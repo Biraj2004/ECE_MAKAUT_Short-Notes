@@ -1,0 +1,660 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[a4paper, margin=0.8in, headheight=14pt]{geometry}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{TeX Gyre Pagella}
+\setmonofont[Scale=0.88]{TeX Gyre Cursor}
+\setmathfont{Latin Modern Math}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{tocloft}
+\newcommand{\Q}[1]{\textbf{#1}\par\noindent\ignorespaces}
+\definecolor{myred}{RGB}{196,30,58}
+\definecolor{mydark}{RGB}{30,30,50}
+\definecolor{mygreen}{RGB}{14,120,80}
+\definecolor{myteal}{RGB}{0,130,140}
+\definecolor{myamber}{RGB}{180,100,0}
+\definecolor{mypurple}{RGB}{100,30,160}
+\definecolor{mygray}{RGB}{246,247,249}
+\definecolor{mgframe}{RGB}{180,185,200}
+\definecolor{watermark}{RGB}{195,200,215}
+\definecolor{hdrred}{RGB}{250,232,235}
+\definecolor{hdrgreen}{RGB}{220,244,233}
+\definecolor{hdrteal}{RGB}{220,242,244}
+\definecolor{hdramber}{RGB}{253,242,215}
+\definecolor{hdrpurple}{RGB}{238,228,255}
+\definecolor{hdrgray}{RGB}{238,240,245}
+\definecolor{rowalt}{RGB}{250,251,253}
+\titleformat{\section}{\large\bfseries\color{myred}}{\thesection.}{0.5em}{}
+  [\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
+\titleformat{\subsection}{\normalsize\bfseries\color{mydark}}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{18pt}{7pt}
+\titlespacing*{\subsection}{0pt}{11pt}{4pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+\renewcommand{\cfttoctitlefont}{\large\bfseries\color{myred}}
+\renewcommand{\cftaftertoctitle}{\par\noindent{\color{myred}\rule{\linewidth}{0.8pt}}}
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{6pt}
+\renewcommand{\cftsecfont}{\normalsize\bfseries\color{mydark}}
+\renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{myteal}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftbeforesecskip}{7pt}
+\renewcommand{\cftsubsecfont}{\small\color{mydark}}
+\renewcommand{\cftsubsecpagefont}{\small\color{myteal}}
+\setlength{\cftbeforesubsecskip}{3pt}
+\setlength{\cftsubsecindent}{1.4em}
+\renewcommand{\arraystretch}{1.45}
+\setlength{\tabcolsep}{6pt}
+\newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}p{#1}}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{myred}\textbf{EC601}\;\color{mydark}--- Control System}
+\fancyhead[R]{\small\color{myteal}\textbf{Module 7 Notes}}
+\fancyfoot[C]{\small\color{mydark}\thepage}
+\fancyfoot[R]{\small\color{watermark}\textit{Â© Biraj}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.3pt}
+\hypersetup{colorlinks=true,linkcolor=myteal,urlcolor=myteal,
+  pdfauthor={Biraj Sarkar},pdftitle={EC601 --- Module 7 Notes}}
+\tcbset{
+  tikzbox/.style={colback=mygray,colframe=mgframe,boxrule=0.6pt,arc=4pt,
+    left=8pt,right=8pt,top=6pt,bottom=6pt,colbacktitle=mgframe,coltitle=mydark,fonttitle=\small\bfseries},
+  defbox/.style={colback=hdrgreen,colframe=mygreen,boxrule=0.8pt,arc=4pt,
+    left=9pt,right=9pt,top=6pt,bottom=6pt,colbacktitle=mygreen,coltitle=white,fonttitle=\small\bfseries},
+  formulabox/.style={colback=hdrteal,colframe=myteal,boxrule=0.8pt,arc=4pt,
+    left=9pt,right=9pt,top=7pt,bottom=7pt,colbacktitle=myteal,coltitle=white,fonttitle=\small\bfseries},
+  examplebox/.style={colback=hdramber,colframe=myamber,boxrule=0.8pt,arc=4pt,
+    left=9pt,right=9pt,top=6pt,bottom=6pt,colbacktitle=myamber,coltitle=white,fonttitle=\small\bfseries},
+  masonbox/.style={colback=hdrpurple,colframe=mypurple,boxrule=0.8pt,arc=4pt,
+    left=9pt,right=9pt,top=6pt,bottom=6pt,colbacktitle=mypurple,coltitle=white,fonttitle=\small\bfseries},
+  exambox/.style={colback=hdrpurple,colframe=mypurple,boxrule=1pt,arc=5pt,
+    left=10pt,right=10pt,top=8pt,bottom=8pt,colbacktitle=mypurple,coltitle=white,fonttitle=\bfseries, breakable}
+}
+% Allow all boxes to break across pages
+\tcbset{breakable}
+\tikzset{
+  block/.style={rectangle,draw=myteal,fill=hdrteal,text width=2.4cm,align=center,
+    minimum height=0.9cm,font=\small,rounded corners=3pt,line width=0.7pt},
+  wblock/.style={rectangle,draw=myteal,fill=hdrteal,text width=3.2cm,align=center,
+    minimum height=0.9cm,font=\small,rounded corners=3pt,line width=0.7pt},
+  redblock/.style={rectangle,draw=myred,fill=hdrred,text width=2.4cm,align=center,
+    minimum height=0.9cm,font=\small,rounded corners=3pt,line width=0.7pt},
+  sumjunc/.style={circle,draw=myamber,fill=hdramber,minimum size=0.62cm,font=\small,line width=0.8pt},
+  arrow/.style={-Stealth,thick,color=mydark},
+  redarrow/.style={-Stealth,thick,color=myred},
+  line/.style={thick,color=mydark}
+}
+\begin{document}
+\begin{center}
+  {\LARGE\bfseries\color{myred} EC601 --- Control System}\\[5pt]
+  {\normalsize\color{mydark} Semester VI \quad$\bullet$\quad 3L:0T:0P \quad$\bullet$\quad 3 Credits}\\[3pt]
+  {\normalsize\color{myteal}\textbf{Module 7 Exam Notes}}\\[3pt]
+  {\small\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27) \;$|$\; \textit{Biraj Sarkar}}
+\end{center}
+\vspace{2pt}\noindent{\color{myred}\rule{\linewidth}{1.5pt}}\vspace{2pt}
+\tableofcontents\newpage
+
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+\section{Cathode Ray Oscilloscope (CRO)}
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+\begin{tcolorbox}[defbox]
+\textbf{CRO (Cathode Ray Oscilloscope):} An electronic test instrument that displays electrical signals as waveforms on a phosphor screen. It plots voltage (Y-axis) vs time (X-axis) in real time, allowing measurement of amplitude, frequency, phase, rise time, and waveform shape.
+\end{tcolorbox}
+
+\subsection{Block Diagram of CRO}
+
+\begin{tcolorbox}[tikzbox, title={CRO Block Diagram}]
+\centering
+\begin{tikzpicture}[node distance=0.4cm and 0.7cm,
+  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=2.0cm,
+    align=center, minimum height=0.9cm, font=\small, rounded corners=3pt, line width=0.7pt}]
+
+  % â”€â”€ Top row (left to right): Attenuator â†’ Y-Amp â†’ CRT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  \node[sblock] (atten) {Attenuator\\(Input)};
+  \node[sblock, right=0.7cm of atten] (yamp)  {Y-Amplifier\\(Vertical)};
+  \node[sblock, right=0.7cm of yamp]  (crt)   {CRT\\(Display)};
+  \node[sblock, right=0.7cm of crt]   (psu)   {Power Supply\\(EHT + LV)};
+
+  % â”€â”€ Bottom row: Trigger â†’ Delay â†’ X-Amp â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  \node[sblock, below=1.1cm of atten] (trig)  {Trigger\\Circuit};
+  \node[sblock, right=0.7cm of trig]  (delay) {Delay Line};
+  \node[sblock, right=0.7cm of delay] (xamp)  {X-Amplifier\\(Horizontal)};
+
+  % â”€â”€ Signal path â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  \draw[arrow] (atten) -- (yamp);
+  \draw[arrow] (yamp)  -- (crt);
+  \draw[arrow] (psu)   -- (crt);
+
+  % â”€â”€ Sweep path â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  \draw[arrow] (trig)  -- (delay);
+  \draw[arrow] (delay) -- (xamp);
+  \draw[arrow] (xamp)  -- (crt);
+
+  % â”€â”€ Y-amp â†’ Delay Line (vertical tap) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  \draw[arrow] (yamp.south) -- (delay.north);
+
+  % â”€â”€ Trigger tapped from Y-amp â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  \coordinate (ytap) at ($(yamp.south)+(0,-0.25)$);
+  \draw[line]  (ytap) -| (trig.north);
+
+  % â”€â”€ Input label â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  \node[left=0.5cm of atten, font=\small] {Signal Input};
+  \draw[arrow] ($(atten.west)-(0.5,0)$) -- (atten.west);
+\end{tikzpicture}
+\end{tcolorbox}
+
+\subsection{Main Blocks and Functions}
+
+\begin{tabularx}{\linewidth}{|B{3.2cm}|X|}
+\hline
+\rowcolor{hdrteal}
+\multicolumn{1}{|>{\centering\arraybackslash}p{3.2cm}|}{\textbf{\color{myteal}Block}} &
+\multicolumn{1}{>{\centering\arraybackslash}X|}{\textbf{\color{myteal}Function}} \\
+\hline
+Attenuator & Reduces input signal to a safe level for the amplifier. Calibrated in V/div. \\
+\hline
+\rowcolor{rowalt}
+Y-Amplifier & Amplifies the vertical (signal) input to drive the vertical deflection plates of CRT. \\
+\hline
+Delay Line & Delays the signal slightly so the sweep starts before the signal arrives --- ensures complete waveform display. \\
+\hline
+\rowcolor{rowalt}
+Trigger Circuit & Synchronises the sweep with the input signal to produce a stable display. \\
+\hline
+Time Base (Sweep Gen.) & Generates a sawtooth waveform for horizontal deflection. Calibrated in time/div. \\
+\hline
+\rowcolor{rowalt}
+X-Amplifier & Amplifies the time base signal to drive the horizontal deflection plates. \\
+\hline
+CRT & Cathode Ray Tube --- electron gun, deflection plates, phosphor screen. Displays the waveform. \\
+\hline
+\rowcolor{rowalt}
+Power Supply & Provides EHT ($\sim$1--10 kV) for CRT and low voltages for amplifiers. \\
+\hline
+\end{tabularx}
+
+\subsection{Measurements with CRO}
+
+\begin{tabularx}{\linewidth}{|B{3.0cm}|X|}
+\hline
+\rowcolor{hdrgreen}
+\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{\color{mygreen}Measurement}} &
+\multicolumn{1}{>{\centering\arraybackslash}X|}{\textbf{\color{mygreen}Method}} \\
+\hline
+Voltage (peak) & Count vertical divisions $\times$ V/div setting. $V_{pk} = n_{div} \times \text{V/div}$ \\
+\hline
+\rowcolor{rowalt}
+Time period $T$ & Count horizontal divisions for one cycle $\times$ time/div. $T = n_{div} \times \text{time/div}$ \\
+\hline
+Frequency & $f = 1/T$ \\
+\hline
+\rowcolor{rowalt}
+Phase difference & Use dual-trace mode; measure time shift $\Delta t$. $\phi = (\Delta t / T)\times 360Â°$ \\
+\hline
+Rise time & Time for signal to go from 10\% to 90\% of final value. \\
+\hline
+\rowcolor{rowalt}
+DC voltage & Set coupling to DC; measure vertical displacement from zero. \\
+\hline
+\end{tabularx}
+
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+\section{Wave Analyzer and Spectrum Analyzer}
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+\subsection{Wave Analyzer}
+
+\begin{tcolorbox}[defbox]
+\textbf{Wave Analyzer:} An instrument that measures the \textbf{amplitude} and \textbf{frequency} of individual harmonic components of a complex periodic waveform. It is essentially a \textit{very narrow bandpass filter} that can be tuned to any frequency within its range.
+\end{tcolorbox}
+
+\textbf{Requirements:}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item Very narrow, stable, and tunable bandpass filter
+  \item High selectivity (ability to separate closely spaced harmonics)
+  \item High sensitivity (detect small amplitude components)
+  \item Calibrated frequency and amplitude readout
+\end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Wave Analyzer Block Diagram}]
+\centering
+\begin{tikzpicture}[node distance=0.3cm and 0.7cm,
+  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=1.9cm,
+    align=center, minimum height=0.85cm, font=\small, rounded corners=3pt, line width=0.7pt}]
+  \node[sblock] (inp)   {Input\\Attenuator};
+  \node[sblock, right=0.7cm of inp]   (mixer) {Mixer};
+  \node[sblock, right=0.7cm of mixer] (if)    {IF Amp\\(Narrow BPF)};
+  \node[sblock, right=0.7cm of if]    (det)   {Detector\\(Rectifier)};
+  \node[sblock, right=0.7cm of det]   (meter) {Meter /\\Display};
+  \node[sblock, below=0.9cm of mixer] (osc)   {Local\\Oscillator};
+
+  \draw[arrow] (inp) -- (mixer);
+  \draw[arrow] (mixer) -- (if);
+  \draw[arrow] (if) -- (det);
+  \draw[arrow] (det) -- (meter);
+  \draw[arrow] (osc) -- (mixer);
+  \node[left=0.4cm of inp, font=\small] {Input};
+  \draw[arrow] ($(inp.west)-(0.4,0)$) -- (inp.west);
+\end{tikzpicture}
+\end{tcolorbox}
+
+\subsection{Spectrum Analyzer}
+
+\begin{tcolorbox}[defbox]
+\textbf{Spectrum Analyzer:} Displays the \textbf{frequency spectrum} of a signal --- amplitude (or power) vs frequency. Unlike the wave analyzer (which measures one frequency at a time), the spectrum analyzer displays \textit{all frequency components simultaneously} on a screen (frequency domain display).
+\end{tcolorbox}
+
+\textbf{Requirements:}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item Wide frequency range with fine resolution
+  \item High dynamic range (detect weak signals near strong ones)
+  \item Fast sweep speed for real-time display
+  \item Calibrated frequency (X-axis) and amplitude/power (Y-axis in dBm)
+\end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Spectrum Analyzer Block Diagram (Swept Superheterodyne)}]
+\centering
+\begin{tikzpicture}[node distance=0.3cm and 0.65cm,
+  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=1.75cm,
+    align=center, minimum height=0.85cm, font=\small, rounded corners=3pt, line width=0.7pt}]
+  \node[sblock] (inp)  {Input\\Attenuator};
+  \node[sblock, right=0.6cm of inp]  (mix)  {Mixer};
+  \node[sblock, right=0.6cm of mix]  (if)   {IF Filter\\(Res.\ BW)};
+  \node[sblock, right=0.6cm of if]   (det)  {Envelope\\Detector};
+  \node[sblock, right=0.6cm of det]  (vbw)  {Video\\Filter};
+  \node[sblock, right=0.6cm of vbw]  (disp) {Display\\(CRT/LCD)};
+  \node[sblock, below=0.9cm of mix]  (vco)  {Swept\\VCO/LO};
+  \node[sblock, below=0.9cm of disp] (sweep){Sweep\\Generator};
+
+  \draw[arrow] (inp)  -- (mix);
+  \draw[arrow] (mix)  -- (if);
+  \draw[arrow] (if)   -- (det);
+  \draw[arrow] (det)  -- (vbw);
+  \draw[arrow] (vbw)  -- (disp);
+  \draw[arrow] (vco)  -- (mix);
+  \draw[arrow] (sweep)-- (vco);
+  \draw[arrow] (sweep)-- (disp);
+  \node[left=0.4cm of inp, font=\small] {RF In};
+  \draw[arrow] ($(inp.west)-(0.4,0)$) -- (inp.west);
+\end{tikzpicture}
+\end{tcolorbox}
+
+\begin{tabularx}{\linewidth}{|B{3.0cm}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
+\hline
+\rowcolor{hdrgray}
+\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{Feature}} &
+\textbf{\color{myamber}Wave Analyzer} & \textbf{\color{mygreen}Spectrum Analyzer} \\
+\hline
+Display & One frequency at a time & All frequencies simultaneously \\
+\hline
+\rowcolor{rowalt}
+Domain & Frequency (selective) & Frequency (full spectrum) \\
+\hline
+Speed & Slow (manual tuning) & Fast (swept or FFT) \\
+\hline
+\rowcolor{rowalt}
+Use & Harmonic distortion analysis & Wideband signal analysis \\
+\hline
+\end{tabularx}
+
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+\section{LVDT (Linear Variable Differential Transformer)}
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+\begin{tcolorbox}[defbox]
+\textbf{LVDT:} A \textbf{Linear Variable Differential Transformer} is an electromechanical transducer that converts linear displacement into a proportional AC voltage. It is the most widely used inductive displacement sensor due to its high accuracy, infinite resolution, and frictionless operation.
+\end{tcolorbox}
+
+\subsection{Construction and Working}
+
+\textbf{Construction:} One primary coil (centre) and two secondary coils (S1, S2) wound symmetrically on a cylindrical former. A movable ferromagnetic \textbf{core} (plunger) slides inside without contact.
+
+\textbf{Working:}
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*, itemsep=3pt]
+  \item AC excitation applied to primary coil induces EMF in both secondary coils.
+  \item Secondary coils connected in \textbf{series opposition}: $V_{out} = V_{S1} - V_{S2}$.
+  \item \textbf{Null position} (core centred): $V_{S1} = V_{S2}$, so $V_{out} = 0$.
+  \item \textbf{Core displaced right:} $V_{S1} > V_{S2}$, $V_{out}$ is positive and in phase with primary.
+  \item \textbf{Core displaced left:} $V_{S2} > V_{S1}$, $V_{out}$ is negative (180Â° phase shift).
+\end{enumerate}
+
+\begin{tcolorbox}[tikzbox, title={LVDT Construction and Output Characteristic}]
+\centering
+\begin{tikzpicture}[scale=0.85]
+  % Former
+  \draw[line width=0.7pt,color=mydark] (0,0.8) rectangle (6,1.6);
+  % Primary coil (centre)
+  \fill[hdrteal] (2.4,0.8) rectangle (3.6,1.6);
+  \node[font=\tiny,color=myteal] at (3.0,1.2) {Primary};
+  % S1
+  \fill[hdrgreen] (0.3,0.8) rectangle (2.1,1.6);
+  \node[font=\tiny,color=mygreen] at (1.2,1.2) {S1};
+  % S2
+  \fill[hdrgreen] (3.9,0.8) rectangle (5.7,1.6);
+  \node[font=\tiny,color=mygreen] at (4.8,1.2) {S2};
+  % Core
+  \fill[myamber!60] (2.6,0.85) rectangle (3.4,1.55);
+  \node[font=\tiny,color=myamber] at (3.0,0.6) {Core};
+  % Displacement arrow
+  \draw[<->,color=myred,thin] (1.5,0.3) -- (4.5,0.3) node[midway,below,font=\tiny] {Displacement};
+  % Output characteristic
+  \begin{scope}[xshift=7.5cm, yshift=0.2cm]
+    \draw[-Stealth,thin,color=mydark] (-1.8,0)--(1.8,0) node[right,font=\tiny]{Displacement};
+    \draw[-Stealth,thin,color=mydark] (0,-1.2)--(0,1.2) node[above,font=\tiny]{$V_{out}$};
+    \draw[color=myred,line width=1.2pt] (-1.6,-1.1)--(1.6,1.1);
+    \fill[myteal] (0,0) circle (2pt);
+    \node[below right,font=\tiny,color=myteal] at (0,0) {Null};
+  \end{scope}
+\end{tikzpicture}
+\end{tcolorbox}
+
+\begin{tabularx}{\linewidth}{|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
+\hline
+\rowcolor{hdrgreen}
+\textbf{\color{mygreen}Advantages} & \textbf{\color{myred}Disadvantages} \\
+\hline
+Infinite resolution (frictionless) & Sensitive to stray magnetic fields \\
+\hline
+\rowcolor{rowalt}
+High accuracy and repeatability & Requires AC excitation and demodulator \\
+\hline
+No mechanical wear (contactless) & Limited to linear displacement \\
+\hline
+\rowcolor{rowalt}
+Rugged; works in harsh environments & Bulkier than resistive sensors \\
+\hline
+\end{tabularx}
+
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+\section{Servomotors}
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+\begin{tcolorbox}[defbox]
+\textbf{Servomotor:} A motor specifically designed for use in \textbf{closed-loop control systems} (servo systems). It must have a linear torque-speed characteristic, low inertia, fast response, and be controllable by an error signal. Used for precise position, speed, or torque control.
+\end{tcolorbox}
+
+\subsection{DC Servomotor}
+
+\begin{tcolorbox}[defbox]
+\textbf{DC Servomotor:} A DC motor with a separately excited field or permanent magnet field, controlled by varying the \textbf{armature voltage}. The torque is proportional to armature current; speed is proportional to back-EMF.
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={DC Servomotor Equations}]
+\textbf{Electrical:} $V_a = E_b + I_a R_a + L_a \dfrac{dI_a}{dt}$, \quad $E_b = K_b\,\omega$\\[4pt]
+\textbf{Mechanical:} $T = K_T\,I_a = J\dfrac{d\omega}{dt} + B\,\omega$\\[4pt]
+\textbf{Transfer Function} (armature control, $L_a \approx 0$):
+$$\frac{\Omega(s)}{V_a(s)} = \frac{K_T/R_a}{Js + B + K_TK_b/R_a}$$
+where $K_T$ = torque constant, $K_b$ = back-EMF constant, $J$ = inertia, $B$ = damping.
+\end{tcolorbox}
+
+\begin{tabularx}{\linewidth}{|B{3.0cm}|X|}
+\hline
+\rowcolor{hdrteal}
+\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{\color{myteal}Feature}} &
+\multicolumn{1}{>{\centering\arraybackslash}X|}{\textbf{\color{myteal}DC Servomotor}} \\
+\hline
+Control method & Armature voltage control or field control \\
+\hline
+\rowcolor{rowalt}
+Torque-speed & Linear (ideal for servo use) \\
+\hline
+Response & Fast; low inertia rotor \\
+\hline
+\rowcolor{rowalt}
+Maintenance & Brushes require periodic replacement \\
+\hline
+Applications & Robotics, CNC machines, antenna positioning \\
+\hline
+\end{tabularx}
+
+\subsection{AC Servomotor}
+
+\begin{tcolorbox}[defbox]
+\textbf{AC Servomotor:} A two-phase induction motor used in servo systems. One phase (reference phase) is supplied with a fixed AC voltage; the other phase (control phase) receives a variable voltage proportional to the error signal. Speed and direction are controlled by the magnitude and phase of the control voltage.
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={AC Servomotor Key Features}]
+\begin{itemize}[leftmargin=*, itemsep=2pt, topsep=2pt]
+  \item \textbf{High rotor resistance:} Ensures stable, linear torque-speed characteristic (negative slope throughout).
+  \item \textbf{Low inertia:} Drag-cup or thin-disc rotor for fast response.
+  \item \textbf{Control:} Vary amplitude of control phase voltage; direction by phase reversal ($\pm 90Â°$).
+  \item \textbf{Transfer function:} $G(s) = K_m / (s(\tau_m s + 1))$ where $K_m$ = motor gain, $\tau_m$ = mechanical time constant.
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tabularx}{\linewidth}{|B{3.0cm}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
+\hline
+\rowcolor{hdrgray}
+\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{Feature}} &
+\textbf{\color{myamber}DC Servomotor} & \textbf{\color{mygreen}AC Servomotor} \\
+\hline
+Supply & DC & 2-phase AC \\
+\hline
+\rowcolor{rowalt}
+Control & Armature voltage & Control phase voltage \\
+\hline
+Maintenance & Brushes needed & Brushless (robust) \\
+\hline
+\rowcolor{rowalt}
+Power range & High power & Low to medium power \\
+\hline
+Noise & More (brushes) & Less \\
+\hline
+\rowcolor{rowalt}
+Applications & Heavy-duty servo & Instruments, light servo \\
+\hline
+\end{tabularx}
+
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+\section{Tachogenerator (Tacho Generator)}
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+\begin{tcolorbox}[defbox]
+\textbf{Tachogenerator:} A transducer that converts \textbf{rotational speed} into a proportional electrical voltage. Used as a \textbf{velocity feedback sensor} in closed-loop speed control systems.\\[4pt]
+\textbf{DC Tacho:} Output DC voltage proportional to speed: $V_{out} = K_t\,\omega$\\[4pt]
+\textbf{AC Tacho:} Output AC voltage whose amplitude is proportional to speed; frequency equals shaft rotation frequency.
+\end{tcolorbox}
+
+\begin{tabularx}{\linewidth}{|B{3.0cm}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
+\hline
+\rowcolor{hdrgray}
+\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{Feature}} &
+\textbf{\color{myamber}DC Tachogenerator} & \textbf{\color{mygreen}AC Tachogenerator} \\
+\hline
+Output & DC voltage $\propto$ speed & AC voltage amplitude $\propto$ speed \\
+\hline
+\rowcolor{rowalt}
+Direction sensing & Polarity reversal & Phase reversal \\
+\hline
+Ripple & Present (commutator) & None \\
+\hline
+\rowcolor{rowalt}
+Use & Speed feedback in DC drives & AC servo systems \\
+\hline
+\end{tabularx}
+
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+\section{Hydraulic and Pneumatic Actuators}
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+
+\subsection{Electro-Hydraulic Valve}
+
+\begin{tcolorbox}[defbox]
+\textbf{Electro-Hydraulic Valve (EHV):} Converts an \textbf{electrical signal} (current or voltage) into a \textbf{hydraulic flow} or pressure. It controls the flow of hydraulic fluid to an actuator. Types: servo valve (proportional), solenoid valve (on-off).\\[4pt]
+\textbf{Working:} An electrical torque motor deflects a flapper between two nozzles, creating a differential pressure that positions a spool valve, which controls hydraulic flow to the actuator.
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={Electro-Hydraulic Servo Valve (Flapper-Nozzle Type)}]
+\centering
+\begin{tikzpicture}[node distance=0.4cm and 1.0cm]
+  \node[block] (torque) {Torque\\Motor};
+  \node[block, right=0.9cm of torque] (flapper) {Flapper-\\Nozzle};
+  \node[block, right=0.9cm of flapper] (spool) {Spool\\Valve};
+  \node[block, right=0.9cm of spool] (act) {Hydraulic\\Actuator};
+  \node[left=0.6cm of torque, font=\small] {$i_{in}$};
+  \draw[arrow] ($(torque.west)-(0.6,0)$) -- (torque.west);
+  \draw[arrow] (torque) -- (flapper);
+  \draw[arrow] (flapper) -- (spool);
+  \draw[arrow] (spool) -- (act);
+  \node[above=0.3cm of spool, font=\tiny, color=myteal] {Hydraulic supply $P_s$};
+  \draw[arrow,color=myteal] ($(spool.north)+(0,0.3)$) -- (spool.north);
+\end{tikzpicture}
+\end{tcolorbox}
+
+\subsection{Hydraulic Servomotor}
+
+\begin{tcolorbox}[defbox]
+\textbf{Hydraulic Servomotor:} A hydraulic actuator (linear cylinder or rotary motor) that converts \textbf{hydraulic power} (pressure $\times$ flow) into \textbf{mechanical motion}. Controlled by an electro-hydraulic valve.\\[4pt]
+\textbf{Advantages:} Very high force/torque output; fast response; high power-to-weight ratio.\\
+\textbf{Disadvantages:} Requires hydraulic power supply; risk of leakage; maintenance intensive.
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={Hydraulic Actuator Transfer Function}]
+For a hydraulic cylinder with spool valve:
+$$\frac{X(s)}{I(s)} = \frac{K_h}{s(Ms + B)}$$
+where $K_h$ = hydraulic gain, $M$ = load mass, $B$ = viscous damping, $X$ = piston displacement, $I$ = input current to valve.
+\end{tcolorbox}
+
+\subsection{Electro-Pneumatic Valve}
+
+\begin{tcolorbox}[defbox]
+\textbf{Electro-Pneumatic Valve:} Converts an \textbf{electrical signal} into a \textbf{pneumatic pressure or flow}. Used to control pneumatic actuators. Types: I/P converter (current-to-pressure), solenoid valve.\\[4pt]
+\textbf{I/P Converter:} Converts 4--20 mA current signal to 3--15 psi (or 0.2--1.0 bar) pneumatic output. Standard interface between electronic controllers and pneumatic actuators in process industries.
+\end{tcolorbox}
+
+\subsection{Pneumatic Actuator}
+
+\begin{tcolorbox}[defbox]
+\textbf{Pneumatic Actuator:} Converts \textbf{compressed air pressure} into \textbf{mechanical motion} (linear or rotary). Controlled by an electro-pneumatic valve or I/P converter.\\[4pt]
+\textbf{Types:}
+\begin{itemize}[leftmargin=*, itemsep=2pt, topsep=2pt]
+  \item \textbf{Spring-return diaphragm actuator:} Air pressure acts on a diaphragm against a spring. Used for control valves. Fail-safe (spring returns to safe position on air failure).
+  \item \textbf{Double-acting cylinder:} Air applied alternately to both sides of a piston for bidirectional motion.
+  \item \textbf{Rotary vane actuator:} Converts air pressure to rotary motion (limited angle).
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tabularx}{\linewidth}{|B{3.0cm}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
+\hline
+\rowcolor{hdrgray}
+\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{Feature}} &
+\textbf{\color{myamber}Hydraulic} & \textbf{\color{mygreen}Pneumatic} & \textbf{\color{myteal}Electric} \\
+\hline
+Power density & Very high & Medium & Medium \\
+\hline
+\rowcolor{rowalt}
+Speed & Fast & Very fast & Fast \\
+\hline
+Precision & High & Moderate & Very high \\
+\hline
+\rowcolor{rowalt}
+Maintenance & High (leaks) & Low & Low \\
+\hline
+Compressibility & Incompressible & Compressible & N/A \\
+\hline
+\rowcolor{rowalt}
+Typical use & Heavy machinery & Process valves & Robotics, CNC \\
+\hline
+\end{tabularx}
+
+%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+\newpage
+\begin{center}
+  {\large\bfseries\color{myred} Quick Revision --- Module 7}\\[3pt]
+  {\small\color{mydark} Instrumentation \& Actuators $|$ EC601}
+\end{center}
+\noindent{\color{myred}\rule{\linewidth}{1.2pt}}\vspace{4pt}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Key Formulas at a Glance}}]
+\begin{tabularx}{\linewidth}{B{5.0cm} X}
+CRO voltage measurement     & $V_{pk} = n_{div} \times \text{V/div}$ \\[2pt]
+CRO time period             & $T = n_{div} \times \text{time/div}$ \\[2pt]
+CRO frequency               & $f = 1/T$ \\[2pt]
+CRO phase difference        & $\phi = (\Delta t / T)\times 360Â°$ \\[2pt]
+LVDT output                 & $V_{out} = V_{S1} - V_{S2}$; zero at null position \\[2pt]
+DC tacho output             & $V_{out} = K_t\,\omega$ \\[2pt]
+DC servomotor TF            & $\Omega(s)/V_a(s) = (K_T/R_a)/(Js+B+K_TK_b/R_a)$ \\[2pt]
+AC servomotor TF            & $G(s) = K_m/[s(\tau_m s+1)]$ \\[2pt]
+Hydraulic actuator TF       & $X(s)/I(s) = K_h/[s(Ms+B)]$ \\[2pt]
+I/P converter range         & 4--20 mA $\to$ 3--15 psi (0.2--1.0 bar)
+\end{tabularx}
+\end{tcolorbox}
+
+\vspace{5pt}
+
+\begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
+\begin{itemize}[leftmargin=*, itemsep=3pt, topsep=0pt]
+  \item \textbf{CRO:} Displays voltage vs time waveforms; measures amplitude, frequency, phase, rise time.
+  \item \textbf{Trigger circuit:} Synchronises CRO sweep with input signal for stable display.
+  \item \textbf{Delay line:} Delays signal in CRO so sweep starts before signal arrives.
+  \item \textbf{Wave analyzer:} Measures amplitude of individual harmonics; narrow tunable BPF.
+  \item \textbf{Spectrum analyzer:} Displays full frequency spectrum (amplitude vs frequency) simultaneously.
+  \item \textbf{LVDT:} Inductive displacement sensor; output voltage proportional to core displacement.
+  \item \textbf{Null position (LVDT):} Core centred; $V_{S1}=V_{S2}$; $V_{out}=0$.
+  \item \textbf{DC servomotor:} DC motor for servo use; controlled by armature voltage; linear torque-speed.
+  \item \textbf{AC servomotor:} 2-phase induction motor; high rotor resistance; low inertia; drag-cup rotor.
+  \item \textbf{Tachogenerator:} Speed-to-voltage transducer; used as velocity feedback sensor.
+  \item \textbf{Electro-hydraulic valve:} Converts electrical signal to hydraulic flow; flapper-nozzle type.
+  \item \textbf{Hydraulic servomotor:} High-force actuator; converts hydraulic power to mechanical motion.
+  \item \textbf{I/P converter:} Converts 4--20 mA to 3--15 psi; interfaces electronic controller to pneumatic actuator.
+  \item \textbf{Pneumatic actuator:} Converts compressed air to mechanical motion; spring-return is fail-safe.
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{5pt}
+
+\begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
+\begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]
+  \item \Q{What is the function of the trigger circuit in a CRO?}
+    It synchronises the time base sweep with the input signal so that the waveform appears stationary (stable) on the screen.
+  \item \Q{Why is a delay line used in a CRO?}
+    To delay the signal slightly so the sweep generator starts before the signal arrives, ensuring the leading edge of the waveform is displayed.
+  \item \Q{How do you measure frequency using a CRO?}
+    Measure the time period $T$ (horizontal divisions $\times$ time/div for one complete cycle), then $f = 1/T$.
+  \item \Q{What is the difference between a wave analyzer and a spectrum analyzer?}
+    Wave analyzer measures one frequency component at a time (narrow tunable BPF). Spectrum analyzer displays all frequency components simultaneously on screen.
+  \item \Q{What is LVDT and how does it work?}
+    Linear Variable Differential Transformer. AC excitation on primary induces EMF in two secondary coils connected in series opposition. Output voltage is proportional to core displacement; zero at null position.
+  \item \Q{What is the output of LVDT at null position?}
+    Zero, because the two secondary voltages are equal and opposite ($V_{S1} = V_{S2}$, so $V_{out} = V_{S1} - V_{S2} = 0$).
+  \item \Q{What are the advantages of LVDT?}
+    Infinite resolution (frictionless/contactless), high accuracy, no mechanical wear, rugged, works in harsh environments.
+  \item \Q{What is the difference between DC and AC servomotor?}
+    DC: controlled by armature voltage, uses brushes, high power. AC: 2-phase induction, brushless, high rotor resistance for linear torque-speed, low inertia drag-cup rotor.
+  \item \Q{What is a tachogenerator?}
+    A speed transducer that generates a voltage proportional to rotational speed ($V = K_t\omega$). Used as velocity feedback in closed-loop speed control.
+  \item \Q{What is an electro-hydraulic servo valve?}
+    Converts electrical current to hydraulic flow using a torque motor, flapper-nozzle, and spool valve. Controls hydraulic actuator position/speed.
+\end{enumerate}
+\end{tcolorbox}
+
+\newpage
+
+\begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions (contd.)}}]
+\begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt, start=11]
+  \item \Q{What is an I/P converter?}
+    Current-to-pressure converter. Converts 4--20 mA electrical signal to 3--15 psi pneumatic signal. Standard interface between electronic controllers and pneumatic actuators.
+  \item \Q{Why is a spring-return pneumatic actuator called fail-safe?}
+    On loss of air supply, the spring returns the actuator (and connected valve) to a predetermined safe position (fully open or fully closed).
+\end{enumerate}
+\end{tcolorbox}
+
+\end{document}
