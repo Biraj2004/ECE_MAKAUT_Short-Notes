@@ -142,4 +142,4 @@ See [`Notes_Build_Guide.md`](Notes_Build_Guide.md) for the complete spec:
 
 ---
 
-*CGEC · B.Tech ECE (2023–27) · MAKAUT*
+*Cooch Behar Government Engineering College · B.Tech ECE (2023–27) · MAKAUT*
