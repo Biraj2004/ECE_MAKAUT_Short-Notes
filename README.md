@@ -80,7 +80,7 @@ ECE_MAKAUT_Short-Notes/
 │   └── ECE 6th SEM YT Playlist.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject
-├── Exam-Ready Module Notes.md      # Full authoring guide & style spec
+├── Notes_Build_Guide.md            # Full authoring guide & style spec
 ├── AGENTS.md                       # Agentic context for AI assistants
 └── CLAUDE.md                       # LLM coding behaviour guidelines
 ```
@@ -122,7 +122,7 @@ Both scripts run 2 passes (3 for combined) automatically and clean aux files on 
 
 ## Authoring guide
 
-See [`Exam-Ready Module Notes.md`](Exam-Ready%20Module%20Notes.md) for the complete spec:
+See [`Notes_Build_Guide.md`](Notes_Build_Guide.md) for the complete spec:
 - LaTeX preamble (copy-exact)
 - Colour palette & tcolorbox styles
 - Table rules, TikZ diagram guidelines

@@ -35,7 +35,7 @@ ECE_MAKAUT_Short-Notes/
 │       └── EC602_Computer_Network.pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
-├── Exam-Ready Module Notes.md      # THE authoritative style & content spec
+├── Notes_Build_Guide.md            # THE authoritative style & content spec
 ├── AGENTS.md                       # This file
 ├── CLAUDE.md                       # LLM behaviour guidelines
 └── README.md
@@ -45,7 +45,7 @@ ECE_MAKAUT_Short-Notes/
 
 ## The authoritative spec
 
-**`Exam-Ready Module Notes.md` is the single source of truth** for everything LaTeX-related in this project. Before writing or editing any `.tex` file, read the relevant sections:
+**`Notes_Build_Guide.md` is the single source of truth** for everything LaTeX-related in this project. Before writing or editing any `.tex` file, read the relevant sections:
 
 | Section | What it covers |
 |---|---|
