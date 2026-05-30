@@ -140,14 +140,14 @@ Follow this order for every topic:
 ```latex
 % ── Primary colours ──────────────────────────────────────────────────────────
 \definecolor{myred}{RGB}{196,30,58}       % section headings
-\definecolor{mydark}{RGB}{30,30,50}       % body text, subsection headings
+\definecolor{mydark}{RGB}{30,30,50}       % body text
 \definecolor{mygreen}{RGB}{14,120,80}     % definition boxes
-\definecolor{myteal}{RGB}{0,130,140}      % formula boxes, diagrams
+\definecolor{myteal}{RGB}{0,130,140}      % formula boxes, diagrams, subsection headings
 \definecolor{myamber}{RGB}{180,100,0}     % example boxes
 \definecolor{mypurple}{RGB}{100,30,160}   % exam/viva boxes
 \definecolor{mygray}{RGB}{246,247,249}    % tikzbox background
 \definecolor{mgframe}{RGB}{180,185,200}   % tikzbox border
-\definecolor{watermark}{RGB}{195,200,215} % footer watermark
+\definecolor{watermark}{RGB}{145,150,170} % footer watermark (darkened for legibility)
 
 % ── Light header backgrounds (table headers & box fills) ─────────────────────
 \definecolor{hdrred}{RGB}{250,232,235}
@@ -164,9 +164,9 @@ Follow this order for every topic:
 | Colour | Use for |
 |---|---|
 | `myred` | `\section` headings only |
-| `mydark` | `\subsection` headings, body text |
+| `mydark` | Body text |
 | `mygreen` | `defbox` — definitions, terminology |
-| `myteal` | `formulabox` — formulas, derivations, block diagrams |
+| `myteal` | `\subsection` headings, `formulabox` — formulas, derivations, block diagrams |
 | `myamber` | `examplebox` — worked examples, solved problems |
 | `mypurple` | `masonbox`, `exambox` — viva Q&A, exam tips |
 | `hdrgray` | Comparison table headers **only** (neutral grey) |
@@ -298,14 +298,19 @@ When a long `\dfrac` expression (e.g., describing function, transfer function) o
 \setlength{\cftaftertoctitleskip}{6pt}
 
 \renewcommand{\cftsecfont}{\normalsize\bfseries\color{mydark}}
-\renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{myteal}}
+\renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{mydark}}
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
 \setlength{\cftbeforesecskip}{7pt}
 
 \renewcommand{\cftsubsecfont}{\small\color{mydark}}
-\renewcommand{\cftsubsecpagefont}{\small\color{myteal}}
+\renewcommand{\cftsubsecpagefont}{\small\color{mydark}}
 \setlength{\cftbeforesubsecskip}{3pt}
 \setlength{\cftsubsecindent}{1.4em}
+
+% Wrap tableofcontents in hyperref linkcolor overrides to keep TOC text/dots black:
+% \hypersetup{linkcolor=mydark}
+% \tableofcontents
+% \hypersetup{linkcolor=myteal}
 ```
 
 ---
@@ -317,7 +322,7 @@ When a long `\dfrac` expression (e.g., describing function, transfer function) o
   {\large\bfseries\color{myred}}{\thesection.}{0.5em}{}
   [\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
 \titleformat{\subsection}
-  {\normalsize\bfseries\color{mydark}}{\thesubsection}{0.5em}{}
+  {\normalsize\bfseries\color{myteal}}{\thesubsection}{0.5em}{}
 \titlespacing*{\section}{0pt}{18pt}{7pt}
 \titlespacing*{\subsection}{0pt}{11pt}{4pt}
 
@@ -347,7 +352,7 @@ Always wrap math with `\texorpdfstring{}{}`:
 \fancyhead[L]{\small\color{myred}\textbf{<CODE>}\;\color{mydark}--- <Subject Name>}
 \fancyhead[R]{\small\color{myteal}\textbf{Module N Notes}}
 \fancyfoot[C]{\small\color{mydark}\thepage}
-\fancyfoot[R]{\small\color{watermark}\textit{© Biraj}}
+\fancyfoot[R]{\small\color{watermark}\textit{\copyright\ Biraj}}
 \renewcommand{\headrulewidth}{0.5pt}
 \renewcommand{\footrulewidth}{0.3pt}
 ```
@@ -368,7 +373,9 @@ Replace `<CODE>`, `<Subject Name>`, and `Module N` per file.
 \vspace{2pt}
 \noindent{\color{myred}\rule{\linewidth}{1.5pt}}
 \vspace{2pt}
+\hypersetup{linkcolor=mydark}
 \tableofcontents
+\hypersetup{linkcolor=myteal}
 \newpage
 ```
 
@@ -762,5 +769,5 @@ Before submitting or printing the PDF:
 - [ ] TikZ labels positioned with `anchor=` to avoid overlapping nodes
 - [ ] Block diagrams: signal taps cleanly separated, no overlapping wires through blocks
 - [ ] No content overflows into footer (`\tcbset{breakable}` is present)
-- [ ] Footer shows `© Biraj` on every page
+- [ ] Footer shows `\copyright\ Biraj` on every page
 - [ ] Aux files cleaned after compilation

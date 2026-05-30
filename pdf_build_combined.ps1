@@ -1,4 +1,4 @@
-﻿# ============================================================
+# ============================================================
 #  pdf_build_combined.ps1  --  Build combined notes for every subject
 #
 #  Discovers subject folders automatically (any subfolder that
@@ -235,7 +235,7 @@ foreach ($folder in $subjectFolders) {
     # -- Section formatting ---------------------------------------------------
     $secFmt = @'
 \titleformat{\section}{\large\bfseries\color{myred}}{\thesection.}{0.5em}{}[\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
-\titleformat{\subsection}{\normalsize\bfseries\color{mydark}}{\thesubsection}{0.5em}{}
+\titleformat{\subsection}{\normalsize\bfseries\color{myteal}}{\thesubsection}{0.5em}{}
 \titlespacing*{\section}{0pt}{18pt}{7pt}
 \titlespacing*{\subsection}{0pt}{11pt}{4pt}
 \setlength{\parindent}{0pt}
@@ -250,15 +250,15 @@ foreach ($folder in $subjectFolders) {
 \setlength{\cftbeforetoctitleskip}{0pt}
 \setlength{\cftaftertoctitleskip}{6pt}
 \renewcommand{\cftsecfont}{\normalsize\bfseries\color{mydark}}
-\renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{myteal}}
+\renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{mydark}}
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
 \setlength{\cftbeforesecskip}{7pt}
 \renewcommand{\cftsubsecfont}{\small\color{mydark}}
-\renewcommand{\cftsubsecpagefont}{\small\color{myteal}}
+\renewcommand{\cftsubsecpagefont}{\small\color{mydark}}
 \setlength{\cftbeforesubsecskip}{3pt}
 \setlength{\cftsubsecindent}{1.4em}
-\renewcommand{\cftpartfont}{\normalsize\bfseries\color{myred}}
-\renewcommand{\cftpartpagefont}{\normalsize\bfseries\color{myred}}
+\renewcommand{\cftpartfont}{\normalsize\bfseries\color{myteal}}
+\renewcommand{\cftpartpagefont}{\normalsize\bfseries\color{myteal}}
 \setlength{\cftbeforepartskip}{14pt}
 '@
     [void]$sb.AppendLine($tocFmt)
@@ -280,7 +280,7 @@ foreach ($folder in $subjectFolders) {
     [void]$sb.AppendLine('\fancyhead[L]{\small\color{myred}\textbf{' + $subjectCode + '}\;\color{mydark}--- ' + $cleanName + '}')
     [void]$sb.AppendLine('\fancyhead[R]{\small\color{myteal}\textbf{\currmodule\ Notes}}')
     [void]$sb.AppendLine('\fancyfoot[C]{\small\color{mydark}\thepage}')
-    [void]$sb.AppendLine('\fancyfoot[R]{\small\color{watermark}\textit{-Biraj}}')
+    [void]$sb.AppendLine('\fancyfoot[R]{\small\color{watermark}\textit{\copyright\ Biraj}}')
     [void]$sb.AppendLine('\renewcommand{\headrulewidth}{0.5pt}')
     [void]$sb.AppendLine('\renewcommand{\footrulewidth}{0.3pt}')
     [void]$sb.AppendLine('')
@@ -332,11 +332,21 @@ foreach ($folder in $subjectFolders) {
     [void]$sb.AppendLine('  {\normalsize\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27)}\\[6pt]')
     [void]$sb.AppendLine('  {\normalsize\color{mydark}\textit{Biraj Sarkar}}')
     [void]$sb.AppendLine('\end{center}')
+    [void]$sb.AppendLine('\vspace{1.0cm}')
+    [void]$sb.AppendLine('\begin{center}')
+    [void]$sb.AppendLine('  \begin{tcolorbox}[colback=mygray, colframe=mgframe, boxrule=0.5pt, arc=3pt, width=0.85\linewidth]')
+    [void]$sb.AppendLine('    \centering\small\color{mydark}')
+    [void]$sb.AppendLine('    \textbf{Disclaimer / Study Guide Notice:}\\')
+    [void]$sb.AppendLine('    These are condensed \textbf{Short Notes} focusing on core theory, key formulas, block/circuit diagrams, and standard viva Q\&As for university exam revision. Exhaustive numerical practice problems and derivation edge cases are not covered. This serves as a quick-revision reference guide for students.')
+    [void]$sb.AppendLine('  \end{tcolorbox}')
+    [void]$sb.AppendLine('\end{center}')
     [void]$sb.AppendLine('\vfill')
     [void]$sb.AppendLine('\begin{center}{\small\color{watermark}\textit{Exam-Ready Notes}}\end{center}')
     [void]$sb.AppendLine('\clearpage')
     [void]$sb.AppendLine('')
+    [void]$sb.AppendLine('\hypersetup{linkcolor=mydark}')
     [void]$sb.AppendLine('\tableofcontents')
+    [void]$sb.AppendLine('\hypersetup{linkcolor=myteal}')
     [void]$sb.AppendLine('\clearpage')
     [void]$sb.AppendLine('')
 

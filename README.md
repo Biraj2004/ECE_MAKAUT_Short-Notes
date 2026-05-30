@@ -23,7 +23,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 3rd SEM | 🔲 Planned | — |
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
-| 6th SEM | ✅ In Progress | EC601 Control System (7 modules), EC602 Computer Network (4 modules) |
+| 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules) |
 | 7th SEM | 🔲 Planned | — |
 | 8th SEM | 🔲 Planned | — |
 
@@ -54,6 +54,16 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `EC602_Module4_Notes.pdf` | Application Layer, DNS, HTTP, Cryptography, Firewalls, ISDN, ATM, Bluetooth |
 | `EC602_Computer_Network.pdf` | **Combined** — all 4 modules, 48 pages |
 
+### HS-HU601 — Economics for Engineers
+
+| File | Topics |
+|---|---|
+| `HS-HU601_Module1_Notes.pdf` | Economic Decision Making, Engineering Costs & Estimations, Cost Estimation Models (Per-Unit, Segmenting, Cost Index, Power-Sizing, Learning Curve) |
+| `HS-HU601_Module2_Notes.pdf` | Cash Flow, Interest Formulas, Equivalence, Debt Repayment, Rate of Return Analysis (AW, FW, PW, IRR, BCR, Sensitivity) |
+| `HS-HU601_Module3_Notes.pdf` | Inflation (Fisher's Equation), Present Worth Analysis with Unequal Lives (LCM), Uncertainty, Decision Trees, Risk |
+| `HS-HU601_Module4_Notes.pdf` | Depreciation (Straight-Line & Double Declining Balance), Economic Service Life, Defender/Challenger Replacement, Accounting & Cost Allocation |
+| `HS-HU601_Economics_for_Engineers.pdf` | **Combined** — all 4 modules, 39 pages |
+
 ---
 
 ## Repository structure
@@ -76,6 +86,13 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── EC602_Module4_Notes.tex / .pdf
 │   │   ├── EC602_Combined_Notes.tex
 │   │   └── EC602_Computer_Network.pdf
+│   ├── 03. Economics for Engineers/
+│   │   ├── HS-HU601_Module1_Notes.tex / .pdf
+│   │   ├── HS-HU601_Module2_Notes.tex / .pdf
+│   │   ├── HS-HU601_Module3_Notes.tex / .pdf
+│   │   ├── HS-HU601_Module4_Notes.tex / .pdf
+│   │   ├── HS-HU601_Combined_Notes.tex
+│   │   └── HS-HU601_Economics_for_Engineers.pdf
 │   ├── sem6 - syllabus.pdf
 │   └── ECE 6th SEM YT Playlist.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs

@@ -33,6 +33,13 @@ ECE_MAKAUT_Short-Notes/
 │       ├── EC602_Module4_Notes.tex / .pdf
 │       ├── EC602_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── EC602_Computer_Network.pdf
+│   └── 03. Economics for Engineers/ # HS-HU601 — 4 modules (All complete)
+│       ├── HS-HU601_Module1_Notes.tex / .pdf
+│       ├── HS-HU601_Module2_Notes.tex / .pdf
+│       ├── HS-HU601_Module3_Notes.tex / .pdf
+│       ├── HS-HU601_Module4_Notes.tex / .pdf
+│       ├── HS-HU601_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── HS-HU601_Economics_for_Engineers.pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -248,6 +255,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 |---|---|---|---|---|
 | EC601 Control System | 7 | ✅ All compiled | `EC601_Control_System.pdf` | 87 |
 | EC602 Computer Network | 4 | ✅ All compiled | `EC602_Computer_Network.pdf` | 48 |
+| HS-HU601 Economics for Engineers | 4 | ✅ All compiled | `HS-HU601_Economics_for_Engineers.pdf` | 39 |
 
 **1st–5th SEM:** Folders exist, no content yet.
 **7th–8th SEM:** Not started.
