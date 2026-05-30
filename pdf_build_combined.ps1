@@ -205,7 +205,6 @@ foreach ($folder in $subjectFolders) {
 \setmonofont[Scale=0.88]{TeX Gyre Cursor}
 \setmathfont{Latin Modern Math}
 \usepackage{xcolor}
-\usepackage{colortbl}
 \usepackage{titlesec}
 \usepackage{enumitem}
 \usepackage{tabularx}
@@ -220,6 +219,9 @@ foreach ($folder in $subjectFolders) {
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{microtype}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\sloppy
 \usepackage{caption}
 \usepackage{setspace}
 \usepackage{multirow}

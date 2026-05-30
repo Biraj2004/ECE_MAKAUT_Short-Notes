@@ -154,7 +154,7 @@ See [`Notes_Build_Guide.md`](Notes_Build_Guide.md) for the complete spec:
 - **Fonts:** TeX Gyre Pagella (body), Latin Modern Math (math)
 - **Diagrams:** TikZ with `shapes.geometric`, `arrows.meta`, `positioning`, `decorations.pathreplacing`
 - **Boxes:** tcolorbox with custom `defbox`, `formulabox`, `examplebox`, `exambox`, `tikzbox`, `masonbox`
-- **Tables:** tabularx + booktabs + colortbl
+- **Tables:** tabularx + booktabs
 - **Build:** PowerShell scripts (`pdf_compile.ps1`, `pdf_build_combined.ps1`)
 
 ---

@@ -135,8 +135,9 @@ These are non-negotiable. Violating them causes compile errors or broken output.
 
 ### Packages
 - Do **not** load `\usepackage{amssymb}` — conflicts with `unicode-math`.
-- Load `\usepackage{xcolor}` **before** `colortbl` and without `[table]` option.
+- Load `\usepackage{xcolor}` without the `[table]` option.
 - TikZ library must include `decorations.pathreplacing` (used for braces in diagrams).
+- Use `\hyphenpenalty=10000`, `\exhyphenpenalty=10000`, and `\sloppy` to globally disable word-breaking/hyphenation across lines.
 
 ### Colours
 - All colours are defined in §4 of the spec. **Do not change RGB values.**

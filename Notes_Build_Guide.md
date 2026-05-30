@@ -90,8 +90,7 @@ Follow this order for every topic:
 ### Required packages (in this order)
 
 ```latex
-\usepackage{xcolor}       % load BEFORE colortbl — no [table] option
-\usepackage{colortbl}     % table row/cell colours
+\usepackage{xcolor}       % required for custom colors
 \usepackage{titlesec}     % section heading formatting
 \usepackage{enumitem}     % list customisation
 \usepackage{tabularx}     % flexible-width tables
@@ -107,6 +106,9 @@ Follow this order for every topic:
 \usepackage{fancyhdr}
 \usepackage{graphicx}
 \usepackage{microtype}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\sloppy
 \usepackage{caption}
 \usepackage{setspace}
 \usepackage{multirow}
@@ -269,7 +271,6 @@ If a table immediately follows a `\textbf{Label:}` line (no blank line between),
 % ─── Table helpers ─────────────────────────────────────────────────────────────
 \renewcommand{\arraystretch}{1.45}
 \setlength{\tabcolsep}{6pt}
-
 % B{w} — bold left-aligned fixed-width column, VERTICALLY CENTERED
 \newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}m{#1}}
 
