@@ -267,9 +267,10 @@ foreach ($folder in $subjectFolders) {
     $tblFmt = @'
 \renewcommand{\arraystretch}{1.45}
 \setlength{\tabcolsep}{6pt}
-\newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}p{#1}}
-\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}m{#1}}
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
 \newcolumntype{Y}{>{\small\raggedright\arraybackslash}X}
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
 '@
     [void]$sb.AppendLine($tblFmt)
 

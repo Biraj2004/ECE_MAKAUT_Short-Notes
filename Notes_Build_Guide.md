@@ -259,19 +259,63 @@ If a table immediately follows a `\textbf{Label:}` line (no blank line between),
 | | Column spec | Notes |
 |---|---|---|
 | ✅ Correct | `>{\centering\arraybackslash}X` | Stretch column — use for all non-first columns |
-| ✅ Correct | `>{\small\bfseries\raggedright\arraybackslash}p{3.2cm}` | Bold-left fixed — first column only |
+| ✅ Correct | `>{\small\bfseries\raggedright\arraybackslash}m{3.2cm}` | Bold-left fixed — first column only (use `m{}` not `p{}`) |
 | ❌ Wrong | `C{2.6cm}` inside tabularx | Causes phantom extra column on right edge |
+| ❌ Wrong | `p{...}` in any column | Top-aligns text — use `m{...}` for vertical centering |
 
-### Global table settings (updated)
+### Global table settings *(canonical preamble — copy exactly)*
 
 ```latex
+% ─── Table helpers ─────────────────────────────────────────────────────────────
 \renewcommand{\arraystretch}{1.45}
 \setlength{\tabcolsep}{6pt}
-\newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}p{#1}}
-% Do NOT define C{} — use inline >{\centering\arraybackslash}p{} instead
+
+% B{w} — bold left-aligned fixed-width column, VERTICALLY CENTERED
+\newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}m{#1}}
+
+% Y — flexible-width column (tabularx X), VERTICALLY CENTERED
+\newcolumntype{Y}{>{\small\raggedright\arraybackslash}X}
+
+% Make ALL tabularx X columns vertically centered by default
+% Without this, X columns use p{} (top-aligned) even if B{} uses m{}
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
 ```
 
-> **Note:** `\tabcolsep` reduced from 9pt → 6pt and `\arraystretch` from 1.55 → 1.45 to prevent column overflow. The `B{}` type now includes `\small` to keep first-column text compact.
+> **Key:** `\renewcommand{\tabularxcolumn}[1]{m{#1}}` is the global fix. It overrides
+> the default tabularx behaviour so that **every** `X`-based column (including `Y`)
+> uses `m{}` (middle/vertically centered) instead of `p{}` (top-aligned).
+> Without this, rows with tall fractions leave text labels hanging at the top.
+
+### Vertical centering rules
+
+| Situation | Rule |
+|---|---|
+| Any table with a fixed-width first column | Use `m{}` not `p{}` in the `B{}` column type |
+| Any `tabularx` table | Ensure `\renewcommand{\tabularxcolumn}[1]{m{#1}}` is in the preamble |
+| Simple text-only table | Default `\arraystretch{1.45}` is sufficient |
+| Table with `\displaystyle\frac` in any cell | Wrap table with `{\renewcommand{\arraystretch}{1.9} ... }` |
+| Row with complex nested fraction (`\frac{expr·(1+i)^n}{expr}`) | Add `\\[6pt]` after the row's `\\` |
+
+### Display-math table template
+
+When a table contains `\displaystyle\frac` expressions, wrap the entire `tabularx`
+in a local group to increase row height without affecting other tables:
+
+```latex
+{\renewcommand{\arraystretch}{1.9}%
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|Y|}
+\hline
+...
+Row with simple formula  & ... \\
+\hline
+Row with tall fraction   & $\displaystyle\frac{i(1+i)^n}{(1+i)^n - 1}$ \\[6pt]
+\hline
+...
+\end{tabularx}}
+```
+
+Note the `[6pt]` after `\\` on tall-fraction rows — this adds bottom padding to
+prevent the fraction descenders from touching the `\hline` below.
 
 ### Wide formulas inside table cells
 
@@ -286,6 +330,8 @@ When a long `\dfrac` expression (e.g., describing function, transfer function) o
 | Last resort | Move the formula out of the table into a `formulabox` and reference it from the table |
 
 > **Rule:** Never use `\dfrac` inside a table cell that shares a row with other content. Always use `\displaystyle\frac` instead — it renders identically but avoids the extra horizontal padding `\dfrac` adds, preventing overflow into adjacent columns.
+
+
 
 ---
 
