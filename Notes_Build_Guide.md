@@ -214,7 +214,7 @@ Follow this order for every topic:
     colback=hdrpurple, colframe=mypurple, boxrule=1pt, arc=5pt,
     left=10pt, right=10pt, top=8pt, bottom=8pt,
     colbacktitle=mypurple, coltitle=white, fonttitle=\bfseries,
-    breakable
+    breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}
   }
 }
 % Allow all boxes to break across pages — prevents footer overflow
@@ -462,7 +462,6 @@ Always open with `\newpage`. Structure in this exact order:
 Use the `\Q{}` macro — it bolds the question and forces a line break before the answer.
 
 ```latex
-% ── Single box (use when Q&A fits on one page) ─────────────────────────
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
 \begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]
   \item \Q{What is the transfer function?}
@@ -470,27 +469,10 @@ Use the `\Q{}` macro — it bolds the question and forces a line break before th
   \item \Q{What is the order of a system?}
     Highest power of $s$ in the denominator of $G(s)$.
   ...
-\end{enumerate}
-\end{tcolorbox}
-
-% ── Two-box split (use when last 2–3 items risk splitting) ─────────────
-\begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
-\begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]
-  \item \Q{Q1?} A1.
-  ...
-  \item \Q{Q10?} A10.
-\end{enumerate}
-\end{tcolorbox}
-
-\newpage
-
-\begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions (contd.)}}]
-\begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt, start=11]
-  \item \Q{Q11?} A11.
-  \item \Q{Q12 with nested list?}
+  \item \Q{What if my answer is very long?}
     \begin{itemize}[leftmargin=*, itemsep=1pt, topsep=2pt]
-      \item Bullet 1
-      \item Bullet 2
+      \item Use nested bullet points
+      \item To keep it clean
     \end{itemize}
 \end{enumerate}
 \end{tcolorbox}
@@ -502,9 +484,8 @@ Use the `\Q{}` macro — it bolds the question and forces a line break before th
 - `\Q{}` — bold question + forced line break before answer
 - **Do NOT** use `\Q{}` outside viva enumerate blocks
 - 10–12 questions per module; cover definitions, formulas, comparisons, derivations
-- The `exambox` has `breakable` — it will split across pages automatically if needed
 - **Multi-bullet answers:** Use a nested `\begin{itemize}...\end{itemize}`, not inline semicolons. Inline lists for long answers cause awkward wrapping.
-- **Prevent mid-item page splits:** `\needspace` does **NOT** work inside breakable tcolorbox. The reliable fix is to split the viva enumerate into two `exambox` blocks with `\newpage` between them, using `start=N` on the second enumerate to continue numbering. See §14 Known Issues for the full template.
+- **Automatic splitting:** The `exambox` is configured with `breakable` and `title after break`. If it grows too long for the page, it will automatically split and append the "(contd.)" title on the next page. No manual splitting is needed!
 
 ---
 
@@ -681,27 +662,7 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
 
 ### Viva Q&A list breaking mid-item across page
 - **Cause:** A `tcolorbox[exambox]` with many items breaks at a page boundary, splitting a single Q&A item across two pages. `\needspace` does **NOT** work inside `breakable` tcolorbox — the box's own break logic ignores it.
-- **Fix (proven):** Split the viva enumerate into TWO `exambox` boxes with `\newpage` between them. Use `start=N` on the second enumerate to keep numbering continuous.
-  ```latex
-  \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
-  \begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]
-    \item \Q{Q1?} A1.
-    ...
-    \item \Q{Q10?} A10.   % last question that fits on first page
-  \end{enumerate}
-  \end{tcolorbox}
-
-  \newpage
-
-  \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions (contd.)}}]
-  \begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt, start=11]
-    \item \Q{Q11?} A11.
-    \item \Q{Q12?} A12 (multi-line / nested list ok here).
-  \end{enumerate}
-  \end{tcolorbox}
-  ```
-- **When to split:** Whenever the last 2–3 viva items have multi-line answers, nested lists, or there are 12+ questions total. Estimate visually after the first compile — if Q11/Q12 land at the bottom of the page or split across pages, apply the split.
-- **Why not `\needspace`:** It is silently ignored inside `breakable` tcolorbox environments because `tcolorbox` uses its own page-break algorithm.
+- **Fix:** The `exambox` is now configured with `title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}` by default. This natively handles page splits and automatically injects the continuation title at the top of the next page! You no longer need to split the box manually using `\newpage`.
 
 ### `\\` inside TikZ node label causes "Not allowed in LR mode"
 - **Cause:** Using `\\` for line breaks inside a TikZ `\node[...]{text\\text}` when the node has no `align=` or `text width=` set.

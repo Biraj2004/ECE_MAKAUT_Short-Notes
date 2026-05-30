@@ -67,7 +67,7 @@ ECE_MAKAUT_Short-Notes/
 | §9 Header/Footer | fancyhdr template |
 | §10 Title Page | Exact title block template |
 | §11 Quick Revision Page | Mandatory last section — structure and order |
-| §12 Viva Q&A Format | `\Q{}` macro, exambox split rules |
+| §12 Viva Q&A Format | `\Q{}` macro, automatic exambox splitting |
 | §13 TikZ Guidelines | Node styles, diagram rules, block diagram template |
 | §14 Known Issues & Fixes | Critical — read before debugging any compile error |
 | §15 Compile Script | How to use `pdf_compile.ps1` |
@@ -170,7 +170,7 @@ These are non-negotiable. Violating them causes compile errors or broken output.
 
 ### Viva Q&A
 - Use `\Q{}` macro inside `exambox` enumerate only.
-- If 12+ questions or last 2–3 have multi-line answers: split into two `exambox` blocks with `\newpage` between, use `start=N` on the second enumerate.
+- The `exambox` is configured with `title after break`, so it will automatically split across pages and reprint the title if it becomes too long. Do NOT manually split the box or use `\newpage`.
 
 ---
 
