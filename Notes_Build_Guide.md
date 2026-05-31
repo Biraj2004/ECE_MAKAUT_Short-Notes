@@ -679,6 +679,10 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
 - **Cause:** Defining `axis/.style={...}` in `\tikzset{}` conflicts with the `axis` environment key used by pgfplots or other TikZ libraries.
 - **Fix:** Rename the custom style to `myaxis` or use inline style: `\draw[-Stealth, thin, color=mydark]` directly.
 
+### Raw markdown bold syntax (`**`)
+- **Cause:** Using markdown-style `**text**` instead of LaTeX command `\textbf{text}` in `.tex` files. This prints literal double asterisks `**` in the compiled PDF instead of bolding the text.
+- **Fix:** Always use `\textbf{text}` for bold text. Never use markdown-style `**` inside LaTeX files.
+
 ### Missing packages (TinyTeX)
 ```
 tlmgr install caption setspace multirow booktabs tocloft

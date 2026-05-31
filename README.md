@@ -23,7 +23,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 3rd SEM | 🔲 Planned | — |
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
-| 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules) |
+| 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules) |
 | 7th SEM | 🔲 Planned | — |
 | 8th SEM | 🔲 Planned | — |
 
@@ -122,6 +122,17 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `OE-EC604B_Module9_Notes.pdf` | Protection & UNIX case study: Protection vs Security, Access Matrix, Distributed OS introduction, UNIX kernel/user layout, inode mapping, process management |
 | `OE-EC604B_Operating_System.pdf` | **Combined** — all 9 modules, 58 pages |
 
+### OE-EC604A — Electronic Measurement \& Measuring Instruments
+
+| File | Topics |
+|---|---|
+| `OE-EC604A_Module1_Notes.pdf` | Block Schematics, Static/Dynamic Characteristics, Errors, PMMC, Range Extension, True RMS Voltmeter |
+| `OE-EC604A_Module2_Notes.pdf` | Wave Analyzers (AF/HF), Harmonic Distortion (THD), Spectrum Analyzer, Function Generator, AWG |
+| `OE-EC604A_Module3_Notes.pdf` | Oscilloscopes (CRT, delay lines, sweep generator), Lissajous figures, dual-trace/dual-beam CROs, DSO |
+| `OE-EC604A_Module4_Notes.pdf` | Transducers classification, Gauge Factor derivation, LVDT, RTD vs Thermistor vs Thermocouple, Piezoelectric |
+| `OE-EC604A_Module5_Notes.pdf` | DC/AC Bridges (Wheatstone, Kelvin Double, Maxwell), Flow/Level/Pressure measurement, DAS (MUX, S/H, ADC) |
+| `OE-EC604A_Electronic_Measurement_and_Measuring_Instruments.pdf` | **Combined** — all 5 modules, 35 pages |
+
 ---
 
 ## Repository structure
@@ -178,6 +189,12 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── OE-EC604B_Module9_Notes.tex / .pdf
 │   │   ├── OE-EC604B_Combined_Notes.tex
 │   │   └── OE-EC604B_Operating_System.pdf
+│   ├── 09. Electronic Measurement and Measuring Instruments/
+│   │   ├── OE-EC604A_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── OE-EC604A_Module5_Notes.tex / .pdf
+│   │   ├── OE-EC604A_Combined_Notes.tex
+│   │   └── OE-EC604A_Electronic_Measurement_and_Measuring_Instruments.pdf
 │   ├── sem6 - syllabus.pdf
 │   └── ECE 6th SEM YT Playlist.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs

@@ -276,6 +276,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | PE-EC603A Introduction to MEMS | 4 | ✅ All compiled | `PE-EC603A_Introduction_to_MEMS.pdf` | 34 |
 | PE-EC603B Bio-Medical Electronics | 4 | ✅ All compiled | `PE-EC603B_BioMedical_Electronics.pdf` | 45 |
 | OE-EC604B Operating System | 9 | ✅ All compiled | `OE-EC604B_Operating_System.pdf` | 58 |
+| OE-EC604A Electronic Measurement and Measuring Instruments | 5 | ✅ All compiled | `OE-EC604A_Electronic_Measurement_and_Measuring_Instruments.pdf` | 35 |
 
 **1st–5th SEM:** Folders exist, no content yet.
 **7th–8th SEM:** Not started.
