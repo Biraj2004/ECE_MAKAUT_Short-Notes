@@ -40,6 +40,16 @@ ECE_MAKAUT_Short-Notes/
 │       ├── HS-HU601_Module4_Notes.tex / .pdf
 │       ├── HS-HU601_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── HS-HU601_Economics_for_Engineers.pdf
+│   └── 04. Information Theory and Coding/ # PE-EC603D — 3 modules (All complete)
+│       ├── PE-EC603D_Module1_Notes.tex / .pdf
+│       ├── PE-EC603D_Module2_Notes.tex / .pdf
+│       ├── PE-EC603D_Module3_Notes.tex / .pdf
+│       ├── PE-EC603D_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── PE-EC603D_Information_Theory_and_Coding.pdf
+│   └── 05. Object Oriented Programming/ # OE-EC604C — 9 modules (All complete)
+│       ├── OE-EC604C_Module1_Notes.tex / .pdf
+│       ├── ...
+│       └── OE-EC604C_Module9_Notes.tex / .pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -257,6 +267,8 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | EC601 Control System | 7 | ✅ All compiled | `EC601_Control_System.pdf` | 87 |
 | EC602 Computer Network | 4 | ✅ All compiled | `EC602_Computer_Network.pdf` | 48 |
 | HS-HU601 Economics for Engineers | 4 | ✅ All compiled | `HS-HU601_Economics_for_Engineers.pdf` | 39 |
+| PE-EC603D Information Theory and Coding | 3 | ✅ All compiled | `PE-EC603D_Information_Theory_and_Coding.pdf` | 35 |
+| OE-EC604C Object Oriented Programming | 9 | ✅ All compiled | `OE-EC604C_Object_Oriented_Programming.pdf` | 68 |
 
 **1st–5th SEM:** Folders exist, no content yet.
 **7th–8th SEM:** Not started.

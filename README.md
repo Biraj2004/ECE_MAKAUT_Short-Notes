@@ -23,7 +23,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 3rd SEM | 🔲 Planned | — |
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
-| 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules) |
+| 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules) |
 | 7th SEM | 🔲 Planned | — |
 | 8th SEM | 🔲 Planned | — |
 
@@ -64,6 +64,30 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `HS-HU601_Module4_Notes.pdf` | Depreciation (Straight-Line & Double Declining Balance), Economic Service Life, Defender/Challenger Replacement, Accounting & Cost Allocation |
 | `HS-HU601_Economics_for_Engineers.pdf` | **Combined** — all 4 modules, 39 pages |
 
+### PE-EC603D — Information Theory and Coding
+
+| File | Topics |
+|---|---|
+| `PE-EC603D_Module1_Notes.pdf` | Basics of Information Theory, Information Measure, Entropy, Joint/Conditional/Mutual Information, Shannon's Noiseless Coding Theorem, Shannon-Fano Coding |
+| `PE-EC603D_Module2_Notes.pdf` | Markov Sources, Stationary Probabilities, Noisy Channel Coding Theorem, Channel Capacity (BSC, BEC), Shannon-Hartley Theorem, Shannon Limit |
+| `PE-EC603D_Module3_Notes.pdf` | Huffman Codes, Prefix Codes, Uniquely Detectable Codes, Cyclic Codes (FSR encoder, systematic encoding), Convolutional Codes (trellis diagram, Viterbi decoding), Arithmetic Coding |
+| `PE-EC603D_Information_Theory_and_Coding.pdf` | **Combined** — all 3 modules, 35 pages |
+
+### OE-EC604C — Object Oriented Programming
+
+| File | Topics |
+|---|---|
+| `OE-EC604C_Module1_Notes.pdf` | Evolution of programming paradigms (Procedural vs OOP), core pillars of OOP |
+| `OE-EC604C_Module2_Notes.pdf` | Streams, namespaces, scope resolution, reference variables, inline functions, overloading \& default arguments |
+| `OE-EC604C_Module3_Notes.pdf` | Access specifiers, static member variables/functions, friend functions/classes, memory layouts, dynamic allocation |
+| `OE-EC604C_Module4_Notes.pdf` | Constructors (Default, Parameterized, Copy, Dynamic), Shallow/Deep copy heap errors, Destructors |
+| `OE-EC604C_Module5_Notes.pdf` | Operator overloading rules, Binary/Unary overloading, stream insertion/extraction operators, type conversions |
+| `OE-EC604C_Module6_Notes.pdf` | Inheritance topologies, derived class constructors/destructors, diamond inheritance Virtual Base classes, containership |
+| `OE-EC604C_Module7_Notes.pdf` | Polymorphic pointers, this pointer, V-Table/V-Ptr bindings, pure virtual functions, abstract classes, virtual destructors |
+| `OE-EC604C_Module8_Notes.pdf` | Stream hierarchy, file modes, open methods, seek/tell pointers, binary read/write, random file access updates |
+| `OE-EC604C_Module9_Notes.pdf` | Exception handling syntax, stack unwinding, re-throwing, templates (function/class) |
+| `OE-EC604C_Object_Oriented_Programming.pdf` | **Combined** — all 9 modules, 68 pages |
+
 ---
 
 ## Repository structure
@@ -93,6 +117,17 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── HS-HU601_Module4_Notes.tex / .pdf
 │   │   ├── HS-HU601_Combined_Notes.tex
 │   │   └── HS-HU601_Economics_for_Engineers.pdf
+│   ├── 04. Information Theory and Coding/
+│   │   ├── PE-EC603D_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC603D_Combined_Notes.tex
+│   │   └── PE-EC603D_Information_Theory_and_Coding.pdf
+│   ├── 05. Object Oriented Programming/
+│   │   ├── OE-EC604C_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── OE-EC604C_Module9_Notes.tex / .pdf
+│   │   ├── OE-EC604C_Combined_Notes.tex
+│   │   └── OE-EC604C_Object_Oriented_Programming.pdf
 │   ├── sem6 - syllabus.pdf
 │   └── ECE 6th SEM YT Playlist.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs

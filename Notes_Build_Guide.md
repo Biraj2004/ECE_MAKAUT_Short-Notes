@@ -616,6 +616,13 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
 - **Cause:** Labels placed at the same y-coordinate as diagram nodes.
 - **Fix:** Place labels with `anchor=north` at a y-coordinate clearly above all nodes. Use `anchor=east` for left-side row labels so they right-align without clipping.
 
+### TikZ path/border overlaps and text collisions
+- **Cause 1:** Drawing path lines (like curve arrows or dashed rectangles) that intersect text labels or pass directly through other node boxes.
+- **Fix 1 (for curves):** Route paths with sufficient spacing. For example, when routing a bypass curve around intermediate blocks, use wider control points (e.g., `(5.0, 1.8)` instead of `(4.0, 0.5)`) to guide the path around the nodes' outer bounds.
+- **Fix 1 (for labels):** Position labels dynamically along the paths using specific anchors (e.g., `node[midway, left]` or `node[pos=0.15, right]`) and offset coordinates to keep text from touching line boundaries.
+- **Cause 2:** Dashed boundaries or divider lines passing directly through headers or labels in multi-column layouts.
+- **Fix 2:** Instead of simple dividing lines, wrap each column or section in a clean solid-colored card/box (using `fill=white, draw=mgframe, rounded corners=6pt`). Place column titles as independent nodes at the top of each card so lines never cross the text.
+
 ### Wrong colour syntax in TikZ
 - **Cause:** `\color=myred` (assignment syntax) instead of `\color{myred}` (command syntax).
 - **Fix:** Always use `\color{myred}` — the `=` form causes `\iffalse` parse errors.
@@ -776,6 +783,8 @@ Before submitting or printing the PDF:
 - [ ] TikZ node labels use `\color{myred}` not `\color=myred`
 - [ ] TikZ labels positioned with `anchor=` to avoid overlapping nodes
 - [ ] Block diagrams: signal taps cleanly separated, no overlapping wires through blocks
+- [ ] No curved paths intersecting/passing through intermediate node boxes
+- [ ] No layout/divider lines intersecting header text (wrap columns in clean card nodes instead)
 - [ ] No content overflows into footer (`\tcbset{breakable}` is present)
 - [ ] Footer shows `\copyright\ Biraj` on every page
 - [ ] Aux files cleaned after compilation

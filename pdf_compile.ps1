@@ -43,7 +43,7 @@ if (-not (Get-Command $COMPILER -ErrorAction SilentlyContinue)) {
 # ── Ensure required packages ──────────────────────────────────────────────────
 $requiredPkgs = @("caption","setspace","multirow","booktabs","tocloft")
 foreach ($pkg in $requiredPkgs) {
-    $check = tlmgr info $pkg 2>&1 | Select-String "installed: Yes"
+    $check = kpsewhich "$pkg.sty" 2>&1
     if (-not $check) {
         Write-Info "Installing missing package: $pkg"
         tlmgr install $pkg 2>&1 | Out-Null
