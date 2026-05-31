@@ -23,7 +23,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 3rd SEM | 🔲 Planned | — |
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
-| 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules) |
+| 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules) |
 | 7th SEM | 🔲 Planned | — |
 | 8th SEM | 🔲 Planned | — |
 
@@ -97,6 +97,31 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `OE-EC604C_Module9_Notes.pdf` | Exception handling syntax, stack unwinding, re-throwing, templates (function/class) |
 | `OE-EC604C_Object_Oriented_Programming.pdf` | **Combined** — all 9 modules, 68 pages |
 
+### PE-EC603B — Bio-Medical Electronics
+
+| File | Topics |
+|---|---|
+| `PE-EC603B_Module1_Notes.pdf` | Human Physiology: Cardiovascular, Respiratory & Nervous systems; bio-electrical signals (ECG, EMG, EEG, ERG); action potential; resting potential; Einthoven triangle |
+| `PE-EC603B_Module2_Notes.pdf` | Biomedical Transducers (strain gauge, LVDT, piezoelectric, capacitive); Flow (EM flowmeter, Doppler); Temperature (thermistor, thermocouple); ISE/Clark/Severinghaus electrodes; Bio-electrodes; Instrumentation Amplifier (INA) |
+| `PE-EC603B_Module3_Notes.pdf` | Blood temperature & thermodilution (Stewart-Hamilton); Blood pressure (Korotkoff, oscillometric, MAP); Impedance plethysmography (Nyboer formula); Ultrasound (A/B/M/Doppler modes, TGC); X-ray & CT (Beer-Lambert, Hounsfield Units); Nuclear imaging (SPECT, PET) |
+| `PE-EC603B_Module4_Notes.pdf` | Cardiac pacemakers (DDD, CRT, ICD); Defibrillators (biphasic waveform, $E=\frac{1}{2}CV^2$); Heart-lung machine (CPB); Haemodialysis (Kt/V, dialysate); Cochlear implant; Myoelectric prostheses; Macroshock/Microshock; IEC 60601 (Type B/BF/CF) |
+| `PE-EC603B_BioMedical_Electronics.pdf` | **Combined** — all 4 modules, 45 pages |
+
+### OE-EC604B — Operating System
+
+| File | Topics |
+|---|---|
+| `OE-EC604B_Module1_Notes.pdf` | Introduction: OS functions, evolution of OS (batch, interactive, time-sharing, real-time, multi-threading) |
+| `OE-EC604B_Module2_Notes.pdf` | OS Structure: System components, monolithic/layered/microkernel structures, system services, system calls |
+| `OE-EC604B_Module3_Notes.pdf` | Concurrent Processes: Process concept, PCB, schedulers, IPC, Critical Section, semaphores, synchronization problems, monitors |
+| `OE-EC604B_Module4_Notes.pdf` | CPU Scheduling: Performance criteria, scheduling algorithms (FCFS, SJF, SRTF, RR, Priority, MLQ, MLFQ), multiprocessor scheduling |
+| `OE-EC604B_Module5_Notes.pdf` | Deadlocks: 4 conditions, Resource Allocation Graph, prevention, avoidance (Banker's algorithm), detection & recovery |
+| `OE-EC604B_Module6_Notes.pdf` | Memory Management: Partitioning schemes, Paging, TLB cache, Segmentation, Virtual Memory, Demand Paging, page replacement (FIFO, LRU, OPT), Thrashing |
+| `OE-EC604B_Module7_Notes.pdf` | I/O & Disk Scheduling: I/O communication (DMA, interrupts), Buffering, Disk structure, disk scheduling (FCFS, SSTF, SCAN, C-SCAN, LOOK, C-LOOK) |
+| `OE-EC604B_Module8_Notes.pdf` | File System: File concept, access methods, directory structures, allocation methods (contiguous, linked, indexed), free-space management |
+| `OE-EC604B_Module9_Notes.pdf` | Protection & UNIX case study: Protection vs Security, Access Matrix, Distributed OS introduction, UNIX kernel/user layout, inode mapping, process management |
+| `OE-EC604B_Operating_System.pdf` | **Combined** — all 9 modules, 58 pages |
+
 ---
 
 ## Repository structure
@@ -141,6 +166,18 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── PE-EC603A_Module1_Notes.tex / .pdf
 │   │   ├── ...
 │   │   └── PE-EC603A_Module4_Notes.tex / .pdf
+│   ├── 07. Bio-Medical Electronics/
+│   │   ├── PE-EC603B_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC603B_Module4_Notes.tex / .pdf
+│   │   ├── PE-EC603B_Combined_Notes.tex
+│   │   └── PE-EC603B_BioMedical_Electronics.pdf
+│   ├── 08. Operating System/
+│   │   ├── OE-EC604B_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── OE-EC604B_Module9_Notes.tex / .pdf
+│   │   ├── OE-EC604B_Combined_Notes.tex
+│   │   └── OE-EC604B_Operating_System.pdf
 │   ├── sem6 - syllabus.pdf
 │   └── ECE 6th SEM YT Playlist.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
