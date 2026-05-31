@@ -212,7 +212,7 @@ foreach ($folder in $subjectFolders) {
 \usepackage{array}
 \usepackage{amsmath}
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing}
 \usepackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
 \usepackage{hyperref}

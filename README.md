@@ -23,7 +23,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 3rd SEM | 🔲 Planned | — |
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
-| 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules) |
+| 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules) |
 | 7th SEM | 🔲 Planned | — |
 | 8th SEM | 🔲 Planned | — |
 
@@ -72,6 +72,15 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC603D_Module2_Notes.pdf` | Markov Sources, Stationary Probabilities, Noisy Channel Coding Theorem, Channel Capacity (BSC, BEC), Shannon-Hartley Theorem, Shannon Limit |
 | `PE-EC603D_Module3_Notes.pdf` | Huffman Codes, Prefix Codes, Uniquely Detectable Codes, Cyclic Codes (FSR encoder, systematic encoding), Convolutional Codes (trellis diagram, Viterbi decoding), Arithmetic Coding |
 | `PE-EC603D_Information_Theory_and_Coding.pdf` | **Combined** — all 3 modules, 35 pages |
+
+### PE-EC603A — Introduction to MEMS
+
+| File | Topics |
+|---|---|
+| `PE-EC603A_Module1_Notes.pdf` | Introduction to MEMS, historical milestones, Richard Feynman's 1959 speech, applications (automotive, consumer, medical/biomedical) |
+| `PE-EC603A_Module2_Notes.pdf` | Geometric scaling, Surface Area vs Volume, Surface-to-Volume ratio, forces scaling (electrostatic, electromagnetic, gravity, surface tension), fluidic scaling (Reynolds number, laminar flow), thermal scaling (time constant) |
+| `PE-EC603A_Module3_Notes.pdf` | Sensors (piezoresistive, capacitive, piezoelectric, thermal), Actuators (comb drive, thermal bimorph, piezo stack), Oxidation kinetics (Deal-Grove), Deposition (PVD, CVD), Photolithography flow, Etching (isotropic/anisotropic, wet/dry), LIGA, Surface micromachining release steps \& capillary stiction mitigation (dimples, supercritical drying) |
+| `PE-EC603A_Module4_Notes.pdf` | Bulk micromachining, wet isotropic vs anisotropic etchants (HNA vs KOH/TMAH), wafer bonding (direct, anodic, eutectic), Solid mechanics (stress, strain, Young's modulus, Poisson's ratio, thermal expansion), Cantilever beam deflection derivation, Coupled electromechanical pull-in model derivation, Finite Element Method (FEM) overview |
 
 ### OE-EC604C — Object Oriented Programming
 
@@ -128,6 +137,10 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── OE-EC604C_Module9_Notes.tex / .pdf
 │   │   ├── OE-EC604C_Combined_Notes.tex
 │   │   └── OE-EC604C_Object_Oriented_Programming.pdf
+│   ├── 06. Introduction to MEMS/
+│   │   ├── PE-EC603A_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   └── PE-EC603A_Module4_Notes.tex / .pdf
 │   ├── sem6 - syllabus.pdf
 │   └── ECE 6th SEM YT Playlist.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
