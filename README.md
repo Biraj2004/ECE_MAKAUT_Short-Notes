@@ -18,7 +18,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 
 | Semester | Status | Subjects |
 |---|---|---|
-| 1st SEM | 🔲 Planned | — |
+| 1st SEM | 🟡 In progress | BS-CH101 Chemistry-I (7 modules compiled) |
 | 2nd SEM | 🔲 Planned | — |
 | 3rd SEM | 🔲 Planned | — |
 | 4th SEM | 🔲 Planned | — |
@@ -26,6 +26,23 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
 | 7th SEM | 🔲 Planned | — |
 | 8th SEM | 🔲 Planned | — |
+
+---
+
+## 1st Semester
+
+### BS-CH101 / BS-CH201 — Chemistry-I
+
+| File | Topics |
+|---|---|
+| `BS-CH101_Module1_Notes.pdf` | Atomic and Molecular Structure: Schrodinger equation, particle in a box, molecular orbitals, aromaticity, crystal field theory, band structure and doping |
+| `BS-CH101_Module2_Notes.pdf` | Spectroscopic Techniques and Applications: selection rules, electronic spectroscopy, fluorescence, IR/rotational spectroscopy, NMR/MRI, diffraction and scattering |
+| `BS-CH101_Module3_Notes.pdf` | Intermolecular Forces and Potential Energy Surfaces: ionic, dipole, van der Waals forces, potential energy curve, real gases and critical phenomena |
+| `BS-CH101_Module4_Notes.pdf` | Free Energy and Chemical Equilibria: thermodynamic laws, entropy, Gibbs free energy, Nernst equation, acid-base/redox/solubility equilibria, corrosion and Ellingham diagrams |
+| `BS-CH101_Module5_Notes.pdf` | Periodic Properties: effective nuclear charge, penetration, orbital energies, size, ionization energy, electronegativity, HSAB, coordination and molecular geometry |
+| `BS-CH101_Module6_Notes.pdf` | Stereochemistry: 3D representations, structural and stereoisomerism, chirality, enantiomers, optical activity, absolute configuration and conformational analysis |
+| `BS-CH101_Module7_Notes.pdf` | Organic Reactions and Drug Molecule Synthesis: substitution, addition, elimination, oxidation, reduction, cyclization, ring opening and aspirin synthesis |
+| `BS-CH101_ChemistryI.pdf` | **Combined** — all 7 modules, 68 pages |
 
 ---
 
@@ -152,7 +169,13 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 
 ```
 ECE_MAKAUT_Short-Notes/
-├── 1st SEM/                        # Planned
+├── 1st SEM/                        # In progress
+│   └── 01. Chemistry-I/
+│       ├── BS-CH101_Module1_Notes.tex
+│       ├── ...
+│       ├── BS-CH101_Module7_Notes.tex
+│       ├── BS-CH101_Combined_Notes.tex
+│       └── BS-CH101_ChemistryI.pdf
 ├── 2nd SEM/                        # Planned
 ├── ...
 ├── 6th SEM/

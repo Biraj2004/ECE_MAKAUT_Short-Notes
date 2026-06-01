@@ -95,11 +95,11 @@ foreach ($folder in $subjectFolders) {
     $outPdf      = Join-Path $folderPath "${subjectCode}_${safeName}.pdf"
 
     # ---- Extract credit line ------------------------------------------------
-    $creditMatch = $firstLines | Select-String 'Semester VI.*Credits' | Select-Object -First 1
+    $creditMatch = $firstLines | Select-String 'Semester .*Credits' | Select-Object -First 1
     $creditStr   = if ($creditMatch) {
         # Extract content between the outermost { } on the line
         ($creditMatch.Line -replace '^\s*\{\\normalsize\\color\{[^}]+\}\s*','') -replace '\}\\\\.*','' -replace '^\s+|\s+$',''
-    } else { 'Semester VI' }
+    } else { 'Semester' }
 
     # ---- Extract module titles from first \section of each module -----------
     $moduleTitles = @{}
