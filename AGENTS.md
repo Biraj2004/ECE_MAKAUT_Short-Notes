@@ -54,6 +54,12 @@ ECE_MAKAUT_Short-Notes/
 │       ├── PE-EC603A_Module1_Notes.tex / .pdf
 │       ├── ...
 │       └── PE-EC603A_Module4_Notes.tex / .pdf
+│   └── 10. CMOS VLSI Design/           # PE-EC603C — 6 modules (All complete)
+│       ├── PE-EC603C_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── PE-EC603C_Module6_Notes.tex / .pdf
+│       ├── PE-EC603C_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── PE-EC603C_CMOS_VLSI_Design.pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -277,6 +283,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | PE-EC603B Bio-Medical Electronics | 4 | ✅ All compiled | `PE-EC603B_BioMedical_Electronics.pdf` | 45 |
 | OE-EC604B Operating System | 9 | ✅ All compiled | `OE-EC604B_Operating_System.pdf` | 58 |
 | OE-EC604A Electronic Measurement and Measuring Instruments | 5 | ✅ All compiled | `OE-EC604A_Electronic_Measurement_and_Measuring_Instruments.pdf` | 35 |
+| PE-EC603C CMOS VLSI Design | 6 | ✅ All compiled | `PE-EC603C_CMOS_VLSI_Design.pdf` | 44 |
 
 **1st–5th SEM:** Folders exist, no content yet.
 **7th–8th SEM:** Not started.
