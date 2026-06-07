@@ -80,16 +80,12 @@ foreach ($folder in $subjectFolders) {
 
     # ---- Extract subject name from title block ------------------------------
     $firstLines  = Get-Content $firstFile.FullName -Encoding UTF8
-    # Title block line: {\LARGE\bfseries\color{myred} EC601 --- Subject Name}\\[5pt]
-    # Use -cmatch (case-sensitive) to avoid matching \large in \titleformat
     $titleLine   = $firstLines | Where-Object { $_ -cmatch 'LARGE' -and $_ -cmatch 'bfseries' -and $_ -cmatch 'myred' } | Select-Object -First 1
     $subjectFull = if ($titleLine) {
         ($titleLine -replace '.*\\color\{myred\}\s*','') -replace '\}\\.*','' -replace '^\s+|\s+$',''
     } else { $subjectCode }
-    # subjectFull is now e.g. "EC601 — Control System" or "EC601 --- Control System"
-    # Split on the em-dash (U+2014) or triple-dash to get just the name
-    $cleanName   = ($subjectFull -split [char]0x2014)[- 1].Trim()
-    if ($cleanName -eq $subjectFull) { $cleanName = ($subjectFull -split '---')[- 1].Trim() }
+    $cleanName   = ($subjectFull -split [char]0x2014)[-1].Trim()
+    if ($cleanName -eq $subjectFull) { $cleanName = ($subjectFull -split '---')[-1].Trim() }
     if (-not $cleanName)             { $cleanName = $subjectCode }
     $safeName    = ($cleanName -replace '\\&','and' -replace '&','and' -replace '[^\w\s]','' -replace '\s+','_').Trim('_')
     $outPdf      = Join-Path $folderPath "${subjectCode}_${safeName}.pdf"
@@ -97,7 +93,6 @@ foreach ($folder in $subjectFolders) {
     # ---- Extract credit line ------------------------------------------------
     $creditMatch = $firstLines | Select-String 'Semester .*Credits' | Select-Object -First 1
     $creditStr   = if ($creditMatch) {
-        # Extract content between the outermost { } on the line
         ($creditMatch.Line -replace '^\s*\{\\normalsize\\color\{[^}]+\}\s*','') -replace '\}\\\\.*','' -replace '^\s+|\s+$',''
     } else { 'Semester' }
 
@@ -120,12 +115,10 @@ foreach ($folder in $subjectFolders) {
         if ($line -match '\\tcbset\s*\{' -and -not $inTcb) { $inTcb = $true; $tcbLines += $line; continue }
         if ($inTcb) { $tcbLines += $line; if ($line -match '^\}') { $inTcb = $false; break } }
     }
-    # Patch exambox: add breakable before closing }
+    # Patch exambox: ensure breakable is present
     $tcbBlock = ($tcbLines -join "`n") -replace '(fonttitle=\\bfseries\s*)\}(\s*\})', '$1, breakable}$2'
 
     # ---- Extract and merge \tikzset blocks from ALL modules ----------------
-    # Line-by-line extraction: capture each complete style entry (may span
-    # multiple lines) from every module, deduplicate by style name.
     $mergedStyles = [ordered]@{}
 
     foreach ($mf in $moduleFiles) {
@@ -135,15 +128,12 @@ foreach ($folder in $subjectFolders) {
         $curLines = @()
 
         foreach ($line in $mLines2) {
-            # Detect \tikzset{ opening
             if (-not $inTikz2 -and $line -match '\\tikzset\s*\{') {
                 $inTikz2 = $true; continue
             }
             if (-not $inTikz2) { continue }
 
-            # Detect closing } of tikzset block (bare } with no comma)
-            if ($line -match '^\}\s*$') { 
-                # Save last pending style
+            if ($line -match '^\}\s*$') {
                 if ($curName -and -not $mergedStyles.Contains($curName)) {
                     $mergedStyles[$curName] = $curLines
                 }
@@ -151,16 +141,13 @@ foreach ($folder in $subjectFolders) {
                 break
             }
 
-            # Detect start of a new style entry  (matches both  name/.style= and  name/.style =)
             if ($line -match '^\s*(\w+)/\.style\s*=') {
-                # Save previous style if any
                 if ($curName -and -not $mergedStyles.Contains($curName)) {
                     $mergedStyles[$curName] = $curLines
                 }
                 $curName = $Matches[1]
                 $curLines = @($line)
             } elseif ($curName) {
-                # Continuation line of current style
                 $curLines += $line
             }
         }
@@ -171,7 +158,6 @@ foreach ($folder in $subjectFolders) {
     $styleNames = @($mergedStyles.Keys)
     for ($si = 0; $si -lt $styleNames.Count; $si++) {
         $sLines = $mergedStyles[$styleNames[$si]]
-        # Ensure last line of each style ends with comma (except the very last style)
         $lastLine = $sLines[-1]
         if ($si -lt $styleNames.Count - 1) {
             if ($lastLine -notmatch ',\s*$') { $lastLine = $lastLine + ',' }
@@ -189,9 +175,6 @@ foreach ($folder in $subjectFolders) {
 
     # =========================================================================
     # Build the .tex file using a StringBuilder
-    # All LaTeX backslashes are written as single \ in single-quoted PS strings.
-    # Dynamic values are concatenated with + operator (never interpolated inside
-    # double-quoted strings that contain LaTeX braces).
     # =========================================================================
     $sb = [System.Text.StringBuilder]::new()
 
@@ -205,6 +188,7 @@ foreach ($folder in $subjectFolders) {
 \setmonofont[Scale=0.88]{TeX Gyre Cursor}
 \setmathfont{Latin Modern Math}
 \usepackage{xcolor}
+\usepackage{colortbl}
 \usepackage{titlesec}
 \usepackage{enumitem}
 \usepackage{tabularx}
@@ -269,6 +253,7 @@ foreach ($folder in $subjectFolders) {
     $tblFmt = @'
 \renewcommand{\arraystretch}{1.45}
 \setlength{\tabcolsep}{6pt}
+\arrayrulecolor{mydark}
 \newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}m{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
 \newcolumntype{Y}{>{\small\raggedright\arraybackslash}X}
@@ -276,7 +261,7 @@ foreach ($folder in $subjectFolders) {
 '@
     [void]$sb.AppendLine($tblFmt)
 
-    # -- Header/footer (dynamic subject code and name) ------------------------
+    # -- Header/footer --------------------------------------------------------
     [void]$sb.AppendLine('\newcommand{\currmodule}{Module 1}')
     [void]$sb.AppendLine('\pagestyle{fancy}')
     [void]$sb.AppendLine('\fancyhf{}')
@@ -292,10 +277,16 @@ foreach ($folder in $subjectFolders) {
     [void]$sb.AppendLine('  pdftitle={' + $subjectCode + ' --- Combined Notes}}')
     [void]$sb.AppendLine('')
 
-    # -- tcolorbox + tikz styles (extracted from source) ---------------------
+    # -- tcolorbox styles (extracted from first module) -----------------------
     [void]$sb.AppendLine($tcbBlock)
-    [void]$sb.AppendLine('\tcbset{breakable}')
+    # CRITICAL FIX: XeLaTeX does not support pdfcol color stacks (used by the
+    # tcolorbox breakable library). Without this, coltitle=white leaks out of
+    # any breakable box and makes all subsequent body text invisible.
+    # Solution: after every tcolorbox closes, explicitly reset text color to black.
+    [void]$sb.AppendLine('\tcbset{after={\color{black}}}')
     [void]$sb.AppendLine('')
+
+    # -- TikZ styles (merged from all modules) --------------------------------
     [void]$sb.AppendLine($tikzBlock)
     [void]$sb.AppendLine('')
 
@@ -322,7 +313,7 @@ foreach ($folder in $subjectFolders) {
     [void]$sb.AppendLine('\begin{document}')
     [void]$sb.AppendLine('')
 
-    # -- Title page (use single \ for LaTeX, \\ for line break) --------------
+    # -- Title page -----------------------------------------------------------
     [void]$sb.AppendLine('\thispagestyle{empty}')
     [void]$sb.AppendLine('\vspace*{1.0cm}')
     [void]$sb.AppendLine('\begin{center}')
@@ -388,7 +379,7 @@ foreach ($folder in $subjectFolders) {
 
     [void]$sb.AppendLine('\end{document}')
 
-    # ---- Write file (UTF-8 without BOM -- xelatex cannot handle BOM) --------
+    # ---- Write file (UTF-8 without BOM) ------------------------------------
     $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
     [System.IO.File]::WriteAllText($outTex, $sb.ToString(), $utf8NoBom)
     $texKB = [math]::Round((Get-Item $outTex).Length/1KB, 1)
@@ -430,13 +421,10 @@ foreach ($folder in $subjectFolders) {
     }
 
     if ($compileOk -and (Test-Path (Join-Path $folderPath "${subjectCode}_Combined_Notes.pdf"))) {
-        # Rename to ECCode_Subject_Name.pdf
         $rawPdf    = Join-Path $folderPath "${subjectCode}_Combined_Notes.pdf"
-        # Remove old named PDF if it exists from a previous run
         if ($outPdf -ne $rawPdf -and (Test-Path $outPdf)) { Remove-Item $outPdf -Force }
         Rename-Item $rawPdf $outPdf -Force
         $pdfKB = [math]::Round((Get-Item $outPdf).Length/1KB, 1)
-        # Count pages from log before it gets cleaned
         $logFile = Join-Path $folderPath "${subjectCode}_Combined_Notes.log"
         $pageInfo = if (Test-Path $logFile) {
             (Get-Content $logFile | Select-String 'Output written' | Select-Object -Last 1).Line

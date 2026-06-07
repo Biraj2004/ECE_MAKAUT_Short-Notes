@@ -147,8 +147,9 @@
     fonttitle=\bfseries,
     breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}}
 }
-% Make all boxes breakable across pages
-\tcbset{breakable}
+
+% XeLaTeX pdfcol fix: reset text color after every tcolorbox
+\tcbset{after={\color{black}}}
 
 % ─── TikZ styles ───────────────────────────────────────────────────────────────
 \tikzset{
@@ -230,7 +231,6 @@ All stream classes are derived from a common virtual base class \texttt{ios}. Th
   \draw[arrow] (ofstream) -- (ostream);
   \draw[arrow] (fstream) -- (iostream);
 \end{tikzpicture}
-\tcbset{colbacktitle=mgframe, coltitle=mydark}
 \end{tcolorbox}
 
 % ===============================================================================
@@ -309,7 +309,6 @@ Each file stream object maintains file pointers that keep track of reading or wr
   \draw[arrow, color=myamber] (0.5, -1.0) -- (2.0, -1.0) node[midway, below, font=\tiny\bfseries] {\texttt{seekg(offset, ios::cur)}};
   \draw[arrow, color=mygreen] (3.8, -1.0) -- (1.8, -1.0) node[midway, below, font=\tiny\bfseries] {\texttt{seekg(-offset, ios::end)} (Backward)};
 \end{tikzpicture}
-\tcbset{colbacktitle=mgframe, coltitle=mydark}
 \end{tcolorbox}
 
 % ===============================================================================
@@ -361,7 +360,6 @@ void loadRecord() {
 }
 \end{verbatim}
 \end{spacing}
-\tcbset{colbacktitle=myamber, coltitle=white}
 \end{tcolorbox}
 
 \subsection{Random Access Database Record Update}
@@ -394,7 +392,6 @@ void updateBalance(int recordId, double newBalance) {
 }
 \end{verbatim}
 \end{spacing}
-\tcbset{colbacktitle=myamber, coltitle=white}
 \end{tcolorbox}
 
 % ===============================================================================
@@ -438,32 +435,31 @@ Get Current Position     & \texttt{int pos = file.tellg(); // returns read offse
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
 \begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]
   \item \Q{What is the difference between opening a file using constructor vs. the \texttt{open()} method?}
-    The constructor automatically opens the file and is clean for single files. The `open()` function allows opening multiple files sequentially using the same stream object.
+    The constructor automatically opens the file and is clean for single files. The \texttt{open()} function allows opening multiple files sequentially using the same stream object.
   \item \Q{Explain the difference between the \texttt{ios::app} and \texttt{ios::ate} file modes.}
-    Both open the file with pointers positioned at the end. However, `ios::app` forces all write operations to occur at the end of the file, whereas `ios::ate` allows shifting the pointer to write anywhere in the file.
+    Both open the file with pointers positioned at the end. However, \texttt{ios::app} forces all write operations to occur at the end of the file, whereas \texttt{ios::ate} allows shifting the pointer to write anywhere in the file.
   \item \Q{Why is \texttt{reinterpret\_cast<char*>} mandatory in \texttt{read()} and \texttt{write()} functions?}
-    These functions are designed to accept a stream of bytes (`char*`). We must cast our class object address to a byte pointer for binary transfer.
+    These functions are designed to accept a stream of bytes (\texttt{char*}). We must cast our class object address to a byte pointer for binary transfer.
   \item \Q{What is random file access and how is it implemented in C++?}
-    Random access allows reading/writing at any arbitrary location in the file without processing it sequentially. It is implemented using `seekg()`, `seekp()`, `tellg()`, and `tellp()`.
+    Random access allows reading/writing at any arbitrary location in the file without processing it sequentially. It is implemented using \texttt{seekg()}, \texttt{seekp()}, \texttt{tellg()}, and \texttt{tellp()}.
   \item \Q{What happens if we attempt to open a non-existent file for reading?}
-    The file stream fails to open, and its error flag is set. We can verify this state using the `fail()` function or checking the stream's truth value: `if(!file)`.
+    The file stream fails to open, and its error flag is set. We can verify this state using the \texttt{fail()} function or checking the stream's truth value: \texttt{if(!file)}.
   \item \Q{Why must we close files explicitly before exiting the program?}
     Closing files flushes the stream buffers (saving unwritten data from RAM to disk) and releases system file handles.
   \item \Q{Can we open a single file for simultaneous reading and writing?}
-    Yes, using the `fstream` class and combining file modes: `fstream file("data.dat", ios::in | ios::out | ios::binary)`.
+    Yes, using the \texttt{fstream} class and combining file modes: \texttt{fstream file("data.dat", ios::in | ios::out | ios::binary)}.
   \item \Q{What is the purpose of the \texttt{eof()} function in C++ streams?}
-    It returns `true` if the get pointer has reached the end-of-file (EOF) during a read operation.
+    It returns \texttt{true} if the get pointer has reached the end-of-file (EOF) during a read operation.
   \item \Q{How does text mode file access differ from binary mode file access?}
     Text mode translates line endings (like converting \texttt{\textbackslash n} to \texttt{\textbackslash r\textbackslash n} on Windows) and parses values. Binary mode copies raw memory bytes bit-by-bit without any translations.
   \item \Q{Which class acts as the root class for all file stream classes?}
-    The root class is `ios` (specifically, \texttt{ios\_base} is the grandparent class, and `ios` inherits from it).
+    The root class is \texttt{ios} (specifically, \texttt{ios\_base} is the grandparent class, and \texttt{ios} inherits from it).
   \item \Q{How can we determine the total size of a file in bytes using seek functions?}
-    We can seek to the end of the file and use `tellg()` to query the pointer offset:
-    `file.seekg(0, ios::end); int size = file.tellg();`.
+    We can seek to the end of the file and use \texttt{tellg()} to query the pointer offset:
+    \texttt{file.seekg(0, ios::end); int size = file.tellg();}.
   \item \Q{What is a file stream buffer and why is it used?}
     It is a temporary block of memory in RAM that buffers read/write bytes to minimize slow disk access operations, improving performance.
 \end{enumerate}
-\tcbset{colbacktitle=mypurple, coltitle=white}
 \end{tcolorbox}
 
 \begin{tcolorbox}[tikzbox, title={Comparison: Sequential File Access vs. Random File Access}]
@@ -484,7 +480,6 @@ Get Current Position     & \texttt{int pos = file.tellg(); // returns read offse
 \textbf{Use Case} & Reading configuration files or writing log lines. & Modifying specific records in a large binary database. \\
 \hline
 \end{tabularx}
-\tcbset{colbacktitle=mgframe, coltitle=mydark}
 \end{tcolorbox}
 
 \end{document}

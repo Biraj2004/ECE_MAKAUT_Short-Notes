@@ -147,8 +147,9 @@
     fonttitle=\bfseries,
     breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}}
 }
-% Make all boxes breakable across pages
-\tcbset{breakable}
+
+% XeLaTeX pdfcol fix: reset text color after every tcolorbox
+\tcbset{after={\color{black}}}
 
 % ─── TikZ styles ───────────────────────────────────────────────────────────────
 \tikzset{
@@ -236,19 +237,21 @@ Copy operations in C++ can lead to critical memory bugs if pointers are involved
 \centering
 \begin{tikzpicture}[node distance=1.2cm, thick, scale=0.85, every node/.style={scale=0.85}]
   % --- SHALLOW COPY BLOCK ---
-  \draw[dashed, color=mgframe] (-4.5, 2.2) rectangle (0.8, -2.6) node[pos=0.1, above, font=\scriptsize\bfseries] {Shallow Copy (Shared Heap Reference)};
+  \draw[dashed, color=mgframe, line width=0.8pt, rounded corners=4pt] (-4.5, 2.1) rectangle (0.8, -2.6);
+  \node[above=2pt, font=\scriptsize\bfseries\color{myred}] at (-1.85, 2.1) {Shallow Copy (Shared Heap Reference)};
   
   \node[draw=myred, fill=hdrred, rounded corners=3pt, minimum width=2.4cm, minimum height=0.8cm, font=\scriptsize\bfseries] (s_obj1) at (-3.2, 1.0) {\texttt{obj1.ptr}};
   \node[draw=myred, fill=hdrred, rounded corners=3pt, minimum width=2.4cm, minimum height=0.8cm, font=\scriptsize\bfseries] (s_obj2) at (-3.2, -0.6) {\texttt{obj2.ptr}};
   
   \node[draw=mydark, fill=mygray, rounded corners=3pt, minimum width=2.6cm, minimum height=0.8cm, font=\scriptsize\bfseries] (s_heap) at (-0.6, 0.2) {Heap: \texttt{"Hello"}};
   
-  \draw[arrow, color=myred] (s_obj1.east) -- (s_heap.west);
-  \draw[arrow, color=myred] (s_obj2.east) -- (s_heap.west);
+  \draw[redarrow] (s_obj1.east) -- (s_heap.west);
+  \draw[redarrow] (s_obj2.east) -- (s_heap.west);
   \node[below, font=\tiny\bfseries\color{myred}, align=center] at (-1.8, -1.8) {Double deletion on\\destruction causes CRASH!};
 
   % --- DEEP COPY BLOCK ---
-  \draw[dashed, color=mgframe] (1.5, 2.2) rectangle (6.8, -2.6) node[pos=0.1, above, font=\scriptsize\bfseries] {Deep Copy (Duplicated Heap Memory)};
+  \draw[dashed, color=mgframe, line width=0.8pt, rounded corners=4pt] (1.5, 2.1) rectangle (6.8, -2.6);
+  \node[above=2pt, font=\scriptsize\bfseries\color{mygreen}] at (4.15, 2.1) {Deep Copy (Duplicated Heap Memory)};
   
   \node[draw=mygreen, fill=hdrgreen, rounded corners=3pt, minimum width=2.4cm, minimum height=0.8cm, font=\scriptsize\bfseries] (d_obj1) at (2.8, 1.0) {\texttt{obj1.ptr}};
   \node[draw=mygreen, fill=hdrgreen, rounded corners=3pt, minimum width=2.4cm, minimum height=0.8cm, font=\scriptsize\bfseries] (d_obj2) at (2.8, -0.6) {\texttt{obj2.ptr}};
@@ -260,7 +263,6 @@ Copy operations in C++ can lead to critical memory bugs if pointers are involved
   \draw[arrow, color=mygreen] (d_obj2.east) -- (d_heap2.west);
   \node[below, font=\tiny\bfseries\color{mygreen}, align=center] at (4.2, -1.8) {Independent resource\\deletion is safe.};
 \end{tikzpicture}
-\tcbset{colbacktitle=mgframe, coltitle=mydark}
 \end{tcolorbox}
 
 \begin{tcolorbox}[examplebox, title={Code Example: String copy constructor (Deep Copy)}]
@@ -292,7 +294,6 @@ public:
 };
 \end{verbatim}
 \end{spacing}
-\tcbset{colbacktitle=myamber, coltitle=white}
 \end{tcolorbox}
 
 % ===============================================================================
@@ -351,7 +352,6 @@ int main() {
 }
 \end{verbatim}
 \end{spacing}
-\tcbset{colbacktitle=myamber, coltitle=white}
 \end{tcolorbox}
 The code above outputs:
 \begin{verbatim}
@@ -403,7 +403,7 @@ Destructor               & \texttt{\textasciitilde MyClass() \{ /* release heap 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
 \begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]
   \item \Q{Why is it mandatory to pass the argument by reference in a copy constructor?}
-    If passed by value, the function call itself would invoke the copy constructor to clone the parameter, causing infinite recursion until the stack overflows. E.g., `MyClass(MyClass source)` is incorrect.
+    If passed by value, the function call itself would invoke the copy constructor to clone the parameter, causing infinite recursion until the stack overflows. E.g., \texttt{MyClass(MyClass source)} is incorrect.
   \item \Q{Can a class have more than one destructor?}
     No. Destructors cannot accept arguments, which means they cannot be overloaded. Every class has exactly one destructor.
   \item \Q{Under what conditions does the C++ compiler write a default copy constructor for you?}
@@ -413,21 +413,20 @@ Destructor               & \texttt{\textasciitilde MyClass() \{ /* release heap 
   \item \Q{Is it possible to declare a private constructor in C++?}
     Yes. A private constructor prevents objects from being created outside the class scope. This pattern is commonly used in the Singleton Design Pattern.
   \item \Q{What is the difference between copy constructor and assignment operator (\texttt{=})?}
-    The copy constructor initializes a newly created object using a source object (e.g., `MyClass a = b;`). The assignment operator copies values to an already existing object (e.g., `a = b;`).
+    The copy constructor initializes a newly created object using a source object (e.g., \texttt{MyClass a = b;}). The assignment operator copies values to an already existing object (e.g., \texttt{a = b;}).
   \item \Q{Does a destructor release the memory of the object itself?}
     No. A destructor only frees auxiliary resources allocated \textit{inside} the object (e.g., heap pointers, file descriptors). The memory for the object structure itself is freed by the stack or heap manager.
-  \item \Q{Why can't we declare a constructor as `virtual`?}
+  \item \Q{Why can't we declare a constructor as \texttt{virtual}?}
     Virtual functions rely on the V-Table (virtual table) pointer inside an object. During construction, the object is not fully formed, and the V-Ptr is not yet initialized. Thus, constructors cannot be virtual.
-  \item \Q{What is the purpose of declaring copy constructor arguments as `const`?}
-    Declaring the argument as `const` (e.g., `const MyClass \&obj`) prevents the copy constructor from accidentally modifying the source object.
+  \item \Q{What is the purpose of declaring copy constructor arguments as \texttt{const}?}
+    Declaring the argument as \texttt{const} (e.g., \texttt{const MyClass \&obj}) prevents the copy constructor from accidentally modifying the source object.
   \item \Q{What is a member initializer list and when is it mandatory?}
-    It is a constructor mechanism used to initialize members directly. It is mandatory for: (1) initializing reference variables, (2) initializing `const` members, and (3) calling parameterized base class constructors.
+    It is a constructor mechanism used to initialize members directly. It is mandatory for: (1) initializing reference variables, (2) initializing \texttt{const} members, and (3) calling parameterized base class constructors.
   \item \Q{Can we call a constructor explicitly like a normal function?}
-    Yes, we can call it explicitly (e.g., `Complex c = Complex(1.0, 2.0);`), which creates a temporary object that is then copied or moved.
+    Yes, we can call it explicitly (e.g., \texttt{Complex c = Complex(1.0, 2.0);}), which creates a temporary object that is then copied or moved.
   \item \Q{What happens if an exception is thrown inside a constructor?}
     If an exception is thrown in a constructor, the object is considered only partially constructed, and its destructor will not run. This can lead to memory leaks unless resources are managed via smart pointers.
 \end{enumerate}
-\tcbset{colbacktitle=mypurple, coltitle=white}
 \end{tcolorbox}
 
 \begin{tcolorbox}[tikzbox, title={Comparison: Shallow Copy vs. Deep Copy}]
