@@ -192,6 +192,12 @@ The base preamble is **identical** to short-notes. Copy it verbatim from any exi
 Two additions to the standard preamble are required for long-book content:
 
 ```latex
+% Larger bottom margin + explicit footskip so breakable tcolorboxes never
+% overflow the footer rule. top=0.8in keeps the look; bottom=1.1in gives
+% the extra clearance needed for long Quick Revision boxes.
+\usepackage[a4paper, top=0.8in, bottom=1.1in, left=0.8in, right=0.8in,
+            headheight=14pt, footskip=30pt]{geometry}
+
 % Required for Jablonski diagrams (snake-arrow IC/ISC), curly braces, etc.
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit,
                 decorations.pathreplacing, decorations.pathmorphing}
@@ -202,15 +208,25 @@ Two additions to the standard preamble are required for long-book content:
 \raggedbottom
 ```
 
-Note the extra `decorations.pathmorphing` — short-notes modules can sometimes get away without it; LONG_BOOK modules almost always need it for the richer diagrams.
+Note: **do not** use `margin=0.8in` (which sets all sides equally) — use the explicit per-side form above so the footer clearance is guaranteed.
 
 ### Header text update
 
 ```latex
 \fancyhead[L]{\small\color{myred}\textbf{<CODE>}\;\color{mydark}--- <Subject Name>}
 \fancyhead[R]{\small\color{myteal}\textbf{Module N Notes}}
+\fancyfoot[L]{\small\color{watermark}\textit{\copyright\ MAKAUT Wingman}}
+\fancyfoot[C]{\small\color{mydark}\thepage}
+\fancyfoot[R]{\small\color{watermark}\textit{\copyright\ Biraj}}
 \hypersetup{pdftitle={<CODE> --- Module N Long Notes: <Topic>}}
 ```
+
+The footer pattern is:
+```
+© MAKAUT Wingman          [page number]          © Biraj
+```
+
+Both copyright labels use the `watermark` colour (light grey). The left label identifies the project; the right label identifies the author.
 
 That `Long Notes:` token in `pdftitle` is the **only** way to distinguish a LONG_BOOK PDF from a short-notes PDF when both are open in a viewer.
 
@@ -351,7 +367,15 @@ These are issues that surfaced during the Module 2 build and **must** be avoided
 - **Cause:** Long fractions in the 2-column formula table.
 - **Fix:** Use `\displaystyle\frac{...}{...}` instead of `\dfrac{...}{...}` inside `tabularx` cells. (Same rule as short-notes — see `Notes_Build_Guide.md` §6.)
 
-### Quick Revision title leaves a near-blank page
+### Content overflowing the footer rule
+- **Symptom:** A `tcolorbox` or table bleeds past the footer `\hrule` line and into the footer text (or below it), as seen in the image where "One-Line Definitions" box text crosses the page-number line.
+- **Cause:** The default `margin=0.8in` sets `bottom=0.8in` with a small `footskip`. Long `breakable` boxes sometimes fail to break early enough, and the remaining fragment on the last line of a page extends into the footer clearance zone.
+- **Fix:** Use the explicit geometry settings (already in the canonical LONG_BOOK preamble):
+  ```latex
+  \usepackage[a4paper, top=0.8in, bottom=1.1in, left=0.8in, right=0.8in,
+              headheight=14pt, footskip=30pt]{geometry}
+  ```
+  The `bottom=1.1in` and `footskip=30pt` together give enough clearance so that even the tallest broken `tcolorbox` fragment has room to end before the footer rule.
 - **Symptom:** The "Quick Revision --- Module N" title appears alone on a page; the formulabox is pushed to the next page, leaving a mostly empty page.
 - **Cause:** The Quick Revision formulabox is now ~25 rows tall. After the manual `\newpage` and the title block, the remaining space on the new page is not enough for the breakable `tcolorbox` to start, so it gets entirely deferred to the next page.
 - **Fix:** Add `\enlargethispage{2\baselineskip}` immediately after the `\newpage` that begins the Quick Revision section. This gives that single page about two extra lines of room — enough for the formulabox top to land there. Pattern:
@@ -459,7 +483,9 @@ The first draft of `1st SEM/01. Chemistry-I/Module2_Long_Notes.tex` was 32 pages
 
 | Semester | Subject | Module | Pages | Status |
 |---|---|---|---|---|
-| 1st SEM | 01. Chemistry-I | Module 2 — Spectroscopic Techniques and Applications | **46** | ✅ Audited, locked |
+| 1st SEM | 01. Chemistry-I | Module 2 --- Spectroscopic Techniques and Applications | **48** | ✅ Audited, locked |
+| 1st SEM | 01. Chemistry-I | Module 3 --- Intermolecular Forces, Real Gases and Critical Phenomena | **27** | ✅ Audited, locked |
+| 1st SEM | 01. Chemistry-I | Module 4 --- Free Energy and Chemical Equilibria | **25** | ✅ Audited, locked |
 | 1st SEM | 01. Chemistry-I | Modules 1, 3, 4, 5, 6, 7 | — | Planned |
 | 1st SEM | All other subjects | — | — | Planned |
 | 2nd–5th SEM | All | — | — | Planned |
