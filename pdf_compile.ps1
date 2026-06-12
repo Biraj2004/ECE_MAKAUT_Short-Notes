@@ -20,7 +20,8 @@ param(
     [string]$Subject  = "",     # Filter by subject code, e.g. "EC601"
     [string]$Module   = "",     # Compile a single file (relative or absolute path)
     [int]   $Passes   = 2,      # Number of xelatex passes (default 2)
-    [switch]$KeepLogs = $false  # Keep .log files after compilation
+    [switch]$KeepLogs = $false, # Keep .log files after compilation
+    [switch]$Clean    = $false  # Clean up all auxiliary build files and exit
 )
 
 $ROOT     = $PSScriptRoot
@@ -73,6 +74,29 @@ if ($Module -ne "") {
 
 if ($texFiles.Count -eq 0) {
     Write-Host "[INFO] No module .tex files found." -ForegroundColor Yellow
+    exit 0
+}
+
+if ($Clean) {
+    Write-Head "============================================================"
+    Write-Head "  Short Notes -- Cleaning Build Files"
+    Write-Head "============================================================"
+    $count = 0
+    foreach ($tex in $texFiles) {
+        $dir      = $tex.DirectoryName
+        $name     = $tex.BaseName
+        $auxExts  = "*.aux","*.toc","*.out","*.synctex.gz","*.fls","*.fdb_latexmk","*.log","*.tmp"
+        foreach ($ext in $auxExts) {
+            Get-ChildItem -Path $dir -Filter $ext |
+                Where-Object { $_.BaseName -eq $name -or $_.BaseName -eq "${name}.out" -or $_.Name -match '\.tmp$' } |
+                ForEach-Object {
+                    Remove-Item $_.FullName -Force -ErrorAction SilentlyContinue
+                    Write-Ok "Removed: $($_.Name)"
+                    $count++
+                }
+        }
+    }
+    Write-Host "`n  Cleanup complete. Removed $count files.`n" -ForegroundColor Green
     exit 0
 }
 

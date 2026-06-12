@@ -19,7 +19,8 @@
 
 param(
     [string]$Subject     = "",
-    [switch]$SkipCompile = $false
+    [switch]$SkipCompile = $false,
+    [switch]$Clean       = $false
 )
 
 $ROOT     = $PSScriptRoot
@@ -53,6 +54,35 @@ if ($Subject -ne "") {
 
 if ($subjectFolders.Count -eq 0) {
     Write-Host "[INFO] No subject folders found." -ForegroundColor Yellow; exit 0
+}
+
+if ($Clean) {
+    Write-Head "============================================================"
+    Write-Head "  Combined Notes Builder -- Cleaning Build Files"
+    Write-Head "============================================================"
+    $count = 0
+    foreach ($folder in $subjectFolders) {
+        $folderPath = $folder.FullName
+        # Find all modules to get their subject codes
+        $moduleFiles = Get-ChildItem -Path $folderPath -Filter "*_Module*_Notes.tex" |
+            Where-Object { $_.Name -notmatch '^_' -and $_.Name -notmatch '_Combined_' }
+        if ($moduleFiles.Count -eq 0) { continue }
+        $subjectCode = $moduleFiles[0].BaseName -replace '_Module.*',''
+        
+        # Extensions to clean
+        $exts = '*.aux','*.toc','*.out','*.synctex.gz','*.fls','*.fdb_latexmk','*.log','*_Combined_Notes.tex','_comb.out.tmp','_comb.err.tmp'
+        foreach ($ext in $exts) {
+            Get-ChildItem -Path $folderPath -Filter $ext |
+                Where-Object { $_.Name -like "*${subjectCode}*" -or $_.Name -match '_comb\.(out|err)\.tmp' } |
+                ForEach-Object {
+                    Remove-Item $_.FullName -Force -ErrorAction SilentlyContinue
+                    Write-Ok "Removed: $($_.Name)"
+                    $count++
+                }
+        }
+    }
+    Write-Host "`n  Cleanup complete. Removed $count files.`n" -ForegroundColor Green
+    exit 0
 }
 
 Write-Head "============================================================"

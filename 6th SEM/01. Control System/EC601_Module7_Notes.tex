@@ -172,7 +172,7 @@
 
 \begin{tabularx}{\linewidth}{|B{3.2cm}|X|}
 \hline
-\multicolumn{1}{|>{\centering\arraybackslash}p{3.2cm}|}{\textbf{\color{myteal}Block}} &
+\multicolumn{1}{|>{\centering\arraybackslash}m{3.2cm}|}{\textbf{\color{myteal}Block}} &
 \multicolumn{1}{>{\centering\arraybackslash}X|}{\textbf{\color{myteal}Function}} \\
 \hline
 Attenuator & Reduces input signal to a safe level for the amplifier. Calibrated in V/div. \\
@@ -197,7 +197,7 @@ Power Supply & Provides EHT ($\sim$1--10 kV) for CRT and low voltages for amplif
 
 \begin{tabularx}{\linewidth}{|B{3.0cm}|X|}
 \hline
-\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{\color{mygreen}Measurement}} &
+\multicolumn{1}{|>{\centering\arraybackslash}m{3.0cm}|}{\textbf{\color{mygreen}Measurement}} &
 \multicolumn{1}{>{\centering\arraybackslash}X|}{\textbf{\color{mygreen}Method}} \\
 \hline
 Voltage (peak) & Count vertical divisions $\times$ V/div setting. $V_{pk} = n_{div} \times \text{V/div}$ \\
@@ -214,9 +214,121 @@ DC voltage & Set coupling to DC; measure vertical displacement from zero. \\
 \hline
 \end{tabularx}
 
-%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+\subsection{Lissajous Figures (Phase \& Frequency Measurement)}
+
+Lissajous figures are patterns displayed on a CRO screen when two sinusoidal signals of different or same frequencies are applied simultaneously to the horizontal ($X$) and vertical ($Y$) deflection plates. They are used to measure \textbf{phase difference} and \textbf{frequency ratio}.
+
+\begin{tcolorbox}[defbox, title={Phase Difference Measurement}]
+When two sine waves of equal frequency ($f_x = f_y$) but different phase are applied, the pattern is an \textbf{ellipse}. The phase difference $\theta$ is calculated from the intercepts:
+$$\sin\theta \;=\; \frac{y_1}{y_2} \quad\Rightarrow\quad \theta \;=\; \sin^{-1}\!\!\left(\frac{y_1}{y_2}\right) \quad \text{or} \quad 180^\circ - \sin^{-1}\!\!\left(\frac{y_1}{y_2}\right)$$
+where $y_1$ is the y-intercept (height at $x=0$) and $y_2$ is the maximum vertical deflection.
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={Lissajous Phase Ellipse}]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Axes
+  \draw[-Stealth, thin, color=mydark] (-3.2,0) -- (3.2,0) node[right]{\small $x$};
+  \draw[-Stealth, thin, color=mydark] (0,-2.4) -- (0,2.4) node[above]{\small $y$};
+  
+  % Ellipse (A_x = 2.5, A_y = 1.8, phase = 45 degrees)
+  \draw[line width=1.2pt, color=myteal, domain=0:360, samples=100] 
+    plot ({2.5*sin(\x)}, {1.8*sin(\x + 45)});
+  
+  % y-intercept y_1
+  \fill[myred] (0, {1.8*sin(45)}) circle (2pt) node[above right, color=myred]{\small $y_1$};
+  \fill[myred] (0, {-1.8*sin(45)}) circle (2pt) node[below left, color=myred]{\small $-y_1$};
+  
+  % maximum height y_2
+  \draw[dashed, color=mgframe] (-2.5, 1.8) -- (2.5, 1.8);
+  \draw[dashed, color=mgframe] (-2.5, -1.8) -- (2.5, -1.8);
+  \fill[mypurple] (1.77, 1.8) circle (2pt);
+  \fill[mypurple] (0, 1.8) circle (2pt) node[left, color=mypurple]{\small $y_2$};
+  \fill[mypurple] (0, -1.8) circle (2pt) node[left, color=mypurple]{\small $-y_2$};
+  
+  % horizontal maximum x_2
+  \draw[dashed, color=mgframe] (2.5, -1.8) -- (2.5, 1.8);
+  \draw[dashed, color=mgframe] (-2.5, -1.8) -- (-2.5, 1.8);
+  \fill[myamber] (2.5, 1.27) circle (2pt);
+  \fill[myamber] (2.5, 0) circle (2pt) node[below right, color=myamber]{\small $x_2$};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[defbox, title={Frequency Measurement}]
+If the frequencies are unequal, the frequency ratio is determined by drawing a horizontal and a vertical line through the pattern and counting the number of tangency points:
+$$\frac{f_y}{f_x} \;=\; \frac{\text{Number of Horizontal Tangencies } (N_h)}{\text{Number of Vertical Tangencies } (N_v)}$$
+\end{tcolorbox}
+
+\subsection{Special Purpose Oscilloscopes: Dual-Trace vs. Dual-Beam \& DSO}
+
+Modern electronic testing requires displaying multiple signals simultaneously and storing waveforms for analysis.
+
+\subsubsection{Dual-Trace vs. Dual-Beam Oscilloscopes}
+
+\begin{tabularx}{\linewidth}{|B{2.8cm}|X|X|}
+\hline
+\multicolumn{1}{|>{\centering\arraybackslash}m{2.8cm}|}{\textbf{Parameter}} &
+\multicolumn{1}{>{\centering\arraybackslash}X|}{\textbf{\color{myteal}Dual-Trace CRO}} &
+\multicolumn{1}{>{\centering\arraybackslash}X|}{\textbf{\color{myamber}Dual-Beam CRO}} \\
+\hline
+Electron Gun & Single electron gun. & Two separate electron guns (or split beam with two deflection systems). \\
+\hline
+Deflection System & One set of vertical deflection plates. & Two independent sets of vertical deflection plates. \\
+\hline
+Working Method & Uses electronic switching (Chop or Alternate mode) to display two traces. & Displays two signals simultaneously by writing with two separate beams. \\
+\hline
+Modes & \textbf{Chop:} switches channels at high speed (low $f$ signals). \textbf{Alternate:} swaps channel after each sweep (high $f$ signals). & Simpler circuitry; no switching required. \\
+\hline
+Cost \& Complexity & Moderate cost; standard design. & Highly complex; expensive CRT assembly. \\
+\hline
+Trace Alignment & Perfect alignment; single electron path. & Beam alignment can drift over time. \\
+\hline
+\end{tabularx}
+
+\subsubsection{Digital Storage Oscilloscope (DSO)}
+
+A \textbf{Digital Storage Oscilloscope (DSO)} digitises the analog input signal and stores it in digital memory. It then reads this data from memory to reconstruct and display the waveform on the screen.
+
+\begin{tcolorbox}[tikzbox, title={DSO Digitisation Block Diagram}]
+\centering
+\begin{tikzpicture}[node distance=0.2cm and 0.4cm,
+  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=1.3cm,
+    align=center, minimum height=0.75cm, font=\scriptsize,
+    rounded corners=2pt, line width=0.6pt}]
+  \node[sblock] (inp) {Input\\Atten.};
+  \node[sblock, right=0.35cm of inp] (sh) {Sample\\\& Hold};
+  \node[sblock, right=0.35cm of sh] (adc) {ADC};
+  \node[sblock, right=0.35cm of adc] (mem) {Digital\\Memory};
+  \node[sblock, right=0.35cm of mem] (dac) {DAC};
+  \node[sblock, right=0.35cm of dac] (disp) {Display};
+  
+  \draw[arrow] (inp) -- (sh);
+  \draw[arrow] (sh) -- (adc);
+  \draw[arrow] (adc) -- (mem);
+  \draw[arrow] (mem) -- (dac);
+  \draw[arrow] (dac) -- (disp);
+\end{tikzpicture}
+\end{tcolorbox}
+
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Sample and Hold (S\&H):} Holds the analog voltage constant long enough for the ADC to convert it.
+  \item \textbf{ADC (Analog-to-Digital Converter):} Converts the held analog sample into a digital word (binary code).
+  \item \textbf{Digital Memory (RAM):} Stores the binary samples sequentially.
+  \item \textbf{DAC (Digital-to-Analog Converter):} Converts the stored data back to an analog signal.
+  \item \textbf{Display:} Reconstructs and plots the signal.
+\end{itemize}
+
+\textbf{Key Advantages of DSO over Analog CRO:}
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*, itemsep=2pt]
+  \item \textbf{Infinite Storage Time:} Waveforms are stored in memory and can be held indefinitely.
+  \item \textbf{Pre-trigger Viewing:} DSOs can display signals that occurred \textit{before} the trigger point using a circular buffer.
+  \item \textbf{Signal Processing:} Direct microprocessor analysis (FFT, peak-to-peak, RMS, frequency).
+  \item \textbf{Easy Export:} Stored data can be transferred to a computer.
+\end{enumerate}
+
+%═══════════════════════════════════════════════════════════════════════════════
 \section{Wave Analyzer and Spectrum Analyzer}
-%â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+%â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• â• 
 
 \subsection{Wave Analyzer}
 
@@ -297,7 +409,7 @@ DC voltage & Set coupling to DC; measure vertical displacement from zero. \\
 
 \begin{tabularx}{\linewidth}{|B{3.0cm}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
 \hline
-\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{Feature}} &
+\multicolumn{1}{|>{\centering\arraybackslash}m{3.0cm}|}{\textbf{Feature}} &
 \textbf{\color{myamber}Wave Analyzer} & \textbf{\color{mygreen}Spectrum Analyzer} \\
 \hline
 Display & One frequency at a time & All frequencies simultaneously \\
@@ -334,29 +446,54 @@ Use & Harmonic distortion analysis & Wideband signal analysis \\
 \begin{tcolorbox}[tikzbox, title={LVDT Construction and Output Characteristic}]
 \centering
 \begin{tikzpicture}[scale=0.85]
-  % Former
-  \draw[line width=0.7pt,color=mydark] (0,0.8) rectangle (6,1.6);
-  % Primary coil (centre)
-  \fill[hdrteal] (2.4,0.8) rectangle (3.6,1.6);
-  \node[font=\tiny,color=myteal] at (3.0,1.2) {Primary};
-  % S1
-  \fill[hdrgreen] (0.3,0.8) rectangle (2.1,1.6);
-  \node[font=\tiny,color=mygreen] at (1.2,1.2) {S1};
-  % S2
-  \fill[hdrgreen] (3.9,0.8) rectangle (5.7,1.6);
-  \node[font=\tiny,color=mygreen] at (4.8,1.2) {S2};
-  % Core
-  \fill[myamber!60] (2.6,0.85) rectangle (3.4,1.55);
-  \node[font=\tiny,color=myamber] at (3.0,0.6) {Core};
-  % Displacement arrow
-  \draw[<->,color=myred,thin] (1.5,0.3) -- (4.5,0.3) node[midway,below,font=\tiny] {Displacement};
+  % Former Hollow Shaft
+  \draw[line width=0.8pt, color=mydark] (0,0.9) rectangle (6,1.5);
+  
+  % Shaft/Arm
+  \draw[line width=2.0pt, color=mgframe] (2.2,1.2) -- (-0.8,1.2);
+  \node[left, font=\tiny, color=mydark] at (-0.8,1.2) {Shaft};
+  
+  % Core (inside former channel)
+  \fill[myamber!60, draw=myamber, line width=0.8pt] (2.2,0.95) rectangle (3.8,1.45);
+  \node[font=\tiny\bfseries, color=mydark] at (3.0,1.2) {Core};
+  
+  % Coils Upper Half (above former)
+  \fill[hdrgreen, draw=mygreen, line width=0.6pt] (0.3,1.5) rectangle (2.1,1.9);
+  \node[font=\tiny, color=mygreen] at (1.2,1.7) {$S_1$};
+  \fill[hdrteal, draw=myteal, line width=0.6pt] (2.4,1.5) rectangle (3.6,1.9);
+  \node[font=\tiny, color=myteal] at (3.0,1.7) {$P$};
+  \fill[hdrgreen, draw=mygreen, line width=0.6pt] (3.9,1.5) rectangle (5.7,1.9);
+  \node[font=\tiny, color=mygreen] at (4.8,1.7) {$S_2$};
+  
+  % Coils Lower Half (below former)
+  \fill[hdrgreen, draw=mygreen, line width=0.6pt] (0.3,0.5) rectangle (2.1,0.9);
+  \node[font=\tiny, color=mygreen] at (1.2,0.7) {$S_1$};
+  \fill[hdrteal, draw=myteal, line width=0.6pt] (2.4,0.5) rectangle (3.6,0.9);
+  \node[font=\tiny, color=myteal] at (3.0,0.7) {$P$};
+  \fill[hdrgreen, draw=mygreen, line width=0.6pt] (3.9,0.5) rectangle (5.7,0.9);
+  \node[font=\tiny, color=mygreen] at (4.8,0.7) {$S_2$};
+  
+  % Displacement arrow (bottom)
+  \draw[<->, color=myred, thick] (2.2,0.15) -- (3.8,0.15) node[midway, below, font=\tiny\bfseries] {Displacement};
+  
   % Output characteristic
-  \begin{scope}[xshift=7.5cm, yshift=0.2cm]
-    \draw[-Stealth,thin,color=mydark] (-1.8,0)--(1.8,0) node[right,font=\tiny]{Displacement};
-    \draw[-Stealth,thin,color=mydark] (0,-1.2)--(0,1.2) node[above,font=\tiny]{$V_{out}$};
-    \draw[color=myred,line width=1.2pt] (-1.6,-1.1)--(1.6,1.1);
+  \begin{scope}[xshift=8.0cm, yshift=1.2cm]
+    \draw[-Stealth, thin, color=mydark] (-1.8,0) -- (1.8,0) node[right, font=\tiny] {Displacement};
+    \draw[-Stealth, thin, color=mydark] (0,-1.3) -- (0,1.3) node[above, font=\tiny] {$V_{out}$};
+    
+    % Curve with linear range and non-linear ends
+    \draw[color=myred, line width=1.2pt] 
+      (-1.6,-1.0) .. controls (-1.3,-1.0) and (-1.1,-0.9) .. (-0.9,-0.75)
+      -- (0.9,0.75) 
+      .. controls (1.1,0.9) and (1.3,1.0) .. (1.6,1.0);
+      
     \fill[myteal] (0,0) circle (2pt);
-    \node[below right,font=\tiny,color=myteal] at (0,0) {Null};
+    \node[below right, font=\tiny, color=myteal] at (0,0) {Null};
+    
+    % Dashed lines marking linear region limits
+    \draw[dashed, color=mgframe, thin] (-0.9, -0.75) -- (-0.9, 1.1);
+    \draw[dashed, color=mgframe, thin] (0.9, 0.75) -- (0.9, 1.1);
+    \draw[<->, color=myteal, thin] (-0.9, 1.0) -- (0.9, 1.0) node[midway, above, font=\tiny] {Linear Range};
   \end{scope}
 \end{tikzpicture}
 \end{tcolorbox}
@@ -399,7 +536,7 @@ where $K_T$ = torque constant, $K_b$ = back-EMF constant, $J$ = inertia, $B$ = d
 
 \begin{tabularx}{\linewidth}{|B{3.0cm}|X|}
 \hline
-\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{\color{myteal}Feature}} &
+\multicolumn{1}{|>{\centering\arraybackslash}m{3.0cm}|}{\textbf{\color{myteal}Feature}} &
 \multicolumn{1}{>{\centering\arraybackslash}X|}{\textbf{\color{myteal}DC Servomotor}} \\
 \hline
 Control method & Armature voltage control or field control \\
@@ -431,7 +568,7 @@ Applications & Robotics, CNC machines, antenna positioning \\
 
 \begin{tabularx}{\linewidth}{|B{3.0cm}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
 \hline
-\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{Feature}} &
+\multicolumn{1}{|>{\centering\arraybackslash}m{3.0cm}|}{\textbf{Feature}} &
 \textbf{\color{myamber}DC Servomotor} & \textbf{\color{mygreen}AC Servomotor} \\
 \hline
 Supply & DC & 2-phase AC \\
@@ -460,7 +597,7 @@ Applications & Heavy-duty servo & Instruments, light servo \\
 
 \begin{tabularx}{\linewidth}{|B{3.0cm}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
 \hline
-\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{Feature}} &
+\multicolumn{1}{|>{\centering\arraybackslash}m{3.0cm}|}{\textbf{Feature}} &
 \textbf{\color{myamber}DC Tachogenerator} & \textbf{\color{mygreen}AC Tachogenerator} \\
 \hline
 Output & DC voltage $\propto$ speed & AC voltage amplitude $\propto$ speed \\
@@ -536,7 +673,7 @@ where $K_h$ = hydraulic gain, $M$ = load mass, $B$ = viscous damping, $X$ = pist
 
 \begin{tabularx}{\linewidth}{|B{3.0cm}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
 \hline
-\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{Feature}} &
+\multicolumn{1}{|>{\centering\arraybackslash}m{3.0cm}|}{\textbf{Feature}} &
 \textbf{\color{myamber}Hydraulic} & \textbf{\color{mygreen}Pneumatic} & \textbf{\color{myteal}Electric} \\
 \hline
 Power density & Very high & Medium & Medium \\
@@ -566,7 +703,9 @@ Typical use & Heavy machinery & Process valves & Robotics, CNC \\
 CRO voltage measurement     & $V_{pk} = n_{div} \times \text{V/div}$ \\[2pt]
 CRO time period             & $T = n_{div} \times \text{time/div}$ \\[2pt]
 CRO frequency               & $f = 1/T$ \\[2pt]
-CRO phase difference        & $\phi = (\Delta t / T)\times 360Â°$ \\[2pt]
+CRO phase difference        & $\phi = (\Delta t / T)\times 360^\circ$ \\[2pt]
+Lissajous phase angle       & $\sin\theta = y_1/y_2$ \\[2pt]
+Lissajous frequency ratio   & $f_y/f_x = N_h/N_v$ \\[2pt]
 LVDT output                 & $V_{out} = V_{S1} - V_{S2}$; zero at null position \\[2pt]
 DC tacho output             & $V_{out} = K_t\,\omega$ \\[2pt]
 DC servomotor TF            & $\Omega(s)/V_a(s) = (K_T/R_a)/(Js+B+K_TK_b/R_a)$ \\[2pt]
@@ -583,6 +722,11 @@ I/P converter range         & 4--20 mA $\to$ 3--15 psi (0.2--1.0 bar)
   \item \textbf{CRO:} Displays voltage vs time waveforms; measures amplitude, frequency, phase, rise time.
   \item \textbf{Trigger circuit:} Synchronises CRO sweep with input signal for stable display.
   \item \textbf{Delay line:} Delays signal in CRO so sweep starts before signal arrives.
+  \item \textbf{Lissajous Figure:} Pattern displayed on CRO by two orthogonal sinusoidal signals.
+  \item \textbf{Chop Mode:} Switching between channels at high speed; used for low-frequency signals.
+  \item \textbf{Alternate Mode:} Switching channels after each sweep; used for high-frequency signals.
+  \item \textbf{DSO:} Digital Storage Oscilloscope; digitises, stores, and displays waveforms.
+  \item \textbf{Pre-trigger Viewing:} DSO feature to view signal before trigger using circular buffer.
   \item \textbf{Wave analyzer:} Measures amplitude of individual harmonics; narrow tunable BPF.
   \item \textbf{Spectrum analyzer:} Displays full frequency spectrum (amplitude vs frequency) simultaneously.
   \item \textbf{LVDT:} Inductive displacement sensor; output voltage proportional to core displacement.
@@ -607,6 +751,14 @@ I/P converter range         & 4--20 mA $\to$ 3--15 psi (0.2--1.0 bar)
     To delay the signal slightly so the sweep generator starts before the signal arrives, ensuring the leading edge of the waveform is displayed.
   \item \Q{How do you measure frequency using a CRO?}
     Measure the time period $T$ (horizontal divisions $\times$ time/div for one complete cycle), then $f = 1/T$.
+  \item \Q{How can phase difference and frequency ratio be measured using Lissajous figures?}
+    Phase difference: for equal frequencies, $\theta = \sin^{-1}(y_1/y_2)$ from the ellipse intercepts. Frequency ratio: for unequal frequencies, $f_y/f_x = N_h/N_v$, where $N_h$ and $N_v$ are horizontal and vertical tangency counts.
+  \item \Q{What is the difference between Chop and Alternate modes in a Dual-Trace CRO?}
+    Chop mode switches between channels rapidly during a single sweep (best for low frequencies). Alternate mode sweeps Channel A completely, then Channel B on the next sweep (best for high frequencies to prevent trace flicker).
+  \item \Q{What is the main advantage of a DSO over an analog CRO?}
+    DSOs digitise and store signals in digital memory, offering infinite waveform storage, pre-trigger viewing (circular buffer recording), and built-in microprocessor-based signal processing.
+  \item \Q{How does a DSO achieve pre-trigger viewing?}
+    It continuously writes ADC samples to a circular memory buffer. When the trigger occurs, it stops writing after a specific delay, retaining the samples that were stored prior to the trigger event.
   \item \Q{What is the difference between a wave analyzer and a spectrum analyzer?}
     Wave analyzer measures one frequency component at a time (narrow tunable BPF). Spectrum analyzer displays all frequency components simultaneously on screen.
   \item \Q{What is LVDT and how does it work?}
@@ -619,7 +771,6 @@ I/P converter range         & 4--20 mA $\to$ 3--15 psi (0.2--1.0 bar)
     DC: controlled by armature voltage, uses brushes, high power. AC: 2-phase induction, brushless, high rotor resistance for linear torque-speed, low inertia drag-cup rotor.
   \item \Q{What is a tachogenerator?}
     A speed transducer that generates a voltage proportional to rotational speed ($V = K_t\omega$). Used as velocity feedback in closed-loop speed control.
-
   \item \Q{What is an electro-hydraulic servo valve?}
     Converts electrical current to hydraulic flow using a torque motor, flapper-nozzle, and spool valve. Controls hydraulic actuator position/speed.
   \item \Q{What is an I/P converter?}

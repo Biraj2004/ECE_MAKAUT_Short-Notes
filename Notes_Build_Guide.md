@@ -264,6 +264,12 @@ If a table immediately follows a `\textbf{Label:}` line (no blank line between),
 | ✅ Correct | `>{\small\bfseries\raggedright\arraybackslash}m{3.2cm}` | Bold-left fixed — first column only (use `m{}` not `p{}`) |
 | ❌ Wrong | `C{2.6cm}` inside tabularx | Causes phantom extra column on right edge |
 | ❌ Wrong | `p{...}` in any column | Top-aligns text — use `m{...}` for vertical centering |
+| ❌ Wrong | `\multicolumn{1}{...p{...}...}{...}` | Top-aligns header text — use `m{...}` inside `\multicolumn` |
+
+### ⚠ Multicolumn Column Types
+When overriding column types using `\multicolumn` (e.g. in table headers), you must explicitly use `m{...}` rather than `p{...}` to maintain the vertical centering of the text:
+- **Correct:** `\multicolumn{1}{|>{\centering\arraybackslash}m{3.0cm}|}{\textbf{Header}}`
+- **Incorrect:** `\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{Header}}` (causes top-alignment mismatch)
 
 ### Global table settings *(canonical preamble — copy exactly)*
 
@@ -590,9 +596,17 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
 - **Cause 2:** `\tabcolsep` too large — total column overhead exceeds `\linewidth`.
 - **Fix:** Use `\setlength{\tabcolsep}{6pt}` (not 9pt).
 
-### Content overflowing into footer
-- **Cause:** Large `tcolorbox` (e.g., 12-question exambox) doesn't fit on remaining page space and overflows the footer.
-- **Fix:** Add `\tcbset{breakable}` globally after the style block. Boxes will split across pages automatically.
+### Content overflowing into footer (unbreakable boxes)
+- **Cause 1:** A large `tcolorbox` (e.g., a multi-part worked example or a 12-question exambox) does not fit on the remaining page space, resulting in footer overflow or the entire box being pushed to the next page (leaving large blank areas).
+- **Fix 1 (Global):** Add `\tcbset{breakable}` globally after the style block. Boxes will split across pages automatically.
+- **Cause 2 (Combined PDF Builder limitation):** The combined builder script extracts the main `\tcbset{...}` style definition block but does not copy the separate global `\tcbset{breakable}` line. Hence, boxes that rely on the global default will not break in the combined PDF.
+- **Fix 2:** Explicitly add the `breakable` key directly to the style definition itself for boxes that are expected to grow large:
+  ```latex
+  exambox/.style={..., breakable}
+  examplebox/.style={..., breakable}
+  ```
+- **Refinement (Unbalanced Page Splits):** When a breakable box splits naturally, it may result in an unbalanced distribution (e.g., 95% of the box on one page and a tiny 5% overflow on the next page, or a massive blank space before it). In such cases, you can insert a strategic `\newpage` or `\pagebreak` *inside* the tcolorbox body (e.g., before a subsection or a major step) to force a clean, balanced split across two pages.
+
 
 ### Phantom extra column in tables
 - **Cause:** Using `C{fixed-width}` column type inside `tabularx`.
@@ -724,6 +738,9 @@ Both scripts live at the **repo root** and are run from there.
 
 # Keep .log files after compilation (useful for debugging failures):
 .\pdf_compile.ps1 -KeepLogs
+
+# Clean up all auxiliary build files (does not compile):
+.\pdf_compile.ps1 -Clean
 ```
 
 - Runs **2 xelatex passes** automatically (for TOC sync)
@@ -742,6 +759,9 @@ Both scripts live at the **repo root** and are run from there.
 
 # Generate .tex only, skip compile (for inspection):
 .\pdf_build_combined.ps1 -SkipCompile
+
+# Clean up all generated combined source files and aux files (does not compile):
+.\pdf_build_combined.ps1 -Clean
 ```
 
 - Auto-discovers subject folders recursively (any `NN. Name/` folder with module `.tex` files)

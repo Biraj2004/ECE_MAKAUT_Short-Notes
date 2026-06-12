@@ -441,6 +441,113 @@ An absolute calibration instrument used to measure very low pressures down to $1
     P \approx \frac{a \cdot h^2}{V}
   \end{equation}
 
+
+\subsection{Humidity and Moisture Measurement}
+Humidity indicates the water vapor content in the air, while moisture refers to the water content bound inside materials (e.g., soil, grains, wood).
+
+\begin{tcolorbox}[defbox, title={\textbf{Relative Humidity (RH)}}]
+Relative Humidity (RH) is the ratio of the actual water vapor pressure ($p_v$) to the saturation water vapor pressure ($p_s$) of air at the same temperature, expressed as a percentage:
+\begin{equation}
+  \text{RH} = \frac{p_v}{p_s} \times 100\%
+\end{equation}
+\end{tcolorbox}
+
+\subsubsection{Sling Psychrometer (Wet/Dry Bulb Principle)}
+A sling psychrometer is a classical instrument used to measure relative humidity by comparing dry-bulb and wet-bulb temperatures.
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Working Principle:} It consists of two identical thermometers mounted side-by-side:
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item \textbf{Dry-Bul Thermometer ($T_d$):} Exposed directly to ambient air to measure standard dry air temperature.
+      \item \textbf{Wet-Bul Thermometer ($T_w$):} Its bulb is covered with a clean cotton wick saturated with distilled water.
+    \end{itemize}
+  \item \textbf{Operation:} The user whirls/slings the psychrometer in the air. This rapid movement creates air flow, causing water to evaporate from the wet wick. Evaporation absorbs latent heat, cooling the wet bulb.
+  \item \textbf{Humidity Determination:} The rate of evaporation (and thus cooling) depends on the moisture content in the air. 
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item In dry air, evaporation is rapid, creating a large temperature difference ($T_d - T_w$, known as \textbf{psychrometric depression}).
+      \item In fully saturated air (100\% RH), no evaporation occurs, and $T_d = T_w$.
+    \end{itemize}
+    Relative humidity is determined from psychrometric tables or charts using $T_d$ and the psychrometric depression ($T_d - T_w$).
+\end{itemize}
+
+\subsubsection{Electronic Hygrometers}
+Electronic hygrometers are solid-state transducers that convert humidity into an electrical signal.
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Capacitive Hygrometer:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item \textbf{Structure:} Consists of a thin hygroscopic polymer or metal-oxide dielectric layer placed between two metal electrodes. The top electrode is porous, allowing water vapor to pass through.
+      \item \textbf{Working:} The polymer layer absorbs water vapor from air until equilibrium is reached. Since water has a high dielectric constant ($\epsilon_r \approx 80$) compared to the dry polymer dielectric ($\epsilon_r \approx 3$), water absorption increases the sensor capacitance:
+        \begin{equation}
+          C \approx C_0 (1 + \alpha \cdot \text{RH})
+        \end{equation}
+        where $C_0$ is dry capacitance and $\alpha$ is the humidity sensitivity coefficient.
+    \end{itemize}
+  \item \textbf{Resistive Hygrometer:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item \textbf{Working:} Uses a hygroscopic salt (e.g., Lithium Chloride, LiCl) deposited on an insulating substrate between two electrodes. The salt absorbs moisture, generating mobile ions.
+      \item \textbf{Resistance Change:} The electrical resistance decreases exponentially with increasing humidity.
+    \end{itemize}
+\end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Structure of a Capacitive Humidity Sensor}]
+\centering
+\begin{tikzpicture}[scale=1.1, thick, font=\small, >=Stealth]
+  % Draw layers
+  % Substrate (Glass/Silicon)
+  \draw[fill=mygray, draw=mydark] (0, 0) rectangle (5, 0.4) coordinate (sub_mid);
+  
+  % Bottom Electrode (Solid Gold/Platinum)
+  \draw[fill=myteal!30, draw=myteal] (0.4, 0.4) rectangle (4.6, 0.7) coordinate (bot_mid);
+  
+  % Dielectric Polymer Layer
+  \draw[fill=hdrgreen, draw=mygreen] (0.8, 0.7) rectangle (4.2, 1.3) coordinate (poly_mid);
+  
+  % Top Electrode (Porous)
+  \draw[fill=myred!20, draw=myred, dashed] (1.1, 1.3) rectangle (3.9, 1.5) coordinate (top_mid);
+
+  % Terminals and contacts
+  % Terminal 1 (Left - connected to Bottom Electrode)
+  \draw (0.6, 0.55) -- (-0.8, 0.55) -- (-0.8, 2.0) node[circle, fill=mydark, inner sep=1.2pt] {} node[above] {\footnotesize Terminal 1};
+  
+  % Terminal 2 (Right - connected to Top Electrode)
+  \draw (3.5, 1.4) -- (5.8, 1.4) -- (5.8, 2.0) node[circle, fill=mydark, inner sep=1.2pt] {} node[above] {\footnotesize Terminal 2};
+
+  % Water Vapor / Absorption arrows
+  \draw[redarrow] (2.0, 2.2) -- (2.0, 1.6) node[midway, left=0.1cm, font=\scriptsize\color{myred}] {Water Vapor};
+  \draw[redarrow] (3.0, 2.2) -- (3.0, 1.6) node[midway, right=0.1cm, font=\scriptsize\color{myred}] {Absorption};
+
+  % Callout Labels with leader lines (on the right/left)
+  % We can place callouts on the right with a line pointing to each layer
+  \node[anchor=west, align=left, font=\scriptsize] (lbl_top) at (6.5, 1.25) {Porous Top Electrode\\(Allows moisture entry)};
+  \draw[->, thin, color=mydark] (lbl_top.west) -- (3.8, 1.4);
+
+  \node[anchor=west, align=left, font=\scriptsize] (lbl_poly) at (6.5, 0.8) {Hygroscopic Polymer\\Dielectric Layer};
+  \draw[->, thin, color=mydark] (lbl_poly.west) -- (3.5, 1.0);
+
+  \node[anchor=west, align=left, font=\scriptsize] (lbl_bot) at (6.5, 0.35) {Bottom Electrode\\(Solid Gold/Platinum)};
+  \draw[->, thin, color=mydark] (lbl_bot.west) -- (4.2, 0.55);
+
+  \node[anchor=west, align=left, font=\scriptsize] (lbl_sub) at (6.5, -0.1) {Glass/Silicon Substrate};
+  \draw[->, thin, color=mydark] (lbl_sub.west) -- (4.5, 0.2);
+\end{tikzpicture}
+\end{tcolorbox}
+
+\subsubsection{Moisture Sensors}
+Moisture measurement in materials (such as soil, paper, wood, or grain) is critical for industrial quality control and agriculture.
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Electrical Conductivity (Resistive) Method:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item Operates by measuring electrical resistance between two metallic probes inserted into the material.
+      \item Water is much more conductive than dry soil or organic fibers. Higher moisture content decreases resistance ($R \propto 1/\text{Moisture}$).
+    \end{itemize}
+  \item \textbf{Microwave Attenuation Method:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item A microwave beam is transmitted through the material.
+      \item Because water molecules have strong electric dipoles, they rotate rapidly in the microwave field, absorbing microwave energy.
+      \item The attenuation (signal loss) and phase shift of the received signal are directly proportional to the total moisture content.
+      \item This provides a non-contact, non-destructive, and continuous bulk measurement.
+    \end{itemize}
+\end{itemize}
+
 \newpage
 % ===============================================================================
 \section{Data Acquisition Systems (DAS)}
@@ -449,8 +556,10 @@ An absolute calibration instrument used to measure very low pressures down to $1
 Data Acquisition Systems interface physical sensors with computers to measure and process parameters automatically.
 
 \subsection{Analog and Digital DAS}
-- \textbf{Analog DAS:} Collects and displays data in continuous analog form (e.g., strip chart recorders, oscilloscope traces).
-- \textbf{Digital DAS:} Converts analog signals into digital values for computer storage, display, and processing.
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Analog DAS:} Collects and displays data in continuous analog form (e.g., strip chart recorders, oscilloscope traces).
+  \item \textbf{Digital DAS:} Converts analog signals into digital values for computer storage, display, and processing.
+\end{itemize}
 
 \begin{tcolorbox}[tikzbox, title={Digital Data Acquisition System Block Diagram}]
 \centering
@@ -496,9 +605,12 @@ Data Acquisition Systems interface physical sensors with computers to measure an
 \vspace{4pt}
 
 \begin{tcolorbox}[formulabox, title={\textbf{Key Module 5 Formulas}}]
-$$\text{Wheatstone:} \quad R_x = \frac{Q}{P} R \qquad \text{Kelvin Double:} \quad R = \frac{P}{Q} S \ \left(\text{when} \ \frac{P}{Q} = \frac{p}{q}\right)$$
-$$\text{Maxwell } L_x: \quad L_x = R_2 R_3 C_4 \qquad \text{Maxwell } R_x: \quad R_x = \frac{R_2 R_3}{R_4}$$
-$$\text{EM Flow EMF:} \quad E = B \cdot D \cdot v \qquad \text{McLeod Vacuum:} \quad P \approx \frac{a \cdot h^2}{V}$$
+\begin{align*}
+  \text{Wheatstone Bridge:} \quad & R_x = \frac{Q}{P} R \qquad \text{Kelvin Double Bridge:} \quad R = \frac{P}{Q} S \ \left(\text{when} \ \frac{P}{Q} = \frac{p}{q}\right) \\
+  \text{Maxwell } L_x: \quad & L_x = R_2 R_3 C_4 \qquad \text{Maxwell } R_x: \quad R_x = \frac{R_2 R_3}{R_4} \\
+  \text{EM Flow EMF:} \quad & E = B \cdot D \cdot v \qquad \text{McLeod Vacuum:} \quad P \approx \frac{a \cdot h^2}{V} \\
+  \text{Capacitive Humidity:} \quad & C \approx C_0 (1 + \alpha \cdot \text{RH}) \qquad \text{Relative Humidity:} \quad \text{RH} = \frac{p_v}{p_s} \times 100\%
+\end{align*}
 \end{tcolorbox}
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
@@ -508,6 +620,9 @@ $$\text{EM Flow EMF:} \quad E = B \cdot D \cdot v \qquad \text{McLeod Vacuum:} \
   \item \textbf{Electromagnetic Flow Meter:} An inductive flow meter measuring conductive fluid speed via Faraday's Law.
   \item \textbf{Pirani Gauge:} A thermal conductivity vacuum gauge measuring pressure via filament heat loss.
   \item \textbf{McLeod Gauge:} A mercury-filled vacuum gauge that compresses low-pressure gas to measure it hydrostatically.
+  \item \textbf{Relative Humidity (RH):} Percent ratio of actual water vapor pressure to saturation vapor pressure.
+  \item \textbf{Sling Psychrometer:} Instrument measuring humidity via dry-bulb and wet-bulb thermometers.
+  \item \textbf{Hygrometer:} Electronic sensor designed to measure humidity in the atmosphere.
   \item \textbf{Multiplexer (MUX):} A switch routing multiple analog input channels sequentially to a single output line.
   \item \textbf{Sample and Hold (S/H):} A circuit holding analog voltage constant during the ADC conversion interval.
 \end{itemize}
@@ -532,6 +647,12 @@ $$\text{EM Flow EMF:} \quad E = B \cdot D \cdot v \qquad \text{McLeod Vacuum:} \
     It works on the principle that the thermal conductivity of a gas is proportional to its pressure at low pressure. As chamber vacuum increases, less heat is conducted away from the filament, raising its temperature and resistance.
   \item \Q{Derive the pressure formula for a McLeod gauge.}
     Initial volume $V$ at pressure $P$ is compressed to volume $V_2 = a \cdot h$. The final pressure is $P + h$. By Boyle's Law: $P V = (P + h) a h = P a h + a h^2$. Since $P \ll h$, $P V \approx a h^2 \implies P \approx a h^2 / V$.
+  \item \Q{Explain the dry-bulb and wet-bulb temperature principle of a Sling Psychrometer.}
+    The dry bulb measures ambient temperature, while the wet bulb (covered in a wet wick) undergoes cooling due to water evaporation during slinging. The evaporation rate, and thus the wet-bulb temperature drop, is inversely proportional to relative humidity. In dry air, the drop is large; at 100\% humidity, the dry and wet bulb temperatures are equal ($T_d = T_w$).
+  \item \Q{How does a capacitive humidity sensor detect relative humidity?}
+    It uses a porous top electrode and a hygroscopic polymer dielectric. Water vapor penetrates the polymer. Since water has a high dielectric constant ($\epsilon_r \approx 80$) compared to the dry polymer ($\epsilon_r \approx 3$), the sensor capacitance increases proportionally to relative humidity.
+  \item \Q{What is the principle of the microwave attenuation method for moisture measurement?}
+    Water molecules have strong electrical dipoles that absorb microwave energy. When microwaves pass through a material, the signal attenuation and phase shift are directly proportional to the moisture content, providing a non-destructive bulk measurement.
   \item \Q{Why is a Sample and Hold circuit necessary before the ADC in digital DAS?}
     An ADC requires a finite time to convert an analog voltage into a digital word. If the analog input changes during this conversion period, the ADC output will suffer from aperture error. The S/H holds the input constant during conversion.
   \item \Q{Compare McLeod Gauge and Pirani Gauge.}

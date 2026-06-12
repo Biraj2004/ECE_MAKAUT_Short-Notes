@@ -6,6 +6,7 @@
 \setmonofont[Scale=0.88]{TeX Gyre Cursor}
 \setmathfont{Latin Modern Math}
 \usepackage{xcolor}
+\usepackage{colortbl}
 \usepackage{titlesec}
 \usepackage{enumitem}
 \usepackage{tabularx}
@@ -68,6 +69,7 @@
 \setlength{\cftbeforepartskip}{14pt}
 \renewcommand{\arraystretch}{1.45}
 \setlength{\tabcolsep}{6pt}
+\arrayrulecolor{mydark}
 \newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}m{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
 \newcolumntype{Y}{>{\small\raggedright\arraybackslash}X}
@@ -124,7 +126,7 @@
     fonttitle=\bfseries,
     breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}}
 }
-\tcbset{breakable}
+\tcbset{after={\color{black}}}
 
 \tikzset{
   block/.style={rectangle, draw=myteal, fill=hdrteal,
@@ -295,7 +297,339 @@ PMMC coils are delicate and can handle only small currents (typically $50\,\mu\t
 
 \subsection{True RMS Responding Voltmeter}
 Standard AC meters measure the average value and scale it by $1.11$ to indicate RMS for perfect sine waves. For non-sinusoidal waves, this causes massive errors.
-- \textbf{Working Principle:} True RMS voltmeters use a \textbf{thermocouple/heating element} combination. The input AC voltage is fed into a heater resistor, producing heat proportional to the RMS power ($\text{Heat} \propto V_{\text{rms}}^2$). A thermocouple converts the temperature difference into a DC voltage, driving a standard PMMC meter to indicate the true RMS value of any waveform.
+
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Working Principle:} True RMS voltmeters use a \textbf{thermocouple/heating element} combination. The input AC voltage is fed into a heater resistor, producing heat proportional to the RMS power ($\text{Heat} \propto V_{\text{rms}}^2$). A thermocouple converts the temperature difference into a DC voltage, driving a standard PMMC meter to indicate the true RMS value of any waveform.
+\end{itemize}
+
+% ===============================================================================
+\section{Ohmmeters}
+% ===============================================================================
+
+\begin{tcolorbox}[defbox, title={\textbf{Ohmmeter}}]
+An \textbf{ohmmeter} is an instrument designed to measure electrical resistance. It consists of an internal voltage source (battery), a current-limiting resistor, and a current-sensing movement (typically PMMC) that displays the resistance value on a calibrated scale.
+\end{tcolorbox}
+
+Ohmmeters are classified into two primary designs depending on how the unknown resistor $R_x$ is connected to the meter: \textbf{Series-type} and \textbf{Shunt-type}.
+
+\subsection{Series-Type Ohmmeter}
+A series-type ohmmeter connects the unknown resistor $R_x$ in series with the internal circuit. It is primarily used for measuring high resistance values (typically in the range of kilohms to megohms).
+
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Circuit Operation:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item $E$: Internal battery voltage source.
+      \item $R_1$: Series current-limiting resistor to protect the meter.
+      \item $R_2$: Shunt zero-adjust variable resistor across the PMMC meter.
+      \item $R_m$: Internal resistance of the PMMC movement.
+      \item $A, B$: Connection terminals for the unknown resistor $R_x$.
+    \end{itemize}
+  \item \textbf{Calibration \& Zero Adjustment:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item \textbf{Short Circuit ($R_x = 0$):} Terminals A and B are short-circuited. The total current is maximum, and the shunt resistor $R_2$ is adjusted so that the pointer deflects to its full-scale value. This Full Scale Deflection (FSD) point is marked as $0\,\Omega$ on the right side of the scale.
+      \item \textbf{Open Circuit ($R_x = \infty$):} Terminals A and B are left open. The current is zero. The pointer remains at zero deflection, which is marked as $\infty\,\Omega$ on the left side of the scale.
+    \end{itemize}
+  \item \textbf{Scale Characteristic:} The scale is non-linear and runs from right to left ($0\,\Omega$ at FSD on the right, $\infty\,\Omega$ at zero deflection on the left). It is crowded at the high-resistance end (left).
+\end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Series-Type Ohmmeter Circuit Schematic}]
+\centering
+\begin{tikzpicture}[thick, scale=0.95]
+  % Coordinates
+  \coordinate (start) at (0,2);
+  \coordinate (R1_in) at (0.8,2);
+  \coordinate (R1_out) at (1.8,2);
+  \coordinate (node_shunt_left) at (2.2,2);
+  \coordinate (node_shunt_right) at (3.8,2);
+  \coordinate (M_in) at (2.6,2);
+  \coordinate (M_out) at (3.4,2);
+  \coordinate (A_term) at (5.0,2);
+  \coordinate (B_term) at (5.0,0);
+  \coordinate (E_in) at (0,0);
+  \coordinate (E_out) at (0.8,0);
+
+  % Draw main loop
+  \draw (start) -- (R1_in);
+  \draw[fill=white] (R1_in) rectangle (1.8,2.3) node[midway] {\footnotesize $R_1$};
+  \draw (R1_out) -- (node_shunt_left);
+  \draw (node_shunt_left) -- (2.6,2);
+  
+  % PMMC Meter
+  \draw[fill=white] (3.0,2) circle (0.4) node (M) {\footnotesize PMMC};
+  \draw[arrow, thin] (2.85,1.85) -- (3.15,2.15);
+  \draw (2.6,2) -- (M_in);
+  \draw (M_out) -- (node_shunt_right);
+  \draw (node_shunt_right) -- (A_term);
+  
+  % Shunt R2 path
+  \draw (node_shunt_left) -- (2.2,1.0) -- (2.6,1.0);
+  \draw[fill=white] (2.6,0.85) rectangle (3.4,1.15) node[midway] {\footnotesize $R_2$};
+  \draw (3.4,1.0) -- (3.8,1.0) -- (node_shunt_right);
+  
+  % Bottom wire and Battery
+  \draw (start) -- (0,0) -- (0.8,0);
+  \draw[fill=white] (1.2, 0) circle (0.3) node {\footnotesize $E$};
+  \draw (1.5,0) -- (B_term);
+  
+  % Terminals
+  \draw[fill=mydark] (A_term) circle (0.06) node[above] {\small A};
+  \draw[fill=mydark] (B_term) circle (0.06) node[below] {\small B};
+  
+  % Unknown Rx
+  \draw[dashed, myred, thick] (A_term) -- (B_term) node[midway, right] {\small $R_x$};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Series Ohmmeter Equations}}]
+The meter current $I_m$ as a function of the unknown resistance $R_x$ is:
+\begin{equation}
+  I_m = \frac{E \cdot R_2}{(R_x + R_1)(R_2 + R_m) + R_2 R_m}
+\end{equation}
+Let $R_h$ be the half-scale resistance (the value of $R_x$ when $I_m = 0.5 I_{fs}$):
+\begin{equation}
+  R_h = R_1 + \frac{R_2 R_m}{R_2 + R_m}
+\end{equation}
+The deflection ratio $s = I_m / I_{fs}$ is given by:
+\begin{equation}
+  s = \frac{R_h}{R_x + R_h}
+\end{equation}
+\end{tcolorbox}
+
+\subsection{Shunt-Type Ohmmeter}
+A shunt-type ohmmeter connects the unknown resistor $R_x$ in parallel (shunt) with the PMMC meter. It is primarily used for measuring very low resistance values (typically $1\,\Omega$ to $100\,\Omega$).
+
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Circuit Operation:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item $E$: Internal battery voltage source.
+      \item $R_1$: Series adjustable current-limiting resistor to calibrate the meter and limit battery drain.
+      \item $S$: Switch to disconnect the battery when not in use.
+      \item $R_m$: Internal resistance of the PMMC movement.
+      \item $A, B$: Connection terminals for $R_x$ across the meter.
+    \end{itemize}
+  \item \textbf{Calibration \& Zero Adjustment:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item \textbf{Short Circuit ($R_x = 0$):} Terminals A and B are short-circuited. No current flows through the meter ($I_m = 0$). The pointer remains at zero deflection on the left, which is marked as $0\,\Omega$.
+      \item \textbf{Open Circuit ($R_x = \infty$):} Terminals A and B are open-circuited. All current flows through the meter. $R_1$ is adjusted until the meter deflects to FSD, which is marked as $\infty\,\Omega$ on the right side of the scale.
+    \end{itemize}
+  \item \textbf{Scale Characteristic:} The scale is non-linear and runs from left to right ($0\,\Omega$ at zero deflection on the left, $\infty\,\Omega$ at FSD on the right). It is suitable for low-value resistance measurement since low values cause measurable deflection changes near zero.
+\end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Shunt-Type Ohmmeter Circuit Schematic}]
+\centering
+\begin{tikzpicture}[thick, scale=0.95]
+  % Coordinates
+  \coordinate (start) at (0,2);
+  \coordinate (R1_in) at (1.2,2);
+  \coordinate (R1_out) at (2.0,2);
+  \coordinate (node_meter) at (2.6,2);
+  \coordinate (node_term_A) at (4.0,2);
+  \coordinate (E_in) at (0,0);
+  \coordinate (B_term) at (4.0,0);
+  
+  % Draw top path with Switch
+  \draw (start) -- (0.5,2);
+  \draw[fill=mydark] (0.5,2) circle (0.04);
+  \draw[fill=mydark] (0.9,2) circle (0.04);
+  \draw (0.5,2) -- (0.85,2.3) node[above] {\footnotesize $S$};
+  \draw (0.9,2) -- (R1_in);
+  \draw[fill=white] (R1_in) rectangle (2.0,2.3) node[midway] {\footnotesize $R_1$};
+  \draw (R1_out) -- (node_meter);
+  \draw (node_meter) -- (node_term_A);
+  
+  % PMMC Meter branch
+  \draw (node_meter) -- (2.6,1.4);
+  \draw[fill=white] (2.6,1.0) circle (0.4) node {\footnotesize PMMC};
+  \draw[arrow, thin] (2.45,0.85) -- (2.75,1.15);
+  \draw (2.6,0.6) -- (2.6,0);
+  
+  % Battery
+  \draw (start) -- (0,0) -- (0.8,0);
+  \draw[fill=white] (1.2, 0) circle (0.3) node {\footnotesize $E$};
+  \draw (1.5,0) -- (B_term);
+  
+  % Connections at bottom
+  \draw (2.6,0) -- (B_term);
+  
+  % Terminals
+  \draw[fill=mydark] (node_term_A) circle (0.06) node[above] {\small A};
+  \draw[fill=mydark] (B_term) circle (0.06) node[below] {\small B};
+  
+  % Unknown Rx
+  \draw[dashed, myred, thick] (node_term_A) -- (B_term) node[midway, right] {\small $R_x$};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Shunt Ohmmeter Equations}}]
+The meter current $I_m$ is given by:
+\begin{equation}
+  I_m = \frac{E R_x}{R_1(R_x + R_m) + R_x R_m}
+\end{equation}
+When $R_1 \gg R_m$, we can simplify to:
+\begin{equation}
+  I_m \approx \frac{E}{R_1} \left( \frac{R_x}{R_x + R_m} \right)
+\end{equation}
+The half-scale resistance $R_h$ where $I_m = 0.5 I_{fs}$ is approximately:
+\begin{equation}
+  R_h = \frac{R_1 R_m}{R_1 + R_m} \approx R_m
+\end{equation}
+The deflection ratio $s = I_m / I_{fs}$ is:
+\begin{equation}
+  s = \frac{R_x}{R_x + R_h}
+\end{equation}
+\end{tcolorbox}
+
+% ===============================================================================
+\section{Multimeters}
+% ===============================================================================
+
+\begin{tcolorbox}[defbox, title={\textbf{Multimeter}}]
+A \textbf{multimeter} is a multi-purpose electronic measuring instrument that integrates several measurement functions---typically voltage, current, and resistance---into a single device.
+\end{tcolorbox}
+
+Multimeters are available in two forms: \textbf{Analog Multimeters} (often called VOM) and \textbf{Digital Multimeters} (DMM).
+
+\subsection{Analog Multimeter (VOM)}
+An Analog Multimeter (Volt-Ohm-Milliammeter or VOM) uses a standard PMMC movement as the central indicator. A multi-deck, multi-position rotary selector switch connects different internal networks to the meter.
+
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Sub-circuits \& Function Selection:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item \textbf{DC Voltage:} Extends range using series multiplier resistors.
+      \item \textbf{AC Voltage:} Uses a diode rectifier network (half-wave or full-wave) to convert AC to DC, which is then scaled by series multipliers.
+      \item \textbf{DC Current:} Extends range using parallel shunt resistors.
+      \item \textbf{Resistance:} Uses an internal battery and calibrating resistors configured as series or shunt ohmmeters.
+    \end{itemize}
+  \item \textbf{Sensitivity:} Voltmeter sensitivity is expressed in ohms-per-volt ($\Omega/\text{V}$), equal to $1 / I_{fs}$. A typical VOM has a DC sensitivity of $20\,\text{k}\Omega/\text{V}$.
+\end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Analog Multimeter (VOM) Block Schematic}]
+\centering
+\begin{tikzpicture}[font=\small, >=Stealth,
+  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=2.4cm,
+    align=center, minimum height=0.85cm, font=\scriptsize,
+    rounded corners=3pt, line width=0.6pt}]
+  
+  % Input terminals on left
+  \node (input) at (0, 1.8) {\scriptsize Input ($+$)};
+  \node (common) at (0, -0.6) {\scriptsize Common ($-$)};
+
+  % Blocks positioned with clear vertical separation
+  \node[sblock] (dcv) at (2.4, 2.7) {DC Voltage\\Multipliers};
+  \node[sblock] (acv) at (2.4, 1.6) {AC Rectifier \&\\Multipliers};
+  \node[sblock] (dci) at (2.4, 0.5) {DC Current\\Shunts};
+  \node[sblock] (ohm) at (2.4, -0.6) {Ohmmeter Battery\\\& Regulators};
+
+  % Selector Switch
+  \node[circle, draw=myamber, fill=hdramber, minimum size=0.6cm, inner sep=0pt] (sw) at (5.0, 0.8) {\scriptsize SW};
+
+  % PMMC Meter
+  \node[circle, draw=mydark, fill=white, minimum size=0.9cm] (pmmc) at (6.8, 0.8) {};
+  \draw[thick, color=mydark] (pmmc.center) circle (0.45);
+  \node at (pmmc.center) {\footnotesize PMMC};
+  \draw[arrow, thin] ($(pmmc.center)+(-0.2,-0.2)$) -- ($(pmmc.center)+(0.2,0.2)$);
+
+  % Connections from Input to Blocks
+  \draw[arrow] (input.east) -- ++(0.4, 0) |- (dcv.west);
+  \draw[arrow] (input.east) -- ++(0.4, 0) |- (acv.west);
+  \draw[arrow] (input.east) -- ++(0.4, 0) |- (dci.west);
+  \draw[arrow] (input.east) -- ++(0.4, 0) |- (ohm.west);
+
+  % Connections from Blocks to Selector Switch (SW)
+  \draw[arrow] (dcv.east) -- ++(0.4, 0) |- (sw.140);
+  \draw[arrow] (acv.east) -- ++(0.2, 0) |- (sw.160);
+  \draw[arrow] (dci.east) -- ++(0.2, 0) |- (sw.200);
+  \draw[arrow] (ohm.east) -- ++(0.4, 0) |- (sw.220);
+
+  % Switch to PMMC
+  \draw[arrow] (sw.east) -- (pmmc.west);
+
+  % PMMC Return to Common (completely clear of all blocks, going below the bottom block)
+  \draw[arrow] (pmmc.south) -- (6.8, -1.4) -- (0.8, -1.4) |- (common.east);
+\end{tikzpicture}
+\end{tcolorbox}
+
+\subsection{Digital Multimeter (DMM)}
+A Digital Multimeter (DMM) processes signals electronically and displays the measured values numerically. DMMs offer higher accuracy, higher input impedance ($10\,\text{M}\Omega$ to eliminate loading effects), and auto-ranging capabilities.
+
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Signal Conditioning Stages:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item \textbf{AC Voltage:} Scale down by an attenuator and convert to DC using an active precision rectifier.
+      \item \textbf{DC Current:} Force the current through low-resistance shunts and measure the resulting voltage drop.
+      \item \textbf{Resistance:} Pass a constant current from an internal source through the unknown resistor $R_x$ to generate a voltage drop ($V_x = I_{\text{const}} \cdot R_x$).
+    \end{itemize}
+  \item \textbf{Dual-Slope Integration ADC:} DMMs use a Dual-Slope ADC for converting analog voltages into digital form due to its superior noise rejection.
+\end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Digital Multimeter (DMM) Block Diagram}]
+\centering
+\begin{tikzpicture}[font=\small, >=Stealth,
+  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=2.1cm,
+    align=center, minimum height=0.9cm, font=\scriptsize,
+    rounded corners=3pt, line width=0.6pt}]
+  
+  % Inputs on the left
+  \node (in_v) at (0, 2.4) {\scriptsize Voltage ($V$)};
+  \node (in_i) at (0, 0.9) {\scriptsize Current ($I$)};
+  \node (in_r) at (0, -0.6) {\scriptsize Resistance ($R$)};
+  
+  % First-stage blocks
+  \node[sblock] (attn) at (2.2, 2.4) {Attenuator /\\Amplifier};
+  \node[sblock] (shunt) at (2.2, 0.9) {Current-to-Voltage\\Converter (Shunts)};
+  \node[sblock] (const_i) at (2.2, -0.6) {Constant Current\\Source};
+  
+  % AC-to-DC Converter (lowered for clear branching)
+  \node[sblock] (rect) at (4.6, 1.85) {AC-to-DC\\Converter};
+  
+  % Selector Switch (SW)
+  \node[circle, draw=myamber, fill=hdramber, minimum size=0.6cm, inner sep=0pt] (sw) at (6.5, 0.9) {\scriptsize SW};
+  
+  % ADC & Display
+  \node[sblock, fill=hdrgreen, draw=mygreen, text width=1.8cm] (adc) at (8.4, 0.9) {Dual-Slope\\ADC};
+  \node[sblock, fill=hdrred, draw=myred, text width=1.8cm] (disp) at (10.4, 0.9) {Digital Display\\(LCD/LED)};
+  
+  % Connections
+  % Voltage path
+  \draw[arrow] (in_v) -- (attn);
+  \draw[line] (attn.east) -- (3.5, 2.4) coordinate (v_split);
+  \draw[arrow] (v_split) -- (5.8, 2.4) |- (sw.130) node[pos=0.2, above, font=\tiny] {DC V};
+  \draw[arrow] (v_split) |- (rect.west) node[pos=0.7, left, font=\tiny] {AC V};
+  \draw[arrow] (rect.east) -- (5.8, 1.85) |- (sw.150);
+  
+  % Current path
+  \draw[arrow] (in_i) -- (shunt);
+  \draw[arrow] (shunt.east) -- (sw.180);
+  
+  % Resistance path
+  \draw[arrow] (in_r) -- (const_i);
+  \draw[arrow] (const_i.east) -- (5.8, -0.6) |- (sw.210);
+  
+  % Switch to ADC and Display
+  \draw[arrow] (sw.east) -- (adc.west);
+  \draw[arrow] (adc.east) -- (disp.west);
+\end{tikzpicture}
+\tcbset{breakable}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Dual-Slope ADC Integration Principle}}]
+The Dual-Slope ADC operates in two phases:
+\begin{enumerate}[leftmargin=*, itemsep=2.5pt]
+  \item \textbf{Integrate Phase (Fixed Time $T_1$):} The input voltage $V_{\text{in}}$ is integrated for a predetermined fixed duration $T_1 = 2^N \cdot T_{\text{clk}}$. The integrator output voltage rises to:
+    \begin{equation}
+      V_p = -\frac{V_{\text{in}}}{RC} T_1
+    \end{equation}
+  \item \textbf{De-integrate Phase (Variable Time $T_2$):} A reference voltage $-V_{\text{ref}}$ of opposite polarity is connected to the integrator. The output ramps down to zero at a constant rate. The variable time $T_2$ taken to return to zero is measured by counting clock pulses:
+    \begin{equation}
+      V_p = \frac{V_{\text{ref}}}{RC} T_2
+    \end{equation}
+\end{enumerate}
+Equating the two peak values, we obtain the voltage relationship:
+\begin{equation}
+  V_{\text{in}} = V_{\text{ref}} \left( \frac{T_2}{T_1} \right)
+\end{equation}
+\textbf{Key Advantage:} The measurement depends only on the ratio of times $T_2/T_1$ and $V_{\text{ref}}$, completely eliminating errors due to component tolerances/aging of $R$ and $C$ or clock frequency drift.
+\end{tcolorbox}
 
 \newpage
 % ===============================================================================
@@ -308,10 +642,14 @@ Standard AC meters measure the average value and scale it by $1.11$ to indicate 
 \noindent{\color{myred}\rule{\linewidth}{1.2pt}}
 \vspace{4pt}
 
-\begin{tcolorbox}[formulabox, title={\textbf{Key Range Extension Formulas}}]
-$$\text{Ammeter Shunt:} \quad R_{sh} = \frac{R_m}{m - 1} \quad \text{where} \ m = \frac{I}{I_m}$$
-$$\text{Voltmeter Multiplier:} \quad R_s = R_m(m - 1) \quad \text{where} \ m = \frac{V}{V_m}$$
-$$\text{Static Error:} \quad E_s = A_m - A_t \qquad \text{Static Sensitivity:} \quad S = \frac{\Delta \text{Output}}{\Delta \text{Input}}$$
+\begin{tcolorbox}[formulabox, title={\textbf{Key Formulas at a Glance}}]
+\begin{align*}
+  \text{Ammeter Shunt:} \quad & R_{sh} = \frac{R_m}{m - 1} \quad \text{where} \ m = \frac{I}{I_m} \\
+  \text{Voltmeter Multiplier:} \quad & R_s = R_m(m - 1) \quad \text{where} \ m = \frac{V}{V_m} \\
+  \text{Series Ohmmeter Deflection:} \quad & s = \frac{I_m}{I_{fs}} = \frac{R_h}{R_x + R_h} \quad \text{where} \ R_h = R_1 + R_2 \parallel R_m \\
+  \text{Shunt Ohmmeter Deflection:} \quad & s = \frac{I_m}{I_{fs}} = \frac{R_x}{R_x + R_h} \quad \text{where} \ R_h = R_1 \parallel R_m \approx R_m \\
+  \text{DMM Dual-Slope ADC:} \quad & V_{\text{in}} = V_{\text{ref}} \left(\frac{T_2}{T_1}\right)
+\end{align*}
 \end{tcolorbox}
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
@@ -321,15 +659,16 @@ $$\text{Static Error:} \quad E_s = A_m - A_t \qquad \text{Static Sensitivity:} \
   \item \textbf{Resolution:} The smallest detectable change in the input measurand.
   \item \textbf{PMMC:} Permanent Magnet Moving Coil movement; sensitive DC indicator based on magnetic coil torque.
   \item \textbf{True RMS Voltmeter:} Instrument measuring heating power of input signal to compute exact RMS regardless of shape.
-  \item \textbf{Gross Errors:} Human-induced errors in writing down readings or incorrect usage of instruments.
-  \item \textbf{Systematic Errors:} Predictable offset errors from instrument design limits or external environment.
+  \item \textbf{Series-type Ohmmeter:} Ohmmeter where the unknown resistance is in series with the meter; zero is on the right of the scale.
+  \item \textbf{Shunt-type Ohmmeter:} Ohmmeter where the unknown resistance is in parallel with the meter; zero is on the left of the scale.
+  \item \textbf{Dual-Slope ADC:} An analog-to-digital converter that integrates input voltage and then de-integrates reference voltage, rejecting noise.
 \end{itemize}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
 \begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]
   \item \Q{Differentiate between Accuracy and Precision.}
-    Accuracy is the closeness of a measured value to the true value, whereas precision is the repeatability of readings when measured repeatedly. An instrument can be highly precise (give the same reading constantly) but inaccurate if it has a constant offset error.
+    Accuracy is the closeness of a measured value to the true value, whereas precision is the repeatability of readings when measured repeatedly. An instrument can be highly precise but inaccurate if it has a constant offset error.
   \item \Q{A PMMC meter has internal resistance $R_m = 100\,\Omega$ and full-scale deflection current $I_m = 1\,\text{mA}$. Calculate the shunt resistance required to extend its range to $1\,\text{A}$.}\\
     Given: $R_m = 100\,\Omega$, $I_m = 1\,\text{mA} = 0.001\,\text{A}$, Target current $I = 1\,\text{A}$.\par
     Multiplying factor: $m = I / I_m = 1 / 0.001 = 1000$.\par
@@ -342,14 +681,14 @@ $$\text{Static Error:} \quad E_s = A_m - A_t \qquad \text{Static Sensitivity:} \
     Because the direction of deflecting torque depends on the current polarity. For AC, the current alternates polarity rapidly (e.g., $50\,\text{Hz}$). The pointer attempts to follow the oscillations but due to inertia, it stays at zero, displaying only the average value (which is 0 for AC).
   \item \Q{What is True RMS and why is it preferred over average-responding voltmeters?}
     Average-responding voltmeters rectify AC, find the average, and multiply it by $1.11$ (the form factor for a sine wave) to display RMS. This is invalid for square, triangular, or distorted waves. A True RMS voltmeter measures the actual thermal power generated by the signal, representing its true heating equivalent.
+  \item \Q{Compare Series and Shunt type Ohmmeters.}
+    In a series ohmmeter, the unknown resistor $R_x$ is in series with the PMMC meter. Zero resistance ($0\,\Omega$) corresponds to full-scale deflection (FSD) on the right. In a shunt ohmmeter, $R_x$ is in parallel with the meter. Zero resistance ($0\,\Omega$) corresponds to zero deflection on the left.
+  \item \Q{What is the main advantage of a Digital Multimeter (DMM) over an analog VOM?}
+    A DMM provides high input impedance (typically $10\,\text{M}\Omega$ across all ranges), which prevents loading errors. It also offers digital numerical displays (no parallax errors), auto-ranging, and greater accuracy.
+  \item \Q{Explain why a Dual-Slope ADC is preferred in DMMs.}
+    It has excellent noise rejection (particularly line frequency noise like $50\,\text{Hz}$/ $60\,\text{Hz}$ if integration time is chosen as a multiple of the line period). Additionally, the conversion accuracy is independent of the values of the integrating capacitor and resistor, and the clock frequency.
   \item \Q{What are systematic errors and how can they be minimized?}
     Systematic errors are predictable, constant errors arising from instrument calibration, component aging, or environmental changes (temperature/humidity). They can be minimized by periodic calibration, proper shielding, and applying mathematical correction factors.
-  \item \Q{Define the term Resolution in measuring instruments.}
-    Resolution is the smallest increment of input quantity change that results in a detectable change in the instrument output/deflection.
-  \item \Q{Explain the role of the resident monitor in early batch processing systems.}
-    The resident monitor was the primitive predecessor of the modern OS kernel. It remained permanently in memory, automatically loading, sequencing, and executing sequential jobs from card/tape readers, reducing idle time between jobs.
-  \item \Q{What is the difference between Gross Errors and Random Errors?}
-    Gross errors are due to human mistakes like incorrect reading entry or wrong wiring. Random errors are unpredictable, fluctuating variations caused by unknown factors that remain even after all systematic and gross errors have been corrected. They are analyzed statistically.
   \item \Q{What is static lag and how does it differ from dynamic lag?}
     Static lag is the delay in response when the input measurand is constant or changing very slowly, caused by friction or spring inertia. Dynamic lag occurs when the input changes rapidly, caused by the system's dynamic parameters (mass, damping, capacitance).
 \end{enumerate}
@@ -370,8 +709,11 @@ $$\text{Static Error:} \quad E_s = A_m - A_t \qquad \text{Static Sensitivity:} \
 \hline
 \textbf{Dependence} & Requires precision to be accurate. & Can be highly precise but inaccurate. \\
 \hline
+\textbf{Time Period} & Measured over short term. & Represents stability over short term. \\
+\hline
 \end{tabularx}
 \end{tcolorbox}
+
 
 
 % -- Module 2 -----------------------------------------------------------------
@@ -1113,6 +1455,113 @@ An absolute calibration instrument used to measure very low pressures down to $1
     P \approx \frac{a \cdot h^2}{V}
   \end{equation}
 
+
+\subsection{Humidity and Moisture Measurement}
+Humidity indicates the water vapor content in the air, while moisture refers to the water content bound inside materials (e.g., soil, grains, wood).
+
+\begin{tcolorbox}[defbox, title={\textbf{Relative Humidity (RH)}}]
+Relative Humidity (RH) is the ratio of the actual water vapor pressure ($p_v$) to the saturation water vapor pressure ($p_s$) of air at the same temperature, expressed as a percentage:
+\begin{equation}
+  \text{RH} = \frac{p_v}{p_s} \times 100\%
+\end{equation}
+\end{tcolorbox}
+
+\subsubsection{Sling Psychrometer (Wet/Dry Bulb Principle)}
+A sling psychrometer is a classical instrument used to measure relative humidity by comparing dry-bulb and wet-bulb temperatures.
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Working Principle:} It consists of two identical thermometers mounted side-by-side:
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item \textbf{Dry-Bul Thermometer ($T_d$):} Exposed directly to ambient air to measure standard dry air temperature.
+      \item \textbf{Wet-Bul Thermometer ($T_w$):} Its bulb is covered with a clean cotton wick saturated with distilled water.
+    \end{itemize}
+  \item \textbf{Operation:} The user whirls/slings the psychrometer in the air. This rapid movement creates air flow, causing water to evaporate from the wet wick. Evaporation absorbs latent heat, cooling the wet bulb.
+  \item \textbf{Humidity Determination:} The rate of evaporation (and thus cooling) depends on the moisture content in the air. 
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item In dry air, evaporation is rapid, creating a large temperature difference ($T_d - T_w$, known as \textbf{psychrometric depression}).
+      \item In fully saturated air (100\% RH), no evaporation occurs, and $T_d = T_w$.
+    \end{itemize}
+    Relative humidity is determined from psychrometric tables or charts using $T_d$ and the psychrometric depression ($T_d - T_w$).
+\end{itemize}
+
+\subsubsection{Electronic Hygrometers}
+Electronic hygrometers are solid-state transducers that convert humidity into an electrical signal.
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Capacitive Hygrometer:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item \textbf{Structure:} Consists of a thin hygroscopic polymer or metal-oxide dielectric layer placed between two metal electrodes. The top electrode is porous, allowing water vapor to pass through.
+      \item \textbf{Working:} The polymer layer absorbs water vapor from air until equilibrium is reached. Since water has a high dielectric constant ($\epsilon_r \approx 80$) compared to the dry polymer dielectric ($\epsilon_r \approx 3$), water absorption increases the sensor capacitance:
+        \begin{equation}
+          C \approx C_0 (1 + \alpha \cdot \text{RH})
+        \end{equation}
+        where $C_0$ is dry capacitance and $\alpha$ is the humidity sensitivity coefficient.
+    \end{itemize}
+  \item \textbf{Resistive Hygrometer:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item \textbf{Working:} Uses a hygroscopic salt (e.g., Lithium Chloride, LiCl) deposited on an insulating substrate between two electrodes. The salt absorbs moisture, generating mobile ions.
+      \item \textbf{Resistance Change:} The electrical resistance decreases exponentially with increasing humidity.
+    \end{itemize}
+\end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Structure of a Capacitive Humidity Sensor}]
+\centering
+\begin{tikzpicture}[scale=1.1, thick, font=\small, >=Stealth]
+  % Draw layers
+  % Substrate (Glass/Silicon)
+  \draw[fill=mygray, draw=mydark] (0, 0) rectangle (5, 0.4) coordinate (sub_mid);
+  
+  % Bottom Electrode (Solid Gold/Platinum)
+  \draw[fill=myteal!30, draw=myteal] (0.4, 0.4) rectangle (4.6, 0.7) coordinate (bot_mid);
+  
+  % Dielectric Polymer Layer
+  \draw[fill=hdrgreen, draw=mygreen] (0.8, 0.7) rectangle (4.2, 1.3) coordinate (poly_mid);
+  
+  % Top Electrode (Porous)
+  \draw[fill=myred!20, draw=myred, dashed] (1.1, 1.3) rectangle (3.9, 1.5) coordinate (top_mid);
+
+  % Terminals and contacts
+  % Terminal 1 (Left - connected to Bottom Electrode)
+  \draw (0.6, 0.55) -- (-0.8, 0.55) -- (-0.8, 2.0) node[circle, fill=mydark, inner sep=1.2pt] {} node[above] {\footnotesize Terminal 1};
+  
+  % Terminal 2 (Right - connected to Top Electrode)
+  \draw (3.5, 1.4) -- (5.8, 1.4) -- (5.8, 2.0) node[circle, fill=mydark, inner sep=1.2pt] {} node[above] {\footnotesize Terminal 2};
+
+  % Water Vapor / Absorption arrows
+  \draw[redarrow] (2.0, 2.2) -- (2.0, 1.6) node[midway, left=0.1cm, font=\scriptsize\color{myred}] {Water Vapor};
+  \draw[redarrow] (3.0, 2.2) -- (3.0, 1.6) node[midway, right=0.1cm, font=\scriptsize\color{myred}] {Absorption};
+
+  % Callout Labels with leader lines (on the right/left)
+  % We can place callouts on the right with a line pointing to each layer
+  \node[anchor=west, align=left, font=\scriptsize] (lbl_top) at (6.5, 1.25) {Porous Top Electrode\\(Allows moisture entry)};
+  \draw[->, thin, color=mydark] (lbl_top.west) -- (3.8, 1.4);
+
+  \node[anchor=west, align=left, font=\scriptsize] (lbl_poly) at (6.5, 0.8) {Hygroscopic Polymer\\Dielectric Layer};
+  \draw[->, thin, color=mydark] (lbl_poly.west) -- (3.5, 1.0);
+
+  \node[anchor=west, align=left, font=\scriptsize] (lbl_bot) at (6.5, 0.35) {Bottom Electrode\\(Solid Gold/Platinum)};
+  \draw[->, thin, color=mydark] (lbl_bot.west) -- (4.2, 0.55);
+
+  \node[anchor=west, align=left, font=\scriptsize] (lbl_sub) at (6.5, -0.1) {Glass/Silicon Substrate};
+  \draw[->, thin, color=mydark] (lbl_sub.west) -- (4.5, 0.2);
+\end{tikzpicture}
+\end{tcolorbox}
+
+\subsubsection{Moisture Sensors}
+Moisture measurement in materials (such as soil, paper, wood, or grain) is critical for industrial quality control and agriculture.
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Electrical Conductivity (Resistive) Method:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item Operates by measuring electrical resistance between two metallic probes inserted into the material.
+      \item Water is much more conductive than dry soil or organic fibers. Higher moisture content decreases resistance ($R \propto 1/\text{Moisture}$).
+    \end{itemize}
+  \item \textbf{Microwave Attenuation Method:}
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
+      \item A microwave beam is transmitted through the material.
+      \item Because water molecules have strong electric dipoles, they rotate rapidly in the microwave field, absorbing microwave energy.
+      \item The attenuation (signal loss) and phase shift of the received signal are directly proportional to the total moisture content.
+      \item This provides a non-contact, non-destructive, and continuous bulk measurement.
+    \end{itemize}
+\end{itemize}
+
 \newpage
 % ===============================================================================
 \section{Data Acquisition Systems (DAS)}
@@ -1121,8 +1570,10 @@ An absolute calibration instrument used to measure very low pressures down to $1
 Data Acquisition Systems interface physical sensors with computers to measure and process parameters automatically.
 
 \subsection{Analog and Digital DAS}
-- \textbf{Analog DAS:} Collects and displays data in continuous analog form (e.g., strip chart recorders, oscilloscope traces).
-- \textbf{Digital DAS:} Converts analog signals into digital values for computer storage, display, and processing.
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Analog DAS:} Collects and displays data in continuous analog form (e.g., strip chart recorders, oscilloscope traces).
+  \item \textbf{Digital DAS:} Converts analog signals into digital values for computer storage, display, and processing.
+\end{itemize}
 
 \begin{tcolorbox}[tikzbox, title={Digital Data Acquisition System Block Diagram}]
 \centering
@@ -1168,9 +1619,12 @@ Data Acquisition Systems interface physical sensors with computers to measure an
 \vspace{4pt}
 
 \begin{tcolorbox}[formulabox, title={\textbf{Key Module 5 Formulas}}]
-$$\text{Wheatstone:} \quad R_x = \frac{Q}{P} R \qquad \text{Kelvin Double:} \quad R = \frac{P}{Q} S \ \left(\text{when} \ \frac{P}{Q} = \frac{p}{q}\right)$$
-$$\text{Maxwell } L_x: \quad L_x = R_2 R_3 C_4 \qquad \text{Maxwell } R_x: \quad R_x = \frac{R_2 R_3}{R_4}$$
-$$\text{EM Flow EMF:} \quad E = B \cdot D \cdot v \qquad \text{McLeod Vacuum:} \quad P \approx \frac{a \cdot h^2}{V}$$
+\begin{align*}
+  \text{Wheatstone Bridge:} \quad & R_x = \frac{Q}{P} R \qquad \text{Kelvin Double Bridge:} \quad R = \frac{P}{Q} S \ \left(\text{when} \ \frac{P}{Q} = \frac{p}{q}\right) \\
+  \text{Maxwell } L_x: \quad & L_x = R_2 R_3 C_4 \qquad \text{Maxwell } R_x: \quad R_x = \frac{R_2 R_3}{R_4} \\
+  \text{EM Flow EMF:} \quad & E = B \cdot D \cdot v \qquad \text{McLeod Vacuum:} \quad P \approx \frac{a \cdot h^2}{V} \\
+  \text{Capacitive Humidity:} \quad & C \approx C_0 (1 + \alpha \cdot \text{RH}) \qquad \text{Relative Humidity:} \quad \text{RH} = \frac{p_v}{p_s} \times 100\%
+\end{align*}
 \end{tcolorbox}
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
@@ -1180,6 +1634,9 @@ $$\text{EM Flow EMF:} \quad E = B \cdot D \cdot v \qquad \text{McLeod Vacuum:} \
   \item \textbf{Electromagnetic Flow Meter:} An inductive flow meter measuring conductive fluid speed via Faraday's Law.
   \item \textbf{Pirani Gauge:} A thermal conductivity vacuum gauge measuring pressure via filament heat loss.
   \item \textbf{McLeod Gauge:} A mercury-filled vacuum gauge that compresses low-pressure gas to measure it hydrostatically.
+  \item \textbf{Relative Humidity (RH):} Percent ratio of actual water vapor pressure to saturation vapor pressure.
+  \item \textbf{Sling Psychrometer:} Instrument measuring humidity via dry-bulb and wet-bulb thermometers.
+  \item \textbf{Hygrometer:} Electronic sensor designed to measure humidity in the atmosphere.
   \item \textbf{Multiplexer (MUX):} A switch routing multiple analog input channels sequentially to a single output line.
   \item \textbf{Sample and Hold (S/H):} A circuit holding analog voltage constant during the ADC conversion interval.
 \end{itemize}
@@ -1204,6 +1661,12 @@ $$\text{EM Flow EMF:} \quad E = B \cdot D \cdot v \qquad \text{McLeod Vacuum:} \
     It works on the principle that the thermal conductivity of a gas is proportional to its pressure at low pressure. As chamber vacuum increases, less heat is conducted away from the filament, raising its temperature and resistance.
   \item \Q{Derive the pressure formula for a McLeod gauge.}
     Initial volume $V$ at pressure $P$ is compressed to volume $V_2 = a \cdot h$. The final pressure is $P + h$. By Boyle's Law: $P V = (P + h) a h = P a h + a h^2$. Since $P \ll h$, $P V \approx a h^2 \implies P \approx a h^2 / V$.
+  \item \Q{Explain the dry-bulb and wet-bulb temperature principle of a Sling Psychrometer.}
+    The dry bulb measures ambient temperature, while the wet bulb (covered in a wet wick) undergoes cooling due to water evaporation during slinging. The evaporation rate, and thus the wet-bulb temperature drop, is inversely proportional to relative humidity. In dry air, the drop is large; at 100\% humidity, the dry and wet bulb temperatures are equal ($T_d = T_w$).
+  \item \Q{How does a capacitive humidity sensor detect relative humidity?}
+    It uses a porous top electrode and a hygroscopic polymer dielectric. Water vapor penetrates the polymer. Since water has a high dielectric constant ($\epsilon_r \approx 80$) compared to the dry polymer ($\epsilon_r \approx 3$), the sensor capacitance increases proportionally to relative humidity.
+  \item \Q{What is the principle of the microwave attenuation method for moisture measurement?}
+    Water molecules have strong electrical dipoles that absorb microwave energy. When microwaves pass through a material, the signal attenuation and phase shift are directly proportional to the moisture content, providing a non-destructive bulk measurement.
   \item \Q{Why is a Sample and Hold circuit necessary before the ADC in digital DAS?}
     An ADC requires a finite time to convert an analog voltage into a digital word. If the analog input changes during this conversion period, the ADC output will suffer from aperture error. The S/H holds the input constant during conversion.
   \item \Q{Compare McLeod Gauge and Pirani Gauge.}
