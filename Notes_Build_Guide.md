@@ -549,6 +549,7 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
 | Line breaks in nodes | `\\` requires `align=center, text width=` on the node — otherwise compile fails with "Not allowed in LR mode" |
 | Custom style names | Avoid generic names like `axis` — they conflict with library keys. Prefix with `my` or use inline styles |
 | Signal taps | Use distinct `\coordinate` points along the wire; do NOT route taps through other blocks |
+| Text next to diagrams | Use side-by-side `minipage`s (e.g., `0.45\linewidth` and `0.5\linewidth`) inside the `tikzbox` to separate the TikZ drawing from text. Never place paragraphs using absolute coordinates inside TikZ nodes (causes overlapping on page wrapping). |
 
 ### Block diagram template (for diagrams with 5+ blocks)
 
@@ -679,9 +680,24 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
 - **Cause:** Defining `axis/.style={...}` in `\tikzset{}` conflicts with the `axis` environment key used by pgfplots or other TikZ libraries.
 - **Fix:** Rename the custom style to `myaxis` or use inline style: `\draw[-Stealth, thin, color=mydark]` directly.
 
-### Raw markdown bold syntax (`**`)
-- **Cause:** Using markdown-style `**text**` instead of LaTeX command `\textbf{text}` in `.tex` files. This prints literal double asterisks `**` in the compiled PDF instead of bolding the text.
-- **Fix:** Always use `\textbf{text}` for bold text. Never use markdown-style `**` inside LaTeX files.
+### Raw markdown bold / emphasis syntax (`**text**` or `*text*`)
+- **Cause:** Using markdown-style `**text**` or `*text*` instead of LaTeX commands like `\textbf{text}` or `\textit{text}` in `.tex` files. This prints literal double asterisks `**` or single asterisks `*` in the compiled PDF instead of bolding/italicizing the text.
+- **Fix:** Always use `\textbf{text}` for bold text and `\textit{text}` for italic/emphasized text. Never use markdown-style asterisks `**` or `*` for text styling inside LaTeX files.
+
+### Raw markdown list points (`- ` or `* `)
+- **Cause:** Starting a line with a hyphen `-` or asterisk `*` followed by a space and text in LaTeX (e.g., `- Text`). In LaTeX, consecutive lines are merged into a single paragraph during compilation. This causes multiple bullet points to concatenate into a single line (separated by literal hyphens `-`) instead of forming a vertical bulleted list.
+- **Fix:** Always wrap lists inside an `itemize` or `enumerate` environment. Use `\item` for each item. Never write raw hyphens `-` or asterisks `*` at the start of a line to represent list points.
+  ```latex
+  % ❌ Wrong (concatenates into a single line)
+  - Point A
+  - Point B
+
+  % ✅ Correct
+  \begin{itemize}[leftmargin=*, itemsep=3pt]
+    \item Point A
+    \item Point B
+  \end{itemize}
+  ```
 
 ### Missing packages (TinyTeX)
 ```
@@ -780,6 +796,7 @@ Before submitting or printing the PDF:
 - [ ] All viva Q&A use `\Q{}` macro (question bold, answer on next line)
 - [ ] Last 2–3 viva items either fit on the same page OR the viva is split into two `exambox` blocks with `\newpage` between (use `start=N` on the second `enumerate`)
 - [ ] Multi-bullet answers in viva use a nested `itemize`, not inline semicolons
+- [ ] No raw markdown bold/emphasis syntax (**text** or *text*) or raw hyphen list points (- Point) in .tex files
 - [ ] No `\usepackage{amssymb}` in preamble
 - [ ] No Unicode em-dash (`—`) in section/subsection titles (use `---`)
 - [ ] Math in headings wrapped with `\texorpdfstring{}{}`

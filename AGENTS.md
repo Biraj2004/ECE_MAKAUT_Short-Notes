@@ -60,6 +60,17 @@ ECE_MAKAUT_Short-Notes/
 │       ├── PE-EC603C_Module6_Notes.tex / .pdf
 │       ├── PE-EC603C_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── PE-EC603C_CMOS_VLSI_Design.pdf
+├── 7th SEM/
+│   ├── 01. Principles of Management/   # HS-HU701 — 4 modules (All complete)
+│   │   ├── HS-HU701_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── HS-HU701_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│   │   └── HS-HU701_Principles_of_Management.pdf
+│   └── 02. Microwave Theory and Technique/ # PE-EC701A — 9 modules (All complete)
+│       ├── PE-EC701A_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── PE-EC701A_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── PE-EC701A_Microwave_Theory_and_Technique.pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -285,5 +296,12 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | OE-EC604A Electronic Measurement and Measuring Instruments | 5 | ✅ All compiled | `OE-EC604A_Electronic_Measurement_and_Measuring_Instruments.pdf` | 35 |
 | PE-EC603C CMOS VLSI Design | 6 | ✅ All compiled | `PE-EC603C_CMOS_VLSI_Design.pdf` | 44 |
 
+**7th SEM — in progress and compiled:**
+
+| Subject | Modules | Module PDFs | Combined PDF | Pages |
+|---|---|---|---|---|
+| HS-HU701 Principles of Management | 4 | ✅ All compiled | `HS-HU701_Principles_of_Management.pdf` | 46 |
+| PE-EC701A Microwave Theory and Technique | 9 | ✅ All compiled | `PE-EC701A_Microwave_Theory_and_Technique.pdf` | 63 |
+
 **1st–5th SEM:** Folders exist, no content yet.
-**7th–8th SEM:** Not started.
+**8th SEM:** Not started.

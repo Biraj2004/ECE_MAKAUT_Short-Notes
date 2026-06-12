@@ -227,7 +227,7 @@ Deadlocks can be described precisely using a directed graph called a \textbf{Res
     \item If the RAG contains no cycles $\to$ No deadlock.
     \item If the RAG contains a cycle $\to$
       \item If single instance per resource type: Deadlock exists (cycle is necessary and sufficient).
-      \item If multiple instances per resource type: Deadlock *may* exist (cycle is necessary but not sufficient).
+      \item If multiple instances per resource type: Deadlock \textit{may} exist (cycle is necessary but not sufficient).
     \end{itemize}
   \end{itemize}
 
@@ -240,10 +240,10 @@ Operating systems use three main strategies to handle deadlocks:
 \subsection{1. Deadlock Prevention}
 Ensures that the system can never enter a deadlock state by designing the system such that at least one of the four Coffman conditions cannot hold:
 \begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{Prevent Mutual Exclusion:} Make resources shareable (e.g., read-only files). *Drawback:* Some resources (printers, mutexes) are inherently non-shareable.
-  \item \textbf{Prevent Hold and Wait:} Require processes to request all resources at once before execution, or release current resources before requesting new ones. *Drawback:* Low resource utilization; starvation.
-  \item \textbf{Prevent No Preemption:} If a process holding resources requests another that cannot be immediately allocated, all its current resources are preempted (released). *Drawback:* Overhead of saving/restoring process states.
-  \item \textbf{Prevent Circular Wait:} Impose a global ordering on all resource types (e.g., $F(R_j) = i$) and require processes to request resources only in strictly increasing order of enumeration. *Advantage:* Most practical prevention strategy.
+  \item \textbf{Prevent Mutual Exclusion:} Make resources shareable (e.g., read-only files). \textbf{Drawback:} Some resources (printers, mutexes) are inherently non-shareable.
+  \item \textbf{Prevent Hold and Wait:} Require processes to request all resources at once before execution, or release current resources before requesting new ones. \textbf{Drawback:} Low resource utilization; starvation.
+  \item \textbf{Prevent No Preemption:} If a process holding resources requests another that cannot be immediately allocated, all its current resources are preempted (released). \textbf{Drawback:} Overhead of saving/restoring process states.
+  \item \textbf{Prevent Circular Wait:} Impose a global ordering on all resource types (e.g., $F(R_j) = i$) and require processes to request resources only in strictly increasing order of enumeration. \textbf{Advantage:} Most practical prevention strategy.
 \end{itemize}
 
 \subsection{2. Deadlock Avoidance}
@@ -338,12 +338,14 @@ Repeat. If $\text{Finish}[i] == \text{true}$ for all $i$, the system is in a \te
     *Step 1: Calculate Need matrix ($\text{Need} = \text{Max} - \text{Allocation}$)*\par
     $\text{Need} = \begin{pmatrix} 7-0 \& 5-1 \& 3-0 \\ 3-2 \& 2-0 \& 2-0 \\ 9-3 \& 0-0 \& 2-2 \\ 2-2 \& 2-1 \& 2-1 \\ 4-0 \& 3-0 \& 3-2 \end{pmatrix} = \begin{pmatrix} 7 \& 4 \& 3 \\ 1 \& 2 \& 2 \\ 6 \& 0 \& 0 \\ 0 \& 1 \& 1 \\ 4 \& 3 \& 1 \end{pmatrix}$\par
     *Step 2: Initialize $\text{Work} = \begin{pmatrix} 3 \& 3 \& 2 \end{pmatrix}$*\par
-    - Check P1: $\text{Need}_1 \begin{pmatrix} 1 \& 2 \& 2 \end{pmatrix} \le \text{Work} \begin{pmatrix} 3 \& 3 \& 2 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_1 = \begin{pmatrix} 5 \& 3 \& 2 \end{pmatrix}$.\par
-    - Check P3: $\text{Need}_3 \begin{pmatrix} 0 \& 1 \& 1 \end{pmatrix} \le \text{Work} \begin{pmatrix} 5 \& 3 \& 2 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_3 = \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix}$.\par
-    - Check P0: $\text{Need}_0 \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix} \le \text{Work} \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_0 = \begin{pmatrix} 7 \& 5 \& 3 \end{pmatrix}$.\par
-    - Check P2: $\text{Need}_2 \begin{pmatrix} 6 \& 0 \& 0 \end{pmatrix} \le \text{Work} \begin{pmatrix} 7 \& 5 \& 3 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_2 = \begin{pmatrix} 10 \& 5 \& 5 \end{pmatrix}$.\par
-    - Check P4: $\text{Need}_4 \begin{pmatrix} 4 \& 3 \& 1 \end{pmatrix} \le \text{Work} \begin{pmatrix} 10 \& 5 \& 5 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_4 = \begin{pmatrix} 10 \& 5 \& 7 \end{pmatrix}$.\par
-    *Result:* All processes finished. System is in \textbf{safe state} with safe sequence: $\langle \mathbf{P1, P3, P0, P2, P4} \rangle$.
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=2pt]
+      \item \textbf{Check P1:} $\text{Need}_1 \begin{pmatrix} 1 \& 2 \& 2 \end{pmatrix} \le \text{Work} \begin{pmatrix} 3 \& 3 \& 2 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_1 = \begin{pmatrix} 5 \& 3 \& 2 \end{pmatrix}$.
+      \item \textbf{Check P3:} $\text{Need}_3 \begin{pmatrix} 0 \& 1 \& 1 \end{pmatrix} \le \text{Work} \begin{pmatrix} 5 \& 3 \& 2 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_3 = \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix}$.
+      \item \textbf{Check P0:} $\text{Need}_0 \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix} \le \text{Work} \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_0 = \begin{pmatrix} 7 \& 5 \& 3 \end{pmatrix}$.
+      \item \textbf{Check P2:} $\text{Need}_2 \begin{pmatrix} 6 \& 0 \& 0 \end{pmatrix} \le \text{Work} \begin{pmatrix} 7 \& 5 \& 3 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_2 = \begin{pmatrix} 10 \& 5 \& 5 \end{pmatrix}$.
+      \item \textbf{Check P4:} $\text{Need}_4 \begin{pmatrix} 4 \& 3 \& 1 \end{pmatrix} \le \text{Work} \begin{pmatrix} 10 \& 5 \& 5 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_4 = \begin{pmatrix} 10 \& 5 \& 7 \end{pmatrix}$.
+    \end{itemize}
+    \textbf{Result:} All processes finished. System is in \textbf{safe state} with safe sequence: $\langle \mathbf{P1, P3, P0, P2, P4} \rangle$.
   \item \Q{Differentiate between Deadlock Prevention and Deadlock Avoidance.}
     Prevention limits system design by enforcing policies that violate one of the 4 Coffman conditions (e.g., resource ordering). Avoidance does not restrict request structures but checks dynamic resource availability and maximum limits to keep the system in a safe state.
   \item \Q{How can the circular wait condition be prevented in operating systems?}

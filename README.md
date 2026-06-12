@@ -24,7 +24,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
-| 7th SEM | 🔲 Planned | — |
+| 7th SEM | 🟡 In progress | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules) |
 | 8th SEM | 🔲 Planned | — |
 
 ---
@@ -165,6 +165,35 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 
 ---
 
+## 7th Semester
+
+### HS-HU701 — Principles of Management
+
+| File | Topics |
+|---|---|
+| `HS-HU701_Module1_Notes.pdf` | Basic Concepts of Management, Functions of Management --- Planning, Organisation Structure |
+| `HS-HU701_Module2_Notes.pdf` | Management and Society, People Management, Managerial Competencies |
+| `HS-HU701_Module3_Notes.pdf` | Leadership, Decision Making, Economic, Financial and Quantitative Analysis |
+| `HS-HU701_Module4_Notes.pdf` | Customer Management, Operations and Technology Management |
+| `HS-HU701_Principles_of_Management.pdf` | **Combined** — all 4 modules, 46 pages |
+
+### PE-EC701A — Microwave Theory and Technique
+
+| File | Topics |
+|---|---|
+| `PE-EC701A_Module1_Notes.pdf` | Introduction to Microwaves, history, band classification (IEEE, Military/NATO), key advantages and applications (civilian, military, medical), EMI/EMC concepts |
+| `PE-EC701A_Module2_Notes.pdf` | Mathematical Model of Microwave Transmission: wave equations, TEM/TE/TM waves, cutoff frequency, guide wavelength, phase and group velocity, power transmission |
+| `PE-EC701A_Module3_Notes.pdf` | RF and Microwave Transmission Lines: transmission line equations, Smith Chart, impedance matching, stub tuning (single, double stub) |
+| `PE-EC701A_Module4_Notes.pdf` | Microwave Network Analysis: S-parameters, properties of S-matrix, relationship with Z, Y, ABCD parameters, signal flow graphs |
+| `PE-EC701A_Module5_Notes.pdf` | Passive and Active Microwave Devices: E-plane Tee, H-plane Tee, Magic Tee, Directional Couplers, Wilkinson Power Divider, Attenuators, Phase Shifters, Circulators, Isolators, Gunn Diode, IMPATT, TRAPATT, BARITT, Klystrons, Magnetrons, TWT |
+| `PE-EC701A_Module6_Notes.pdf` | Microwave Design Principles: microstrip lines, striplines, coplanar waveguides, filter design (Butterworth, Chebyshev, Richard's transformation, Kuroda's identities), amplifier design, Rollett stability factor |
+| `PE-EC701A_Module7_Notes.pdf` | Microwave Antennas: patch antennas, horn antennas, parabolic dish antennas, lens antennas, antenna arrays, Friis transmission equation |
+| `PE-EC701A_Module8_Notes.pdf` | Microwave Measurements: VSWR measurement (low, high VSWR, double-minimum method), power measurement (bolometer, calorimeter), impedance measurement, frequency, noise figure, network analyzer, spectrum analyzer |
+| `PE-EC701A_Module9_Notes.pdf` | Microwave Systems \& Modern Trends: radar systems, Doppler shift, satellite communication, GPS, navigation aids (ILS, LORAN, RFID), biological effects, MMICs, RFMEMS |
+| `PE-EC701A_Microwave_Theory_and_Technique.pdf` | **Combined** — all 9 modules, 63 pages |
+
+---
+
 ## Repository structure
 
 ```
@@ -239,6 +268,18 @@ ECE_MAKAUT_Short-Notes/
 │   │   └── PE-EC603C_CMOS_VLSI_Design.pdf
 │   ├── sem6 - syllabus.pdf
 │   └── ECE 6th SEM YT Playlist.pdf
+├── 7th SEM/                        # In progress
+│   ├── 01. Principles of Management/
+│   │   ├── HS-HU701_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── HS-HU701_Combined_Notes.tex
+│   │   └── HS-HU701_Principles_of_Management.pdf
+│   ├── 02. Microwave Theory and Technique/
+│   │   ├── PE-EC701A_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC701A_Combined_Notes.tex
+│   │   └── PE-EC701A_Microwave_Theory_and_Technique.pdf
+│   └── sem7.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject
 ├── Notes_Build_Guide.md            # Full authoring guide & style spec

@@ -6,6 +6,7 @@
 \setmonofont[Scale=0.88]{TeX Gyre Cursor}
 \setmathfont{Latin Modern Math}
 \usepackage{xcolor}
+\usepackage{colortbl}
 \usepackage{titlesec}
 \usepackage{enumitem}
 \usepackage{tabularx}
@@ -68,6 +69,7 @@
 \setlength{\cftbeforepartskip}{14pt}
 \renewcommand{\arraystretch}{1.45}
 \setlength{\tabcolsep}{6pt}
+\arrayrulecolor{mydark}
 \newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}m{#1}}
 \newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
 \newcolumntype{Y}{>{\small\raggedright\arraybackslash}X}
@@ -124,7 +126,7 @@
     fonttitle=\bfseries,
     breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}}
 }
-\tcbset{breakable}
+\tcbset{after={\color{black}}}
 
 \tikzset{
   block/.style={rectangle, draw=myteal, fill=hdrteal,
@@ -837,13 +839,13 @@ When multiple CPUs are available, scheduling complexity increases:
   \item \textbf{Symmetric Multiprocessing (SMP):} Each processor schedules itself from the common ready queue or private ready queue.
   \item \textbf{Processor Affinity:} A process has an affinity for the processor it is currently running on to avoid the cache invalidation cost of migrating to another CPU.
   \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
-    \item *Soft Affinity:* OS tries to keep process on same CPU but does not guarantee it.
-    \item *Hard Affinity:* Process specifies it can only run on a subset of CPUs.
+    \item \textbf{Soft Affinity:} OS tries to keep process on same CPU but does not guarantee it.
+    \item \textbf{Hard Affinity:} Process specifies it can only run on a subset of CPUs.
   \end{itemize}
   \item \textbf{Load Balancing:} Keeps workload evenly distributed across all CPUs.
   \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
-    \item *Push Migration:* A specific task monitors load and pushes processes from overloaded CPUs to idle ones.
-    \item *Pull Migration:* An idle processor pulls a waiting task from a busy processor.
+    \item \textbf{Push Migration:} A specific task monitors load and pushes processes from overloaded CPUs to idle ones.
+    \item \textbf{Pull Migration:} An idle processor pulls a waiting task from a busy processor.
     \end{itemize}
   \end{itemize}
 
@@ -893,10 +895,10 @@ $$\text{Average Waiting Time} = \frac{1}{N}\sum_{i=1}^{N} WT_i$$
     \hline
     \end{tabularx}\\
     \textbf{Using Preemptive Priority Scheduling:}\par
-    *Gantt Chart:* P1 runs from [0-1]. At $t=1$, P2 arrives with priority 1, preempts P1. P2 runs from [1-5]. At $t=5$, P3 runs from [5-7]. At $t=7$, P1 finishes from [7-14].\par
-    *Completion Times (CT):* P2 = 5, P3 = 7, P1 = 14.\par
-    *Turnaround Times (TAT = CT - AT):* P1 = 14, P2 = 4, P3 = 5. (Avg TAT = 7.67).\par
-    *Waiting Times (WT = TAT - BT):* P1 = 6, P2 = 0, P3 = 3. (Avg WT = 3.0).
+    \textbf{Gantt Chart:} P1 runs from [0-1]. At $t=1$, P2 arrives with priority 1, preempts P1. P2 runs from [1-5]. At $t=5$, P3 runs from [5-7]. At $t=7$, P1 finishes from [7-14].\par
+    \textbf{Completion Times (CT):} P2 = 5, P3 = 7, P1 = 14.\par
+    \textbf{Turnaround Times (TAT = CT - AT):} P1 = 14, P2 = 4, P3 = 5. (Avg TAT = 7.67).\par
+    \textbf{Waiting Times (WT = TAT - BT):} P1 = 6, P2 = 0, P3 = 3. (Avg WT = 3.0).
   \item \Q{What is the Convoy Effect in CPU scheduling? How is it resolved?}
     It happens in FCFS when one CPU-bound process holds the CPU while multiple I/O-bound processes wait in the ready queue. Resolved by using preemptive scheduling algorithms (like Round Robin).
   \item \Q{Why is SJF scheduling called "optimal"? Why is it difficult to implement?}
@@ -973,7 +975,7 @@ Deadlocks can be described precisely using a directed graph called a \textbf{Res
     \item If the RAG contains no cycles $\to$ No deadlock.
     \item If the RAG contains a cycle $\to$
       \item If single instance per resource type: Deadlock exists (cycle is necessary and sufficient).
-      \item If multiple instances per resource type: Deadlock *may* exist (cycle is necessary but not sufficient).
+      \item If multiple instances per resource type: Deadlock \textit{may} exist (cycle is necessary but not sufficient).
     \end{itemize}
   \end{itemize}
 
@@ -986,10 +988,10 @@ Operating systems use three main strategies to handle deadlocks:
 \subsection{1. Deadlock Prevention}
 Ensures that the system can never enter a deadlock state by designing the system such that at least one of the four Coffman conditions cannot hold:
 \begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{Prevent Mutual Exclusion:} Make resources shareable (e.g., read-only files). *Drawback:* Some resources (printers, mutexes) are inherently non-shareable.
-  \item \textbf{Prevent Hold and Wait:} Require processes to request all resources at once before execution, or release current resources before requesting new ones. *Drawback:* Low resource utilization; starvation.
-  \item \textbf{Prevent No Preemption:} If a process holding resources requests another that cannot be immediately allocated, all its current resources are preempted (released). *Drawback:* Overhead of saving/restoring process states.
-  \item \textbf{Prevent Circular Wait:} Impose a global ordering on all resource types (e.g., $F(R_j) = i$) and require processes to request resources only in strictly increasing order of enumeration. *Advantage:* Most practical prevention strategy.
+  \item \textbf{Prevent Mutual Exclusion:} Make resources shareable (e.g., read-only files). \textbf{Drawback:} Some resources (printers, mutexes) are inherently non-shareable.
+  \item \textbf{Prevent Hold and Wait:} Require processes to request all resources at once before execution, or release current resources before requesting new ones. \textbf{Drawback:} Low resource utilization; starvation.
+  \item \textbf{Prevent No Preemption:} If a process holding resources requests another that cannot be immediately allocated, all its current resources are preempted (released). \textbf{Drawback:} Overhead of saving/restoring process states.
+  \item \textbf{Prevent Circular Wait:} Impose a global ordering on all resource types (e.g., $F(R_j) = i$) and require processes to request resources only in strictly increasing order of enumeration. \textbf{Advantage:} Most practical prevention strategy.
 \end{itemize}
 
 \subsection{2. Deadlock Avoidance}
@@ -1084,12 +1086,14 @@ Repeat. If $\text{Finish}[i] == \text{true}$ for all $i$, the system is in a \te
     *Step 1: Calculate Need matrix ($\text{Need} = \text{Max} - \text{Allocation}$)*\par
     $\text{Need} = \begin{pmatrix} 7-0 \& 5-1 \& 3-0 \\ 3-2 \& 2-0 \& 2-0 \\ 9-3 \& 0-0 \& 2-2 \\ 2-2 \& 2-1 \& 2-1 \\ 4-0 \& 3-0 \& 3-2 \end{pmatrix} = \begin{pmatrix} 7 \& 4 \& 3 \\ 1 \& 2 \& 2 \\ 6 \& 0 \& 0 \\ 0 \& 1 \& 1 \\ 4 \& 3 \& 1 \end{pmatrix}$\par
     *Step 2: Initialize $\text{Work} = \begin{pmatrix} 3 \& 3 \& 2 \end{pmatrix}$*\par
-    - Check P1: $\text{Need}_1 \begin{pmatrix} 1 \& 2 \& 2 \end{pmatrix} \le \text{Work} \begin{pmatrix} 3 \& 3 \& 2 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_1 = \begin{pmatrix} 5 \& 3 \& 2 \end{pmatrix}$.\par
-    - Check P3: $\text{Need}_3 \begin{pmatrix} 0 \& 1 \& 1 \end{pmatrix} \le \text{Work} \begin{pmatrix} 5 \& 3 \& 2 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_3 = \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix}$.\par
-    - Check P0: $\text{Need}_0 \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix} \le \text{Work} \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_0 = \begin{pmatrix} 7 \& 5 \& 3 \end{pmatrix}$.\par
-    - Check P2: $\text{Need}_2 \begin{pmatrix} 6 \& 0 \& 0 \end{pmatrix} \le \text{Work} \begin{pmatrix} 7 \& 5 \& 3 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_2 = \begin{pmatrix} 10 \& 5 \& 5 \end{pmatrix}$.\par
-    - Check P4: $\text{Need}_4 \begin{pmatrix} 4 \& 3 \& 1 \end{pmatrix} \le \text{Work} \begin{pmatrix} 10 \& 5 \& 5 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_4 = \begin{pmatrix} 10 \& 5 \& 7 \end{pmatrix}$.\par
-    *Result:* All processes finished. System is in \textbf{safe state} with safe sequence: $\langle \mathbf{P1, P3, P0, P2, P4} \rangle$.
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=2pt]
+      \item \textbf{Check P1:} $\text{Need}_1 \begin{pmatrix} 1 \& 2 \& 2 \end{pmatrix} \le \text{Work} \begin{pmatrix} 3 \& 3 \& 2 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_1 = \begin{pmatrix} 5 \& 3 \& 2 \end{pmatrix}$.
+      \item \textbf{Check P3:} $\text{Need}_3 \begin{pmatrix} 0 \& 1 \& 1 \end{pmatrix} \le \text{Work} \begin{pmatrix} 5 \& 3 \& 2 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_3 = \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix}$.
+      \item \textbf{Check P0:} $\text{Need}_0 \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix} \le \text{Work} \begin{pmatrix} 7 \& 4 \& 3 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_0 = \begin{pmatrix} 7 \& 5 \& 3 \end{pmatrix}$.
+      \item \textbf{Check P2:} $\text{Need}_2 \begin{pmatrix} 6 \& 0 \& 0 \end{pmatrix} \le \text{Work} \begin{pmatrix} 7 \& 5 \& 3 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_2 = \begin{pmatrix} 10 \& 5 \& 5 \end{pmatrix}$.
+      \item \textbf{Check P4:} $\text{Need}_4 \begin{pmatrix} 4 \& 3 \& 1 \end{pmatrix} \le \text{Work} \begin{pmatrix} 10 \& 5 \& 5 \end{pmatrix}$? Yes. $\text{Work} \to \text{Work} + \text{Alloc}_4 = \begin{pmatrix} 10 \& 5 \& 7 \end{pmatrix}$.
+    \end{itemize}
+    \textbf{Result:} All processes finished. System is in \textbf{safe state} with safe sequence: $\langle \mathbf{P1, P3, P0, P2, P4} \rangle$.
   \item \Q{Differentiate between Deadlock Prevention and Deadlock Avoidance.}
     Prevention limits system design by enforcing policies that violate one of the 4 Coffman conditions (e.g., resource ordering). Avoidance does not restrict request structures but checks dynamic resource availability and maximum limits to keep the system in a safe state.
   \item \Q{How can the circular wait condition be prevented in operating systems?}
@@ -1261,35 +1265,41 @@ where $p$ = Page Fault Rate ($0 \le p \le 1$), $T_{\text{mem}}$ = RAM Access Tim
     Paging divides memory into fixed-size blocks (pages/frames), avoiding external fragmentation but suffering from internal fragmentation. It is invisible to the user. Segmentation divides memory into logical variable-size modules, matching the programmer's view, but suffers from external fragmentation.
   \item \Q{Given a reference string: \texttt{7, 0, 1, 2, 0, 3, 0, 4, 2, 3}. Frame size = 3.}\\
     \textbf{Calculate page faults for: (a) FIFO, (b) LRU, (c) Optimal.}\par
-    *(a) FIFO:* Frames status:\par
-    - Ref 7: [7] - Fault 1\par
-    - Ref 0: [7, 0] - Fault 2\par
-    - Ref 1: [7, 0, 1] - Fault 3\par
-    - Ref 2: [2, 0, 1] (replaces 7) - Fault 4\par
-    - Ref 0: [2, 0, 1] - Hit\par
-    - Ref 3: [2, 3, 1] (replaces 0) - Fault 5\par
-    - Ref 0: [2, 3, 0] (replaces 1) - Fault 6\par
-    - Ref 4: [4, 3, 0] (replaces 2) - Fault 7\par
-    - Ref 2: [4, 2, 0] (replaces 3) - Fault 8\par
-    - Ref 3: [4, 2, 3] (replaces 0) - Fault 9. \textbf{Total Faults = 9.}\par
-    *(b) LRU:* Frames status:\par
-    - Ref 7, 0, 1: [7, 0, 1] - Faults = 3\par
-    - Ref 2: [2, 0, 1] (replaces 7) - Fault 4\par
-    - Ref 0: [2, 0, 1] - Hit (0 is most recent)\par
-    - Ref 3: [2, 0, 3] (replaces 1) - Fault 5\par
-    - Ref 0: [2, 0, 3] - Hit\par
-    - Ref 4: [4, 0, 3] (replaces 2) - Fault 6\par
-    - Ref 2: [4, 0, 2] (replaces 3) - Fault 7\par
-    - Ref 3: [3, 0, 2] (replaces 4) - Fault 8. \textbf{Total Faults = 8.}\par
-    *(c) Optimal:* Frames status:\par
-    - Ref 7, 0, 1: [7, 0, 1] - Faults = 3\par
-    - Ref 2: [2, 0, 1] (replaces 7, unused furthest) - Fault 4\par
-    - Ref 0: [2, 0, 1] - Hit\par
-    - Ref 3: [2, 0, 3] (replaces 1, unused furthest) - Fault 5\par
-    - Ref 0: [2, 0, 3] - Hit\par
-    - Ref 4: [4, 0, 3] (replaces 2, unused furthest) - Fault 6\par
-    - Ref 2: [2, 0, 3] (replaces 4) - Fault 7\par
-    - Ref 3: [2, 0, 3] - Hit. \textbf{Total Faults = 7.}
+    \textbf{(a) FIFO:} Frames status:\par
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=2pt]
+      \item \textbf{Ref 7:} [7] - Fault 1
+      \item \textbf{Ref 0:} [7, 0] - Fault 2
+      \item \textbf{Ref 1:} [7, 0, 1] - Fault 3
+      \item \textbf{Ref 2:} [2, 0, 1] (replaces 7) - Fault 4
+      \item \textbf{Ref 0:} [2, 0, 1] - Hit
+      \item \textbf{Ref 3:} [2, 3, 1] (replaces 0) - Fault 5
+      \item \textbf{Ref 0:} [2, 3, 0] (replaces 1) - Fault 6
+      \item \textbf{Ref 4:} [4, 3, 0] (replaces 2) - Fault 7
+      \item \textbf{Ref 2:} [4, 2, 0] (replaces 3) - Fault 8
+      \item \textbf{Ref 3:} [4, 2, 3] (replaces 0) - Fault 9. \textbf{Total Faults = 9.}
+    \end{itemize}
+    \textbf{(b) LRU:} Frames status:\par
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=2pt]
+      \item \textbf{Ref 7, 0, 1:} [7, 0, 1] - Faults = 3
+      \item \textbf{Ref 2:} [2, 0, 1] (replaces 7) - Fault 4
+      \item \textbf{Ref 0:} [2, 0, 1] - Hit (0 is most recent)
+      \item \textbf{Ref 3:} [2, 0, 3] (replaces 1) - Fault 5
+      \item \textbf{Ref 0:} [2, 0, 3] - Hit
+      \item \textbf{Ref 4:} [4, 0, 3] (replaces 2) - Fault 6
+      \item \textbf{Ref 2:} [4, 0, 2] (replaces 3) - Fault 7
+      \item \textbf{Ref 3:} [3, 0, 2] (replaces 4) - Fault 8. \textbf{Total Faults = 8.}
+    \end{itemize}
+    \textbf{(c) Optimal:} Frames status:\par
+    \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=2pt]
+      \item \textbf{Ref 7, 0, 1:} [7, 0, 1] - Faults = 3
+      \item \textbf{Ref 2:} [2, 0, 1] (replaces 7, unused furthest) - Fault 4
+      \item \textbf{Ref 0:} [2, 0, 1] - Hit
+      \item \textbf{Ref 3:} [2, 0, 3] (replaces 1, unused furthest) - Fault 5
+      \item \textbf{Ref 0:} [2, 0, 3] - Hit
+      \item \textbf{Ref 4:} [4, 0, 3] (replaces 2, unused furthest) - Fault 6
+      \item \textbf{Ref 2:} [2, 0, 3] (replaces 4) - Fault 7
+      \item \textbf{Ref 3:} [2, 0, 3] - Hit. \textbf{Total Faults = 7.}
+    \end{itemize}
   \item \Q{What is Belady's Anomaly? Give an example of when it occurs.}
     Belady's Anomaly is when allocating more page frames to a process increases the number of page faults. It occurs in FIFO page replacement. Example string: \texttt{1, 2, 3, 4, 1, 2, 5, 1, 2, 3, 4, 5}. Frame size = 3 gives 9 faults; Frame size = 4 gives 10 faults.
   \item \Q{What is a TLB and how does it improve Effective Access Time?}
@@ -1336,7 +1346,7 @@ The control of I/O devices connected to the computer is a major function of an o
 
 \subsection{I/O Communication Methods}
 \begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{Polling (Busy-Wait I/O):} CPU repeatedly reads the status register of the device controller until the device is ready. *Drawback:* Wastes CPU cycles.
+  \item \textbf{Polling (Busy-Wait I/O):} CPU repeatedly reads the status register of the device controller until the device is ready. \textbf{Drawback:} Wastes CPU cycles.
   \item \textbf{Interrupt-Driven I/O:} CPU starts I/O and switches to other tasks. When I/O is ready, the device controller triggers a hardware interrupt, forcing the CPU to branch to the Interrupt Service Routine (ISR).
   \item \textbf{Direct Memory Access (DMA):} Used for high-speed I/O. The DMA controller transfers blocks of data directly between device buffer and main memory, interrupting the CPU only once at the end of the block transfer.
 \end{itemize}
@@ -1460,8 +1470,8 @@ $$\text{Average Rotational Latency} = \frac{1}{2} \times \frac{60}{\text{RPM}}\ 
   \item \Q{Compare SCAN, C-SCAN, LOOK, and C-LOOK disk scheduling algorithms.}
     SCAN moves the head to the extreme boundary in one direction, then reverses. C-SCAN goes to the boundary, returns to the other boundary without servicing on the return. LOOK and C-LOOK improve on this by reversing at the last request instead of going to the extreme boundary.
   \item \Q{Give a numerical comparison of SCAN vs LOOK head travel. Head starts at 50 (direction: increasing). Request queue: \texttt{90, 150, 20}. Boundary = 199.}
-    *SCAN:* Head goes $50 \to 90 \to 150 \to \mathbf{199} \to 20$. Head travel: $(199 - 50) + (199 - 20) = 149 + 179 = 328$ cylinders.\par
-    *LOOK:* Head goes $50 \to 90 \to 150 \to 20$ (stops at 150 because it is the last request). Head travel: $(150 - 50) + (150 - 20) = 100 + 130 = 230$ cylinders.
+    \textbf{SCAN:} Head goes $50 \to 90 \to 150 \to \mathbf{199} \to 20$. Head travel: $(199 - 50) + (199 - 20) = 149 + 179 = 328$ cylinders.\par
+    \textbf{LOOK:} Head goes $50 \to 90 \to 150 \to 20$ (stops at 150 because it is the last request). Head travel: $(150 - 50) + (150 - 20) = 100 + 130 = 230$ cylinders.
   \item \Q{What is starvation in disk scheduling? Which algorithm is most prone to it?}
     Starvation occurs when a request is never serviced because closer requests keep arriving. SSTF is most prone to starvation because the head tends to stay in localized clusters, leaving requests on the far ends unserviced.
   \item \Q{Explain the mechanical layout of a Hard Disk Drive.}
@@ -1520,7 +1530,7 @@ The file system provides the online storage and access mechanism for both data a
 \subsection{Directory Structures}
 A directory is a container that organizes files. Common topologies:
 \begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{Single-Level Directory:} All files are in a single directory. *Problems:* Naming collisions, organization issues.
+  \item \textbf{Single-Level Directory:} All files are in a single directory. \textbf{Problems:} Naming collisions, organization issues.
   \item \textbf{Two-Level Directory:} Each user gets a private User File Directory (UFD) nested under a Master File Directory (MFD).
   \item \textbf{Tree-Structured Directory:} Users can create subdirectories and organize files hierarchically. The most common structure.
 \end{itemize}
@@ -1582,8 +1592,8 @@ To store files on disk, the OS must map logical file blocks to physical disk sec
 % ===============================================================================
 
 To allocate blocks, the OS tracks all free disk blocks using one of two common methods:
-1. \textbf{Bit Vector (Bit Map):} An array of bits where each bit corresponds to a disk block (0 = allocated, 1 = free). *Advantages:* Fast, easy to find consecutive blocks. *Disadvantages:* Must be kept in RAM, consumes space for large disks.
-2. \textbf{Linked List:} All free blocks are linked together. Directory keeps a pointer to the first free block. *Advantages:* Minimal space overhead. *Disadvantages:* Slow to traverse; hard to find contiguous free blocks.
+1. \textbf{Bit Vector (Bit Map):} An array of bits where each bit corresponds to a disk block (0 = allocated, 1 = free). \textbf{Advantages:} Fast, easy to find consecutive blocks. \textbf{Disadvantages:} Must be kept in RAM, consumes space for large disks.
+2. \textbf{Linked List:} All free blocks are linked together. Directory keeps a pointer to the first free block. \textbf{Advantages:} Minimal space overhead. \textbf{Disadvantages:} Slow to traverse; hard to find contiguous free blocks.
 
 \newpage
 % ===============================================================================
@@ -1627,8 +1637,8 @@ Let block size = $1\,\text{KB}$. Pointer size = $4\,\text{Bytes}$.
     An index block contains an array of disk block addresses allocated to a file. If a file exceeds the index block capacity, the OS uses: 1. Linked scheme (linking multiple index blocks). 2. Multilevel indexing (an index block containing pointers to other index blocks). 3. Combined scheme (like UNIX inodes).
   \item \Q{Describe free space management using a Bit Vector. Calculate the size of a bit map for a 200 GB disk with 4 KB blocks.}
     A bit vector uses 1 bit for each disk block: 1 means free, 0 means allocated.
-    *Total Blocks* = $200\,\text{GB} / 4\,\text{KB} = (200 \times 10^9) / (4 \times 10^3) = 50 \times 10^6$ blocks.\par
-    *Map Size* = $50 \times 10^6$ bits $\approx 6.25\,\text{MB}$ of storage.
+    \textbf{Total Blocks} = $200\,\text{GB} / 4\,\text{KB} = (200 \times 10^9) / (4 \times 10^3) = 50 \times 10^6$ blocks.\par
+    \textbf{Map Size} = $50 \times 10^6$ bits $\approx 6.25\,\text{MB}$ of storage.
   \item \Q{Explain the difference between sequential and direct file access mechanisms.}
     Sequential access processes records one after another from the beginning, moving a read pointer sequentially. Direct access allows reading/writing blocks in any arbitrary order by specifying the relative block number directly.
   \item \Q{What are the advantages of a tree-structured directory over a single-level directory?}
@@ -1809,12 +1819,12 @@ Let block size = $1\,\text{KB}$. Disk address pointer = $4\,\text{Bytes}$.
     A Distributed OS coordinates multiple autonomous CPUs connected by communication networks, presenting them as a single logical machine. Advantages include resource sharing, computational speedup, reliability (fault tolerance), and scalability.
   \item \Q{Explain the UNIX Inode pointer layout and calculate max file size for a 2 KB block size with 4-byte pointers.}
     Layout has 12 direct, 1 single indirect, 1 double indirect, and 1 triple indirect pointers.
-    *Pointers per block* = $2\,\text{KB} / 4\,\text{B} = 512$.\par
-    *Direct size* = $12 \times 2\,\text{KB} = 24\,\text{KB}$.\par
-    *Single indirect size* = $512 \times 2\,\text{KB} = 1024\,\text{KB} = 1\,\text{MB}$.\par
-    *Double indirect size* = $512^2 \times 2\,\text{KB} = 512\,\text{MB}$.\par
-    *Triple indirect size* = $512^3 \times 2\,\text{KB} = 256\,\text{GB}$.\par
-    *Max File Size* = $24\,\text{KB} + 1\,\text{MB} + 512\,\text{MB} + 256\,\text{GB} \approx 256.5\,\text{GB}$.
+    \textbf{Pointers per block} = $2\,\text{KB} / 4\,\text{B} = 512$.\par
+    \textbf{Direct size} = $12 \times 2\,\text{KB} = 24\,\text{KB}$.\par
+    \textbf{Single indirect size} = $512 \times 2\,\text{KB} = 1024\,\text{KB} = 1\,\text{MB}$.\par
+    \textbf{Double indirect size} = $512^2 \times 2\,\text{KB} = 512\,\text{MB}$.\par
+    \textbf{Triple indirect size} = $512^3 \times 2\,\text{KB} = 256\,\text{GB}$.\par
+    \textbf{Max File Size} = $24\,\text{KB} + 1\,\text{MB} + 512\,\text{MB} + 256\,\text{GB} \approx 256.5\,\text{GB}$.
   \item \Q{What is the function of the Superblock in the UNIX file system?}
     The Superblock is located at a fixed offset near the start of the disk partition. It contains critical metadata about the file system, including total blocks, free block count, free inode list, size of inode list, and status flag.
   \item \Q{Describe the UNIX process scheduling formula and explain the role of the nice value.}
