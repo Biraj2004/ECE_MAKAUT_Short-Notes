@@ -264,6 +264,75 @@ Microwave attenuators are passive components used to reduce the amplitude or pow
   \end{itemize}
 \end{itemize}
 
+\subsection{Power Divider (T-Junction and Wilkinson)}
+Power dividers are passive 3-port networks used to split an input signal into two or more output signals of lesser power.
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Reciprocal Lossless 3-Port Limitation:} By S-matrix properties, it is mathematically impossible for a 3-port junction to be simultaneously reciprocal, lossless, and matched at all ports.
+  \item \textbf{T-Junction Power Divider:} A simple lossless reciprocal 3-port divider (E-plane or H-plane waveguide junction or microstrip line). Since it is lossless and reciprocal, it cannot be matched at all ports simultaneously (typically the output ports are mismatched, leading to reflections).
+  \item \textbf{Wilkinson Power Divider:} A reciprocal 3-port network that achieves matching at all ports simultaneously and provides high isolation between the output ports by utilizing internal loss under mismatch. It is lossless when the output ports are matched and balanced.
+\end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Wilkinson Power Divider Transmission Line Layout}]
+\centering
+\begin{tikzpicture}[scale=0.95, every node/.style={font=\small}]
+  % Input line
+  \draw[very thick] (0,0) -- (1.5,0);
+  \node[left] at (0,0) {Port 1 ($Z_0$)};
+  
+  % Split junction
+  \filldraw (1.5,0) circle (2pt);
+  
+  % Upper branch (quarter-wave transformer)
+  \draw[very thick] (1.5,0) to[out=45, in=180] (3.5,0.8) -- (4.5,0.8);
+  \node[above] at (2.5,0.5) {$\lambda/4$, $\sqrt{2}Z_0$};
+  \node[right] at (4.5,0.8) {Port 2 ($Z_0$)};
+  
+  % Lower branch (quarter-wave transformer)
+  \draw[very thick] (1.5,0) to[out=-45, in=180] (3.5,-0.8) -- (4.5,-0.8);
+  \node[below] at (2.5,-0.5) {$\lambda/4$, $\sqrt{2}Z_0$};
+  \node[right] at (4.5,-0.8) {Port 3 ($Z_0$)};
+  
+  % Isolation Resistor
+  \draw[thick] (3.5,0.8) -- (3.5,-0.8);
+  \filldraw (3.5,0.8) circle (1.5pt);
+  \filldraw (3.5,-0.8) circle (1.5pt);
+  \node[left] at (3.5,0) {$R = 2Z_0$};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Wilkinson Power Divider S-Matrix}}]
+For design parameters with quarter-wave line impedance of $Z_0\sqrt{2}$ and an isolation resistor of $2Z_0$, the S-matrix of an ideal symmetric Wilkinson power divider matched at all three ports is:
+\begin{equation}
+  [S] = -\frac{j}{\sqrt{2}} \begin{bmatrix} 0 & 1 & 1 \\ 1 & 0 & 0 \\ 1 & 0 & 0 \end{bmatrix}
+\end{equation}
+When ports 2 and 3 are matched, no current flows through the isolation resistor $2Z_0$, and the power is split equally with zero loss ($S_{21} = S_{31} = -3\text{ dB}$).
+\end{tcolorbox}
+
+\subsection{Cavity Resonators}
+A microwave cavity resonator is a metallic enclosure that confines electromagnetic energy inside a cavity, storing it in standing waves.
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Mechanism:} Unlike lumped LC circuits which suffer from high radiation and conductor losses at gigahertz frequencies, cavity resonators completely enclose fields to achieve extremely high Q-factors ($10^3$ to $10^5$).
+  \item \textbf{Rectangular Cavity Resonator:} Formed by closing both ends of a rectangular waveguide of dimensions $a \times b$ at a distance $d$ (along the z-axis). Resonance occurs when the guide length $d$ is an integer multiple of half-guide-wavelengths ($d = p \lambda_g / 2$).
+\end{itemize}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Cavity Resonance \& Quality Factor}}]
+The resonant frequency $f_{mnp}$ for $\text{TE}_{mnp}$ or $\text{TM}_{mnp}$ modes in a rectangular cavity filled with dielectric ($\epsilon_r$) is:
+\begin{equation}
+  f_{mnp} = \frac{c}{2\sqrt{\epsilon_r}} \sqrt{\left(\frac{m}{a}\right)^{\!2} + \left(\frac{n}{b}\right)^{\!2} + \left(\frac{p}{d}\right)^{\!2}} \quad (\text{Hz})
+\end{equation}
+The \textbf{Quality Factor ($Q$)} measures the energy storage efficiency of the resonator:
+\begin{equation}
+  Q = 2\pi \frac{\text{Energy Stored}}{\text{Energy Dissipated per cycle}} = \omega \frac{W}{P_L}
+\end{equation}
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt, topsep=2pt]
+  \item \textbf{Unloaded $Q$ ($Q_0$):} Internal $Q$ of the cavity itself, accounting for conductor wall losses ($Q_c$) and dielectric losses ($Q_d$): $1/Q_0 = 1/Q_c + 1/Q_d$.
+  \item \textbf{Loaded $Q$ ($Q_L$):} Accounts for both internal cavity losses and external circuit load losses ($Q_e$):
+    \begin{equation}
+      \frac{1}{Q_L} = \frac{1}{Q_0} + \frac{1}{Q_e}
+    \end{equation}
+\end{itemize}
+\end{tcolorbox}
+
 % ===============================================================================
 \section{Microwave Semiconductor Devices}
 % ===============================================================================

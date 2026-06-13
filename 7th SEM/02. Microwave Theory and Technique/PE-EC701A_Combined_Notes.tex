@@ -1336,6 +1336,75 @@ Microwave attenuators are passive components used to reduce the amplitude or pow
   \end{itemize}
 \end{itemize}
 
+\subsection{Power Divider (T-Junction and Wilkinson)}
+Power dividers are passive 3-port networks used to split an input signal into two or more output signals of lesser power.
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Reciprocal Lossless 3-Port Limitation:} By S-matrix properties, it is mathematically impossible for a 3-port junction to be simultaneously reciprocal, lossless, and matched at all ports.
+  \item \textbf{T-Junction Power Divider:} A simple lossless reciprocal 3-port divider (E-plane or H-plane waveguide junction or microstrip line). Since it is lossless and reciprocal, it cannot be matched at all ports simultaneously (typically the output ports are mismatched, leading to reflections).
+  \item \textbf{Wilkinson Power Divider:} A reciprocal 3-port network that achieves matching at all ports simultaneously and provides high isolation between the output ports by utilizing internal loss under mismatch. It is lossless when the output ports are matched and balanced.
+\end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Wilkinson Power Divider Transmission Line Layout}]
+\centering
+\begin{tikzpicture}[scale=0.95, every node/.style={font=\small}]
+  % Input line
+  \draw[very thick] (0,0) -- (1.5,0);
+  \node[left] at (0,0) {Port 1 ($Z_0$)};
+  
+  % Split junction
+  \filldraw (1.5,0) circle (2pt);
+  
+  % Upper branch (quarter-wave transformer)
+  \draw[very thick] (1.5,0) to[out=45, in=180] (3.5,0.8) -- (4.5,0.8);
+  \node[above] at (2.5,0.5) {$\lambda/4$, $\sqrt{2}Z_0$};
+  \node[right] at (4.5,0.8) {Port 2 ($Z_0$)};
+  
+  % Lower branch (quarter-wave transformer)
+  \draw[very thick] (1.5,0) to[out=-45, in=180] (3.5,-0.8) -- (4.5,-0.8);
+  \node[below] at (2.5,-0.5) {$\lambda/4$, $\sqrt{2}Z_0$};
+  \node[right] at (4.5,-0.8) {Port 3 ($Z_0$)};
+  
+  % Isolation Resistor
+  \draw[thick] (3.5,0.8) -- (3.5,-0.8);
+  \filldraw (3.5,0.8) circle (1.5pt);
+  \filldraw (3.5,-0.8) circle (1.5pt);
+  \node[left] at (3.5,0) {$R = 2Z_0$};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Wilkinson Power Divider S-Matrix}}]
+For design parameters with quarter-wave line impedance of $Z_0\sqrt{2}$ and an isolation resistor of $2Z_0$, the S-matrix of an ideal symmetric Wilkinson power divider matched at all three ports is:
+\begin{equation}
+  [S] = -\frac{j}{\sqrt{2}} \begin{bmatrix} 0 & 1 & 1 \\ 1 & 0 & 0 \\ 1 & 0 & 0 \end{bmatrix}
+\end{equation}
+When ports 2 and 3 are matched, no current flows through the isolation resistor $2Z_0$, and the power is split equally with zero loss ($S_{21} = S_{31} = -3\text{ dB}$).
+\end{tcolorbox}
+
+\subsection{Cavity Resonators}
+A microwave cavity resonator is a metallic enclosure that confines electromagnetic energy inside a cavity, storing it in standing waves.
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Mechanism:} Unlike lumped LC circuits which suffer from high radiation and conductor losses at gigahertz frequencies, cavity resonators completely enclose fields to achieve extremely high Q-factors ($10^3$ to $10^5$).
+  \item \textbf{Rectangular Cavity Resonator:} Formed by closing both ends of a rectangular waveguide of dimensions $a \times b$ at a distance $d$ (along the z-axis). Resonance occurs when the guide length $d$ is an integer multiple of half-guide-wavelengths ($d = p \lambda_g / 2$).
+\end{itemize}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Cavity Resonance \& Quality Factor}}]
+The resonant frequency $f_{mnp}$ for $\text{TE}_{mnp}$ or $\text{TM}_{mnp}$ modes in a rectangular cavity filled with dielectric ($\epsilon_r$) is:
+\begin{equation}
+  f_{mnp} = \frac{c}{2\sqrt{\epsilon_r}} \sqrt{\left(\frac{m}{a}\right)^{\!2} + \left(\frac{n}{b}\right)^{\!2} + \left(\frac{p}{d}\right)^{\!2}} \quad (\text{Hz})
+\end{equation}
+The \textbf{Quality Factor ($Q$)} measures the energy storage efficiency of the resonator:
+\begin{equation}
+  Q = 2\pi \frac{\text{Energy Stored}}{\text{Energy Dissipated per cycle}} = \omega \frac{W}{P_L}
+\end{equation}
+\begin{itemize}[leftmargin=1.5em, itemsep=2pt, topsep=2pt]
+  \item \textbf{Unloaded $Q$ ($Q_0$):} Internal $Q$ of the cavity itself, accounting for conductor wall losses ($Q_c$) and dielectric losses ($Q_d$): $1/Q_0 = 1/Q_c + 1/Q_d$.
+  \item \textbf{Loaded $Q$ ($Q_L$):} Accounts for both internal cavity losses and external circuit load losses ($Q_e$):
+    \begin{equation}
+      \frac{1}{Q_L} = \frac{1}{Q_0} + \frac{1}{Q_e}
+    \end{equation}
+\end{itemize}
+\end{tcolorbox}
+
 % ===============================================================================
 \section{Microwave Semiconductor Devices}
 % ===============================================================================
@@ -1786,6 +1855,36 @@ An active device presenting a negative input impedance $Z_{\text{in}} = R_{\text
 
 \subsection{Two-Port Transistor Oscillator}
 A transistor-based oscillator uses an active three-terminal device (e.g., GaAs MESFET). An unstable termination at one port (such as a capacitive load at the source) is used to generate a negative input resistance at the other port (gate), which is then connected to a high-$Q$ resonant circuit (tuning network) to establish oscillation at the desired frequency.
+
+\subsection{Microwave Power Amplifier Design}
+Microwave power amplifiers (PAs) are designed to deliver high RF power levels to a load (typically a transmitting antenna) with maximum efficiency and minimal distortion.
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{1-dB Compression Point ($P_{1\text{dB}}$):} As input power increases, the amplifier eventually saturates and gain drops. The $P_{1\text{dB}}$ is the power level at which the output power is $1\text{ dB}$ lower than it would be in the ideal linear region. It marks the boundary of the linear operating region.
+  \item \textbf{Power Added Efficiency (PAE):} A critical metric for PAs that accounts for the input RF power, expressing the net RF power generated relative to the DC power consumed:
+    \begin{equation}
+      \text{PAE} = \frac{P_{\text{RF, out}} - P_{\text{RF, in}}}{P_{\text{DC}}} \times 100\%
+    \end{equation}
+  \item \textbf{Drain/Collector Efficiency ($\eta$):} Ratio of output RF power to input DC power: $\eta = P_{\text{RF, out}}/P_{\text{DC}} \times 100\%$.
+\end{itemize}
+
+\textbf{Power Amplifier Classes:}\par\noindent
+PAs are classified based on their conduction angle ($\theta_c$), which defines the fraction of the RF cycle during which the active transistor conducts current.
+\par\noindent
+\begin{tabularx}{\linewidth}{|B{1.6cm}|Y|Y|Y|Y|}
+\hline
+\rowcolor{hdrgray}
+\textbf{Class} & \textbf{Conduction Angle ($\theta_c$)} & \textbf{Ideal Max Efficiency} & \textbf{Linearity} & \textbf{Characteristics} \\
+\hline
+Class A & $360^\circ$ (conducts full cycle) & $50\%$ & Outstanding & Low efficiency; high heat dissipation; active at all times. \\
+\hline
+Class AB & $180^\circ < \theta_c < 360^\circ$ & $50\% - 78.5\%$ & Good & Compromise between Class A and B; commonly used in RF links. \\
+\hline
+Class B & $180^\circ$ (conducts half cycle) & $78.5\%$ & Moderate & Transistor conducts only during one half-cycle; requires push-pull. \\
+\hline
+Class C & $<180^\circ$ (conducts narrow pulses) & $>85\%$ (approaching $100\%$) & Very Poor & High distortion; requires resonant tank circuit to reconstruct wave. \\
+\hline
+\end{tabularx}
+
 \begin{center}
   {\large\bfseries\color{myred} Quick Revision --- Module VI}\\[3pt]
   {\small\color{mydark} Microwave Design Principles $|$ PE-EC701A}
@@ -2256,6 +2355,36 @@ The noise figure $F$ is then calculated as:
   F = 1 + \frac{T_e}{T_0} \quad (\text{with } T_0 = 290\text{ K})
 \end{equation}
 \end{tcolorbox}
+
+% ===============================================================================
+\section{Measurement of Microwave Antenna Parameters}
+% ===============================================================================
+
+Antenna parameter measurements are critical for validating design parameters such as radiation pattern and directive gain.
+
+\subsection{Radiation Pattern Measurement}
+The radiation pattern is measured in the far-field region to ensure that the wave behaves as a local plane wave.
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Far-Field Boundary (Fraunhofer Distance):} The minimum distance $R$ between the transmitting antenna and the antenna under test (AUT) of maximum dimension $D$ is:
+    \begin{equation}
+      R \ge \frac{2 D^2}{\lambda} \quad (\text{m})
+    \end{equation}
+  \item \textbf{Setup:} Carried out in an \textbf{anechoic chamber} lined with RF-absorbing foam pyramids to eliminate echoes. The AUT is placed on a rotating positioner as a receiver, and a stationary source antenna transmits a signal. The received power is recorded as a function of the rotation angle ($\theta, \phi$) to plot the 2D/3D radiation pattern.
+\end{itemize}
+
+\subsection{Antenna Gain Measurement}
+Gain is measured using either absolute or relative methods:
+\begin{enumerate}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Three-Antenna Method (Absolute Method):} Requires no prior knowledge of any antenna's gain. By measuring the received power combinations ($P_{ij}$) among three different antennas ($A, B, C$) separated by distance $R$, we apply the \textbf{Friis Transmission Equation} to solve for individual gains:
+    \begin{equation}
+      G_i G_j = \left( \frac{4\pi R}{\lambda} \right)^{\!2} \frac{P_{rec, j}}{P_{trans, i}}
+    \end{equation}
+    Taking the logarithm yields a system of three linear equations to find $G_A, G_B, G_C$.
+  \item \textbf{Gain Transfer Method (Comparison Method):} The received power of a standard gain horn antenna (with known gain $G_{std}$) is measured first as $P_{std}$. The AUT is then substituted in the exact same position, and its received power $P_{AUT}$ is measured. The gain of the AUT is calculated as:
+    \begin{equation}
+      G_{AUT} = G_{std} \cdot \frac{P_{AUT}}{P_{std}} \quad \implies \quad G_{AUT (dBi)} = G_{std (dBi)} + 10 \log_{10}\left(\frac{P_{AUT}}{P_{std}}\right)
+    \end{equation}
+\end{enumerate}
 
 % ===============================================================================
 % MANDATORY QUICK REVISION PAGE
