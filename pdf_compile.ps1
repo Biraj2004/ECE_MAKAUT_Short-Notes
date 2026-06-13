@@ -34,6 +34,54 @@ function Write-Info { param($m) Write-Host "  [..]   $m" -ForegroundColor Cyan  
 function Write-Head { param($m) Write-Host "`n$m"        -ForegroundColor Yellow }
 function Write-Skip { param($m) Write-Host "  [SKIP] $m" -ForegroundColor DarkGray }
 
+# ── Linter function to check for raw markdown syntax ──────────────────────────
+function Test-MarkdownFormatting {
+    param([string]$FilePath)
+    
+    $errors = @()
+    if (-not (Test-Path $FilePath)) { return $errors }
+    
+    $lines = Get-Content -Path $FilePath -Encoding UTF8
+    $inTikz = $false
+    $lineNum = 0
+    
+    foreach ($line in $lines) {
+        $lineNum++
+        $trimmed = $line.Trim()
+        
+        if ($trimmed.Contains("\begin{tikzpicture}")) {
+            $inTikz = $true
+        }
+        if ($trimmed.Contains("\end{tikzpicture}")) {
+            $inTikz = $false
+        }
+        
+        # Skip comments and empty lines
+        if ($trimmed.StartsWith("%") -or $trimmed -eq "") {
+            continue
+        }
+        
+        # Check for raw markdown bold **
+        if ($trimmed.Contains("**") -and -not $trimmed.Contains("\texttt{**}") -and -not $trimmed.Contains("\verb")) {
+            $errors += "Line ${lineNum}: Raw bold '**' found: $trimmed"
+        }
+        
+        # Check for raw bullets * or - outside TikZ
+        if (-not $inTikz) {
+            if ($trimmed -match "^\*[ \t]+\S") {
+                $errors += "Line ${lineNum}: Raw asterisk list item found: $trimmed"
+            }
+            if ($trimmed -match "^-[ \t]+\S") {
+                $errors += "Line ${lineNum}: Raw hyphen list item found: $trimmed"
+            }
+            if ($trimmed -match "^\d+\.[ \t]+\S" -and -not $trimmed.StartsWith("\item") -and -not ($trimmed -match "^\d+\.[ \t]+\\textbf")) {
+                $errors += "Line ${lineNum}: Raw numbered list item found (needs \item inside enumerate): $trimmed"
+            }
+        }
+    }
+    return $errors
+}
+
 # ── Check xelatex ─────────────────────────────────────────────────────────────
 if (-not (Get-Command $COMPILER -ErrorAction SilentlyContinue)) {
     Write-Host "[ERROR] '$COMPILER' not found in PATH." -ForegroundColor Red
@@ -118,6 +166,18 @@ foreach ($tex in $texFiles) {
     $pdfPath  = Join-Path $dir "$name.pdf"
 
     Write-Head "► $($tex.Name)"
+
+    # Lint for raw markdown syntax
+    $lintErrors = Test-MarkdownFormatting -FilePath $fullPath
+    if ($lintErrors.Count -gt 0) {
+        Write-Fail "Markdown syntax check failed for $($tex.Name):"
+        foreach ($err in $lintErrors) {
+            Write-Host "    $err" -ForegroundColor Red
+        }
+        $failed++
+        $results += [PSCustomObject]@{ File=$tex.Name; Status="FAIL (Lint)"; Size="-" }
+        continue
+    }
 
     $passOk = $true
 

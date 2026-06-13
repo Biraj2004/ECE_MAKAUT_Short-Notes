@@ -24,7 +24,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
-| 7th SEM | 🟡 In progress | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules) |
+| 7th SEM | 🟡 In progress | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules) |
 | 8th SEM | 🔲 Planned | — |
 
 ---
@@ -192,6 +192,41 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC701A_Module9_Notes.pdf` | Microwave Systems \& Modern Trends: radar systems, Doppler shift, satellite communication, GPS, navigation aids (ILS, LORAN, RFID), biological effects, MMICs, RFMEMS |
 | `PE-EC701A_Microwave_Theory_and_Technique.pdf` | **Combined** — all 9 modules, 63 pages |
 
+### PE-EC701B — Satellite Communication
+
+| File | Topics |
+|---|---|
+| `PE-EC701B_Module1_Notes.pdf` | Introduction to Satellite Communication: principles, basic uplink/downlink architecture, brief history, advantages, disadvantages, applications, frequency bands classification, and uplink/downlink frequency separation. |
+| `PE-EC701B_Module2_Notes.pdf` | Orbital Mechanics: Kepler's three laws of planetary motion, elliptical orbit parameters (apogee, perigee, eccentricity), orbital velocity (Vis-Viva equation), angular velocity, and Solar vs. Sidereal day comparison. |
+| `PE-EC701B_Module3_Notes.pdf` | Satellite Sub-systems: study of satellite bus and payload architectures, TTC\&M, Attitude and Orbit Control (AOCS), stabilization (spin vs. three-axis), communication transponders (bent-pipe vs. regenerative), and power systems (solar arrays and battery backup). |
+| `PE-EC701B_Module4_Notes.pdf` | Typical Phenomena in Satellite Communication: Solar Eclipse on satellite (geometry, effects, remedies), Sun Transit Outage (alignment, thermal noise, remedies), and Doppler frequency shift (expression derivation and satellite communications impact). |
+| `PE-EC701B_Module5_Notes.pdf` | Satellite Link Budget: power flux density, received signal power (Friis transmission equation), system noise temperature calculation, noise power, drafting satellite link budgets, C/N and C/N0 ratios under clear air and rainy conditions. |
+| `PE-EC701B_Module6_Notes.pdf` | Modulation and Multiple Access Schemes: digital modulation (QPSK/8PSK), concept of multiple access, FDMA (FDM vs. FDMA, intermodulation distortion, amplifier back-off), TDMA (frame structure, preambles, guard times, frame efficiency), and CDMA (DS-CDMA, PN codes, processing gain). |
+| `PE-EC701B_Satellite_Communication.pdf` | **Combined** — all 6 modules, 42 pages |
+
+### PE-EC701C — Mobile Communication and Networks
+
+| File | Topics |
+|---|---|
+| `PE-EC701C_Module1_Notes.pdf` | Cellular Concepts and Wireless Standards: Cell structure, frequency reuse, cell splitting, sectoring, microcell zone, channel assignment, handoff (hard, soft, delayed, queuing), interference, capacity (Erlang B/C), power control, and 2G/3G standards overview. |
+| `PE-EC701C_Module2_Notes.pdf` | Signal Propagation and Fading Channels: Reflection, refraction, diffraction (knife-edge model), scattering, path loss, lognormal shadowing, fading channels, Doppler shift, Rayleigh and Ricean models, multipath parameters (delay spread, coherence bandwidth, coherence time), flat vs. frequency selective fading, slow vs. fast fading, average fade duration, and level crossing rate. |
+| `PE-EC701C_Module3_Notes.pdf` | Channel Capacity and Mobile Antennas: Flat and frequency selective channel capacity, water-filling algorithm, monopole antennas, PIFA structure and working, base station omnidirectional/sectorized antennas, and smart antennas (switched-beam, adaptive arrays). |
+| `PE-EC701C_Module4_Notes.pdf` | Multiple Access and Modulation Schemes: FDMA, TDMA (slot structure), CDMA (Walsh codes, PN sequences, near-far problem), SDMA, BPSK, QPSK, OQPSK, $\pi/4$-DQPSK, QAM, MSK, GMSK (continuous phase, Gaussian LPF), multicarrier modulation, and OFDM (orthogonality, IFFT/FFT, cyclic prefix, PAPR). |
+| `PE-EC701C_Module5_Notes.pdf` | Receiver Structure and Diversity Techniques: Space, time, frequency, and polarization diversity, selection/MRC/EGC combining, RAKE receiver (finger structure), equalization (ZFE, MMSE, LMS, RLS, DFE), and transmit diversity (Alamouti 2x1 scheme). |
+| `PE-EC701C_Module6_Notes.pdf` | MIMO and Cellular System Examples: MIMO space-time processing, spatial multiplexing vs. spatial diversity, diversity-multiplexing tradeoff, performance measures (outage, SNR, BER/SER), system examples: GSM (architecture, logical/physical channels), GPRS, EDGE (8-PSK updates), IS-95, WCDMA, and CDMA2000. |
+| `PE-EC701C_Mobile_Communication_and_Networks.pdf` | **Combined** — all 6 modules |
+
+### PE-EC702A — Adaptive Signal Processing
+
+| File | Topics |
+|---|---|
+| `PE-EC702A_Module1_Notes.pdf` | General Concept of Adaptive Filtering \& Estimation, Applications \& Motivation, Probability Review, Stationary Processes, Correlation Structures \& Autocorrelation Matrix Properties |
+| `PE-EC702A_Module2_Notes.pdf` | Optimal FIR (Wiener) Filter, Wiener-Hopf Equations, MSE Performance Surface, Method of Steepest Descent, Convergence Analysis, LMS Algorithm (Real/Complex), Excess MSE, Misadjustment |
+| `PE-EC702A_Module3_Notes.pdf` | Variants of LMS: Sign-LMS Family, Normalized LMS (NLMS), Block LMS, FDAF, Sub-band Adaptive Filtering; Signal Space Concepts: Vector spaces, Linear Operators, Inner Product Spaces, Gram-Schmidt Orthogonalization, Orthogonal Projection/Decomposition |
+| `PE-EC702A_Module4_Notes.pdf` | Vector Space of Random Variables, Forward/Backward Projections \& Linear Prediction, Stochastic Lattice Filters, Reflection Coefficients, Yule-Walker Equations, Levinson-Durbin Recursion, Joint Process Estimator, GAL |
+| `PE-EC702A_Module5_Notes.pdf` | Recursive Least Squares (RLS) Cost Function, Matrix Inversion Lemma, RLS Transversal Update Equations, RLS Lattice Filters, APA, Subspace Adaptive Filters, Partial Updates, QRD-RLS, Systolic Arrays |
+| `PE-EC702A_Adaptive_Signal_Processing.pdf` | **Combined** — all 5 modules |
+
 ---
 
 ## Repository structure
@@ -279,6 +314,22 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── ...
 │   │   ├── PE-EC701A_Combined_Notes.tex
 │   │   └── PE-EC701A_Microwave_Theory_and_Technique.pdf
+│   ├── 03. Satellite Communication/
+│   │   ├── PE-EC701B_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC701B_Combined_Notes.tex
+│   │   └── PE-EC701B_Satellite_Communication.pdf
+│   ├── 04. Mobile Communication and Networks/
+│   │   ├── PE-EC701C_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC701C_Combined_Notes.tex
+│   │   └── PE-EC701C_Mobile_Communication_and_Networks.pdf
+│   ├── 05. Adaptive Signal Processing/
+│   │   ├── PE-EC702A_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC702A_Module5_Notes.tex / .pdf
+│   │   ├── PE-EC702A_Combined_Notes.tex
+│   │   └── PE-EC702A_Adaptive_Signal_Processing.pdf
 │   └── sem7.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject

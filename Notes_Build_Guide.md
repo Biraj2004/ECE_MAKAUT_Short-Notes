@@ -816,7 +816,7 @@ Before submitting or printing the PDF:
 - [ ] All viva Q&A use `\Q{}` macro (question bold, answer on next line)
 - [ ] Last 2–3 viva items either fit on the same page OR the viva is split into two `exambox` blocks with `\newpage` between (use `start=N` on the second `enumerate`)
 - [ ] Multi-bullet answers in viva use a nested `itemize`, not inline semicolons
-- [ ] No raw markdown bold/emphasis syntax (**text** or *text*) or raw hyphen list points (- Point) in .tex files
+- [ ] No raw markdown bold/emphasis syntax (**text** or *text*), or raw list points (- Point, * Point, or 1. Point) in .tex files (the compiler script now validates this and fails compile if found)
 - [ ] No `\usepackage{amssymb}` in preamble
 - [ ] No Unicode em-dash (`—`) in section/subsection titles (use `---`)
 - [ ] Math in headings wrapped with `\texorpdfstring{}{}`

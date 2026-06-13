@@ -71,6 +71,16 @@ ECE_MAKAUT_Short-Notes/
 │       ├── ...
 │       ├── PE-EC701A_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── PE-EC701A_Microwave_Theory_and_Technique.pdf
+│   └── 03. Satellite Communication/       # PE-EC701B — 6 modules (All complete)
+│       ├── PE-EC701B_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── PE-EC701B_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── PE-EC701B_Satellite_Communication.pdf
+│   └── 05. Adaptive Signal Processing/ # PE-EC702A — 5 modules (All complete)
+│       ├── PE-EC702A_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── PE-EC702A_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── PE-EC702A_Adaptive_Signal_Processing.pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -302,6 +312,8 @@ Examples: `01. Control System/`, `02. Computer Network/`
 |---|---|---|---|---|
 | HS-HU701 Principles of Management | 4 | ✅ All compiled | `HS-HU701_Principles_of_Management.pdf` | 46 |
 | PE-EC701A Microwave Theory and Technique | 9 | ✅ All compiled | `PE-EC701A_Microwave_Theory_and_Technique.pdf` | 63 |
+| PE-EC701B Satellite Communication | 6 | ✅ All compiled | `PE-EC701B_Satellite_Communication.pdf` | 42 |
+| PE-EC702A Adaptive Signal Processing | 5 | ✅ All compiled | `PE-EC702A_Adaptive_Signal_Processing.pdf` | — |
 
 **1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
 **8th SEM:** Not started.
