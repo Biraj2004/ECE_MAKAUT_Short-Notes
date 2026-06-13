@@ -18,7 +18,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 
 | Semester | Status | Subjects |
 |---|---|---|
-| 1st SEM | 🟡 In progress | BS-CH101 Chemistry-I (7 modules compiled) |
+| 1st SEM | 🟡 In progress | BS-CH101 Chemistry-I (7 modules + combined PDF complete) |
 | 2nd SEM | 🔲 Planned | — |
 | 3rd SEM | 🔲 Planned | — |
 | 4th SEM | 🔲 Planned | — |

@@ -303,5 +303,5 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | HS-HU701 Principles of Management | 4 | ✅ All compiled | `HS-HU701_Principles_of_Management.pdf` | 46 |
 | PE-EC701A Microwave Theory and Technique | 9 | ✅ All compiled | `PE-EC701A_Microwave_Theory_and_Technique.pdf` | 63 |
 
-**1st–5th SEM:** Folders exist, no content yet.
+**1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
 **8th SEM:** Not started.
