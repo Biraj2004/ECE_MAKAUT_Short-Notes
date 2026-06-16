@@ -157,8 +157,8 @@ Follow this order for every topic:
 \definecolor{hdrteal}{RGB}{220,242,244}
 \definecolor{hdramber}{RGB}{253,242,215}
 \definecolor{hdrpurple}{RGB}{238,228,255}
-\definecolor{hdrgray}{RGB}{238,240,245}   % comparison table headers only
-\definecolor{rowalt}{RGB}{250,251,253}    % alternate row shading
+\definecolor{hdrgray}{RGB}{238,240,245}   % DEPRECATED (Do not use for table headers)
+\definecolor{rowalt}{RGB}{250,251,253}    % DEPRECATED (Do not use for row shading)
 ```
 
 ### Colour usage rules
@@ -171,10 +171,10 @@ Follow this order for every topic:
 | `myteal` | `\subsection` headings, `formulabox` — formulas, derivations, block diagrams |
 | `myamber` | `examplebox` — worked examples, solved problems |
 | `mypurple` | `masonbox`, `exambox` — viva Q&A, exam tips |
-| `hdrgray` | Comparison table headers **only** (neutral grey) |
-| `hdrteal` | Topic-specific table headers (formulas, properties) |
-| `hdrgreen` | Definition/terminology table headers |
-| `hdrpurple` | SFG/Mason table headers |
+| `hdrgray` | DEPRECATED (Do not use for table headers) |
+| `hdrteal` | Box header background only (Do not use for tables) |
+| `hdrgreen` | Box header background only (Do not use for tables) |
+| `hdrpurple` | Box header background only (Do not use for tables) |
 
 ---
 
@@ -240,6 +240,42 @@ Follow this order for every topic:
 ## 6. Table Rules
 
 > Follow exactly — these rules prevent broken/phantom column layouts.
+
+### ⚠ Strict Boxed Styling (No Colors, Full Borders)
+
+All tables inside module files must strictly adhere to a standard boxed style. Diverging from this causes visual inconsistencies:
+* **No `\rowcolor` or Shading:** Do NOT use `\rowcolor{...}` or alternating row colors (like `rowalt`). Table headers and data rows must have a transparent/white background.
+* **No `booktabs` Rules:** Do NOT use `\toprule`, `\midrule`, or `\bottomrule`.
+* **Explicit Grids:** Always enclose all columns with vertical lines (`|`) in the column specifier and separate all rows with `\hline` (top, bottom, and between every row).
+
+### ⚠ Preventing Grid Line Collisions (Cell Padding)
+
+In boxed tables, text or mathematical symbols (especially subscripts, superscripts, fractions, matrices, sum/product limits, or square roots) can collide with the horizontal `\hline` lines above or below them. To guarantee adequate breathing room (vertical padding) and prevent clipping:
+
+1. **Alternate Row Stretch (`\arraystretch`):**
+   * For any table containing standard equations, subscripts/superscripts, or square roots, wrap the table block in a local group and increase the row stretch to `1.65`:
+     ```latex
+     {\renewcommand{\arraystretch}{1.65}%
+     \begin{tabularx}{\linewidth}{...}
+     ...
+     \end{tabularx}}
+     ```
+   * For tables containing tall fractions (`\frac` or `\displaystyle\frac`), integration `\int`, sum `\sum`, or matrices, increase the row stretch even further to `1.9`:
+     ```latex
+     {\renewcommand{\arraystretch}{1.9}%
+     \begin{tabularx}{\linewidth}{...}
+     ...
+     \end{tabularx}}
+     ```
+2. **Explicit Row Bottom-Padding (`\\[length]`):**
+   * If a cell contains descenders (such as $g$, $p$, $q$, $y$) or subscripts (such as $w_{ij}$) or fractions that get too close to the horizontal line below it, add extra spacing at the end of the row instead of just `\\`:
+     * Use `\\[4pt]` for mild subscripts/descenders.
+     * Use `\\[6pt]` for single fractions or square roots.
+     * Use `\\[8pt]` for complex nested fractions or matrices.
+     * *Example:* `Row content & $w_{ij} = \sum s_i t_j$ \\[6pt]`
+3. **Explicit Row Top-Padding (Struts):**
+   * If a tall mathematical expression touches the `\hline` above it, insert a vertical strut `\rule{0pt}{14pt}` at the start of that cell to force top clearance.
+     * *Example:* `\rule{0pt}{14pt} \sqrt{\frac{x}{y}} & ... \\`
 
 ### Always use `tabularx` with `\linewidth`
 
