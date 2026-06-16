@@ -207,6 +207,7 @@ These are non-negotiable. Violating them causes compile errors or broken output.
 - All 6 styles (`tikzbox`, `defbox`, `formulabox`, `examplebox`, `masonbox`, `exambox`) must be present in every file.
 - Always set both `colbacktitle` and `coltitle=white` — missing `coltitle` makes title text invisible.
 - Add `\tcbset{breakable}` after the style block.
+- **Strategic page splits:** If a breakable box is pushed entirely to the next page (due to starting with tall list items or unbreakable display math blocks) and leaves a large blank space or orphans a section heading/rule, insert a strategic `\newpage` inside the box body (e.g. after the first item) to force it to start on the current page and break cleanly.
 
 ### Math in headings
 ```latex
@@ -293,6 +294,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | PowerShell `1KB` parse error in strings | Use a separate variable: `$sizeKB = ...; $sizeStr = "$sizeKB KB"` |
 | `Get-Content` mangling em-dash | Always use `-Encoding UTF8` when reading `.tex` files in PowerShell |
 | tikzset extraction in combined builder | Regex must match `name/.style=` (with slash), not `name.style=` |
+| Breakable box pushed to next page leaving empty space / orphaned rule | Insert a strategic `\newpage` or `\pagebreak` inside the `tcolorbox` body (e.g. after the first item) to force it to start on the current page. |
 
 ---
 

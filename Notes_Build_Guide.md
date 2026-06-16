@@ -671,7 +671,22 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
   exambox/.style={..., breakable}
   examplebox/.style={..., breakable}
   ```
-- **Refinement (Unbalanced Page Splits):** When a breakable box splits naturally, it may result in an unbalanced distribution (e.g., 95% of the box on one page and a tiny 5% overflow on the next page, or a massive blank space before it). In such cases, you can insert a strategic `\newpage` or `\pagebreak` *inside* the tcolorbox body (e.g., before a subsection or a major step) to force a clean, balanced split across two pages.
+- **Refinement (Unbalanced Page Splits / Pushed Boxes):** When a breakable box contains tall nested environments (like list items starting with large `align*` equation blocks or tables) at its very beginning, the page-builder may determine that the first unbreakable chunk cannot fit in the remaining space of the current page. As a result, the entire box is pushed to the next page, leaving a massive white space. If this box is placed immediately after a section heading, it can also cause the heading title and its horizontal red rule to split (with the rule orphaned on the next page).
+  - **The Fix:** Insert a strategic `\newpage` or `\pagebreak` *inside* the `tcolorbox` body (e.g., before a `\textbf{Solution:}` block or immediately after the first list item like part (a)). This forces a portion of the box's content to stay on the first page, which pulls the box start to the current page. This keeps the section title and rule properly grouped with the box start and cleanly distributes the rest of the content onto the next page.
+    ```latex
+    \begin{tcolorbox}[examplebox, title={Fuzzy Set Operations}]
+    \textbf{Problem:} ...
+    \begin{itemize}[leftmargin=*]
+      \item \textbf{(a) Union:}
+        \begin{align*}
+          ...
+        \end{align*}
+        \newpage % Strategic split: fits Part (a) on page 1, pushes Part (b) to page 2
+      \item \textbf{(b) Intersection:}
+        ...
+    \end{itemize}
+    \end{tcolorbox}
+    ```
 
 
 ### Phantom extra column in tables
