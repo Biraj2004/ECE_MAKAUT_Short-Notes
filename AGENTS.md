@@ -194,6 +194,8 @@ These are non-negotiable. Violating them causes compile errors or broken output.
 - Add `\par\noindent` before any table that immediately follows inline text.
 - Never use `C{fixed-width}` inside `tabularx` — use `>{\centering\arraybackslash}X`.
 - Never use `\dfrac` inside table cells — use `\displaystyle\frac`.
+- For `\multirow` blocks: do NOT use `\hline` inside the multirow span. Use `\cline{start-end}` (e.g. `\cline{2-3}`) for inner rows to avoid cutting through the group text.
+- Header text color: never leave/use `\color{white}` inside table headers after removing background colors, as it causes white-on-white invisible text. All headers should be black/dark text.
 
 ### TikZ diagrams
 - Always wrap in `\begin{tcolorbox}[tikzbox, title={...}]`.

@@ -307,6 +307,36 @@ When overriding column types using `\multicolumn` (e.g. in table headers), you m
 - **Correct:** `\multicolumn{1}{|>{\centering\arraybackslash}m{3.0cm}|}{\textbf{Header}}`
 - **Incorrect:** `\multicolumn{1}{|>{\centering\arraybackslash}p{3.0cm}|}{\textbf{Header}}` (causes top-alignment mismatch)
 
+### ⚠ Multirow Column Borders (No Intersecting Lines)
+When a table contains `\multirow` blocks (e.g., grouping multiple rows under a single category), standard horizontal lines (`\hline`) will cut through the first column and intersect the category name. To prevent this:
+- **Do NOT use `\hline` inside the multirow span:** Only use `\hline` at the very top and bottom boundaries of the multirow block.
+- **Use `\cline{start-end}` for inner rows:** For horizontal separators *inside* the multirow block, use `\cline{2-3}` (or whichever columns should have horizontal borders), leaving the first column open.
+- **Correct:**
+  ```latex
+  \multirow{3}{*}{\textbf{Interpersonal}} & Figurehead & ... \\
+  \cline{2-3}
+  & Leader & ... \\
+  \cline{2-3}
+  & Liaison & ... \\
+  \hline
+  ```
+- **Incorrect (cuts through "Interpersonal"):**
+  ```latex
+  \multirow{3}{*}{\textbf{Interpersonal}} & Figurehead & ... \\
+  \hline
+  & Leader & ... \\
+  \hline
+  & Liaison & ... \\
+  \hline
+  ```
+
+### ⚠ Invisible Table Headers (No White Text)
+When converting table headers to satisfy the strict boxed table styling (removing all shading/row colors like `rowalt` or `myteal` from headers):
+- **Always ensure header text is black/dark:** Remove any legacy `\color{white}` or similar specifiers in your column/multicolumn definitions.
+- **Why it matters:** Leaving `\color{white}` on a transparent/white background makes the table header text invisible (white on white).
+- **Correct:** `\multicolumn{1}{|>{\centering\arraybackslash}m{3.0cm}|}{\textbf{Type}}`
+- **Incorrect (invisible text):** `\multicolumn{1}{|>{\centering\arraybackslash\color{white}}m{3.0cm}|}{\textbf{Type}}`
+
 ### Global table settings *(canonical preamble — copy exactly)*
 
 ```latex
