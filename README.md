@@ -24,7 +24,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
-| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules) |
+| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules) |
 | 8th SEM | 🔲 Planned | — |
 
 ---
@@ -241,6 +241,17 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC702B_Module8_Notes.pdf` | Video Segmentation: Temporal video segmentation, shot boundary detection (hard-cuts, soft-cuts: fade, dissolve, wipe), spatial/motion-based segmentation (background subtraction, temporal difference, optical flow), moving object detection and tracking (Kalman filters, Mean-Shift, Particle filters). |
 | `PE-EC702B_Digital_Image_and_Video_Processing.pdf` | **Combined** — all 8 modules, 54 pages |
 
+### PE-EC702C — Neural Network and Fuzzy Logic Control
+
+| File | Topics |
+|---|---|
+| `PE-EC702C_Module1_Notes.pdf` | Biological vs. Artificial Neural Networks, Structural and Functional Mapping, Single-Layer Feedforward/Multi-Layer Feedforward/Recurrent Topologies, Activation Functions, McCulloch-Pitts Neuron Model, Linear Separability (XOR problem), Hebb Net Learning Rule, Perceptron Learning Algorithm, Adaline and Madaline Networks, Bidirectional Associative Memory (BAM). |
+| `PE-EC702C_Module2_Notes.pdf` | Competitive Learning, Kohonen Self-Organizing Map (SOM) topology \& algorithm, Learning Vector Quantization (LVQ), Maxnet, Hamming Network, Counterpropagation Network (CPN) structure \& training. |
+| `PE-EC702C_Module3_Notes.pdf` | Backpropagation Neural Network (BPNN) architecture, feedforward \& error backpropagation equations, learning rate, momentum, local minima, Boltzmann Machine learning (visible/hidden units, energy, transitions), Adaptive Resonance Theory (ART1 architecture, vigilance test, resonance). |
+| `PE-EC702C_Module4_Notes.pdf` | Classical vs. Fuzzy Sets, Membership Functions, Fuzzy Relations, Max-Min and Max-Product Composition, Fuzzification methods, Defuzzification methods (Centroid, Weighted Average, Mean of Maxima, First/Last of Maxima), Lambda Cuts ($\lambda$-cuts). |
+| `PE-EC702C_Module5_Notes.pdf` | Fuzzy Logic Controller (FLC) architecture, Mamdani and Sugeno inference models, Rule base design, applications of Fuzzy Logic (Inverted Pendulum control, temperature control, washing machine), Applications of Neural Networks (pattern recognition, process control). |
+| `PE-EC702C_Neural_Network_and_Fuzzy_Logic_Control.pdf` | **Combined** — all 5 modules, 40 pages |
+
 ---
 
 ## Repository structure
@@ -350,6 +361,11 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── PE-EC702B_Module8_Notes.tex / .pdf
 │   │   ├── PE-EC702B_Combined_Notes.tex
 │   │   └── PE-EC702B_Digital_Image_and_Video_Processing.pdf
+│   ├── 07. Neural Network and Fuzzy Logic Control/
+│   │   ├── PE-EC702C_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC702C_Combined_Notes.tex
+│   │   └── PE-EC702C_Neural_Network_and_Fuzzy_Logic_Control.pdf
 │   └── sem7.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject
