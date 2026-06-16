@@ -637,6 +637,39 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
 - **Fix 1 (for labels):** Position labels dynamically along the paths using specific anchors (e.g., `node[midway, left]` or `node[pos=0.15, right]`) and offset coordinates to keep text from touching line boundaries.
 - **Cause 2:** Dashed boundaries or divider lines passing directly through headers or labels in multi-column layouts.
 - **Fix 2:** Instead of simple dividing lines, wrap each column or section in a clean solid-colored card/box (using `fill=white, draw=mgframe, rounded corners=6pt`). Place column titles as independent nodes at the top of each card so lines never cross the text.
+### TikZ reversed arrowheads
+- **Cause:** Drawing an arrow between two nodes that are overlapping or too close together. If the physical distance between node boundaries is smaller than the arrowhead size (e.g., $< 8$pt), TikZ's path-drawing algorithm calculates a negative line segment length and draws the arrowhead backwards (pointing in the opposite direction).
+- **Fix:** Ensure a minimum boundary gap of at least `0.5cm` between adjacent nodes. Adjust coordinates to space nodes out horizontally/vertically, or use relative positioning with sufficient distance:
+  ```latex
+  % ❌ Too close (overlapping boundaries, arrowhead flips)
+  \node[block] (n1) at (0,0) {Block 1};
+  \node[block] (n2) at (1.5,0) {Block 2}; % text width=1.4cm makes total width ~1.6cm, center distance 1.5cm is too small
+  
+  % ✅ Clean boundary gap
+  \node[block] (n1) at (0,0) {Block 1};
+  \node[block] (n2) at (2.5,0) {Block 2}; % Gap is ~0.9cm, arrows render correctly
+  ```
+
+### TikZ tree / hierarchy branching
+- **Cause:** Using simple `|-` or `--` connectors to draw lines from a parent node to multiple horizontally-aligned child nodes. This causes arrows to enter nodes horizontally from the side or overlap other paths.
+- **Fix:** Use coordinate math (`calc` library) to compute a branch midpoint, and then use the `-|` operator to route lines horizontally first, then vertically straight down into the child nodes' top centers:
+  ```latex
+  % ✅ Clean tree branch routing
+  \draw[line] (parent.south) -- ($(parent.south)!0.5!(middle_child.north)$) coordinate (branch);
+  \draw[arrow] (branch) -- (middle_child.north);
+  \draw[arrow] (branch) -| (left_child.north);
+  \draw[arrow] (branch) -| (right_child.north);
+  ```
+
+### TikZ coordinate scaling vs. node sizes
+- **Cause:** Relying on `scale=X` to shrink a diagram. In TikZ, `scale=X` only scales coordinate values; it does **not** scale node dimensions, font sizes, or padding. Shrinking coordinates without shrinking nodes pushes nodes physically closer, causing text and border overlaps.
+- **Fix:** Keep `scale=1.0` and space out coordinates. If scaling is necessary, also manually shrink the node styles by setting smaller `minimum size`, reducing padding with `inner sep=1.2pt` (default is `0.3333em`), and reducing font size (e.g., `font=\tiny`):
+  ```latex
+  % ✅ Safe compact style definition
+  \tikzset{
+    leaf/.style={circle, draw=mydark, fill=mygray, minimum size=0.4cm, inner sep=1.2pt, font=\tiny}
+  }
+  ```
 
 ### Wrong colour syntax in TikZ
 - **Cause:** `\color=myred` (assignment syntax) instead of `\color{myred}` (command syntax).
@@ -712,6 +745,34 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
     \item Point B
   \end{itemize}
   ```
+
+### Inline Math vs. Display Math (Avoid Inline Matrices)
+- **Cause:** Writing large mathematical structures (like matrices, arrays, or tall fractions) inline using `$...$` causes extremely uneven line heights, overlaps text, and can split equations awkwardly across lines (e.g. splitting at `=`).
+- **Fix:** Always use display math `\[ ... \]` or the `equation*` / `align*` environment for matrices, fractions, or long equations. Keep inline math `$...$` only for simple variables (like $x, y$) or small expressions (like $v=(0,0)$).
+- **Preventing splits:** If a small equation must remain inline but should not be split across line breaks, wrap it in braces: `{$E = mc^2$}` or `\mbox{$E = mc^2$}`.
+
+### Mathematical Layout & Derivations Elegance
+- **Side-by-Side minipages:** When showing related mathematical objects (e.g., a current macroblock matrix and its reference search coordinate grid), place them side-by-side using `minipage` blocks to optimize vertical space and improve contrast:
+  ```latex
+  \begin{minipage}{0.42\linewidth}
+    \centering
+    \textbf{Current Block:}
+    \[
+      F_t = \begin{bmatrix} 80 & 85 \\ 70 & 75 \end{bmatrix}
+    \]
+  \end{minipage}
+  \hfill
+  \begin{minipage}{0.53\linewidth}
+    \centering
+    \textbf{Reference Region:}
+    \par\vspace{4pt}
+    \begin{tabular}{c | c c c}
+      ...
+    \end{tabular}
+  \end{minipage}
+  ```
+- **Explicit Grid Separators:** Grids or coordinate tables showing search blocks must use explicit separators (like `c | c c c` and a horizontal `\hline`) so index coordinates (labels) are visually separated from coordinate values.
+- **Structured Explanations:** Break down multi-part calculations or comparative steps with bold subsections (e.g., `\textbf{Alternative Candidate Analysis:}`) and clear itemized bullet points (`\begin{itemize}[leftmargin=*]`) instead of running them in a single dense paragraph. This ensures high readability.
 
 ### Missing packages (TinyTeX)
 ```

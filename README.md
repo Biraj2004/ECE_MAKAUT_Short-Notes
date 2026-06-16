@@ -24,7 +24,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
-| 7th SEM | 🟡 In progress | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules) |
+| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules) |
 | 8th SEM | 🔲 Planned | — |
 
 ---
@@ -214,7 +214,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC701C_Module4_Notes.pdf` | Multiple Access and Modulation Schemes: FDMA, TDMA (slot structure), CDMA (Walsh codes, PN sequences, near-far problem), SDMA, BPSK, QPSK, OQPSK, $\pi/4$-DQPSK, QAM, MSK, GMSK (continuous phase, Gaussian LPF), multicarrier modulation, and OFDM (orthogonality, IFFT/FFT, cyclic prefix, PAPR). |
 | `PE-EC701C_Module5_Notes.pdf` | Receiver Structure and Diversity Techniques: Space, time, frequency, and polarization diversity, selection/MRC/EGC combining, RAKE receiver (finger structure), equalization (ZFE, MMSE, LMS, RLS, DFE), and transmit diversity (Alamouti 2x1 scheme). |
 | `PE-EC701C_Module6_Notes.pdf` | MIMO and Cellular System Examples: MIMO space-time processing, spatial multiplexing vs. spatial diversity, diversity-multiplexing tradeoff, performance measures (outage, SNR, BER/SER), system examples: GSM (architecture, logical/physical channels), GPRS, EDGE (8-PSK updates), IS-95, WCDMA, and CDMA2000. |
-| `PE-EC701C_Mobile_Communication_and_Networks.pdf` | **Combined** — all 6 modules |
+| `PE-EC701C_Mobile_Communication_and_Networks.pdf` | **Combined** — all 6 modules, 51 pages |
 
 ### PE-EC702A — Adaptive Signal Processing
 
@@ -225,7 +225,21 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC702A_Module3_Notes.pdf` | Variants of LMS: Sign-LMS Family, Normalized LMS (NLMS), Block LMS, FDAF, Sub-band Adaptive Filtering; Signal Space Concepts: Vector spaces, Linear Operators, Inner Product Spaces, Gram-Schmidt Orthogonalization, Orthogonal Projection/Decomposition |
 | `PE-EC702A_Module4_Notes.pdf` | Vector Space of Random Variables, Forward/Backward Projections \& Linear Prediction, Stochastic Lattice Filters, Reflection Coefficients, Yule-Walker Equations, Levinson-Durbin Recursion, Joint Process Estimator, GAL |
 | `PE-EC702A_Module5_Notes.pdf` | Recursive Least Squares (RLS) Cost Function, Matrix Inversion Lemma, RLS Transversal Update Equations, RLS Lattice Filters, APA, Subspace Adaptive Filters, Partial Updates, QRD-RLS, Systolic Arrays |
-| `PE-EC702A_Adaptive_Signal_Processing.pdf` | **Combined** — all 5 modules |
+| `PE-EC702A_Adaptive_Signal_Processing.pdf` | **Combined** — all 5 modules, 37 pages |
+
+### PE-EC702B — Digital Image and Video Processing
+
+| File | Topics |
+|---|---|
+| `PE-EC702B_Module1_Notes.pdf` | Digital Image Fundamentals: Visual perception (eye structure, Weber ratio), image sensing/acquisition, sampling \& quantization, spatial/intensity resolution, pixel relationships (neighbors, adjacency, paths, distance measures). |
+| `PE-EC702B_Module2_Notes.pdf` | Image Enhancements and Filtering: Gray level transformations (gamma, log), spatial domain smoothing (average, median) and sharpening (Laplacian, gradient), histogram processing (equalization, matching), 2D DFT, frequency domain filtering (low-pass/high-pass Butterworth, Gaussian, Ideal). |
+| `PE-EC702B_Module3_Notes.pdf` | Color Image Processing: Color models (RGB, YUV, HSI), conversion formulas, color complements, color slicing, tone/color corrections, full-color/channel-by-channel smoothing and sharpening, color segmentation. |
+| `PE-EC702B_Module4_Notes.pdf` | Image Segmentation: Discontinuity detection (point, line, edge), edge linking, Hough transform, Otsu's global thresholding, local adaptive thresholding, region-based segmentation (growing, splitting, merging, quadtree). |
+| `PE-EC702B_Module5_Notes.pdf` | Wavelets and Multi-resolution Image Processing: Time-frequency localization (Fourier vs STFT), CWT scaling/translation, scaling ($\phi(t)$) and wavelet ($\psi(t)$) functions, MRA, subband filter banks (downsampling/upsampling, reconstruction), wavelet packets. |
+| `PE-EC702B_Module6_Notes.pdf` | Image Compression: Redundancies (coding, inter-pixel, psycho-visual), Huffman coding, Arithmetic coding, LZW coding, lossy prediction and transform coding, DCT energy compaction, JPEG and JPEG-2000 standards. |
+| `PE-EC702B_Module7_Notes.pdf` | Fundamentals of Video Coding: Inter-frame temporal redundancy, motion estimation/compensation (full search, TSS, 2D logarithmic), frame types (I, P, B), video hierarchy (GOP, slice, macroblock), hybrid video encoder/decoder block diagram, standards (H.264/AVC, H.265/HEVC, MPEG-2/4). |
+| `PE-EC702B_Module8_Notes.pdf` | Video Segmentation: Temporal video segmentation, shot boundary detection (hard-cuts, soft-cuts: fade, dissolve, wipe), spatial/motion-based segmentation (background subtraction, temporal difference, optical flow), moving object detection and tracking (Kalman filters, Mean-Shift, Particle filters). |
+| `PE-EC702B_Digital_Image_and_Video_Processing.pdf` | **Combined** — all 8 modules, 54 pages |
 
 ---
 
@@ -303,7 +317,7 @@ ECE_MAKAUT_Short-Notes/
 │   │   └── PE-EC603C_CMOS_VLSI_Design.pdf
 │   ├── sem6 - syllabus.pdf
 │   └── ECE 6th SEM YT Playlist.pdf
-├── 7th SEM/                        # In progress
+├── 7th SEM/                        # Complete
 │   ├── 01. Principles of Management/
 │   │   ├── HS-HU701_Module1_Notes.tex / .pdf
 │   │   ├── ...
@@ -330,6 +344,12 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── PE-EC702A_Module5_Notes.tex / .pdf
 │   │   ├── PE-EC702A_Combined_Notes.tex
 │   │   └── PE-EC702A_Adaptive_Signal_Processing.pdf
+│   ├── 06. Digital Image and Video Processing/
+│   │   ├── PE-EC702B_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC702B_Module8_Notes.tex / .pdf
+│   │   ├── PE-EC702B_Combined_Notes.tex
+│   │   └── PE-EC702B_Digital_Image_and_Video_Processing.pdf
 │   └── sem7.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject

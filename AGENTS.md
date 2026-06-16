@@ -9,7 +9,7 @@
 
 This is a LaTeX note-writing project for **MAKAUT B.Tech ECE (2023–27)** by Biraj Sarkar (CGEC).
 
-The goal is exam-ready, module-wise PDF notes for every subject across all 8 semesters. Currently **6th SEM is in progress**. Earlier semesters (1st–5th) are planned but empty. 7th and 8th are future work.
+The goal is exam-ready, module-wise PDF notes for every subject across all 8 semesters. Currently **6th SEM and 7th SEM are complete**. Earlier semesters (1st–5th) are planned but empty. 8th is future work.
 
 Each subject is broken into modules matching the MAKAUT syllabus. Every module is a **self-contained `.tex` file** that compiles to a PDF. A combined PDF per subject is also generated automatically.
 
@@ -81,6 +81,11 @@ ECE_MAKAUT_Short-Notes/
 │       ├── ...
 │       ├── PE-EC702A_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── PE-EC702A_Adaptive_Signal_Processing.pdf
+│   └── 06. Digital Image and Video Processing/ # PE-EC702B — 8 modules (All complete)
+│       ├── PE-EC702B_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── PE-EC702B_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── PE-EC702B_Digital_Image_and_Video_Processing.pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -306,14 +311,16 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | OE-EC604A Electronic Measurement and Measuring Instruments | 5 | ✅ All compiled | `OE-EC604A_Electronic_Measurement_and_Measuring_Instruments.pdf` | 35 |
 | PE-EC603C CMOS VLSI Design | 6 | ✅ All compiled | `PE-EC603C_CMOS_VLSI_Design.pdf` | 44 |
 
-**7th SEM — in progress and compiled:**
+**7th SEM — complete and compiled:**
 
 | Subject | Modules | Module PDFs | Combined PDF | Pages |
 |---|---|---|---|---|
 | HS-HU701 Principles of Management | 4 | ✅ All compiled | `HS-HU701_Principles_of_Management.pdf` | 46 |
 | PE-EC701A Microwave Theory and Technique | 9 | ✅ All compiled | `PE-EC701A_Microwave_Theory_and_Technique.pdf` | 63 |
 | PE-EC701B Satellite Communication | 6 | ✅ All compiled | `PE-EC701B_Satellite_Communication.pdf` | 42 |
-| PE-EC702A Adaptive Signal Processing | 5 | ✅ All compiled | `PE-EC702A_Adaptive_Signal_Processing.pdf` | — |
+| PE-EC701C Mobile Communication and Networks | 6 | ✅ All compiled | `PE-EC701C_Mobile_Communication_and_Networks.pdf` | 51 |
+| PE-EC702A Adaptive Signal Processing | 5 | ✅ All compiled | `PE-EC702A_Adaptive_Signal_Processing.pdf` | 37 |
+| PE-EC702B Digital Image and Video Processing | 8 | ✅ All compiled | `PE-EC702B_Digital_Image_and_Video_Processing.pdf` | 54 |
 
 **1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
 **8th SEM:** Not started.
