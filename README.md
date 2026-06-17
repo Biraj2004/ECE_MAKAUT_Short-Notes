@@ -24,7 +24,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
-| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules) |
+| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules) |
 | 8th SEM | 🔲 Planned | — |
 
 ---
@@ -252,6 +252,17 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC702C_Module5_Notes.pdf` | Fuzzy Logic Controller (FLC) architecture, Mamdani and Sugeno inference models, Rule base design, applications of Fuzzy Logic (Inverted Pendulum control, temperature control, washing machine), Applications of Neural Networks (pattern recognition, process control). |
 | `PE-EC702C_Neural_Network_and_Fuzzy_Logic_Control.pdf` | **Combined** — all 5 modules, 40 pages |
 
+### PE-EC703A — Embedded System
+
+| File | Topics |
+|---|---|
+| `PE-EC703A_Module1_Notes.pdf` | Overview of Embedded Systems: definition, characteristics, embedded processors (MCU/MPU/DSP/FPGA/SoC), system hardware/software components, layered architecture model, 7-step design process flow, HW/SW co-design. |
+| `PE-EC703A_Module2_Notes.pdf` | Embedded Hardware: 8051 block diagram, features, interfacing list, ARM features (Load-Store, Thumb, Barrel Shifter, NVIC), memory types, Harvard vs Von Neumann, memory map, ILP pipelining and hazards, processor/memory selection. |
+| `PE-EC703A_Module3_Notes.pdf` | I/O Types \& Interrupt Service Mechanism: serial/parallel ports, timers, watchdog timer operation, RTC, protocols (I2C, CAN, ISA), ISR flow, vector table, nested interrupts, IE register, interrupt latency and deadline. |
+| `PE-EC703A_Module4_Notes.pdf` | Embedded Software Development \& RTOS: low-level ALP vs high-level C, preprocessor directives, functions and macros, volatile, C++ concepts, RTOS services, task states, priority-based/cyclic/round-robin scheduling. |
+| `PE-EC703A_Module5_Notes.pdf` | Embedded System Design using PIC Microcontroller: PIC16 family, PIC16F873 specifications and CPU block diagram, peripherals (WDT, ADC, EEPROM, UART, SPI, I2C), interfacing (LCD, sensors, stepper, keypad, DAC), case studies (vending machine, digital camera). |
+| `PE-EC703A_Embedded_System.pdf` | **Combined** — all 5 modules, 50 pages |
+
 ---
 
 ## Repository structure
@@ -366,6 +377,12 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── ...
 │   │   ├── PE-EC702C_Combined_Notes.tex
 │   │   └── PE-EC702C_Neural_Network_and_Fuzzy_Logic_Control.pdf
+│   ├── 08. Embedded System/
+│   │   ├── PE-EC703A_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC703A_Module5_Notes.tex / .pdf
+│   │   ├── PE-EC703A_Combined_Notes.tex
+│   │   └── PE-EC703A_Embedded_System.pdf
 │   └── sem7.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject

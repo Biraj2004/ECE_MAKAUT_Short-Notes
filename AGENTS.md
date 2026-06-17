@@ -86,6 +86,16 @@ ECE_MAKAUT_Short-Notes/
 │       ├── ...
 │       ├── PE-EC702B_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── PE-EC702B_Digital_Image_and_Video_Processing.pdf
+│   └── 07. Neural Network and Fuzzy Logic Control/ # PE-EC702C — 5 modules (All complete)
+│   │   ├── PE-EC702C_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC702C_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│   │   └── PE-EC702C_Neural_Network_and_Fuzzy_Logic_Control.pdf
+│   └── 08. Embedded System/       # PE-EC703A — 5 modules (All complete)
+│       ├── PE-EC703A_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── PE-EC703A_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── PE-EC703A_Embedded_System.pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -325,6 +335,8 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | PE-EC701C Mobile Communication and Networks | 6 | ✅ All compiled | `PE-EC701C_Mobile_Communication_and_Networks.pdf` | 51 |
 | PE-EC702A Adaptive Signal Processing | 5 | ✅ All compiled | `PE-EC702A_Adaptive_Signal_Processing.pdf` | 37 |
 | PE-EC702B Digital Image and Video Processing | 8 | ✅ All compiled | `PE-EC702B_Digital_Image_and_Video_Processing.pdf` | 54 |
+| PE-EC702C Neural Network and Fuzzy Logic Control | 5 | ✅ All compiled | `PE-EC702C_Neural_Network_and_Fuzzy_Logic_Control.pdf` | 40 |
+| PE-EC703A Embedded System | 5 | ✅ All compiled | `PE-EC703A_Embedded_System.pdf` | 50 |
 
 **1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
 **8th SEM:** Not started.

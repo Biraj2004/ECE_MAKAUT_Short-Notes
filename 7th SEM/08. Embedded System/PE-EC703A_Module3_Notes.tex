@@ -547,14 +547,42 @@ t_{latency} = t_{detect} + t_{inst\_complete} + t_{context\_save} + t_{vector\_f
 \subsection{Interrupt Deadline}
 
 \begin{tcolorbox}[defbox, title={\textbf{Interrupt Deadline}}]
-An \textbf{interrupt deadline} is the maximum allowable time from interrupt occurrence to completion of the ISR response. In \textbf{hard real-time} systems, if the ISR does not complete its critical actions before the deadline, the system fails (e.g., missing a motor control pulse, losing a data byte from UART buffer).
+An \textbf{interrupt deadline} is the maximum allowable time window within which an interrupt request must be fully serviced. It starts at the moment the interrupt event occurs (trigger) and ends when the required response action is completely finished.
 \end{tcolorbox}
 
-\[
-t_{latency} + t_{ISR\_execution} \leq t_{deadline}
-\]
+\subsubsection{Classification of Interrupt Deadlines}
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Hard Deadline:} Missing the deadline results in total system failure, physical damage, or safety hazards (e.g., airbag deployment, pacemaker pacing pulse, anti-lock braking systems).
+  \item \textbf{Soft Deadline:} Missing the deadline degrades the quality of service (QoS) but does not cause system failure (e.g., dropping a frame in video playback, delaying a UI button highlight).
+  \item \textbf{Firm Deadline:} Missing the deadline means the processed data is completely useless, but it does not cause catastrophic damage (e.g., packet arrival in telecommunication where outdated packets are simply discarded).
+\end{itemize}
 
-\textbf{Design rule:} Always keep ISR code as \textbf{short as possible}. Use a flag variable in the ISR and do heavy processing in the main loop (``deferred processing'' or ``bottom half'' approach).
+\begin{tcolorbox}[formulabox, title={\textbf{Real-Time Constraint \& Timing Budget}}]
+For a system to be real-time compliant, the sum of interrupt latency and the ISR execution time must not exceed the deadline:
+\[
+t_{\text{latency}} + t_{\text{ISR\_execution}} \leq t_{\text{deadline}}
+\]
+Where:
+\begin{itemize}[leftmargin=*, itemsep=2pt, topsep=4pt]
+  \item $t_{\text{latency}}$: The time taken to detect the interrupt, save context, and jump to the ISR start.
+  \item $t_{\text{ISR\_execution}}$: The execution time of the active instructions inside the ISR.
+  \item $t_{\text{deadline}}$: The timing budget imposed by the physical process/application.
+\end{itemize}
+\end{tcolorbox}
+
+\subsubsection{Key Factors Causing Deadline Violations}
+\begin{enumerate}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Interrupt Nesting \& Blocking:} If a higher-priority interrupt preempts the current ISR, or if interrupts are globally disabled (during critical sections of the OS), the execution of the lower-priority ISR is delayed, increasing its response time.
+  \item \textbf{Interrupt Jitter:} The variance in interrupt latency caused by processor states (pipeline stalls, cache misses, branch mispredictions, or instruction execution state).
+  \item \textbf{Over-complex ISRs:} Performing heavy math (e.g., floating-point computations, FFT) or blocking calls (e.g., waiting for serial I/O or delays) inside the ISR.
+\end{enumerate}
+
+\subsubsection{Design Strategies to Meet Deadlines}
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Keep ISRs ``Short and Sweet'':} Perform only the bare minimum operations (e.g., reading a register, clearing a flag, placing data in a circular buffer) and signal the main loop or a background task using a volatile flag or RTOS semaphore.
+  \item \textbf{Deferred Processing (Bottom Half):} Defer the heavy non-critical execution to the background (often called a deferred procedure call, tasklet, or thread).
+  \item \textbf{Proper Priority Assignment:} Use \textbf{Deadline Monotonic Scheduling (DMS)}, where interrupts with shorter deadlines are assigned higher priority, regardless of their arrival rate.
+\end{itemize}
 
 % ===============================================================================
 % MANDATORY QUICK REVISION PAGE
