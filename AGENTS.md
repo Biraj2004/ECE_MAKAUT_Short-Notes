@@ -96,6 +96,12 @@ ECE_MAKAUT_Short-Notes/
 │       ├── ...
 │       ├── PE-EC703A_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── PE-EC703A_Embedded_System.pdf
+│   └── 09. Wireless Sensor Networks/ # PE-EC703B — 5 modules (All complete)
+│       ├── PE-EC703B_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── PE-EC703B_Module5_Notes.tex / .pdf
+│       ├── PE-EC703B_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── PE-EC703B_Wireless_Sensor_Networks.pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -337,6 +343,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | PE-EC702B Digital Image and Video Processing | 8 | ✅ All compiled | `PE-EC702B_Digital_Image_and_Video_Processing.pdf` | 54 |
 | PE-EC702C Neural Network and Fuzzy Logic Control | 5 | ✅ All compiled | `PE-EC702C_Neural_Network_and_Fuzzy_Logic_Control.pdf` | 40 |
 | PE-EC703A Embedded System | 5 | ✅ All compiled | `PE-EC703A_Embedded_System.pdf` | 50 |
+| PE-EC703B Wireless Sensor Networks | 5 | ✅ All compiled | `PE-EC703B_Wireless_Sensor_Networks.pdf` | — |
 
 **1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
 **8th SEM:** Not started.
