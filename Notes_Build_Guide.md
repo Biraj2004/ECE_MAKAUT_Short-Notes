@@ -1,6 +1,6 @@
 # Exam-Ready Module Notes Instruction
 **MAKAUT B.Tech — Build Guide**
-> Author: Biraj Sarkar | CGEC | B.Tech ECE (2023–27) | Last updated: May 2026
+> Author: Biraj Sarkar | CGEC | B.Tech ECE (2023–27) | Last updated: June 2026
 
 ---
 
@@ -234,6 +234,16 @@ Follow this order for every topic:
 
 > **⚠ Critical:** Always set both `colbacktitle` **and** `coltitle` for every style.
 > Without `coltitle=white`, dark title backgrounds produce invisible black-on-dark text.
+
+### ⚠ Page Breaking and White Space Mitigation (Strategic Splitting)
+
+By default, all boxes must be breakable (`\tcbset{breakable}` in preamble) to prevent them from overflowing into the footer or leaving huge white spaces on the page. However, you must use page breaks **awarely** and **strategically**:
+
+1. **The Pushed-Box Problem:** If a breakable box starts with a tall unbreakable element (like a tall diagram, a large table, or a multi-line `\displaystyle\frac` equation) and is placed near the bottom of a page, LaTeX cannot split it at that first element. Instead of breaking, the compiler will push the **entire box** to the next page, leaving a large, ugly white space at the bottom of the current page.
+2. **The Strategic Fix (Internal Page-Breaking):** If a box is pushed to the next page and leaves empty space, you must manually intervene by inserting a strategic `\newpage` or `\pagebreak` inside the box body:
+   - For example, in an `exambox` containing several Q&A items, if the box is pushed to the next page because it starts too low, insert `\newpage` inside the box *after* the first or second Q&A item. This forces the box to start on the current page, print the first few items, break cleanly at the `\newpage`, and continue on the next page.
+   - For bulleted/numbered lists, place the `\newpage` or `\pagebreak` cleanly between items.
+3. **Isolate Unbreakable Elements:** If a box contains an unbreakable block diagram or comparative table that is causing the entire box to jump, pull that element out of the main text box. Place it in its own separate `tikzbox` or standalone table, allowing the remaining text boxes to break naturally.
 
 ---
 
@@ -506,12 +516,17 @@ Replace `<CODE>`, `<Subject Name>`, and `Module N` per file.
 
 Always open with `\newpage`. Structure in this exact order:
 
-```
-1. formulabox  →  "Key Formulas at a Glance"          (2-col tabularx of all module formulas)
-2. defbox      →  "One-Line Definitions"               (bullet list of every key term)
-3. exambox     →  "Frequently Asked / Viva Questions"  (10–12 Q&A pairs using \Q{})
-4. tikzbox     →  Summary comparison table or reference table
-```
+1. **formulabox**  →  "Key Formulas at a Glance" or "Key Concepts at a Glance"
+2. **defbox**      →  "One-Line Definitions"
+3. **exambox**     →  "Frequently Asked / Viva Questions"
+4. **tikzbox**     →  Summary comparison table or reference table
+
+### ⚠ Critical Formatting Rules for Quick Revision
+
+- **No Section Headings:** Do NOT use `\section{Quick Revision --- Module N}` as this generates standard numbered section headings. Always use the centered title block template below.
+- **Formulas/Concepts Format:** Never use a bulleted `itemize` list inside the `formulabox` for key formulas. Always use a 2-column `tabularx` using column specifiers `B{5.0cm} X` and local row height adjustment `\renewcommand{\arraystretch}{1.35}`.
+- **Exambox Title Suffix:** The `exambox` title must be exactly `Frequently Asked / Viva Questions`. Do NOT append `--- Module N` or other module suffixes to the title.
+- **Bold Q-Numbering:** The list inside the `exambox` must use the bold Q-numbering format: `\begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]`. Never omit the `label=\textbf{Q\arabic*.}` configuration.
 
 ### Title block template
 
@@ -524,6 +539,19 @@ Always open with `\newpage`. Structure in this exact order:
 \noindent{\color{myred}\rule{\linewidth}{1.2pt}}
 \vspace{4pt}
 ```
+
+### Key Formulas / Concepts Box Template
+
+```latex
+\begin{tcolorbox}[formulabox, title={\textbf{Key Formulas and Metrics at a Glance}}]
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\linewidth}{B{5.0cm} X}
+Formula / Concept Name & $Formula = Expression$ \quad (optional description/units) \\[4pt]
+Another Metric & $Metric = Expression2$ \\[4pt]
+\end{tabularx}
+\end{tcolorbox}
+```
+
 
 ---
 
@@ -946,6 +974,12 @@ Before submitting or printing the PDF:
 - [ ] All box titles are visible (white text on coloured background)
 - [ ] No table content clipped on the right — check all tables following inline text labels
 - [ ] No formula in a table cell overflows into adjacent column (use `\!` and `\newline` to fit)
+- [ ] **No table shading or row colors used:** All tables use transparent/white backgrounds with explicit horizontal borders (`\hline`) separating every row and vertical lines (`|`) surrounding all columns.
+- [ ] **Table headers do not use white text:** Header text must be dark/black on transparent background.
+- [ ] **Quick Revision page has no `\section` heading:** Use the centered, non-section title block layout.
+- [ ] **Quick Revision formulas in `tabularx` format:** Never use an `itemize` list for formulas in the `formulabox` of Quick Revision; use the 2-column `tabularx` template.
+- [ ] **Exambox title has no module suffix:** Must be exactly `Frequently Asked / Viva Questions` with no extra module number or subject suffix.
+- [ ] **Bold Q-numbering in exambox:** Enumerate items inside `exambox` must use `[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]`.
 - [ ] No TikZ block diagram extends past the `tikzbox` border (use local `sblock` style for 5+ blocks)
 - [ ] No `\\` line break inside a TikZ node without `align=center` and `text width=`
 - [ ] No custom `axis/.style` defined in `\tikzset{}` (use inline styles instead)
