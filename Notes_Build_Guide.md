@@ -662,16 +662,12 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
 - **Cause 2:** `\tabcolsep` too large — total column overhead exceeds `\linewidth`.
 - **Fix:** Use `\setlength{\tabcolsep}{6pt}` (not 9pt).
 
-### Content overflowing into footer (unbreakable boxes)
-- **Cause 1:** A large `tcolorbox` (e.g., a multi-part worked example or a 12-question exambox) does not fit on the remaining page space, resulting in footer overflow or the entire box being pushed to the next page (leaving large blank areas).
-- **Fix 1 (Global):** Add `\tcbset{breakable}` globally after the style block. Boxes will split across pages automatically.
-- **Cause 2 (Combined PDF Builder limitation):** The combined builder script extracts the main `\tcbset{...}` style definition block but does not copy the separate global `\tcbset{breakable}` line. Hence, boxes that rely on the global default will not break in the combined PDF.
-- **Fix 2:** Explicitly add the `breakable` key directly to the style definition itself for boxes that are expected to grow large:
-  ```latex
-  exambox/.style={..., breakable}
-  examplebox/.style={..., breakable}
-  ```
-- **Refinement (Unbalanced Page Splits / Pushed Boxes):** When a breakable box contains tall nested environments (like list items starting with large `align*` equation blocks or tables) at its very beginning, the page-builder may determine that the first unbreakable chunk cannot fit in the remaining space of the current page. As a result, the entire box is pushed to the next page, leaving a massive white space. If this box is placed immediately after a section heading, it can also cause the heading title and its horizontal red rule to split (with the rule orphaned on the next page).
+### Content overflowing into footer (unbreakable boxes) & Large White Spaces
+- **Cause 1:** A large `tcolorbox` (e.g., a multi-part worked example or a 12-question exambox) does not fit on the remaining page space, resulting in footer overflow or the entire box being pushed to the next page, leaving large blank areas (large white spaces).
+- **Fix 1 (Global):** Add `\tcbset{breakable}` globally after the style block in all source modules. Boxes will split across pages automatically.
+- **Combined PDF Builder Fix:** The combined builder script (`pdf_build_combined.ps1`) has been updated to automatically apply `\tcbset{breakable}` globally in the combined document's preamble, ensuring that all boxes (`defbox`, `formulabox`, `examplebox`, `exambox`, etc.) break across pages exactly as they do in individual modules.
+- **Refinement (Unbalanced Page Splits / Pushed Boxes):** 
+  When a breakable box contains tall nested environments (like list items starting with large `align*` equation blocks, tables, or TikZ diagrams) at its very beginning, the LaTeX page-builder may determine that the first unbreakable chunk cannot fit in the remaining space of the current page. As a result, the entire box is pushed to the next page, leaving a massive white space. If this box is placed immediately after a section heading, it can also cause the heading title and its horizontal red rule to split (with the rule and box orphaned on the next page).
   - **The Fix:** Insert a strategic `\newpage` or `\pagebreak` *inside* the `tcolorbox` body (e.g., before a `\textbf{Solution:}` block or immediately after the first list item like part (a)). This forces a portion of the box's content to stay on the first page, which pulls the box start to the current page. This keeps the section title and rule properly grouped with the box start and cleanly distributes the rest of the content onto the next page.
     ```latex
     \begin{tcolorbox}[examplebox, title={Fuzzy Set Operations}]

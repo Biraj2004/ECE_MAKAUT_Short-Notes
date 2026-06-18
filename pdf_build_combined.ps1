@@ -309,6 +309,8 @@ foreach ($folder in $subjectFolders) {
 
     # -- tcolorbox styles (extracted from first module) -----------------------
     [void]$sb.AppendLine($tcbBlock)
+    # Enable breakable globally for all boxes to prevent large white spaces
+    [void]$sb.AppendLine('\tcbset{breakable}')
     # CRITICAL FIX: XeLaTeX does not support pdfcol color stacks (used by the
     # tcolorbox breakable library). Without this, coltitle=white leaks out of
     # any breakable box and makes all subsequent body text invisible.
