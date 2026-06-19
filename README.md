@@ -24,7 +24,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
-| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), OE-EC704A Web Technology (5 modules) |
+| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (5 modules), OE-EC704A Web Technology (5 modules) |
 | 8th SEM | 🔲 Planned | — |
 
 ---
@@ -273,6 +273,17 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC703B_Module4_Notes.pdf` | Dissemination protocols (Directed Diffusion, Rumor Routing); Data gathering (PEGASIS chain protocol); Data aggregation and fusion (types: lossless, lossy, in-network processing); QoS metrics (lifetime, coverage, connectivity, latency, PDR); real-time traffic support; Security (CIA goals, attack types: Sybil, wormhole, selective forwarding, DoS, hello flood, replay, node capture); SPINS (SNEP + μTESLA) |
 | `PE-EC703B_Module5_Notes.pdf` | Design principles for WSNs (8 principles: energy-first, cross-layer, data-centric, self-organization, security by design); WSN gateway (functions, protocol translation); WSN-to-Internet (6LoWPAN, CoAP, RPL DODAG); Internet-to-WSN (MQTT, downlink challenges); OS for WSN (requirements); TinyOS (event-driven, component-based, FIFO scheduler); nesC (interfaces, modules, configurations, split-phase, atomic) |
 | `PE-EC703B_Wireless_Sensor_Networks.pdf` | **Combined** — all 5 modules, 236 KB |
+
+### PE-EC703C — Wavelet Transforms
+
+| File | Topics |
+|---|---|
+| `PE-EC703C_Module1_Notes.pdf` | Introduction \& Continuous Wavelet Transform (CWT): historical origins, time-frequency resolution limitations (Fourier vs. STFT vs. Wavelet), Heisenberg uncertainty principle, CWT definition (scale $a$ and shift $b$), mother wavelets, constant-Q bandpass filter bank interpretation, admissibility condition, inverse CWT, energy conservation. |
+| `PE-EC703C_Module2_Notes.pdf` | Discrete Wavelet Transform (DWT) \& Multi-resolution Analysis (MRA): approximations in nested linear vector subspaces, five MRA axioms, refinement/dilation equations for scaling and wavelet functions (Father/Mother wavelets), detail spaces, Haar scaling and wavelet functions and filter coefficients, Haar wavelet decomposition example. |
+| `PE-EC703C_Module3_Notes.pdf` | Orthonormal MRA \& Filter Banks: construction of orthonormal MRA, 2-channel subband coder analysis/synthesis filter banks, decimation/interpolation, perfect reconstruction (PR) conditions (aliasing cancellation, no distortion), Quadrature Mirror Filters (QMF), Mallat FWT octave decomposition tree algorithm, Daubechies, Symlets, and Coiflets orthogonal families, cascade algorithm. |
+| `PE-EC703C_Module4_Notes.pdf` | Bi-orthogonal Wavelets \& Multi-dimensional Wavelets: bi-orthogonal wavelet bases, cross-orthogonality (bi-orthogonality) conditions, bi-orthogonal filter PR conditions, CDF 9/7 (lossy) and 5/3 (lossless) wavelets, separable 2D DWT subband quadrants (LL, LH, HL, HH), non-separable multi-dimensional wavelets (Quincunx sampling), Wavelet Packets full binary tree decomposition, best basis selection (Shannon entropy). |
+| `PE-EC703C_Module5_Notes.pdf` | Wavelet Applications \& Beyond Wavelets: transform coding principles (quantization, entropy coding), image compression (DWT vs. DCT, JPEG 2000 vs. JPEG, progressive transmission, ROI), audio/video subband coding, wavelet denoising (hard/soft thresholding, universal VisuShrink vs. adaptive SureShrink), speckle homomorphic filtering, edge detection, image fusion, DWMT vs. OFDM, beyond wavelets: Ridgelets (Radon projection), Curvelets (parabolic scaling, USFFT, wrapping). |
+| `PE-EC703C_Wavelet_Transforms.pdf` | **Combined** — all 5 modules, 38 pages |
 
 ### OE-EC704A — Web Technology
 
