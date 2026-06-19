@@ -524,6 +524,7 @@ Always open with `\newpage`. Structure in this exact order:
 ### ⚠ Critical Formatting Rules for Quick Revision
 
 - **No Section Headings:** Do NOT use `\section{Quick Revision --- Module N}` as this generates standard numbered section headings. Always use the centered title block template below.
+- **Standardized Title Block Layout:** The title block must strictly follow the two-line centered layout (Module name on line 1, topic names and subject code on line 2) with a `1.2pt` horizontal rule. Do NOT use single-line, inline headings with bullet points (such as `QUICK REVISION \quad\bullet\quad Code Module N`) or different rule thicknesses.
 - **Formulas/Concepts Format:** Never use a bulleted `itemize` list inside the `formulabox` for key formulas. Always use a 2-column `tabularx` using column specifiers `B{5.0cm} X` and local row height adjustment `\renewcommand{\arraystretch}{1.35}`.
 - **Exambox Title Suffix:** The `exambox` title must be exactly `Frequently Asked / Viva Questions`. Do NOT append `--- Module N` or other module suffixes to the title.
 - **Bold Q-Numbering:** The list inside the `exambox` must use the bold Q-numbering format: `\begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]`. Never omit the `label=\textbf{Q\arabic*.}` configuration.
@@ -976,7 +977,7 @@ Before submitting or printing the PDF:
 - [ ] No formula in a table cell overflows into adjacent column (use `\!` and `\newline` to fit)
 - [ ] **No table shading or row colors used:** All tables use transparent/white backgrounds with explicit horizontal borders (`\hline`) separating every row and vertical lines (`|`) surrounding all columns.
 - [ ] **Table headers do not use white text:** Header text must be dark/black on transparent background.
-- [ ] **Quick Revision page has no `\section` heading:** Use the centered, non-section title block layout.
+- [ ] **Quick Revision page title block layout is correct:** Use the centered, two-line, non-section title block layout (Module on line 1, topic names and subject code on line 2) with a `1.2pt` horizontal rule. Do NOT use single-line, inline headings with bullet points.
 - [ ] **Quick Revision formulas in `tabularx` format:** Never use an `itemize` list for formulas in the `formulabox` of Quick Revision; use the 2-column `tabularx` template.
 - [ ] **Exambox title has no module suffix:** Must be exactly `Frequently Asked / Viva Questions` with no extra module number or subject suffix.
 - [ ] **Bold Q-numbering in exambox:** Enumerate items inside `exambox` must use `[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]`.

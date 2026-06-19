@@ -24,7 +24,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
-| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules) |
+| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), OE-EC704A Web Technology (5 modules) |
 | 8th SEM | 🔲 Planned | — |
 
 ---
@@ -274,6 +274,17 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC703B_Module5_Notes.pdf` | Design principles for WSNs (8 principles: energy-first, cross-layer, data-centric, self-organization, security by design); WSN gateway (functions, protocol translation); WSN-to-Internet (6LoWPAN, CoAP, RPL DODAG); Internet-to-WSN (MQTT, downlink challenges); OS for WSN (requirements); TinyOS (event-driven, component-based, FIFO scheduler); nesC (interfaces, modules, configurations, split-phase, atomic) |
 | `PE-EC703B_Wireless_Sensor_Networks.pdf` | **Combined** — all 5 modules, 236 KB |
 
+### OE-EC704A — Web Technology
+
+| File | Topics |
+|---|---|
+| `OE-EC704A_Module1_Notes.pdf` | Web Development Basics: Client-Server architecture flow, HTML skeletal document structure, XML vs HTML, Block-level vs Inline elements, lists, hyperlinks, tables, forms, CSS syntax selectors, box model and sizing |
+| `OE-EC704A_Module2_Notes.pdf` | Introduction to Java Programming: JDK vs JRE vs JVM, execution compile-and-run flow, characteristics (platform independence), stack and heap memory models, data types, operators, control flow (labeled break/continue), constructors, static fields/methods, inner classes |
+| `OE-EC704A_Module3_Notes.pdf` | OOP Principles, Inheritance \& Interfaces: 4 pillars of Java OOP (Encapsulation, Abstraction, Inheritance, Polymorphism), super keyword, method overriding vs overloading, dynamic method dispatch, abstract classes, packages and access modifiers, Root Object methods, Composition vs Inheritance, SOLID design principles |
+| `OE-EC704A_Module4_Notes.pdf` | Exception Handling, Strings, I/O \& Collections: try-catch-finally, throws, custom exceptions, String vs StringBuffer, immutability pool, byte/character streams, console/file I/O, collections hierarchy, ArrayList vs LinkedList |
+| `OE-EC704A_Module5_Notes.pdf` | Applet Life Cycle, Events \& AWT: Applet skeleton, lifecycle methods, security sandbox, delegation event model, listener interfaces, adapter classes, anonymous inner classes, AWT hierarchy vs Swing, layout managers (Flow/Border/Grid) |
+| `OE-EC704A_Web_Technology.pdf` | **Combined** — all 5 modules, 161 KB |
+
 ---
 
 ## Repository structure
@@ -400,6 +411,12 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── PE-EC703B_Module5_Notes.tex / .pdf
 │   │   ├── PE-EC703B_Combined_Notes.tex
 │   │   └── PE-EC703B_Wireless_Sensor_Networks.pdf
+│   ├── 10. Web Technology/
+│   │   ├── OE-EC704A_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── OE-EC704A_Module5_Notes.tex / .pdf
+│   │   ├── OE-EC704A_Combined_Notes.tex
+│   │   └── OE-EC704A_Web_Technology.pdf
 │   └── sem7.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject
