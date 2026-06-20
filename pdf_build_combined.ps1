@@ -327,6 +327,9 @@ foreach ($folder in $subjectFolders) {
 \newcommand{\modulestart}[2]{%
   \clearpage
   \renewcommand{\currmodule}{Module #1}%
+  \renewcommand{\theHsection}{mod#1.\arabic{section}}%
+  \renewcommand{\theHsubsection}{\theHsection.\arabic{subsection}}%
+  \renewcommand{\theHsubsubsection}{\theHsubsection.\arabic{subsubsection}}%
   \phantomsection
   \addcontentsline{toc}{part}{Module #1: #2}%
   \setcounter{section}{0}%
