@@ -345,7 +345,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | PE-EC703A Embedded System | 5 | ✅ All compiled | `PE-EC703A_Embedded_System.pdf` | 50 |
 | PE-EC703B Wireless Sensor Networks | 5 | ✅ All compiled | `PE-EC703B_Wireless_Sensor_Networks.pdf` | 54 |
 | PE-EC703C Wavelet Transforms | 7 | ✅ All compiled | `PE-EC703C_Wavelet_Transforms.pdf` | 42 |
-| OE-EC704A Web Technology | 10 | ✅ All compiled | `OE-EC704A_Web_Technology.pdf` | 68 |
+| OE-EC704A Web Technology | 10 | ✅ All compiled | `OE-EC704A_Web_Technology.pdf` | 70 |
 
 **1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
 **8th SEM:** Not started.

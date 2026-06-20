@@ -292,7 +292,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | File | Topics |
 |---|---|
 | `OE-EC704A_Module1_Notes.pdf` | Web Development Basics: Client-Server architecture flow, HTML skeletal document structure, XML vs HTML, Block-level vs Inline elements, lists, hyperlinks, tables, forms, frame, CSS syntax selectors, box model, HTML5 semantic elements, and CSS3 layout models (Flexbox, Grid) |
-| `OE-EC704A_Module2_Notes.pdf` | Introduction to Java Programming: JDK vs JRE vs JVM, compile-and-run execution flow, Java characteristics, JVM memory model (heap, stack, method area), data types, operators, expressions, control flow (selection, iteration, jump statements) |
+| `OE-EC704A_Module2_Notes.pdf` | Introduction to Java Programming \& OOP: JDK vs JRE vs JVM, execution compile/run flow, Java characteristics, OOP concepts (four pillars: encapsulation, abstraction, inheritance, polymorphism), simple programs (Hello World structure), data types, operators, control flow (selection, iteration, jump statements) |
 | `OE-EC704A_Module3_Notes.pdf` | Classes \& Inheritance: Class declarations and instantiations, Constructors (Default, Parameterized, Copy), argument passing mechanisms (pass-by-value myth), static keyword (fields, methods, blocks, nested classes), inner classes (member, local, anonymous), inheritance trees, super keyword, method overloading vs overriding, dynamic method dispatch, abstract classes, and final keyword |
 | `OE-EC704A_Module4_Notes.pdf` | Interface \& Package: Packages folder mapping, import keyword, visibility access control matrix, Interface constants and abstracts, dynamic method lookup callback binding, and interface default, static, and private methods |
 | `OE-EC704A_Module5_Notes.pdf` | Exception Handling: Checked vs unchecked exception hierarchy, try-catch-finally blocks, throw vs throws keyword delegation, try-with-resources, AutoCloseable interface, and domain-specific custom exceptions |
@@ -301,7 +301,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `OE-EC704A_Module8_Notes.pdf` | Java Utility Package (Collections): Collections framework architecture, List interface, ArrayList contiguous backing array, LinkedList doubly-linked node layout, and traversing collections via Iterator (fail-fast behavior) vs enhanced For-Each loop |
 | `OE-EC704A_Module9_Notes.pdf` | Applet Architecture: Client-side Applet class, browser execution lifecycle methods, setForeground() and setBackground(), showStatus() window, HTML Applet tag, parameter passing (getParameter()), getCodeBase() and getDocumentBase() resource loading, and strict security sandbox rules |
 | `OE-EC704A_Module10_Notes.pdf` | Event Handling \& AWT: Delegation Event Model (sources, events, listeners), Adapter classes, anonymous inner classes for inline handlers, heavyweight AWT controls (Label, Button, TextField), and FlowLayout, BorderLayout, and GridLayout container arrangement managers |
-| `OE-EC704A_Web_Technology.pdf` | **Combined** — all 10 modules, 68 pages, 245.8 KB |
+| `OE-EC704A_Web_Technology.pdf` | **Combined** — all 10 modules, 70 pages, 256.2 KB |
 
 ---
 
