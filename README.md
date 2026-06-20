@@ -24,7 +24,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
-| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (10 modules) |
+| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (10 modules), OE-EC704C Entrepreneurship (4 modules) |
 | 8th SEM | 🔲 Planned | — |
 
 ---
@@ -304,6 +304,16 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `OE-EC704A_Module10_Notes.pdf` | Event Handling \& AWT: Delegation Event Model (sources, events, listeners), Adapter classes, anonymous inner classes for inline handlers, heavyweight AWT controls (Label, Button, TextField), and FlowLayout, BorderLayout, and GridLayout container arrangement managers |
 | `OE-EC704A_Web_Technology.pdf` | **Combined** — all 10 modules, 70 pages |
 
+### OE-EC704C — Entrepreneurship
+
+| File | Topics |
+|---|---|
+| `OE-EC704C_Module1_Notes.pdf` | Introduction to Entrepreneurship: definition, types, career path, challenges, growth of SSI, entrepreneurship development programs (EDP), government policy \& institutional support (MSMED Act, DIC, SIDO, NSIC, SIDBI, SFC) |
+| `OE-EC704C_Module2_Notes.pdf` | Market Assessment \& SSI Setup: market survey, demand forecasting, product selection, steps to start a Small Scale Industry (SSI), plant location \& layout, raw materials, energy, and distribution channels |
+| `OE-EC704C_Module3_Notes.pdf` | Financial Management, Costing \& Taxation: working capital concepts, operating cycle calculation, elements of cost, double-entry bookkeeping golden rules, mathematical break-even analysis (BEP) \& chart, direct vs. indirect taxes (excise, sales, VAT, GST) |
+| `OE-EC704C_Module4_Notes.pdf` | Decision Making, Motivation \& Project Reports: programmed vs non-programmed decisions, qualitative/quantitative forecasting (Delphi, moving averages, exponential smoothing), personnel management functions, motivation theories (Maslow, Herzberg, McGregor Theory X/Y), PPR vs DPR comparison \& key contents of Detailed Project Reports |
+| `OE-EC704C_Entrepreneurship.pdf` | **Combined** — all 4 modules, 33 pages |
+
 ---
 
 ## Repository structure
@@ -436,6 +446,18 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── OE-EC704A_Module10_Notes.tex / .pdf
 │   │   ├── OE-EC704A_Combined_Notes.tex
 │   │   └── OE-EC704A_Web_Technology.pdf
+│   ├── 11. Wavelet Transforms/
+│   │   ├── PE-EC703C_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC703C_Module7_Notes.tex / .pdf
+│   │   ├── PE-EC703C_Combined_Notes.tex
+│   │   └── PE-EC703C_Wavelet_Transforms.pdf
+│   ├── 12. Entrepreneurship/
+│   │   ├── OE-EC704C_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── OE-EC704C_Module4_Notes.tex / .pdf
+│   │   ├── OE-EC704C_Combined_Notes.tex
+│   │   └── OE-EC704C_Entrepreneurship.pdf
 │   └── sem7.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject

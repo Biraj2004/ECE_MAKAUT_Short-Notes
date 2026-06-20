@@ -102,6 +102,21 @@ ECE_MAKAUT_Short-Notes/
 │       ├── PE-EC703B_Module5_Notes.tex / .pdf
 │       ├── PE-EC703B_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── PE-EC703B_Wireless_Sensor_Networks.pdf
+│   └── 10. Web Technology/         # OE-EC704A — 10 modules (All complete)
+│       ├── OE-EC704A_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── OE-EC704A_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── OE-EC704A_Web_Technology.pdf
+│   └── 11. Wavelet Transforms/     # PE-EC703C — 7 modules (All complete)
+│       ├── PE-EC703C_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── PE-EC703C_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── PE-EC703C_Wavelet_Transforms.pdf
+│   └── 12. Entrepreneurship/       # OE-EC704C — 4 modules (All complete)
+│       ├── OE-EC704C_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── OE-EC704C_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── OE-EC704C_Entrepreneurship.pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -346,6 +361,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | PE-EC703B Wireless Sensor Networks | 5 | ✅ All compiled | `PE-EC703B_Wireless_Sensor_Networks.pdf` | 56 |
 | PE-EC703C Wavelet Transforms | 7 | ✅ All compiled | `PE-EC703C_Wavelet_Transforms.pdf` | 42 |
 | OE-EC704A Web Technology | 10 | ✅ All compiled | `OE-EC704A_Web_Technology.pdf` | 70 |
+| OE-EC704C Entrepreneurship | 4 | ✅ All compiled | `OE-EC704C_Entrepreneurship.pdf` | 33 |
 
 **1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
 **8th SEM:** Not started.
