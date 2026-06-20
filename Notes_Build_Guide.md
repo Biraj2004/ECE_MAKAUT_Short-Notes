@@ -713,6 +713,13 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
     \end{tcolorbox}
     ```
 
+> [!WARNING]
+> **Avoid Unnecessary/Preemptive Page Breaks:**
+> Do NOT use `\newpage` or `\pagebreak` preemptively before a box, table, or TikZ diagram to push it to the next page. This creates massive unnecessary white spaces and breaks the layout flow. Let LaTeX place boxes and elements naturally. Only use `\newpage` where strictly required by the design spec:
+> - Immediately before the **Quick Revision** page (mandatory).
+> - Immediately after the **Table of Contents** page (mandatory).
+> - Inside a `tcolorbox` body only as an absolute last resort to resolve orphaned section headings or header/box separation.
+
 
 ### Phantom extra column in tables
 - **Cause:** Using `C{fixed-width}` column type inside `tabularx`.
@@ -987,7 +994,8 @@ Before submitting or printing the PDF:
 - [ ] TOC page numbers are correct (compiled twice)
 - [ ] Quick Revision page starts on a new page (`\newpage` before it)
 - [ ] All viva Q&A use `\Q{}` macro (question bold, answer on next line)
-- [ ] Last 2–3 viva items either fit on the same page OR the viva is split into two `exambox` blocks with `\newpage` between (use `start=N` on the second `enumerate`)
+- [ ] Viva questions in the `exambox` break cleanly across pages (relying on `title after break` instead of manual `\newpage` box splits)
+- [ ] No unnecessary or preemptive `\newpage` / `\pagebreak` commands before tables, boxes, or TikZ diagrams (let them flow naturally to avoid large blank spaces)
 - [ ] Multi-bullet answers in viva use a nested `itemize`, not inline semicolons
 - [ ] No raw markdown bold/emphasis syntax (**text** or *text*), or raw list points (- Point, * Point, or 1. Point) in .tex files (the compiler script now validates this and fails compile if found)
 - [ ] No `\usepackage{amssymb}` in preamble

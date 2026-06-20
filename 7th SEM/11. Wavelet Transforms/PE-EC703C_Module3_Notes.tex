@@ -153,10 +153,10 @@
 % ─── TikZ styles ───────────────────────────────────────────────────────────────
 \tikzset{
   block/.style={rectangle, draw=myteal, fill=hdrteal,
-    text width=2.2cm, align=center, minimum height=0.9cm,
+    text width=2.5cm, align=center, minimum height=1.0cm,
     font=\small, rounded corners=3pt, line width=0.7pt},
   redblock/.style={rectangle, draw=myred, fill=hdrred,
-    text width=2.2cm, align=center, minimum height=0.9cm,
+    text width=2.5cm, align=center, minimum height=1.0cm,
     font=\small, rounded corners=3pt, line width=0.7pt},
   arrow/.style={-Stealth, thick, color=mydark},
   redarrow/.style={-Stealth, thick, color=myred},
@@ -170,7 +170,7 @@
 \begin{center}
   {\LARGE\bfseries\color{myred} PE-EC703C --- Wavelet Transforms}\\[5pt]
   {\normalsize\color{mydark} Semester VII \quad$\bullet$\quad 3L:0T:0P \quad$\bullet$\quad 3 Credits}\\[3pt]
-  {\normalsize\color{myteal}\textbf{Module 3 Exam Notes: Orthonormal MRA \& Filter Banks}}\\[3pt]
+  {\normalsize\color{myteal}\textbf{Module 3 Exam Notes: Discrete Wavelet Transform \& MRA}}\\[3pt]
   {\small\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27) \;$|$\; \textit{Biraj Sarkar}}
 \end{center}
 \vspace{2pt}
@@ -183,237 +183,230 @@
 \newpage
 
 % ===============================================================================
-\section{2-Channel Filter Banks and Subband Coding}
+\section{Multi-resolution Analysis (MRA) Framework}
 % ===============================================================================
 
-Multi-resolution analysis is implemented in practice using \textbf{digital filter banks}. A \textbf{2-Channel Filter Bank} splits a signal into two subbands (Analysis) and reconstructs it back to a single signal (Synthesis).
+\begin{tcolorbox}[defbox, title={\textbf{Definition of Multi-resolution Analysis}}]
+\textbf{Multi-resolution Analysis (MRA)} is a mathematical framework developed by Mallat and Meyer to construct orthonormal wavelet bases. It represents a continuous-time signal $x(t) \in L^2(\mathbb{R})$ as a limit of successive approximations, each representing a different resolution level.
+\end{tcolorbox}
 
-\subsection{Analysis and Synthesis Filter Banks}
+\subsection{Nested Vector Subspaces}
+The MRA is characterized by a sequence of closed nested linear vector subspaces $\{V_j\}_{j=-\infty}^{\infty}$ of the Hilbert space $L^2(\mathbb{R})$:
+$$\dots \subset V_{-2} \subset V_{-1} \subset V_0 \subset V_1 \subset V_2 \subset \dots \subset L^2(\mathbb{R})$$
+where:
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item Each subspace $V_j$ corresponds to a specific \textbf{resolution level} (with larger indices $j$ representing finer details/sampling rates).
+  \item Any signal in $V_j$ is also contained in the next finer subspace $V_{j+1}$.
+\end{itemize}
+
+\subsection{The Five Core MRA Axioms}
+A family of subspaces $\{V_j\}_{j\in\mathbb{Z}}$ constitutes an MRA of $L^2(\mathbb{R})$ if the following mathematical axioms are satisfied:
 \begin{enumerate}[leftmargin=*, itemsep=4pt]
-  \item \textbf{Analysis Filter Bank (Decomposition):}
-        \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=2pt]
-          \item \textbf{Low-Pass Filter ($H_0(z)$):} Extracts approximation components.
-          \item \textbf{High-Pass Filter ($H_1(z)$):} Extracts detail components.
-          \item \textbf{Decimation / Downsampling ($\downarrow 2$):} Discards every second sample to maintain the original data rate, yielding subband signals $v_0[n]$ and $v_1[n]$.
-        \end{itemize}
-  \item \textbf{Synthesis Filter Bank (Reconstruction):}
-        \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=2pt]
-          \item \textbf{Interpolation / Upsampling ($\uparrow 2$):} Inserts a zero between adjacent samples.
-          \item \textbf{Low-Pass Filter ($G_0(z)$):} Smooths the upsampled approximation.
-          \item \textbf{High-Pass Filter ($G_1(z)$):} Smooths the upsampled detail.
-          \item The filtered outputs are summed together to produce the reconstructed signal $\hat{x}[n]$.
-        \end{itemize}
+  \item \textbf{Containment (Monotonicity):} $V_j \subset V_{j+1}$ for all $j \in \mathbb{Z}$.
+  \item \textbf{Completeness (Separation):} The intersection of all subspaces contains only the zero function:
+$$\bigcap_{j=-\infty}^{\infty} V_j = \{0\}$$
+  \item \textbf{Density:} The union of all subspaces is dense in $L^2(\mathbb{R})$ (any signal can be approximated to arbitrary precision):
+$$\overline{\bigcup_{j=-\infty}^{\infty} V_j} = L^2(\mathbb{R})$$
+  \item \textbf{Scaling Similarity (Scale Invariance):} Scaling a function in time by a factor of 2 shifts it to the adjacent subspace:
+$$f(t) \in V_j \iff f(2t) \in V_{j+1}$$
+  \item \textbf{Translation Invariance (Shift Invariance):} Shifting a function in $V_0$ by an integer step remains in $V_0$:
+$$f(t) \in V_0 \iff f(t-k) \in V_0 \quad \text{for all } k \in \mathbb{Z}$$
 \end{enumerate}
 
-\begin{tcolorbox}[tikzbox, title={2-Channel Subband Coder / Filter Bank System}]
+\newpage
+\begin{tcolorbox}[tikzbox, title={Nested Vector Subspaces Hierarchy}]
 \centering
-\begin{tikzpicture}[node distance=0.6cm and 0.8cm]
-  % Input
-  \node (in) {$x[n]$};
+\begin{tikzpicture}[scale=0.9]
+  % Nested circles
+  \draw[draw=myred, fill=hdrred, line width=1.2pt] (0,0) circle (3.2);
+  \draw[draw=myamber, fill=hdramber, line width=1.1pt] (0,0) circle (2.2);
+  \draw[draw=myteal, fill=hdrteal, line width=1.0pt] (0,0) circle (1.2);
   
-  % Analysis Filters
-  \node[block, right=0.8cm of in, yshift=0.9cm] (h0) {Low-pass\\$H_0(z)$};
-  \node[block, right=0.8cm of in, yshift=-0.9cm] (h1) {High-pass\\$H_1(z)$};
+  % Labels
+  \node[color=myteal, font=\small\bfseries] at (0, 0) {$V_{-1}$ (Coarse)};
+  \node[color=myamber, font=\small\bfseries] at (0, 1.6) {$V_0$};
+  \node[color=myred, font=\small\bfseries] at (0, 2.6) {$V_1$ (Fine)};
   
-  % Downsamplers
-  \node[circle, draw=myamber, fill=hdramber, right=0.5cm of h0, inner sep=2pt] (d0) {\small $\downarrow 2$};
-  \node[circle, draw=myamber, fill=hdramber, right=0.5cm of h1, inner sep=2pt] (d1) {\small $\downarrow 2$};
+  % Detail space mapping
+  \draw[arrow, color=mydark] (1.2, 0) -- (2.2, 0) node[midway, below, font=\tiny] {$\oplus W_{-1}$};
+  \draw[arrow, color=mydark] (2.2, 0) -- (3.2, 0) node[midway, below, font=\tiny] {$\oplus W_0$};
   
-  % Upsamplers
-  \node[circle, draw=myamber, fill=hdramber, right=1.2cm of d0] (u0) {\small $\uparrow 2$};
-  \node[circle, draw=myamber, fill=hdramber, right=1.2cm of d1] (u1) {\small $\uparrow 2$};
-  
-  % Synthesis Filters
-  \node[block, right=0.5cm of u0] (g0) {Low-pass\\$G_0(z)$};
-  \node[block, right=0.5cm of u1] (g1) {High-pass\\$G_1(z)$};
-  
-  % Summation
-  \node[circle, draw=myred, fill=hdrred, right=0.8cm of g0, yshift=-0.9cm] (sum) {\textbf{+}};
-  \node[right=0.6cm of sum] (out) {$\hat{x}[n]$};
-  
-  % Connections
-  \draw[arrow] (in) -- ++(0.4,0) |- (h0.west);
-  \draw[arrow] (in) -- ++(0.4,0) |- (h1.west);
-  \draw[arrow] (h0) -- (d0);
-  \draw[arrow] (h1) -- (d1);
-  \draw[arrow] (d0) -- (u0) node[midway, above, font=\tiny] {$v_0[n]$};
-  \draw[arrow] (d1) -- (u1) node[midway, above, font=\tiny] {$v_1[n]$};
-  \draw[arrow] (u0) -- (g0);
-  \draw[arrow] (u1) -- (g1);
-  \draw[arrow] (g0.east) -| (sum.north);
-  \draw[arrow] (g1.east) -| (sum.south);
-  \draw[arrow] (sum) -- (out);
+  \node[font=\tiny\bfseries, color=mydark] at (4.5, 0.5) {$V_{j+1} = V_j \oplus W_j$};
+  \node[font=\tiny, color=mydark, align=left] at (4.5, -0.2) {$V_j$: Approximation Space\\$W_j$: Detail Space};
 \end{tikzpicture}
 \end{tcolorbox}
 
 % ===============================================================================
-\section{Perfect Reconstruction (PR) Conditions}
+\section{Scaling Function and Wavelet Function}
 % ===============================================================================
 
-Let the $Z$-transform of the reconstructed signal be $\hat{X}(z)$. The input-output relationship of the 2-channel filter bank is:
-$$\hat{X}(z) = \frac{1}{2}\left[H_0(z)G_0(z) + H_1(z)G_1(z)\right]X(z) + \frac{1}{2}\left[H_0(-z)G_0(z) + H_1(-z)G_1(z)\right]X(-z)$$
-where the term involving $X(-z)$ represents \textbf{aliasing} introduced by downsampling.
+An MRA is completely defined by its \textbf{scaling function $\phi(t)$} (also known as the \textbf{Father Wavelet}).
 
-\subsection{Aliasing Cancellation Condition}
-To completely cancel aliasing, the second term must be zero for all $X(z)$:
-$$H_0(-z)G_0(z) + H_1(-z)G_1(z) = 0$$
-This is achieved by choosing synthesis filters that mirror the analysis filters:
-$$G_0(z) = H_1(-z), \quad G_1(z) = -H_0(-z)$$
+\subsection{The Dilation (Refinement) Equation}
+Because $\phi(t) \in V_0 \subset V_1$, and the set $\{\sqrt{2}\phi(2t-k)\}_{k\in\mathbb{Z}}$ forms an orthonormal basis for $V_1$, the scaling function can be expanded as a linear combination of scaled and shifted copies of itself. This is the \textbf{refinement equation} (or \textbf{dilation equation}):
+$$\phi(t) = \sqrt{2} \sum_{k=-\infty}^{\infty} h_0[k] \phi(2t - k)$$
+where $h_0[k]$ are the \textbf{scaling filter coefficients} (low-pass filter).
 
-\subsection{No Distortion Condition}
-After substituting the aliasing cancellation parameters, we require $\hat{x}[n]$ to be a delayed version of the input: $\hat{x}[n] = x[n - d] \implies \hat{X}(z) = z^{-d}X(z)$. This yields the \textbf{no distortion condition}:
-$$H_0(z)G_0(z) + H_1(z)G_1(z) = 2z^{-d}$$
-
-\subsection{Orthonormal Quadrature Mirror Filters (QMF)}
-In an orthonormal filter bank, the filters must satisfy conjugate symmetry conditions. In the time domain, the relationship is:
-$$h_1[k] = (-1)^k h_0[N - 1 - k] \quad (\text{where } N \text{ is the filter length})$$
-In the $Z$-domain, this translates to:
-$$H_1(z) = z^{-(N-1)}H_0(-z^{-1})$$
-This ensures that the filter bank cancels aliasing, has no amplitude distortion, and is orthonormal.
+\subsection{Detail Spaces ($W_j$) and the Wavelet Function}
+The approximation space $V_{j+1}$ has finer resolution than $V_j$. The missing information between them is represented by the \textbf{detail space $W_j$}, defined as the orthogonal complement of $V_j$ in $V_{j+1}$:
+$$V_{j+1} = V_j \oplus W_j \quad \text{where } V_j \perp W_j$$
+By repeating this decomposition:
+$$V_{j+1} = V_{j-1} \oplus W_{j-1} \oplus W_j = V_0 \oplus \bigoplus_{i=0}^{j} W_i$$
+To span the detail spaces, we define the \textbf{wavelet function $\psi(t)$} (the \textbf{Mother Wavelet}), which can also be written in terms of the scaling function at the next scale:
+$$\psi(t) = \sqrt{2} \sum_{k=-\infty}^{\infty} h_1[k] \phi(2t - k)$$
+where $h_1[k]$ are the \textbf{wavelet filter coefficients} (high-pass filter).
 
 % ===============================================================================
-\section{Discrete-Time Multi-resolution Analysis}
+\section{The Haar Wavelet System}
 % ===============================================================================
 
-To decompose a signal across multiple scales, we cascade the Analysis filter bank in an octave tree structure (the \textbf{Mallat Algorithm}).
+The \textbf{Haar system} is the oldest and simplest example of an MRA.
 
-\begin{tcolorbox}[tikzbox, title={Wavelet Octave-Band Decomposition Tree (Mallat Algorithm)}]
+\subsection{Haar Scaling Function (Father Wavelet)}
+The Haar scaling function $\phi(t)$ is a simple unit step box function:
+$$\phi(t) = \begin{cases} 1 & 0 \le t < 1 \\ 0 & \text{otherwise} \end{cases}$$
+Its refinement equation is:
+$$\phi(t) = \phi(2t) + \phi(2t-1)$$
+Comparing with the general dilation equation $\phi(t) = \sqrt{2}[h_0[0]\phi(2t) + h_0[1]\phi(2t-1)]$, the Haar scaling filter coefficients are:
+$$h_0[0] = \frac{1}{\sqrt{2}}, \quad h_0[1] = \frac{1}{\sqrt{2}} \quad (\text{all other } h_0[k] = 0)$$
+
+\subsection{Haar Wavelet Function (Mother Wavelet)}
+The Haar wavelet $\psi(t)$ is defined as:
+$$\psi(t) = \begin{cases} 1 & 0 \le t < 0.5 \\ -1 & 0.5 \le t < 1 \\ 0 & \text{otherwise} \end{cases}$$
+Its refinement equation is:
+$$\psi(t) = \phi(2t) - \phi(2t-1)$$
+Thus, the Haar wavelet filter coefficients are:
+$$h_1[0] = \frac{1}{\sqrt{2}}, \quad h_1[1] = -\frac{1}{\sqrt{2}} \quad (\text{all other } h_1[k] = 0)$$
+
+\begin{tcolorbox}[tikzbox, title={Haar Scaling Function and Wavelet Plots}]
 \centering
-\begin{tikzpicture}[node distance=0.5cm and 0.8cm,
-  lbl/.style={font=\tiny\bfseries, color=myred}]
-  
-  % Level 1
-  \node (in) {$x[n]$};
-  \node[block, right=0.6cm of in, yshift=0.8cm] (h01) {$H_0(z)$};
-  \node[block, right=0.6cm of in, yshift=-0.8cm] (h11) {$H_1(z)$};
-  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h01] (d01) {\small $\downarrow 2$};
-  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h11] (d11) {\small $\downarrow 2$};
-  \node[right=0.3cm of d11] (d1) {$d_1[n]$};
-  
-  % Level 2
-  \node[block, right=0.6cm of d01, yshift=0.8cm] (h02) {$H_0(z)$};
-  \node[block, right=0.6cm of d01, yshift=-0.8cm] (h12) {$H_1(z)$};
-  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h02] (d02) {\small $\downarrow 2$};
-  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h12] (d12) {\small $\downarrow 2$};
-  \node[right=0.3cm of d12] (d2) {$d_2[n]$};
-  
-  % Level 3
-  \node[block, right=0.6cm of d02, yshift=0.8cm] (h03) {$H_0(z)$};
-  \node[block, right=0.6cm of d02, yshift=-0.8cm] (h13) {$H_1(z)$};
-  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h03] (d03) {\small $\downarrow 2$};
-  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h13] (d13) {\small $\downarrow 2$};
-  \node[right=0.3cm of d03] (a3) {$a_3[n]$};
-  \node[right=0.3cm of d13] (d3) {$d_3[n]$};
+\begin{tikzpicture}[scale=0.95]
+  % Scaling Function Plot
+  \draw[arrow] (-0.5,0) -- (2.5,0) node[right, font=\tiny] {$t$};
+  \draw[arrow] (0,-0.5) -- (0,1.8) node[above, font=\tiny] {$\phi(t)$};
+  \draw[line, color=mygreen, line width=1.5pt] (-0.5,0) -- (0,0) -- (0,1.2) -- (1.8,1.2) -- (1.8,0) -- (2.3,0);
+  \node[left, font=\tiny] at (0,1.2) {$1.0$};
+  \node[below, font=\tiny] at (1.8,0) {$1.0$};
+  \node[font=\small\bfseries, color=mygreen] at (1,1.5) {Haar Scaling Function $\phi(t)$};
 
-  % Connections
-  \draw[arrow] (in) -- ++(0.3,0) |- (h01.west);
-  \draw[arrow] (in) -- ++(0.3,0) |- (h11.west);
-  \draw[arrow] (h01) -- (d01);
-  \draw[arrow] (h11) -- (d11);
-  \draw[arrow] (d11) -- (d1);
-  
-  \draw[arrow] (d01.east) -- ++(0.3,0) |- (h02.west);
-  \draw[arrow] (d01.east) -- ++(0.3,0) |- (h12.west);
-  \draw[arrow] (h02) -- (d02);
-  \draw[arrow] (h12) -- (d12);
-  \draw[arrow] (d12) -- (d2);
-  
-  \draw[arrow] (d02.east) -- ++(0.3,0) |- (h03.west);
-  \draw[arrow] (d02.east) -- ++(0.3,0) |- (h13.west);
-  \draw[arrow] (h03) -- (d03);
-  \draw[arrow] (h13) -- (d13);
-  \draw[arrow] (d03) -- (a3);
-  \draw[arrow] (d13) -- (d3);
-  
-  \node[lbl, above=0.1cm of h01] {Stage 1};
-  \node[lbl, above=0.1cm of h02] {Stage 2};
-  \node[lbl, above=0.1cm of h03] {Stage 3};
+  % Wavelet Function Plot
+  \draw[arrow] (4.5,0) -- (7.5,0) node[right, font=\tiny] {$t$};
+  \draw[arrow] (5.0,-1.5) -- (5.0,1.8) node[above, font=\tiny] {$\psi(t)$};
+  \draw[line, color=myred, line width=1.5pt] 
+    (4.5,0) -- (5.0,0) -- (5.0,1.2) -- (6.0,1.2) -- (6.0,-1.2) -- (7.0,-1.2) -- (7.0,0) -- (7.3,0);
+  \node[left, font=\tiny] at (5.0,1.2) {$1.0$};
+  \node[left, font=\tiny] at (5.0,-1.2) {$-1.0$};
+  \node[below, font=\tiny] at (6.0,0) {$0.5$};
+  \node[below, font=\tiny] at (7.0,0) {$1.0$};
+  \node[font=\small\bfseries, color=myred] at (6,1.5) {Haar Wavelet $\psi(t)$};
 \end{tikzpicture}
 \end{tcolorbox}
 
-% ===============================================================================
-\section{Orthonormal Wavelet Families}
-% ===============================================================================
-
-To compute wavelets from filter coefficients, we use the \textbf{Cascade Algorithm (Refinement)}. By repeatedly upsampling and filtering $h_0[k]$, the scaling function $\phi(t)$ is generated at the limit.
-
-Several standard orthogonal families exist, each offering unique trade-offs:
-\begin{enumerate}[leftmargin=*, itemsep=4pt]
-  \item \textbf{Daubechies Wavelets (dbN):} Orthonormal, compactly supported wavelets with the maximum number of vanishing moments (equal to $N$, the filter order). This maximizes frequency response sharpness and makes them excellent for compression.
-  \item \textbf{Symlets (symN):} Designed by Ingrid Daubechies to be "least asymmetric" versions of the db wavelets, providing near-linear phase characteristics while maintaining orthonormality.
-  \item \textbf{Coiflets (coifN):} Scaling functions also have vanishing moments, which improves polynomial approximation accuracy in both scaling and wavelet spaces.
+\subsection{Haar Wavelet Decomposition Example}
+Consider a discrete-time signal $x = [c_1, c_2]$ representing values in space $V_1$.
+\begin{enumerate}[leftmargin=*, itemsep=4.5pt]
+  \item \textbf{Approximation coefficient} (Low-pass projection in $V_0$):
+        $$a_1 = \frac{c_1 + c_2}{\sqrt{2}}$$
+  \item \textbf{Detail coefficient} (High-pass projection in $W_0$):
+        $$d_1 = \frac{c_1 - c_2}{\sqrt{2}}$$
 \end{enumerate}
+The Haar transform maps $[c_1, c_2] \to [a_1, d_1]$. It decomposes the signal into its local mean (coarse trend) and local difference (detail fluctuation).
+
+\subsection{Haar Wavelet Packets and Applications}
+A standard Haar DWT only decomposes the low-pass approximation coefficients ($a_j$) recursively. A \textbf{Haar Wavelet Packet} decomposition recursively filters both the approximation ($a_j$) and the detail ($d_j$) coefficients at each level, yielding a full balanced binary tree.
+
+\subsubsection{Recursive Generation of Haar Wavelet Packets}
+Let $W_0(t) = \phi(t)$ be the Haar scaling function and $W_1(t) = \psi(t)$ be the Haar wavelet function. The higher-order wavelet packet functions $W_n(t)$ for $n \ge 0$ are recursively defined by:
+$$W_{2n}(t) = \sum_{k=0}^{1} h_0[k] W_n(2t - k) = \frac{1}{\sqrt{2}} \left[ W_n(2t) + W_n(2t-1) \right]$$
+$$W_{2n+1}(t) = \sum_{k=0}^{1} h_1[k] W_n(2t - k) = \frac{1}{\sqrt{2}} \left[ W_n(2t) - W_n(2t-1) \right]$$
+For example, starting from the first level:
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item $W_2(t)$ is generated from the low-pass projection of $W_1(t)$, representing a high-frequency approximation packet.
+  \item $W_3(t)$ is generated from the high-pass projection of $W_1(t)$, representing a high-frequency detail packet.
+\end{itemize}
+
+\subsubsection{Applications of Haar Wavelet Packets}
+Due to their simple step-like structure and ease of computational implementation, Haar wavelet packets are widely used in:
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Transient Signal Detection:} The localized rectangular support of Haar packets makes them highly sensitive to sudden spikes, edges, and discontinuities in signals.
+  \item \textbf{High-Frequency Feature Extraction:} By decomposing the high-frequency bands recursively, Haar packets capture structural texture details in images that standard DWT skips.
+  \item \textbf{Real-Time Low-Power Hardware Implementations:} Since the Haar filter coefficients ($1/\sqrt{2}$) involve simple additions and subtractions, Haar packet transforms are ideal for low-cost hardware implementation on microcontrollers and FPGAs.
+\end{itemize}
 
 \newpage
 % ===============================================================================
 \begin{center}
   {\large\bfseries\color{myred} Quick Revision --- Module 3}\\[3pt]
-  {\small\color{mydark} Orthonormal MRA \& Filter Banks $|$ PE-EC703C}
+  {\small\color{mydark} Discrete Wavelet Transform \& MRA $|$ PE-EC703C}
 \end{center}
 \noindent{\color{myred}\rule{\linewidth}{1.2pt}}
 \vspace{4pt}
 % ===============================================================================
 
-\begin{tcolorbox}[formulabox, title={\textbf{Key Filter Bank Equations}}]
+\begin{tcolorbox}[formulabox, title={\textbf{Key DWT \& MRA Equations}}]
 \renewcommand{\arraystretch}{1.35}
 \begin{tabularx}{\linewidth}{B{5.0cm} X}
-Aliasing Cancellation & $H_0(-z)G_0(z) + H_1(-z)G_1(z) = 0$ \\[4pt]
-No Distortion Condition & $H_0(z)G_0(z) + H_1(z)G_1(z) = 2z^{-d}$ \\[4pt]
-Synthesis Filters (PR) & $G_0(z) = H_1(-z), \quad G_1(z) = -H_0(-z)$ \\[4pt]
-Orthonormal QMF Relation & $h_1[k] = (-1)^k h_0[N - 1 - k] \quad \implies H_1(z) = z^{-(N-1)}H_0(-z^{-1})$ \\[4pt]
-Vanishing Moments dbN & $\int_{-\infty}^{\infty} t^p \psi(t) dt = 0 \quad$ for $p = 0, 1, \dots, N-1$
+MRA Nested Spaces & $\dots \subset V_{-1} \subset V_0 \subset V_1 \subset V_2 \dots \subset L^2(\mathbb{R})$ \\[4pt]
+Scaling Refinement Eq. & $\phi(t) = \sqrt{2} \sum_{k} h_0[k] \phi(2t - k) \quad$ (Father Wavelet) \\[4pt]
+Wavelet Refinement Eq. & $\psi(t) = \sqrt{2} \sum_{k} h_1[k] \phi(2t - k) \quad$ (Mother Wavelet) \\[4pt]
+Orthogonal Complement & $V_{j+1} = V_j \oplus W_j \quad$ where $V_j \perp W_j$ \\[4pt]
+Haar scaling coefficients & $h_0[0] = 1/\sqrt{2}, \quad h_0[1] = 1/\sqrt{2}$ \\[4pt]
+Haar wavelet coefficients & $h_1[0] = 1/\sqrt{2}, \quad h_1[1] = -1/\sqrt{2}$
 \end{tabularx}
 \tcbset{after={\color{black}}}
 \end{tcolorbox}
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
 \begin{itemize}[leftmargin=*, itemsep=3.5pt]
-  \item \textbf{Filter Bank:} A system of parallel digital filters that splits (Analysis) and recombines (Synthesis) a signal.
-  \item \textbf{Subband Coding:} Compression technique where a signal is split into frequency bands and coded separately.
-  \item \textbf{Decimation ($\downarrow 2$):} Downsampling operation that discards every other sample, compressing the spectrum.
-  \item \textbf{Interpolation ($\uparrow 2$):} Upsampling operation that inserts zeros between samples, expanding the spectrum.
-  \item \textbf{QMF (Quadrature Mirror Filter):} A filter bank where high-pass and low-pass filters are mirror images across $f_s/4$.
-  \item \textbf{Vanishing Moments:} The power to which a wavelet can cancel out polynomial components, aiding signal compression.
-  \item \textbf{Cascade Algorithm:} Iterative upsampling/filtering technique used to construct scaling functions from coefficients.
+  \item \textbf{MRA:} A mathematical framework decomposing a signal into nested resolution spaces.
+  \item \textbf{Approximation Space ($V_j$):} Subspace containing low-resolution signal trends up to scale $j$.
+  \item \textbf{Detail Space ($W_j$):} Subspace containing the localized high-resolution differences between $V_j$ and $V_{j+1}$.
+  \item \textbf{Father Wavelet ($\phi(t)$):} The scaling function that spans the approximation spaces.
+  \item \textbf{Mother Wavelet ($\psi(t)$):} The wavelet function that spans the detail spaces.
+  \item \textbf{Dilation Equation:} A recursive relation defining the scaling function using scaled/shifted copies of itself.
+  \item \textbf{Haar Wavelet:} The simplest orthonormal wavelet, represented by an asymmetric step function.
 \end{itemize}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
 \begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]
-  \item \Q{What are the conditions for Perfect Reconstruction (PR) in a 2-channel filter bank?}
-        Perfect reconstruction requires: (1) Aliasing Cancellation: $H_0(-z)G_0(z) + H_1(-z)G_1(z) = 0$, and (2) No Distortion: $H_0(z)G_0(z) + H_1(z)G_1(z) = 2z^{-d}$, where $d$ is the system delay.
+  \item \Q{State the five basic axioms of Multi-resolution Analysis (MRA).}
+        The five axioms are: (1) Containment: $V_j \subset V_{j+1}$; (2) Completeness: $\bigcap V_j = \{0\}$; (3) Density: $\overline{\bigcup V_j} = L^2(\mathbb{R})$; (4) Scaling Similarity: $f(t) \in V_j \iff f(2t) \in V_{j+1}$; and (5) Translation Invariance: $f(t) \in V_0 \iff f(t-k) \in V_0$.
 
-  \item \Q{How does downsampling introduce aliasing? How is it resolved in filter banks?}
-        Downsampling by 2 discards alternate samples, which stretches the spectrum. If the signal bandwidth exceeds $f_s/4$, spectral overlap (aliasing) occurs. In filter banks, the synthesis filters $G_0(z)$ and $G_1(z)$ are designed such that the aliased components from the low-pass and high-pass branches cancel each other out during summation.
+  \item \Q{What is the difference between approximation space and detail space?}
+        The approximation space ($V_j$) represents the low-frequency, smoothed version of a signal at resolution scale $j$. The detail space ($W_j$) represents the high-frequency difference or fluctuation needed to transition from a coarse scale $V_j$ to a finer scale $V_{j+1}$.
 
-  \item \Q{Define the Quadrature Mirror Filter (QMF) relationship.}
-        A QMF bank uses mirror-symmetric filters. The high-pass filter is a modulated version of the low-pass filter: $h_1[k] = (-1)^k h_0[N - 1 - k]$. In the frequency domain, $|H_1(e^{j\omega})| = |H_0(e^{j(\pi - \omega)})|$.
+  \item \Q{Write down the refinement/dilation equation for the scaling function.}
+        The refinement equation is: $\phi(t) = \sqrt{2} \sum_{k=-\infty}^{\infty} h_0[k] \phi(2t-k)$, where $h_0[k]$ are the scaling filter coefficients. This equation shows that the scaling function is self-similar across scales.
 
-  \item \Q{What are vanishing moments, and why are they important in Daubechies wavelets?}
-        A wavelet has $N$ vanishing moments if $\int_{-\infty}^{\infty} t^p \psi(t) dt = 0$ for $p = 0, \dots, N-1$. It means the wavelet ignores polynomials up to degree $N-1$. In Daubechies wavelets, having more vanishing moments allows the wavelet to represent smooth signals with fewer non-zero coefficients, maximizing compression.
+  \item \Q{What are the coefficients of the Haar scaling and wavelet filters?}
+        For the Haar scaling filter: $h_0[0] = 1/\sqrt{2}$, $h_0[1] = 1/\sqrt{2}$. For the Haar wavelet filter: $h_1[0] = 1/\sqrt{2}$, $h_1[1] = -1/\sqrt{2}$. All other coefficients are zero.
 
-  \item \Q{What is the Mallat Algorithm?}
-        The Mallat Algorithm (or Fast Wavelet Transform) is a recursive algorithm that computes DWT coefficients by cascading 2-channel filter banks. It splits the low-pass approximation at each stage into a new approximation and detail, achieving $O(N)$ computational complexity.
+  \item \Q{Why does the DWT avoid the redundancy of the CWT?}
+        The CWT varies the scale $a$ and shift $b$ continuously, creating infinite overlap and redundant representation. The DWT samples the time-scale grid discretely (usually on a dyadic grid: $a = 2^j, b = k \cdot 2^j$), creating an orthogonal, non-redundant representation.
 
-  \item \Q{Why do we prefer Symlets over standard Daubechies wavelets in some applications?}
-        Standard Daubechies wavelets are highly asymmetric, causing non-linear phase response and phase distortion in filtered signals. Symlets are designed to be "least asymmetric" while retaining compact support and orthonormality, providing near-linear phase.
+  \item \Q{What is the relation between the scaling function $\phi(t)$ and the wavelet function $\psi(t)$?}
+        The scaling function $\phi(t)$ generates the approximation spaces ($V_j$). The wavelet function $\psi(t)$ is orthogonal to $\phi(t)$ and generates the detail spaces ($W_j$). Mathematically, $\psi(t)$ is derived from the scaling function via: $\psi(t) = \sqrt{2} \sum_{k} h_1[k] \phi(2t-k)$.
+
+  \item \Q{What are the drawbacks of the Haar wavelet system?}
+        The Haar wavelet is discontinuous in the time domain, which causes poor frequency resolution and spectral leakage. Additionally, it has only one vanishing moment, making it inefficient for compressing smooth signals.
 \end{enumerate}
 \end{tcolorbox}
 
-\begin{tcolorbox}[tikzbox, title={\textbf{Summary Comparison of Wavelet Families}}]
+\begin{tcolorbox}[tikzbox, title={\textbf{Comparison Table: Approximation vs. Detail Spaces}}]
 \par\noindent
 {\renewcommand{\arraystretch}{1.4}%
-\begin{tabularx}{\linewidth}{|B{3.0cm}|Y|Y|Y|}
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
 \hline
-\textbf{Family} & \textbf{Symmetry} & \textbf{Compact Support} & \textbf{Vanishing Moments} \\
+\textbf{Feature} & \textbf{Approximation Space ($V_j$)} & \textbf{Detail Space ($W_j$)} \\
 \hline
-\textbf{Haar} & Symmetric (linear phase). & Yes (shortest). & 1 (poor smoothness). \\
+\textbf{Spanning Basis} & Shifted Scaling Functions: $\{\phi_{j,k}(t)\}$. & Shifted Wavelet Functions: $\{\psi_{j,k}(t)\}$. \\
 \hline
-\textbf{Daubechies (dbN)} & Asymmetric (non-linear phase). & Yes (width $2N-1$). & $N$ (excellent compression). \\
+\textbf{Spectral Content} & Low-frequency components (trends). & High-frequency components (details/edges). \\
 \hline
-\textbf{Symlets (symN)} & Near-symmetric (near-linear). & Yes (width $2N-1$). & $N$ (linear phase trade-off). \\
+\textbf{Filtering Operation} & Low-pass filter ($h_0[k]$). & High-pass filter ($h_1[k]$). \\
 \hline
-\textbf{Coiflets (coifN)} & Near-symmetric (near-linear). & Yes (width $6N-1$). & $2N$ for wavelet, $2N-1$ for scaling. \\
+\textbf{Relationship} & $V_{j+1} = V_j \oplus W_j$ & $W_j \perp V_j$ and $W_j \perp W_i$ (for $i \neq j$). \\
 \hline
 \end{tabularx}}
 \end{tcolorbox}

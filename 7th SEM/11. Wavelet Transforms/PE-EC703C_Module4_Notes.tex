@@ -170,7 +170,7 @@
 \begin{center}
   {\LARGE\bfseries\color{myred} PE-EC703C --- Wavelet Transforms}\\[5pt]
   {\normalsize\color{mydark} Semester VII \quad$\bullet$\quad 3L:0T:0P \quad$\bullet$\quad 3 Credits}\\[3pt]
-  {\normalsize\color{myteal}\textbf{Module 4 Exam Notes: Bi-orthogonal \& Multi-dimensional Wavelets}}\\[3pt]
+  {\normalsize\color{myteal}\textbf{Module 4 Exam Notes: MRA Ortho-normal Wavelets \& Filter Banks}}\\[3pt]
   {\small\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27) \;$|$\; \textit{Biraj Sarkar}}
 \end{center}
 \vspace{2pt}
@@ -183,210 +183,237 @@
 \newpage
 
 % ===============================================================================
-\section{Bi-orthogonal Wavelets}
+\section{2-Channel Filter Banks and Subband Coding}
 % ===============================================================================
 
-Orthonormal wavelets (like the Daubechies family) cannot be symmetric (except for the Haar wavelet). In image processing, asymmetry introduces phase distortion, which is highly visible. To achieve both \textbf{compact support}, \textbf{orthogonality}, and \textbf{symmetry} (linear phase), we relax the self-orthogonality requirement and use \textbf{Bi-orthogonal Wavelets}.
+Multi-resolution analysis is implemented in practice using \textbf{digital filter banks}. A \textbf{2-Channel Filter Bank} splits a signal into two subbands (Analysis) and reconstructs it back to a single signal (Synthesis).
 
-\subsection{Dual Scaling and Wavelet Functions}
-A bi-orthogonal wavelet system uses two scaling functions ($\phi$, $\tilde{\phi}$) and two wavelet functions ($\psi$, $\tilde{\psi}$):
-\begin{itemize}[leftmargin=*, itemsep=3.5pt]
-  \item $\phi(t)$ and $\psi(t)$ are used for \textbf{decomposition (Analysis)}.
-  \item $\tilde{\phi}(t)$ and $\tilde{\psi}(t)$ are used for \textbf{reconstruction (Synthesis)}.
-\end{itemize}
-
-They satisfy the \textbf{cross-orthogonality (bi-orthogonality)} conditions:
-$$\langle \phi(t), \tilde{\phi}(t-k) \rangle = \delta[k], \quad \langle \psi(t), \tilde{\psi}(t-k) \rangle = \delta[k]$$
-$$\langle \phi(t), \tilde{\psi}(t-k) \rangle = 0, \quad \langle \psi(t), \tilde{\phi}(t-k) \rangle = 0$$
-where $\delta[k]$ is the Kronecker delta.
-
-\subsection{Bi-orthogonal Filter Perfect Reconstruction Conditions}
-In the $Z$-domain, the analysis filters ($H_0, H_1$) and synthesis filters ($\tilde{H}_0, \tilde{H}_1$) must satisfy:
-$$H_0(z)\tilde{H}_0(z^{-1}) + H_1(z)\tilde{H}_1(z^{-1}) = 2$$
-$$H_0(-z)\tilde{H}_0(z^{-1}) + H_1(-z)\tilde{H}_1(z^{-1}) = 0$$
-These conditions allow the filters to have symmetric coefficients (linear phase response).
-
-\subsection{Popular Bi-orthogonal Wavelets: CDF 9/7 and 5/3}
-\begin{itemize}[leftmargin=*, itemsep=4.5pt]
-  \item \textbf{CDF 9/7 Wavelet:} The Cohen-Daubechies-Feauveau 9/7 wavelet has 9 low-pass analysis coefficients and 7 low-pass synthesis coefficients. It has high smoothness and vanishing moments, making it the industry standard for lossy image compression (\textbf{JPEG 2000} standard).
-  \item \textbf{CDF 5/3 Wavelet:} Has 5 analysis coefficients and 3 synthesis coefficients. It utilizes integer-to-integer mappings, enabling \textbf{lossless} (reversible) image compression.
-\end{itemize}
-
-% ===============================================================================
-\section{Two-Dimensional Wavelets}
-% ===============================================================================
-
-To analyze 2D signals (images), we extend the 1D MRA to $L^2(\mathbb{R}^2)$.
-
-\subsection{Separable 2D Wavelet Decomposition}
-A separable 2D wavelet transform uses the tensor product of 1D scaling and wavelet functions:
-\begin{enumerate}[leftmargin=*, itemsep=4.5pt]
-  \item \textbf{2D Scaling Function (Approximation):}
-        $$\Phi(x,y) = \phi(x)\phi(y) \quad \implies \text{LL Subband (Low-Low)} = \text{Coarse Approximation}$$
-  \item \textbf{2D Wavelet Functions (Details):}
-        \begin{itemize}[leftmargin=*, itemsep=3pt, topsep=3pt]
-          \item $\Psi^H(x,y) = \phi(x)\psi(y) \quad \implies \text{HL Subband (Low-High)} = \text{Horizontal Details}$
-          \item $\Psi^V(x,y) = \psi(x)\phi(y) \quad \implies \text{LH Subband (High-Low)} = \text{Vertical Details}$
-          \item $\Psi^D(x,y) = \psi(x)\psi(y) \quad \implies \text{HH Subband (High-High)} = \text{Diagonal Details}$
+\subsection{Analysis and Synthesis Filter Banks}
+\begin{enumerate}[leftmargin=*, itemsep=4pt]
+  \item \textbf{Analysis Filter Bank (Decomposition):}
+        \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=2pt]
+          \item \textbf{Low-Pass Filter ($H_0(z)$):} Extracts approximation components.
+          \item \textbf{High-Pass Filter ($H_1(z)$):} Extracts detail components.
+          \item \textbf{Decimation / Downsampling ($\downarrow 2$):} Discards every second sample to maintain the original data rate, yielding subband signals $v_0[n]$ and $v_1[n]$.
+        \end{itemize}
+  \item \textbf{Synthesis Filter Bank (Reconstruction):}
+        \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=2pt]
+          \item \textbf{Interpolation / Upsampling ($\uparrow 2$):} Inserts a zero between adjacent samples.
+          \item \textbf{Low-Pass Filter ($G_0(z)$):} Smooths the upsampled approximation.
+          \item \textbf{High-Pass Filter ($G_1(z)$):} Smooths the upsampled detail.
+          \item The filtered outputs are summed together to produce the reconstructed signal $\hat{x}[n]$.
         \end{itemize}
 \end{enumerate}
 
-\newpage
-\begin{tcolorbox}[tikzbox, title={2D DWT Separable Quadrant Subbands (3-Level Grid)}]
+\begin{tcolorbox}[tikzbox, title={2-Channel Subband Coder / Filter Bank System}]
 \centering
-\begin{tikzpicture}[scale=0.85]
-  % Boundary Box
-  \draw[draw=mydark, line width=1pt] (0,0) rectangle (6,6);
+\begin{tikzpicture}[node distance=0.6cm and 0.8cm]
+  % Input
+  \node (in) {$x[n]$};
   
-  % Level 1 division
-  \draw[line] (3,0) -- (3,6);
-  \draw[line] (0,3) -- (6,3);
-  \node[font=\small\bfseries] at (4.5, 4.5) {HL1};
-  \node[font=\small\bfseries] at (1.5, 1.5) {LH1};
-  \node[font=\small\bfseries] at (4.5, 1.5) {HH1};
+  % Analysis Filters
+  \node[block, right=0.8cm of in, yshift=0.9cm] (h0) {Low-pass\\$H_0(z)$};
+  \node[block, right=0.8cm of in, yshift=-0.9cm] (h1) {High-pass\\$H_1(z)$};
   
-  % Level 2 division
-  \draw[line] (1.5,3) -- (1.5,6);
-  \draw[line] (0,4.5) -- (3,4.5);
-  \node[font=\footnotesize\bfseries] at (2.25, 5.25) {HL2};
-  \node[font=\footnotesize\bfseries] at (0.75, 3.75) {LH2};
-  \node[font=\footnotesize\bfseries] at (2.25, 3.75) {HH2};
+  % Downsamplers
+  \node[circle, draw=myamber, fill=hdramber, right=0.5cm of h0, inner sep=2pt] (d0) {\small $\downarrow 2$};
+  \node[circle, draw=myamber, fill=hdramber, right=0.5cm of h1, inner sep=2pt] (d1) {\small $\downarrow 2$};
   
-  % Level 3 division
-  \draw[line] (0.75,4.5) -- (0.75,6);
-  \draw[line] (0,5.25) -- (1.5,5.25);
-  \node[font=\tiny\bfseries] at (0.375, 5.625) {LL3};
-  \node[font=\tiny\bfseries] at (1.125, 5.625) {HL3};
-  \node[font=\tiny\bfseries] at (0.375, 4.875) {LH3};
-  \node[font=\tiny\bfseries] at (1.125, 4.875) {HH3};
+  % Upsamplers
+  \node[circle, draw=myamber, fill=hdramber, right=1.2cm of d0] (u0) {\small $\uparrow 2$};
+  \node[circle, draw=myamber, fill=hdramber, right=1.2cm of d1] (u1) {\small $\uparrow 2$};
+  
+  % Synthesis Filters
+  \node[block, right=0.5cm of u0] (g0) {Low-pass\\$G_0(z)$};
+  \node[block, right=0.5cm of u1] (g1) {High-pass\\$G_1(z)$};
+  
+  % Summation
+  \node[circle, draw=myred, fill=hdrred, right=0.8cm of g0, yshift=-0.9cm] (sum) {\textbf{+}};
+  \node[right=0.6cm of sum] (out) {$\hat{x}[n]$};
+  
+  % Connections
+  \draw[arrow] (in) -- ++(0.4,0) |- (h0.west);
+  \draw[arrow] (in) -- ++(0.4,0) |- (h1.west);
+  \draw[arrow] (h0) -- (d0);
+  \draw[arrow] (h1) -- (d1);
+  \draw[arrow] (d0) -- (u0) node[midway, above, font=\tiny] {$v_0[n]$};
+  \draw[arrow] (d1) -- (u1) node[midway, above, font=\tiny] {$v_1[n]$};
+  \draw[arrow] (u0) -- (g0);
+  \draw[arrow] (u1) -- (g1);
+  \draw[arrow] (g0.east) -| (sum.north);
+  \draw[arrow] (g1.east) -| (sum.south);
+  \draw[arrow] (sum) -- (out);
 \end{tikzpicture}
 \end{tcolorbox}
 
-\subsection{Non-Separable Multi-dimensional Wavelets}
-Separable transforms prioritize horizontal and vertical directions. \textbf{Non-separable 2D wavelets} use non-diagonal dilation matrices (like \textbf{Quincunx sampling}), splitting the frequency spectrum diagonally. This offers isotropic directional resolution and is less computationally redundant.
-
 % ===============================================================================
-\section{Wavelet Packets}
+\section{Perfect Reconstruction (PR) Conditions}
 % ===============================================================================
 
-\begin{tcolorbox}[defbox, title={\textbf{Definition of Wavelet Packets}}]
-In a standard DWT, only the low-frequency approximation coefficients ($a_j$) are decomposed at each step. \textbf{Wavelet Packets (WP)} generalize this by recursively decomposing \textbf{both} approximation ($a_j$) and detail ($d_j$) coefficients, forming a \textbf{full binary tree} representation of the signal.
-\end{tcolorbox}
+Let the $Z$-transform of the reconstructed signal be $\hat{X}(z)$. The input-output relationship of the 2-channel filter bank is:
+$$\hat{X}(z) = \frac{1}{2}\left[H_0(z)G_0(z) + H_1(z)G_1(z)\right]X(z) + \frac{1}{2}\left[H_0(-z)G_0(z) + H_1(-z)G_1(z)\right]X(-z)$$
+where the term involving $X(-z)$ represents \textbf{aliasing} introduced by downsampling.
 
-\begin{tcolorbox}[tikzbox, title={Wavelet Packet (WP) vs. Standard DWT Trees}]
+\subsection{Aliasing Cancellation Condition}
+To completely cancel aliasing, the second term must be zero for all $X(z)$:
+$$H_0(-z)G_0(z) + H_1(-z)G_1(z) = 0$$
+This is achieved by choosing synthesis filters that mirror the analysis filters:
+$$G_0(z) = H_1(-z), \quad G_1(z) = -H_0(-z)$$
+
+\subsection{No Distortion Condition}
+After substituting the aliasing cancellation parameters, we require $\hat{x}[n]$ to be a delayed version of the input: $\hat{x}[n] = x[n - d] \implies \hat{X}(z) = z^{-d}X(z)$. This yields the \textbf{no distortion condition}:
+$$H_0(z)G_0(z) + H_1(z)G_1(z) = 2z^{-d}$$
+
+\subsection{Orthonormal Quadrature Mirror Filters (QMF)}
+In an orthonormal filter bank, the filters must satisfy conjugate symmetry conditions. In the time domain, the relationship is:
+$$h_1[k] = (-1)^k h_0[N - 1 - k] \quad (\text{where } N \text{ is the filter length})$$
+In the $Z$-domain, this translates to:
+$$H_1(z) = z^{-(N-1)}H_0(-z^{-1})$$
+This ensures that the filter bank cancels aliasing, has no amplitude distortion, and is orthonormal.
+
+% ===============================================================================
+\section{Discrete-Time Multi-resolution Analysis}
+% ===============================================================================
+
+To decompose a signal across multiple scales, we cascade the Analysis filter bank in an octave tree structure (the \textbf{Mallat Algorithm}).
+
+\begin{tcolorbox}[tikzbox, title={Wavelet Octave-Band Decomposition Tree (Mallat Algorithm)}]
 \centering
-\begin{tikzpicture}[scale=0.9,
-  node/.style={circle, draw=mydark, fill=mygray, minimum size=0.8cm, font=\tiny\bfseries}]
+\begin{tikzpicture}[node distance=0.5cm and 0.8cm,
+  lbl/.style={font=\tiny\bfseries, color=myred}]
   
-  % Standard DWT Tree
-  \node at (1.5,2.5) {\small\bfseries Standard DWT Tree (Octave-Band)};
-  \node[node] (s0) at (1.5,1.5) {$x$};
-  \node[node] (sa1) at (0.5,0.5) {$a_1$};
-  \node[node] (sd1) at (2.5,0.5) {$d_1$};
-  \node[node] (sa2) at (-0.3,-0.5) {$a_2$};
-  \node[node] (sd2) at (1.3,-0.5) {$d_2$};
-  \draw[arrow] (s0) -- (sa1);
-  \draw[arrow] (s0) -- (sd1);
-  \draw[arrow] (sa1) -- (sa2);
-  \draw[arrow] (sa1) -- (sd2);
+  % Level 1
+  \node (in) {$x[n]$};
+  \node[block, right=0.6cm of in, yshift=0.8cm] (h01) {$H_0(z)$};
+  \node[block, right=0.6cm of in, yshift=-0.8cm] (h11) {$H_1(z)$};
+  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h01] (d01) {\small $\downarrow 2$};
+  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h11] (d11) {\small $\downarrow 2$};
+  \node[right=0.3cm of d11] (d1) {$d_1[n]$};
+  
+  % Level 2
+  \node[block, right=0.6cm of d01, yshift=0.8cm] (h02) {$H_0(z)$};
+  \node[block, right=0.6cm of d01, yshift=-0.8cm] (h12) {$H_1(z)$};
+  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h02] (d02) {\small $\downarrow 2$};
+  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h12] (d12) {\small $\downarrow 2$};
+  \node[right=0.3cm of d12] (d2) {$d_2[n]$};
+  
+  % Level 3
+  \node[block, right=0.6cm of d02, yshift=0.8cm] (h03) {$H_0(z)$};
+  \node[block, right=0.6cm of d02, yshift=-0.8cm] (h13) {$H_1(z)$};
+  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h03] (d03) {\small $\downarrow 2$};
+  \node[circle, draw=myamber, fill=hdramber, right=0.3cm of h13] (d13) {\small $\downarrow 2$};
+  \node[right=0.3cm of d03] (a3) {$a_3[n]$};
+  \node[right=0.3cm of d13] (d3) {$d_3[n]$};
 
-  % Wavelet Packet Tree
-  \node at (7.5,2.5) {\small\bfseries Wavelet Packet Tree (Full Binary)};
-  \node[node] (w0) at (7.5,1.5) {$x$};
-  \node[node] (wa1) at (6.5,0.5) {$a_1$};
-  \node[node] (wd1) at (8.5,0.5) {$d_1$};
-  \node[node] (wa2) at (5.7,-0.5) {$aa_2$};
-  \node[node] (wad2) at (7.1,-0.5) {$da_2$};
-  \node[node] (wda2) at (7.9,-0.5) {$ad_2$};
-  \node[node] (wd2) at (9.3,-0.5) {$dd_2$};
-  \draw[arrow] (w0) -- (wa1);
-  \draw[arrow] (w0) -- (wd1);
-  \draw[arrow] (wa1) -- (wa2);
-  \draw[arrow] (wa1) -- (wad2);
-  \draw[arrow] (wd1) -- (wda2);
-  \draw[arrow] (wd1) -- (wd2);
+  % Connections
+  \draw[arrow] (in) -- ++(0.3,0) |- (h01.west);
+  \draw[arrow] (in) -- ++(0.3,0) |- (h11.west);
+  \draw[arrow] (h01) -- (d01);
+  \draw[arrow] (h11) -- (d11);
+  \draw[arrow] (d11) -- (d1);
+  
+  \draw[arrow] (d01.east) -- ++(0.3,0) |- (h02.west);
+  \draw[arrow] (d01.east) -- ++(0.3,0) |- (h12.west);
+  \draw[arrow] (h02) -- (d02);
+  \draw[arrow] (h12) -- (d12);
+  \draw[arrow] (d12) -- (d2);
+  
+  \draw[arrow] (d02.east) -- ++(0.3,0) |- (h03.west);
+  \draw[arrow] (d02.east) -- ++(0.3,0) |- (h13.west);
+  \draw[arrow] (h03) -- (d03);
+  \draw[arrow] (h13) -- (d13);
+  \draw[arrow] (d03) -- (a3);
+  \draw[arrow] (d13) -- (d3);
+  
+  \node[lbl, above=0.1cm of h01] {Stage 1};
+  \node[lbl, above=0.1cm of h02] {Stage 2};
+  \node[lbl, above=0.1cm of h03] {Stage 3};
 \end{tikzpicture}
-\tcbset{after={\color{black}}}
 \end{tcolorbox}
 
-\textbf{Advantages of Wavelet Packets:}
-\begin{itemize}[leftmargin=*, itemsep=4.5pt]
-  \item \textbf{Rich Spectral Breakdown:} Yields $2^J$ subbands at level $J$, dividing the frequency spectrum uniformly (equal-width subbands).
-  \item \textbf{Best Basis Selection:} Using entropy metrics (like \textbf{Shannon entropy}), the algorithm selects the optimal path through the tree to maximize sparsity, matching the signal's specific frequency patterns.
-\end{itemize}
+% ===============================================================================
+\section{Orthonormal Wavelet Families}
+% ===============================================================================
+
+To compute wavelets from filter coefficients, we use the \textbf{Cascade Algorithm (Refinement)}. By repeatedly upsampling and filtering $h_0[k]$, the scaling function $\phi(t)$ is generated at the limit.
+
+Several standard orthogonal families exist, each offering unique trade-offs:
+\begin{enumerate}[leftmargin=*, itemsep=4pt]
+  \item \textbf{Daubechies Wavelets (dbN):} Orthonormal, compactly supported wavelets with the maximum number of vanishing moments (equal to $N$, the filter order). This maximizes frequency response sharpness and makes them excellent for compression.
+  \item \textbf{Symlets (symN):} Designed by Ingrid Daubechies to be "least asymmetric" versions of the db wavelets, providing near-linear phase characteristics while maintaining orthonormality.
+  \item \textbf{Coiflets (coifN):} Scaling functions also have vanishing moments, which improves polynomial approximation accuracy in both scaling and wavelet spaces.
+\end{enumerate}
 
 \newpage
 % ===============================================================================
 \begin{center}
   {\large\bfseries\color{myred} Quick Revision --- Module 4}\\[3pt]
-  {\small\color{mydark} Bi-orthogonal \& Multi-dimensional Wavelets $|$ PE-EC703C}
+  {\small\color{mydark} MRA Ortho-normal Wavelets \& Filter Banks $|$ PE-EC703C}
 \end{center}
 \noindent{\color{myred}\rule{\linewidth}{1.2pt}}
 \vspace{4pt}
 % ===============================================================================
 
-\begin{tcolorbox}[formulabox, title={\textbf{Key Equations}}]
+\begin{tcolorbox}[formulabox, title={\textbf{Key Filter Bank Equations}}]
 \renewcommand{\arraystretch}{1.35}
 \begin{tabularx}{\linewidth}{B{5.0cm} X}
-Bi-orthogonality Rel. & $\langle \phi(t), \tilde{\phi}(t-k) \rangle = \delta[k], \quad \langle \psi(t), \tilde{\psi}(t-k) \rangle = \delta[k]$ \\[4pt]
-PR filter condition & $H_0(z)\tilde{H}_0(z^{-1}) + H_1(z)\tilde{H}_1(z^{-1}) = 2$ \\[4pt]
-2D Approximation (LL) & $\Phi(x,y) = \phi(x)\phi(y)$ \\[4pt]
-2D Horiz. Wavelet (HL) & $\Psi^H(x,y) = \phi(x)\psi(y)$ \\[4pt]
-2D Vert. Wavelet (LH) & $\Psi^V(x,y) = \psi(x)\phi(y)$ \\[4pt]
-2D Diag. Wavelet (HH) & $\Psi^D(x,y) = \psi(x)\psi(y)$
+Aliasing Cancellation & $H_0(-z)G_0(z) + H_1(-z)G_1(z) = 0$ \\[4pt]
+No Distortion Condition & $H_0(z)G_0(z) + H_1(z)G_1(z) = 2z^{-d}$ \\[4pt]
+Synthesis Filters (PR) & $G_0(z) = H_1(-z), \quad G_1(z) = -H_0(-z)$ \\[4pt]
+Orthonormal QMF Relation & $h_1[k] = (-1)^k h_0[N - 1 - k] \quad \implies H_1(z) = z^{-(N-1)}H_0(-z^{-1})$ \\[4pt]
+Vanishing Moments dbN & $\int_{-\infty}^{\infty} t^p \psi(t) dt = 0 \quad$ for $p = 0, 1, \dots, N-1$
 \end{tabularx}
 \tcbset{after={\color{black}}}
 \end{tcolorbox}
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
 \begin{itemize}[leftmargin=*, itemsep=3.5pt]
-  \item \textbf{Bi-orthogonal Wavelet:} A wavelet system utilizing dual, cross-orthogonal scaling and wavelet bases for decomposition and reconstruction.
-  \item \textbf{Linear Phase:} Filter characteristic indicating constant group delay, preventing signal phase distortion.
-  \item \textbf{CDF 9/7 Wavelet:} A symmetric biorthogonal filter family used for lossy image compression in JPEG 2000.
-  \item \textbf{Separable 2D DWT:} 2D transform implemented by running 1D transforms along rows and columns sequentially.
-  \item \textbf{Non-separable Wavelet:} A 2D wavelet transform using multi-directional sampling grids (e.g. Quincunx).
-  \item \textbf{Wavelet Packet:} Decompositions where both low-pass and high-pass branches are recursively filtered.
+  \item \textbf{Filter Bank:} A system of parallel digital filters that splits (Analysis) and recombines (Synthesis) a signal.
+  \item \textbf{Subband Coding:} Compression technique where a signal is split into frequency bands and coded separately.
+  \item \textbf{Decimation ($\downarrow 2$):} Downsampling operation that discards every other sample, compressing the spectrum.
+  \item \textbf{Interpolation ($\uparrow 2$):} Upsampling operation that inserts zeros between samples, expanding the spectrum.
+  \item \textbf{QMF (Quadrature Mirror Filter):} A filter bank where high-pass and low-pass filters are mirror images across $f_s/4$.
+  \item \textbf{Vanishing Moments:} The power to which a wavelet can cancel out polynomial components, aiding signal compression.
+  \item \textbf{Cascade Algorithm:} Iterative upsampling/filtering technique used to construct scaling functions from coefficients.
 \end{itemize}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
 \begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]
-  \item \Q{Why do we need bi-orthogonal wavelets in image processing?}
-        In image processing, phase distortion must be avoided. Orthonormal wavelets (except Haar) cannot be symmetric (which is required for linear phase). Bi-orthogonal wavelets decouple decomposition and reconstruction, allowing filters to be symmetric and linear-phase while remaining compactly supported.
+  \item \Q{What are the conditions for Perfect Reconstruction (PR) in a 2-channel filter bank?}
+        Perfect reconstruction requires: (1) Aliasing Cancellation: $H_0(-z)G_0(z) + H_1(-z)G_1(z) = 0$, and (2) No Distortion: $H_0(z)G_0(z) + H_1(z)G_1(z) = 2z^{-d}$, where $d$ is the system delay.
 
-  \item \Q{What is the difference between CDF 9/7 and CDF 5/3 filters in JPEG 2000?}
-        The CDF 9/7 filter has 9 analysis and 7 synthesis coefficients. It is used for lossy compression because it has high vanishing moments and excellent energy compaction. The CDF 5/3 filter has 5 analysis and 3 synthesis coefficients, uses integer coefficients, and is used for lossless compression.
+  \item \Q{How does downsampling introduce aliasing? How is it resolved in filter banks?}
+        Downsampling by 2 discards alternate samples, which stretches the spectrum. If the signal bandwidth exceeds $f_s/4$, spectral overlap (aliasing) occurs. In filter banks, the synthesis filters $G_0(z)$ and $G_1(z)$ are designed such that the aliased components from the low-pass and high-pass branches cancel each other out during summation.
 
-  \item \Q{Explain separable 2D wavelet decomposition.}
-        A separable 2D wavelet transform is computed by applying the 1D DWT horizontally along each row of the image, followed by applying the 1D DWT vertically along each column. This decomposes the image into four subbands: LL (approximation), LH (vertical details), HL (horizontal details), and HH (diagonal details).
+  \item \Q{Define the Quadrature Mirror Filter (QMF) relationship.}
+        A QMF bank uses mirror-symmetric filters. The high-pass filter is a modulated version of the low-pass filter: $h_1[k] = (-1)^k h_0[N - 1 - k]$. In the frequency domain, $|H_1(e^{j\omega})| = |H_0(e^{j(\pi - \omega)})|$.
 
-  \item \Q{What is Quincunx sampling in multi-dimensional wavelets?}
-        Quincunx sampling is a non-separable 2D downsampling scheme. It reduces the sampling grid by a factor of 2 in a diagonal checkerboard pattern. It provides isotropic frequency responses, avoiding the horizontal/vertical directional bias of separable transforms.
+  \item \Q{What are vanishing moments, and why are they important in Daubechies wavelets?}
+        A wavelet has $N$ vanishing moments if $\int_{-\infty}^{\infty} t^p \psi(t) dt = 0$ for $p = 0, \dots, N-1$. It means the wavelet ignores polynomials up to degree $N-1$. In Daubechies wavelets, having more vanishing moments allows the wavelet to represent smooth signals with fewer non-zero coefficients, maximizing compression.
 
-  \item \Q{How do Wavelet Packets differ from standard DWT?}
-        A standard DWT only decomposes the approximation subband ($a_j$) at each level. A Wavelet Packet transform recursively decomposes both the approximation ($a_j$) and detail ($d_j$) subbands, generating a full binary tree. This provides higher spectral resolution at high frequencies.
+  \item \Q{What is the Mallat Algorithm?}
+        The Mallat Algorithm (or Fast Wavelet Transform) is a recursive algorithm that computes DWT coefficients by cascading 2-channel filter banks. It splits the low-pass approximation at each stage into a new approximation and detail, achieving $O(N)$ computational complexity.
 
-  \item \Q{What is "best basis selection" in Wavelet Packets?}
-        Since Wavelet Packets generate a redundant binary tree, we must select the most efficient subbands. The best basis algorithm evaluates the entropy (e.g. Shannon entropy) of each node and prunes the tree to minimize representation cost.
+  \item \Q{Why do we prefer Symlets over standard Daubechies wavelets in some applications?}
+        Standard Daubechies wavelets are highly asymmetric, causing non-linear phase response and phase distortion in filtered signals. Symlets are designed to be "least asymmetric" while retaining compact support and orthonormality, providing near-linear phase.
 \end{enumerate}
 \end{tcolorbox}
 
-\begin{tcolorbox}[tikzbox, title={\textbf{Summary Comparison: DWT vs. Wavelet Packets}}]
+\begin{tcolorbox}[tikzbox, title={\textbf{Summary Comparison of Wavelet Families}}]
 \par\noindent
 {\renewcommand{\arraystretch}{1.4}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\begin{tabularx}{\linewidth}{|B{3.0cm}|Y|Y|Y|}
 \hline
-\textbf{Feature} & \textbf{Standard DWT} & \textbf{Wavelet Packets (WP)} \\
+\textbf{Family} & \textbf{Symmetry} & \textbf{Compact Support} & \textbf{Vanishing Moments} \\
 \hline
-\textbf{Decomposition Tree} & Octave-band (unbalanced tree). & Full binary tree (symmetrical). \\
+\textbf{Haar} & Symmetric (linear phase). & Yes (shortest). & 1 (poor smoothness). \\
 \hline
-\textbf{Subbands at Level $J$} & $3J+1$ subbands. & $2^J$ subbands. \\
+\textbf{Daubechies (dbN)} & Asymmetric (non-linear phase). & Yes (width $2N-1$). & $N$ (excellent compression). \\
 \hline
-\textbf{Frequency Resolution} & Logarithmic (narrow at low frequencies). & Uniform (equal bandwidth bands). \\
+\textbf{Symlets (symN)} & Near-symmetric (near-linear). & Yes (width $2N-1$). & $N$ (linear phase trade-off). \\
 \hline
-\textbf{Adaptivity} & Rigid (fixed octaves). & Highly adaptive (best basis selection). \\
-\hline
-\textbf{Sparsity for Curves} & Poor (requires many coefficients). & Poor (struggles with curved features). \\
+\textbf{Coiflets (coifN)} & Near-symmetric (near-linear). & Yes (width $6N-1$). & $2N$ for wavelet, $2N-1$ for scaling. \\
 \hline
 \end{tabularx}}
 \end{tcolorbox}
