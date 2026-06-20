@@ -320,30 +320,30 @@ Examples: `01. Control System/`, `02. Computer Network/`
 
 | Subject | Modules | Module PDFs | Combined PDF | Pages |
 |---|---|---|---|---|
-| EC601 Control System | 7 | ✅ All compiled | `EC601_Control_System.pdf` | 87 |
+| EC601 Control System | 7 | ✅ All compiled | `EC601_Control_System.pdf` | 89 |
 | EC602 Computer Network | 4 | ✅ All compiled | `EC602_Computer_Network.pdf` | 48 |
 | HS-HU601 Economics for Engineers | 4 | ✅ All compiled | `HS-HU601_Economics_for_Engineers.pdf` | 39 |
-| PE-EC603D Information Theory and Coding | 3 | ✅ All compiled | `PE-EC603D_Information_Theory_and_Coding.pdf` | 35 |
-| OE-EC604C Object Oriented Programming | 9 | ✅ All compiled | `OE-EC604C_Object_Oriented_Programming.pdf` | 68 |
-| PE-EC603A Introduction to MEMS | 4 | ✅ All compiled | `PE-EC603A_Introduction_to_MEMS.pdf` | 34 |
+| PE-EC603D Information Theory and Coding | 3 | ✅ All compiled | `PE-EC603D_Information_Theory_and_Coding.pdf` | 37 |
+| OE-EC604C Object Oriented Programming | 9 | ✅ All compiled | `OE-EC604C_Object_Oriented_Programming.pdf` | 69 |
+| PE-EC603A Introduction to MEMS | 4 | ✅ All compiled | `PE-EC603A_Introduction_to_MEMS.pdf` | 35 |
 | PE-EC603B Bio-Medical Electronics | 4 | ✅ All compiled | `PE-EC603B_BioMedical_Electronics.pdf` | 45 |
 | OE-EC604B Operating System | 9 | ✅ All compiled | `OE-EC604B_Operating_System.pdf` | 58 |
-| OE-EC604A Electronic Measurement and Measuring Instruments | 5 | ✅ All compiled | `OE-EC604A_Electronic_Measurement_and_Measuring_Instruments.pdf` | 35 |
+| OE-EC604A Electronic Measurement and Measuring Instruments | 5 | ✅ All compiled | `OE-EC604A_Electronic_Measurement_and_Measuring_Instruments.pdf` | 43 |
 | PE-EC603C CMOS VLSI Design | 6 | ✅ All compiled | `PE-EC603C_CMOS_VLSI_Design.pdf` | 44 |
 
 **7th SEM — complete and compiled:**
 
 | Subject | Modules | Module PDFs | Combined PDF | Pages |
 |---|---|---|---|---|
-| HS-HU701 Principles of Management | 4 | ✅ All compiled | `HS-HU701_Principles_of_Management.pdf` | 46 |
-| PE-EC701A Microwave Theory and Technique | 9 | ✅ All compiled | `PE-EC701A_Microwave_Theory_and_Technique.pdf` | 63 |
+| HS-HU701 Principles of Management | 4 | ✅ All compiled | `HS-HU701_Principles_of_Management.pdf` | 45 |
+| PE-EC701A Microwave Theory and Technique | 9 | ✅ All compiled | `PE-EC701A_Microwave_Theory_and_Technique.pdf` | 71 |
 | PE-EC701B Satellite Communication | 6 | ✅ All compiled | `PE-EC701B_Satellite_Communication.pdf` | 42 |
 | PE-EC701C Mobile Communication and Networks | 6 | ✅ All compiled | `PE-EC701C_Mobile_Communication_and_Networks.pdf` | 51 |
-| PE-EC702A Adaptive Signal Processing | 5 | ✅ All compiled | `PE-EC702A_Adaptive_Signal_Processing.pdf` | 37 |
+| PE-EC702A Adaptive Signal Processing | 5 | ✅ All compiled | `PE-EC702A_Adaptive_Signal_Processing.pdf` | 36 |
 | PE-EC702B Digital Image and Video Processing | 8 | ✅ All compiled | `PE-EC702B_Digital_Image_and_Video_Processing.pdf` | 54 |
 | PE-EC702C Neural Network and Fuzzy Logic Control | 5 | ✅ All compiled | `PE-EC702C_Neural_Network_and_Fuzzy_Logic_Control.pdf` | 40 |
-| PE-EC703A Embedded System | 5 | ✅ All compiled | `PE-EC703A_Embedded_System.pdf` | 50 |
-| PE-EC703B Wireless Sensor Networks | 5 | ✅ All compiled | `PE-EC703B_Wireless_Sensor_Networks.pdf` | 54 |
+| PE-EC703A Embedded System | 5 | ✅ All compiled | `PE-EC703A_Embedded_System.pdf` | 52 |
+| PE-EC703B Wireless Sensor Networks | 5 | ✅ All compiled | `PE-EC703B_Wireless_Sensor_Networks.pdf` | 56 |
 | PE-EC703C Wavelet Transforms | 7 | ✅ All compiled | `PE-EC703C_Wavelet_Transforms.pdf` | 42 |
 | OE-EC704A Web Technology | 10 | ✅ All compiled | `OE-EC704A_Web_Technology.pdf` | 70 |
 

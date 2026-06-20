@@ -42,7 +42,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `BS-CH101_Module5_Notes.pdf` | Periodic Properties: effective nuclear charge, penetration, orbital energies, size, ionization energy, electronegativity, HSAB, coordination and molecular geometry |
 | `BS-CH101_Module6_Notes.pdf` | Stereochemistry: 3D representations, structural and stereoisomerism, chirality, enantiomers, optical activity, absolute configuration and conformational analysis |
 | `BS-CH101_Module7_Notes.pdf` | Organic Reactions and Drug Molecule Synthesis: substitution, addition, elimination, oxidation, reduction, cyclization, ring opening and aspirin synthesis |
-| `BS-CH101_ChemistryI.pdf` | **Combined** — all 7 modules, 68 pages |
+| `BS-CH101_ChemistryI.pdf` | **Combined** — all 7 modules, 71 pages |
 
 ---
 
@@ -59,7 +59,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `EC601_Module5_Notes.pdf` | State Space Analysis, Controllability, Observability |
 | `EC601_Module6_Notes.pdf` | Nonlinear Control, Describing Functions, Optimal Control |
 | `EC601_Module7_Notes.pdf` | Instrumentation: CRO, Analyzers, Transducers, Actuators |
-| `EC601_Control_System.pdf` | **Combined** — all 7 modules, 87 pages |
+| `EC601_Control_System.pdf` | **Combined** — all 7 modules, 89 pages |
 
 ### EC602 — Computer Network
 
@@ -88,7 +88,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC603D_Module1_Notes.pdf` | Basics of Information Theory, Information Measure, Entropy, Joint/Conditional/Mutual Information, Shannon's Noiseless Coding Theorem, Shannon-Fano Coding |
 | `PE-EC603D_Module2_Notes.pdf` | Markov Sources, Stationary Probabilities, Noisy Channel Coding Theorem, Channel Capacity (BSC, BEC), Shannon-Hartley Theorem, Shannon Limit |
 | `PE-EC603D_Module3_Notes.pdf` | Huffman Codes, Prefix Codes, Uniquely Detectable Codes, Cyclic Codes (FSR encoder, systematic encoding), Convolutional Codes (trellis diagram, Viterbi decoding), Arithmetic Coding |
-| `PE-EC603D_Information_Theory_and_Coding.pdf` | **Combined** — all 3 modules, 35 pages |
+| `PE-EC603D_Information_Theory_and_Coding.pdf` | **Combined** — all 3 modules, 37 pages |
 
 ### PE-EC603A — Introduction to MEMS
 
@@ -98,6 +98,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC603A_Module2_Notes.pdf` | Geometric scaling, Surface Area vs Volume, Surface-to-Volume ratio, forces scaling (electrostatic, electromagnetic, gravity, surface tension), fluidic scaling (Reynolds number, laminar flow), thermal scaling (time constant) |
 | `PE-EC603A_Module3_Notes.pdf` | Sensors (piezoresistive, capacitive, piezoelectric, thermal), Actuators (comb drive, thermal bimorph, piezo stack), Oxidation kinetics (Deal-Grove), Deposition (PVD, CVD), Photolithography flow, Etching (isotropic/anisotropic, wet/dry), LIGA, Surface micromachining release steps \& capillary stiction mitigation (dimples, supercritical drying) |
 | `PE-EC603A_Module4_Notes.pdf` | Bulk micromachining, wet isotropic vs anisotropic etchants (HNA vs KOH/TMAH), wafer bonding (direct, anodic, eutectic), Solid mechanics (stress, strain, Young's modulus, Poisson's ratio, thermal expansion), Cantilever beam deflection derivation, Coupled electromechanical pull-in model derivation, Finite Element Method (FEM) overview |
+| `PE-EC603A_Introduction_to_MEMS.pdf` | **Combined** — all 4 modules, 35 pages |
 
 ### OE-EC604C — Object Oriented Programming
 
@@ -112,7 +113,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `OE-EC604C_Module7_Notes.pdf` | Polymorphic pointers, this pointer, V-Table/V-Ptr bindings, pure virtual functions, abstract classes, virtual destructors |
 | `OE-EC604C_Module8_Notes.pdf` | Stream hierarchy, file modes, open methods, seek/tell pointers, binary read/write, random file access updates |
 | `OE-EC604C_Module9_Notes.pdf` | Exception handling syntax, stack unwinding, re-throwing, templates (function/class) |
-| `OE-EC604C_Object_Oriented_Programming.pdf` | **Combined** — all 9 modules, 68 pages |
+| `OE-EC604C_Object_Oriented_Programming.pdf` | **Combined** — all 9 modules, 69 pages |
 
 ### PE-EC603B — Bio-Medical Electronics
 
@@ -148,7 +149,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `OE-EC604A_Module3_Notes.pdf` | Oscilloscopes (CRT, delay lines, sweep generator), Lissajous figures, dual-trace/dual-beam CROs, DSO |
 | `OE-EC604A_Module4_Notes.pdf` | Transducers classification, Gauge Factor derivation, LVDT, RTD vs Thermistor vs Thermocouple, Piezoelectric |
 | `OE-EC604A_Module5_Notes.pdf` | DC/AC Bridges (Wheatstone, Kelvin Double, Maxwell), Flow/Level/Pressure measurement, DAS (MUX, S/H, ADC) |
-| `OE-EC604A_Electronic_Measurement_and_Measuring_Instruments.pdf` | **Combined** — all 5 modules, 35 pages |
+| `OE-EC604A_Electronic_Measurement_and_Measuring_Instruments.pdf` | **Combined** — all 5 modules, 43 pages |
 | | |
 
 ### PE-EC603C — CMOS VLSI Design
@@ -175,7 +176,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `HS-HU701_Module2_Notes.pdf` | Management and Society, People Management, Managerial Competencies |
 | `HS-HU701_Module3_Notes.pdf` | Leadership, Decision Making, Economic, Financial and Quantitative Analysis |
 | `HS-HU701_Module4_Notes.pdf` | Customer Management, Operations and Technology Management |
-| `HS-HU701_Principles_of_Management.pdf` | **Combined** — all 4 modules, 46 pages |
+| `HS-HU701_Principles_of_Management.pdf` | **Combined** — all 4 modules, 45 pages |
 
 ### PE-EC701A — Microwave Theory and Technique
 
@@ -190,7 +191,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC701A_Module7_Notes.pdf` | Microwave Antennas: patch antennas, horn antennas, parabolic dish antennas, lens antennas, antenna arrays, Friis transmission equation |
 | `PE-EC701A_Module8_Notes.pdf` | Microwave Measurements: VSWR measurement (low, high VSWR, double-minimum method), power measurement (bolometer, calorimeter), impedance measurement, frequency, noise figure, network analyzer, spectrum analyzer |
 | `PE-EC701A_Module9_Notes.pdf` | Microwave Systems \& Modern Trends: radar systems, Doppler shift, satellite communication, GPS, navigation aids (ILS, LORAN, RFID), biological effects, MMICs, RFMEMS |
-| `PE-EC701A_Microwave_Theory_and_Technique.pdf` | **Combined** — all 9 modules, 63 pages |
+| `PE-EC701A_Microwave_Theory_and_Technique.pdf` | **Combined** — all 9 modules, 71 pages |
 
 ### PE-EC701B — Satellite Communication
 
@@ -225,7 +226,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC702A_Module3_Notes.pdf` | Variants of LMS: Sign-LMS Family, Normalized LMS (NLMS), Block LMS, FDAF, Sub-band Adaptive Filtering; Signal Space Concepts: Vector spaces, Linear Operators, Inner Product Spaces, Gram-Schmidt Orthogonalization, Orthogonal Projection/Decomposition |
 | `PE-EC702A_Module4_Notes.pdf` | Vector Space of Random Variables, Forward/Backward Projections \& Linear Prediction, Stochastic Lattice Filters, Reflection Coefficients, Yule-Walker Equations, Levinson-Durbin Recursion, Joint Process Estimator, GAL |
 | `PE-EC702A_Module5_Notes.pdf` | Recursive Least Squares (RLS) Cost Function, Matrix Inversion Lemma, RLS Transversal Update Equations, RLS Lattice Filters, APA, Subspace Adaptive Filters, Partial Updates, QRD-RLS, Systolic Arrays |
-| `PE-EC702A_Adaptive_Signal_Processing.pdf` | **Combined** — all 5 modules, 37 pages |
+| `PE-EC702A_Adaptive_Signal_Processing.pdf` | **Combined** — all 5 modules, 36 pages |
 
 ### PE-EC702B — Digital Image and Video Processing
 
@@ -261,7 +262,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC703A_Module3_Notes.pdf` | I/O Types \& Interrupt Service Mechanism: serial/parallel ports, timers, watchdog timer operation, RTC, protocols (I2C, CAN, ISA), ISR flow, vector table, nested interrupts, IE register, interrupt latency and deadline. |
 | `PE-EC703A_Module4_Notes.pdf` | Embedded Software Development \& RTOS: low-level ALP vs high-level C, preprocessor directives, functions and macros, volatile, C++ concepts, RTOS services, task states, priority-based/cyclic/round-robin scheduling. |
 | `PE-EC703A_Module5_Notes.pdf` | Embedded System Design using PIC Microcontroller: PIC16 family, PIC16F873 specifications and CPU block diagram, peripherals (WDT, ADC, EEPROM, UART, SPI, I2C), interfacing (LCD, sensors, stepper, keypad, DAC), case studies (vending machine, digital camera). |
-| `PE-EC703A_Embedded_System.pdf` | **Combined** — all 5 modules, 50 pages |
+| `PE-EC703A_Embedded_System.pdf` | **Combined** — all 5 modules, 52 pages |
 
 ### PE-EC703B — Wireless Sensor Networks
 
@@ -272,7 +273,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC703B_Module3_Notes.pdf` | MAC protocols: classification (contention vs schedule), S-MAC (sleep-wake scheduling), B-MAC (preamble sampling / LPL); IEEE 802.15.4 (PHY+MAC, O-QPSK, 250 kbps, GTS, superframe); ZigBee (protocol stack, device types, topologies); Routing: Flooding, Gossiping, SPIN, Directed Diffusion, LEACH (probability formula, cluster head rotation) |
 | `PE-EC703B_Module4_Notes.pdf` | Dissemination protocols (Directed Diffusion, Rumor Routing); Data gathering (PEGASIS chain protocol); Data aggregation and fusion (types: lossless, lossy, in-network processing); QoS metrics (lifetime, coverage, connectivity, latency, PDR); real-time traffic support; Security (CIA goals, attack types: Sybil, wormhole, selective forwarding, DoS, hello flood, replay, node capture); SPINS (SNEP + μTESLA) |
 | `PE-EC703B_Module5_Notes.pdf` | Design principles for WSNs (8 principles: energy-first, cross-layer, data-centric, self-organization, security by design); WSN gateway (functions, protocol translation); WSN-to-Internet (6LoWPAN, CoAP, RPL DODAG); Internet-to-WSN (MQTT, downlink challenges); OS for WSN (requirements); TinyOS (event-driven, component-based, FIFO scheduler); nesC (interfaces, modules, configurations, split-phase, atomic) |
-| `PE-EC703B_Wireless_Sensor_Networks.pdf` | **Combined** — all 5 modules, 236 KB |
+| `PE-EC703B_Wireless_Sensor_Networks.pdf` | **Combined** — all 5 modules, 56 pages |
 
 ### PE-EC703C — Wavelet Transforms
 
@@ -301,7 +302,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `OE-EC704A_Module8_Notes.pdf` | Java Utility Package (Collections): Collections framework architecture, List interface, ArrayList contiguous backing array, LinkedList doubly-linked node layout, and traversing collections via Iterator (fail-fast behavior) vs enhanced For-Each loop |
 | `OE-EC704A_Module9_Notes.pdf` | Applet Architecture: Client-side Applet class, browser execution lifecycle methods, setForeground() and setBackground(), showStatus() window, HTML Applet tag, parameter passing (getParameter()), getCodeBase() and getDocumentBase() resource loading, and strict security sandbox rules |
 | `OE-EC704A_Module10_Notes.pdf` | Event Handling \& AWT: Delegation Event Model (sources, events, listeners), Adapter classes, anonymous inner classes for inline handlers, heavyweight AWT controls (Label, Button, TextField), and FlowLayout, BorderLayout, and GridLayout container arrangement managers |
-| `OE-EC704A_Web_Technology.pdf` | **Combined** — all 10 modules, 70 pages, 256.2 KB |
+| `OE-EC704A_Web_Technology.pdf` | **Combined** — all 10 modules, 70 pages |
 
 ---
 
