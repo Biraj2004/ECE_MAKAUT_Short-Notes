@@ -117,6 +117,11 @@ ECE_MAKAUT_Short-Notes/
 │       ├── ...
 │       ├── OE-EC704C_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── OE-EC704C_Entrepreneurship.pdf
+│   └── 13. Optimization Technique/ # OE-EC704B — 6 modules (All complete)
+│       ├── OE-EC704B_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── OE-EC704B_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── OE-EC704B_Optimization_Technique.pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -362,6 +367,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | PE-EC703C Wavelet Transforms | 7 | ✅ All compiled | `PE-EC703C_Wavelet_Transforms.pdf` | 42 |
 | OE-EC704A Web Technology | 10 | ✅ All compiled | `OE-EC704A_Web_Technology.pdf` | 70 |
 | OE-EC704C Entrepreneurship | 4 | ✅ All compiled | `OE-EC704C_Entrepreneurship.pdf` | 33 |
+| OE-EC704B Optimization Technique | 6 | ✅ All compiled | `OE-EC704B_Optimization_Technique.pdf` | 36 |
 
 **1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
 **8th SEM:** Not started.

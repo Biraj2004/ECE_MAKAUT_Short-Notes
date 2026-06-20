@@ -24,7 +24,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
-| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (10 modules), OE-EC704C Entrepreneurship (4 modules) |
+| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (10 modules), OE-EC704C Entrepreneurship (4 modules), OE-EC704B Optimization Technique (6 modules) |
 | 8th SEM | 🔲 Planned | — |
 
 ---
@@ -314,6 +314,18 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `OE-EC704C_Module4_Notes.pdf` | Decision Making, Motivation \& Project Reports: programmed vs non-programmed decisions, qualitative/quantitative forecasting (Delphi, moving averages, exponential smoothing), personnel management functions, motivation theories (Maslow, Herzberg, McGregor Theory X/Y), PPR vs DPR comparison \& key contents of Detailed Project Reports |
 | `OE-EC704C_Entrepreneurship.pdf` | **Combined** — all 4 modules, 33 pages |
 
+### OE-EC704B — Optimization Technique
+
+| File | Topics |
+|---|---|
+| `OE-EC704B_Module1_Notes.pdf` | Introduction to Optimization: standard problem formulation, design vector, objective function, behaviour/side constraints, feasible region, cylindrical tank formulation example, classification of problems and search algorithms, optimization design loop flowchart. |
+| `OE-EC704B_Module2_Notes.pdf` | Single-variable Optimization Algorithm: necessary/sufficient optimality criteria, inflection point, unimodal function definition, exhaustive search steps, Fibonacci search (interval reduction and point formulas), successive quadratic estimation (SQE) formula and logic. |
+| `OE-EC704B_Module3_Notes.pdf` | Gradient-based Methods: Newton-Raphson method (formula derivation and convergence), bisection method (Intermediate Value Theorem, interval sign check), secant method (finite difference approximation, update rule, Golden Ratio convergence), computer pseudo-codes. |
+| `OE-EC704B_Module4_Notes.pdf` | Multivariable Optimization Algorithm: first-order necessary and second-order sufficient (Hessian matrix positive/negative definite, saddle points) criteria, Nelder-Mead simplex operations (reflection, expansion, contraction, shrinkage), Hooke-Jeeves pattern search, Cauchy's steepest descent, Newton's method, multi-objective optimization, Pareto dominance, Pareto front. |
+| `OE-EC704B_Module5_Notes.pdf` | Constrained Optimization Algorithm: active/inactive/violated constraints, Box's complex search, Kelly's cutting plane method, exterior penalty functions, interior barrier functions (inverse and logarithmic barrier cost functions), convex programming conditions and global minimum theorem. |
+| `OE-EC704B_Module6_Notes.pdf` | Advanced Optimization Algorithms: Genetic Algorithm (selection, crossover, mutation, roulette wheel probability, elitism, flowchart), Simulated Annealing (Metropolis acceptance criterion, Boltzmann probability, cooling schedule), Particle Swarm Optimization (PSO velocity and position update equations), DE, BFA, and ACO (pheromone update rule). |
+| `OE-EC704B_Optimization_Technique.pdf` | **Combined** — all 6 modules, 36 pages |
+
 ---
 
 ## Repository structure
@@ -458,6 +470,12 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── OE-EC704C_Module4_Notes.tex / .pdf
 │   │   ├── OE-EC704C_Combined_Notes.tex
 │   │   └── OE-EC704C_Entrepreneurship.pdf
+│   ├── 13. Optimization Technique/
+│   │   ├── OE-EC704B_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── OE-EC704B_Module6_Notes.tex / .pdf
+│   │   ├── OE-EC704B_Combined_Notes.tex
+│   │   └── OE-EC704B_Optimization_Technique.pdf
 │   └── sem7.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject
