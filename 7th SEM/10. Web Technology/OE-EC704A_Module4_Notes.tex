@@ -177,10 +177,9 @@
 \begin{center}
   {\LARGE\bfseries\color{myred} OE-EC704A --- Web Technology}\\[5pt]
   {\normalsize\color{mydark} Semester VII \quad$\bullet$\quad 3L:0T:0P \quad$\bullet$\quad 3 Credits}\\[3pt]
-  {\normalsize\color{myteal}\textbf{Module 4 Exam Notes: Exception Handling, Strings, I/O Streams \& Collections}}\\[3pt]
+  {\normalsize\color{myteal}\textbf{Module 4 Exam Notes: Interfaces and Packages}}\\[3pt]
   {\small\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27) \;$|$\; \textit{Biraj Sarkar}}
 \end{center}
-\vspace{2pt}
 \noindent{\color{myred}\rule{\linewidth}{1.5pt}}
 \vspace{2pt}
 
@@ -190,279 +189,125 @@
 \newpage
 
 % ===============================================================================
-\section{Java Exception Handling Mechanism}
+\section{Interfaces}
 % ===============================================================================
 
-An exception is an event that disrupts the normal flow of instruction execution. Java uses a structured exception handling system based on five keywords: \texttt{try}, \texttt{catch}, \texttt{throw}, \texttt{throws}, and \texttt{finally}.
+An interface is a reference type in Java that is similar to a class but contains only constants, method signatures, default methods, static methods, and nested types.
 
-\begin{tcolorbox}[defbox, title={\textbf{Exception Types}}]
+\begin{tcolorbox}[defbox, title={\textbf{Interface Concept}}]
+An \textbf{Interface} defines a contract that implementing classes must satisfy. It specifies \textit{what} a class should do, but not \textit{how} it does it.
 \begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{Checked Exceptions (Compile-time):} Exceptions that must be declared in the method signature or handled in a try-catch block. Verified by the compiler (e.g., \texttt{IOException}, \texttt{SQLException}).
-  \item \textbf{Unchecked Exceptions (Runtime):} Exceptions that extend \texttt{RuntimeException}. Not verified by the compiler (e.g., \texttt{NullPointerException}, \texttt{ArithmeticException}).
-  \item \textbf{Errors:} Serious conditions that applications should not try to catch. They represent system failures (e.g., \texttt{OutOfMemoryError}, \texttt{StackOverflowError}).
+  \item Declared using the \texttt{interface} keyword.
+  \item All variables declared inside an interface are implicitly \texttt{public}, \texttt{static}, and \texttt{final} (constants).
+  \item All methods without a body are implicitly \texttt{public} and \texttt{abstract}.
 \end{itemize}
 \end{tcolorbox}
 
-\begin{tcolorbox}[tikzbox, title={Java Exception Class Hierarchy}]
-\centering
-\begin{tikzpicture}[node distance=1.2cm and 1.5cm,
-  root/.style={rectangle, draw=myred, fill=hdrred, text width=2.4cm,
-    align=center, minimum height=0.7cm, font=\small\bfseries, rounded corners=3pt, line width=0.8pt},
-  node/.style={rectangle, draw=myteal, fill=hdrteal, text width=2.4cm,
-    align=center, minimum height=0.7cm, font=\small, rounded corners=3pt, line width=0.7pt},
-  error/.style={rectangle, draw=myamber, fill=hdramber, text width=2.4cm,
-    align=center, minimum height=0.7cm, font=\small, rounded corners=3pt, line width=0.7pt}]
+\subsection{Syntax and Implementation}
+A class implements an interface using the \texttt{implements} keyword. It must provide concrete overrides for all abstract methods declared in the interface.
 
-  % Hierarchy Nodes
-  \node[root] (throw) {Throwable};
-  \node[node, below left=0.8cm and 1.5cm of throw] (ex) {Exception};
-  \node[error, below right=0.8cm and 1.5cm of throw] (err) {Error};
-  
-  \node[node, below left=0.8cm and 0.8cm of ex] (chk) {IOException\\{\tiny (Checked)}};
-  \node[node, below right=0.8cm and 0.8cm of ex] (rt) {RuntimeException\\{\tiny (Unchecked)}};
-  
-  \node[error, below=0.8cm of err] (oome) {OutOfMemoryError};
-  \node[node, below=0.8cm of rt] (npe) {NullPointer-\\Exception};
+\begin{verbatim}
+interface Flyable {
+    int SPEED_LIMIT = 300; // Implicitly public static final
+    void fly();            // Implicitly public abstract
+}
+
+class Airplane implements Flyable {
+    @Override
+    public void fly() { // Must be declared public
+        System.out.println("Airplane is flying at high altitude.");
+    }
+}
+\end{verbatim}
+
+\subsection{Interface Additions in Java 8 and 9}
+To support backward compatibility and clean API design, Java has expanded what an interface can contain:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Default Methods (Java 8):} Declared using the \texttt{default} keyword. They provide a default concrete implementation, allowing developers to add new methods to interfaces without breaking existing implementing classes.
+  \item \textbf{Static Methods (Java 8):} Concrete methods bound to the interface itself. They cannot be overridden by implementing classes.
+  \item \textbf{Private Methods (Java 9):} Used to encapsulate common helper logic shared among default/static methods within the same interface.
+\end{itemize}
+
+% ===============================================================================
+\section{Packages}
+% ===============================================================================
+
+A package is a grouping of related classes, interfaces, and subpackages, providing namespace management and access protection.
+
+\begin{tcolorbox}[defbox, title={\textbf{Java Packages}}]
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Directory Mapping:} Packages map directly to the folder structure on disk. For example, a class in package \texttt{com.cgec.webtech} must reside in a folder path \texttt{com/cgec/webtech/}.
+  \item \textbf{Namespace Clashing Prevention:} Ensures class name uniqueness by grouping them under a domain namespace.
+  \item \textbf{The \texttt{package} Keyword:} Declared as the very first non-comment statement in a source file.
+  \item \textbf{The \texttt{import} Keyword:} Used to make classes from other packages accessible within the current file.
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={Java Package Structure Mapping to File System}]
+\centering
+\begin{tikzpicture}[node distance=0.8cm and 1.5cm,
+  folder/.style={rectangle, draw=mydark, fill=hdramber, text width=2.5cm,
+    align=center, minimum height=0.6cm, font=\small\bfseries, rounded corners=2pt, line width=0.8pt},
+  file/.style={rectangle, draw=myteal, fill=hdrteal, text width=2.5cm,
+    align=center, minimum height=0.6cm, font=\small, rounded corners=2pt, line width=0.7pt}]
+
+  % Folders
+  \node[folder] (src) {src};
+  \node[folder, below=0.6cm of src] (com) {com};
+  \node[folder, below=0.6cm of com] (cgec) {cgec};
+  \node[file, below=0.6cm of cgec] (app) {MyApp.java};
 
   % Paths
-  \draw[arrow] (ex) -- (throw);
-  \draw[arrow] (err) -- (throw);
-  \draw[arrow] (chk) -- (ex);
-  \draw[arrow] (rt) -- (ex);
-  \draw[arrow] (npe) -- (rt);
-  \draw[arrow] (oome) -- (err);
-\end{tikzpicture}
-\end{tcolorbox}
+  \draw[arrow] (src) -- (com);
+  \draw[arrow] (com) -- (cgec);
+  \draw[arrow] (cgec) -- (app);
 
-\subsection{Checked vs. Unchecked Exceptions}
-
-\par\noindent
-{\renewcommand{\arraystretch}{1.5}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
-\hline
-\textbf{Feature} & \textbf{Checked Exceptions} & \textbf{Unchecked Exceptions} \\
-\hline
-\textbf{Compiler Checks} & Enforced at compilation. & Not verified by the compiler. \\
-\hline
-\textbf{Base Superclass} & Inherits from \texttt{java.lang.Exception}. & Inherits from \texttt{java.lang.RuntimeException}. \\
-\hline
-\textbf{Resolution Rule} & Must use \texttt{try-catch} or declare \texttt{throws}. & Recommended to write defensive checks. \\
-\hline
-\textbf{Examples} & \texttt{FileNotFoundException, IOException} & \texttt{ArithmeticException, NullPointerException} \\
-\hline
-\end{tabularx}}
-
-% ===============================================================================
-\section{Java String Handling}
-% ===============================================================================
-
-Java represents sequences of characters using the \texttt{String} class.
-
-\begin{tcolorbox}[defbox, title={\textbf{String Immutability}}]
-Java String objects are \textbf{immutable}, meaning their state cannot be modified after creation. 
-\begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{String Pool:} When a string literal is declared, the JVM checks if it exists in the String Constant Pool (SCP) on the heap. If present, it reuses the reference, saving heap memory.
-  \item \textbf{Why Immutable?} Ensures thread safety, security (parameters like DB connection URLs cannot be altered), and enables string pool caching.
-\end{itemize}
-\end{tcolorbox}
-
-\subsection{String vs. StringBuffer}
-
-\par\noindent
-{\renewcommand{\arraystretch}{1.5}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
-\hline
-\textbf{Metric} & \textbf{String Class} & \textbf{StringBuffer Class} \\
-\hline
-\textbf{Mutability} & Immutable (read-only once created). & Mutable (can append or modify content). \\
-\hline
-\textbf{Performance} & Slower for frequent concatenations (creates new objects). & Fast and memory efficient (modifies local buffer). \\
-\hline
-\textbf{Thread Safety} & Naturally thread-safe due to immutability. & Thread-safe; methods are synchronized. \\
-\hline
-\textbf{Heap Allocation} & SCP or standard heap space. & Standard heap space only. \\
-\hline
-\end{tabularx}}
-
-\subsection{String and StringBuffer Constructors}
-Both classes provide multiple constructors to instantiate character sequences:
-
-\par\noindent
-{\renewcommand{\arraystretch}{1.45}%
-\begin{tabularx}{\linewidth}{|B{3.5cm}|B{3.8cm}|Y|}
-\hline
-\textbf{Constructor} & \textbf{Signature} & \textbf{Description} \\
-\hline
-Default String & \texttt{String()} & Initializes a newly created, empty String object. \\
-\hline
-Char Array String & \texttt{String(char[] value)} & Allocates a new String representing the char array's contents. \\
-\hline
-String Copier & \texttt{String(String original)} & Initializes a copy of the argument string. \\
-\hline
-Buffer Converter & \texttt{String(StringBuffer sb)} & Converts a mutable StringBuffer into an immutable String. \\
-\hline
-Default Buffer & \texttt{StringBuffer()} & Creates an empty buffer with an initial capacity of 16 characters. \\
-\hline
-Capacity Buffer & \texttt{StringBuffer(int cap)} & Creates an empty buffer with the specified initial capacity. \\
-\hline
-String Buffer & \texttt{StringBuffer(String str)} & Creates a buffer initialized with the specified string content. \\
-\hline
-\end{tabularx}}
-
-\subsection{Core String Operations}
-The String class provides a rich set of methods for manipulating character sequences. Because String is immutable, all modifying methods return a \textbf{new} String instance representing the result.
-
-\par\noindent
-{\renewcommand{\arraystretch}{1.4}%
-\begin{tabularx}{\linewidth}{|B{3.0cm}|B{4.5cm}|Y|}
-\hline
-\textbf{Operation} & \textbf{Key Method Signature} & \textbf{Functional Description} \\
-\hline
-\textbf{Extraction} & \texttt{char charAt(int index)} & Returns the char value at the specified index ($0$ to $\text{length}-1$). \\
-                    & \texttt{int length()} & Returns the number of characters in the string. \\
-\hline
-\textbf{Comparison} & \texttt{boolean equals(Object obj)} & Compares string values for character-by-character equality. \\
-                    & \texttt{boolean equalsIgnoreCase(String s)} & Value comparison ignoring case differences. \\
-                    & \texttt{int compareTo(String anotherString)} & Lexicographically compares two strings (returns $0$ if equal, negative if less, positive if greater). \\
-\hline
-\textbf{Searching}  & \texttt{int indexOf(String str)} & Returns the index of the first occurrence of the substring (or $-1$). \\
-                    & \texttt{int lastIndexOf(String str)} & Returns the index of the last occurrence of the substring. \\
-                    & \texttt{boolean contains(CharSequence s)} & Returns true if the string contains the specified sequence. \\
-\hline
-\textbf{Modifying}  & \texttt{String substring(int begin, int end)} & Extracts a new substring from \texttt{begin} (inclusive) to \texttt{end} (exclusive). \\
-                    & \texttt{String concat(String str)} & Appends the specified string to the end (equivalent to the \texttt{+} operator). \\
-                    & \texttt{String replace(char old, char new)} & Returns a new string with all occurrences of \texttt{old} replaced by \texttt{new}. \\
-                    & \texttt{String trim()} & Returns a copy with leading and trailing whitespaces omitted. \\
-\hline
-\end{tabularx}}
-
-\subsection{Utility Conversions: \texttt{toString()} and \texttt{valueOf()}}
-Java provides built-in mechanisms to convert objects and primitive values into string representations:
-
-\begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{The \texttt{toString()} Method:} Defined in the root \texttt{Object} class. Every class inherits it, and standard library classes (like \texttt{String}, \texttt{StringBuffer}, \texttt{ArrayList}) override it to return a readable value representation. 
-  \begin{itemize}[label=\(\circ\), leftmargin=1.5em]
-    \item When an object reference is printed via \texttt{System.out.println(obj)}, the JVM implicitly invokes \texttt{obj.toString()}.
-    \item By default, it returns: \texttt{getClass().getName() + "@" + Integer.toHexString(hashCode())}.
-  \end{itemize}
-  \item \textbf{The Static \texttt{String.valueOf()} Methods:} Overloaded static utility methods that convert any primitive type or object into a String representation.
-  \begin{itemize}[label=\(\circ\), leftmargin=1.5em]
-    \item \texttt{String.valueOf(int i)} returns a string representing the integer.
-    \item \texttt{String.valueOf(boolean b)} returns \texttt{"true"} or \texttt{"false"}.
-    \item \texttt{String.valueOf(Object obj)} returns \texttt{obj.toString()} or \texttt{"null"} if the object reference is null (preventing a \texttt{NullPointerException}).
-  \end{itemize}
-\end{itemize}
-
-% ===============================================================================
-\section{Java Input/Output (I/O) Streams}
-% ===============================================================================
-
-An I/O stream represents an abstraction of a data source or destination (e.g., keyboard, file, network socket).
-
-\subsection{Byte Stream vs. Character Stream}
-
-\par\noindent
-{\renewcommand{\arraystretch}{1.5}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
-\hline
-\textbf{Metric} & \textbf{Byte Stream} & \textbf{Character Stream} \\
-\hline
-\textbf{Data Unit} & Processes data as raw 8-bit bytes. & Processes data as 16-bit Unicode characters. \\
-\hline
-\textbf{Use Case} & Binary files (images, audio, zip files). & Text files (documents, configuration text). \\
-\hline
-\textbf{Base Classes} & \texttt{InputStream} and \texttt{OutputStream} & \texttt{Reader} and \texttt{Writer} \\
-\hline
-\textbf{Key Classes} & \texttt{FileInputStream, FileOutputStream} & \texttt{FileReader, FileWriter} \\
-\hline
-\end{tabularx}}
-
-\begin{tcolorbox}[tikzbox, title={Java Stream Hierarchy}]
-\centering
-\begin{tikzpicture}[node distance=0.8cm and 1.2cm,
-  base/.style={rectangle, draw=myred, fill=hdrred, text width=2.4cm,
-    align=center, minimum height=0.7cm, font=\small\bfseries, rounded corners=3pt, line width=0.8pt},
-  sub/.style={rectangle, draw=myteal, fill=hdrteal, text width=2.4cm,
-    align=center, minimum height=0.7cm, font=\small, rounded corners=3pt, line width=0.7pt}]
-
-  % Byte Streams
-  \node[base] (is) {InputStream};
-  \node[sub, below=0.6cm of is] (fis) {FileInputStream};
-  \draw[arrow] (fis) -- (is);
-  
-  \node[base, right=0.8cm of is] (os) {OutputStream};
-  \node[sub, below=0.6cm of os] (fos) {FileOutputStream};
-  \draw[arrow] (fos) -- (os);
-
-  % Character Streams
-  \node[base, right=1.2cm of os] (rd) {Reader};
-  \node[sub, below=0.6cm of rd] (fr) {FileReader};
-  \draw[arrow] (fr) -- (rd);
-  
-  \node[base, right=0.8cm of rd] (wr) {Writer};
-  \node[sub, below=0.6cm of wr] (fw) {FileWriter};
-  \draw[arrow] (fw) -- (wr);
-
-  % Labels
-  \node[above=0.2cm of $(is.north)!0.5!(os.north)$, font=\footnotesize\bfseries, color=myred] {Byte Streams (8-bit)};
-  \node[above=0.2cm of $(rd.north)!0.5!(wr.north)$, font=\footnotesize\bfseries, color=myred] {Character Streams (16-bit)};
+  % Package statement explanation
+  \node[right=of app, font=\tiny\ttfamily\bfseries, color=myteal] {package com.cgec;};
 \end{tikzpicture}
 \end{tcolorbox}
 
 % ===============================================================================
-\section{Java Collections Framework}
+\section{Access Control Mechanism}
 % ===============================================================================
 
-The Collections Framework provides a unified architecture for storing and manipulating groups of objects.
+Java uses access modifiers to control visibility of classes, constructors, variables, and methods.
 
-\subsection{ArrayList vs. LinkedList}
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{\texttt{private}:} Visible only within the declaring class. It provides the highest encapsulation.
+  \item \textbf{Default (Package-Private):} Visible to all classes in the same package. No keyword is specified.
+  \item \textbf{\texttt{protected}:} Visible to all classes in the same package, and to subclasses in different packages.
+  \item \textbf{\texttt{public}:} Accessible from any class anywhere in the application.
+\end{itemize}
 
-\par\noindent
-{\renewcommand{\arraystretch}{1.5}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
-\hline
-\textbf{Metric} & \textbf{\texttt{ArrayList}} & \textbf{\texttt{LinkedList}} \\
-\hline
-\textbf{Internal Structure} & Dynamically resizing array. & Doubly linked list. \\
-\hline
-\textbf{Access Time} & $O(1)$ random access (index-based). & $O(n)$ search access (sequential traverse). \\
-\hline
-\textbf{Insertion/Deletion} & $O(n)$ (requires element shifts). & $O(1)$ if pointer is located. \\
-\hline
-\textbf{Memory Overhead} & Low (only stores elements). & Higher (stores element and prev/next links). \\
-\hline
-\end{tabularx}}
+% ===============================================================================
+\section{Dynamic Method Lookup}
+% ===============================================================================
 
-\begin{tcolorbox}[tikzbox, title={ArrayList vs. LinkedList Memory Layout}]
+Dynamic Method Lookup (or Interface-based Dynamic Binding) is the runtime mechanism by which the JVM resolves calls to interface methods.
+
+\begin{tcolorbox}[defbox, title={\textbf{Interface Callbacks}}]
+When an interface reference calls a method, the JVM looks up the actual runtime class of the referenced object, retrieves its dynamic method table, and invokes the concrete overridden method. This is the foundation of loose coupling and polymorphic callbacks.
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={Interface Callback Mechanism}]
 \centering
-\begin{tikzpicture}[scale=0.85]
-  % ArrayList
-  \node[font=\small\bfseries, color=myteal] at (1,2) {ArrayList (Contiguous Memory):};
-  \draw[draw=mydark, fill=hdrteal, line width=1pt] (0,0.8) rectangle (6,1.4);
-  \foreach \x in {1.5, 3.0, 4.5} {
-    \draw[line] (\x, 0.8) -- (\x, 1.4);
-  }
-  \node[font=\tiny] at (0.75, 1.1) {Val 1};
-  \node[font=\tiny] at (2.25, 1.1) {Val 2};
-  \node[font=\tiny] at (3.75, 1.1) {Val 3};
-  \node[font=\tiny] at (5.25, 1.1) {Val 4};
+\begin{tikzpicture}[node distance=1.2cm and 2.2cm,
+  intf/.style={rectangle, draw=mypurple, fill=hdrpurple, text width=3.4cm,
+    align=center, minimum height=0.9cm, font=\small\bfseries, rounded corners=3pt, line width=0.8pt},
+  impl/.style={rectangle, draw=myteal, fill=hdrteal, text width=3.4cm,
+    align=center, minimum height=0.9cm, font=\small, rounded corners=3pt, line width=0.7pt}]
 
-  \node[font=\tiny\bfseries] at (0.75, 0.5) {[0]};
-  \node[font=\tiny\bfseries] at (2.25, 0.5) {[1]};
-  \node[font=\tiny\bfseries] at (3.75, 0.5) {[2]};
-  \node[font=\tiny\bfseries] at (5.25, 0.5) {[3]};
-
-  % LinkedList
-  \node[font=\small\bfseries, color=myred] at (1,-0.5) {LinkedList (Pointer Links):};
+  % Interface reference
+  \node[intf] (ref) {Flyable reference\\{\tiny Flyable f = new Airplane();}};
   
-  \node[draw=mydark, fill=hdrred, minimum width=2.0cm, minimum height=0.6cm, rounded corners=2pt] (n1) at (0.5,-1.6) {\tiny Data1 | Next};
-  \node[draw=mydark, fill=hdrred, minimum width=2.0cm, minimum height=0.6cm, rounded corners=2pt] (n2) at (3.2,-1.6) {\tiny Data2 | Next};
-  \node[draw=mydark, fill=hdrred, minimum width=2.0cm, minimum height=0.6cm, rounded corners=2pt] (n3) at (5.9,-1.6) {\tiny Data3 | Next};
+  % Implementing classes
+  \node[impl, below left=1.2cm and 0.4cm of ref] (air) {Airplane\\{\tiny void fly() \{ ... \}}};
+  \node[impl, below right=1.2cm and 0.4cm of ref] (bird) {Bird\\{\tiny void fly() \{ ... \}}};
 
-  \draw[arrow, transform canvas={yshift=0.08cm}] (n1) -- (n2);
-  \draw[arrow, transform canvas={yshift=-0.08cm}] (n2) -- (n1);
-  \draw[arrow, transform canvas={yshift=0.08cm}] (n2) -- (n3);
-  \draw[arrow, transform canvas={yshift=-0.08cm}] (n3) -- (n2);
+  % Paths
+  \draw[arrow] (ref) -- (air) node[midway, left, font=\tiny\bfseries] {Resolves at runtime};
+  \draw[arrow] (ref) -- (bird) node[midway, right, font=\tiny\bfseries] {Alternative target};
 \end{tikzpicture}
 \tcbset{after={\color{black}}}
 \end{tcolorbox}
@@ -471,94 +316,95 @@ The Collections Framework provides a unified architecture for storing and manipu
 % ===============================================================================
 \begin{center}
   {\large\bfseries\color{myred} Quick Revision --- Module 4}\\[3pt]
-  {\small\color{mydark} Exception Handling, Strings, I/O Streams \& Collections $|$ OE-EC704A}
+  {\small\color{mydark} Interfaces and Packages $|$ OE-EC704A}
 \end{center}
 \noindent{\color{myred}\rule{\linewidth}{1.2pt}}
 \vspace{4pt}
 
-\begin{tcolorbox}[formulabox, title={\textbf{Exception, File I/O \& Collections Syntax}}]
+\begin{tcolorbox}[formulabox, title={\textbf{Interface \& Package Declarations}}]
 {\renewcommand{\arraystretch}{1.3}%
 \begin{tabularx}{\linewidth}{l Y}
 \textbf{Concept} & \textbf{Syntax and Example Usage} \\
 \hline
-Try-Catch Block & \texttt{try \{ int a = 5/0; \} catch(ArithmeticException e) \{ ... \}} \\
-Throws Declaration & \texttt{void readFile() throws IOException \{ ... \}} \\
-Custom Exception & \texttt{class MyException extends Exception \{ MyException(String s)\{super(s);\} \}} \\
-Buffer Reader I/O & \texttt{BufferedReader br = new BufferedReader(new InputStreamReader(System.in));} \\
+Interface Definition & \texttt{interface InterfaceName \{ void methodSignature(); \}} \\
+Implementation & \texttt{class ClassName implements InterfaceName \{ ... \}} \\
+Default Method & \texttt{default void log() \{ System.out.println("Default Log"); \}} \\
+Static Method & \texttt{static int add(int a, int b) \{ return a + b; \}} \\
 \hline
-\textbf{Collections \& Strings} & \textbf{Core Declarations \& Queries} \\
+\textbf{Packages \& Imports} & \textbf{Core syntax headers} \\
 \hline
-ArrayList Declare & \texttt{ArrayList<String> list = new ArrayList<String>();} \\
-Collection Iterator & \texttt{Iterator<String> itr = list.iterator(); while(itr.hasNext()) \{ ... \}} \\
-String Concat & \texttt{String s = "Biraj" + " Sarkar"; // SCP optimization} \\
-StringBuffer Append & \texttt{StringBuffer sb = new StringBuffer("CGE"); sb.append("C");} \\
+Package Declaration & \texttt{package com.cgec.webtech; // must be first line} \\
+Class Import & \texttt{import java.util.ArrayList;} \\
+Wildcard Import & \texttt{import java.util.*;} \\
+Static Import & \texttt{import static java.lang.Math.PI;} \\
 \end{tabularx}}
 \end{tcolorbox}
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
 \begin{itemize}[leftmargin=*, itemsep=2pt]
-  \item \textbf{Checked Exception:} An exception subclass checked during compilation that requires explicit handling.
-  \item \textbf{Unchecked Exception:} RuntimeException subclasses resulting from logical design faults.
-  \item \textbf{Immutability:} State constraint preventing modification of heap values after initial allocation.
-  \item \textbf{Stream:} Abstract communication pipe that handles sequential transfer of data bytes.
-  \item \textbf{Byte Stream:} Stream subclass designed to process binary data using 8-bit units.
-  \item \textbf{Character Stream:} Stream subclass designed to process Unicode text data using 16-bit units.
-  \item \textbf{Collections Framework:} Framework of interfaces and classes for managing structures.
-  \item \textbf{Iterator:} Universal collection interface cursor that iterates elements in a forward direction.
+  \item \textbf{Interface:} A reference type declaring method signatures and constants, defining a contract.
+  \item \textbf{Package:} A directory structure grouping related classes and interfaces.
+  \item \textbf{Default Method:} An interface method containing a default body, declared with the \texttt{default} keyword.
+  \item \textbf{Access Modifier:} Keywords controlling the accessibility level of classes and class members.
+  \item \textbf{Dynamic Method Lookup:} Runtime resolution of interface method calls based on actual object instance type.
+  \item \textbf{Encapsulation:} Bundling class state and behavior while restricting direct access using private.
+  \item \textbf{Namespace:} A naming container resolving name conflicts across different components.
+  \item \textbf{Multiple Inheritance:} Implementing multiple interfaces to inherit behaviors from multiple sources.
 \end{itemize}
 \tcbset{after={\color{black}}}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
 \begin{enumerate}[leftmargin=*, label=\textbf{Q\arabic*.}, itemsep=5pt]
-  \item \Q{What is the difference between \texttt{final}, \texttt{finally}, and \texttt{finalize}?}
-        \texttt{final} is a modifier indicating that a class cannot be inherited, a method cannot be overridden, or a variable cannot be reassigned. \texttt{finally} is a block accompanying a try-catch block to execute clean-up operations. \texttt{finalize} is a method invoked by the Garbage Collector before reclaiming an object.
+  \item \Q{Can an interface be instantiated? Why?}
+        No. An interface does not have constructors and contains abstract method signatures without implementations, so it cannot represent concrete runtime state.
         
-  \item \Q{Can we write a try block without a catch block? If so, how?}
-        Yes, a try block can be followed by a \texttt{finally} block instead of a catch block. Additionally, Java 7 supports the \textbf{try-with-resources} statement, which automatically closes resources without requiring an explicit catch or finally.
+  \item \Q{Why does Java allow multiple inheritance using interfaces but not classes?}
+        Classes hold state (instance variables). If a class inherits from multiple parent classes, duplicate variable names cause conflicts. Since interfaces hold no state variables (only constants) and historically had no implementations, there is no duplicate implementation ambiguity.
         
-  \item \Q{What is try-with-resources statement?}
-        It is a try block declared with one or more resources (e.g., streams). The resources must implement \texttt{java.lang.AutoCloseable}. They are automatically closed when exiting the try block.
+  \item \Q{What is the difference between an Interface and an Abstract Class?}
+        An abstract class can contain instance variables (state) and constructors, whereas an interface can only contain public static final constants. A class can extend only one class but implement multiple interfaces.
         
-  \item \Q{Why are String objects immutable while StringBuffer objects are mutable?}
-        Strings are cached in the String Constant Pool to save memory and ensure thread safety. StringBuffer is designed for dynamic character manipulation without creating multiple garbage references.
+  \item \Q{What are default methods and why were they introduced in Java 8?}
+        Default methods have concrete bodies declared with the \texttt{default} keyword inside an interface. They allow adding new methods to interfaces without breaking existing classes that implement the interface.
         
-  \item \Q{What is the difference between \texttt{equals()} and \texttt{==} when comparing strings?}
-        \texttt{==} compares reference equality (whether they point to the exact same object reference). The \texttt{equals()} method compares value equality (whether the character sequences are identical).
+  \item \Q{What is a functional interface?}
+        An interface containing exactly one abstract method. It can be annotated with \texttt{@FunctionalInterface} and is used for Lambda expressions (e.g., \texttt{Runnable}, \texttt{Comparable}).
         
-  \item \Q{What is the difference between byte stream classes and character stream classes?}
-        Byte stream classes read and write raw 8-bit bytes (binary), whereas character stream classes read and write 16-bit Unicode characters, handling text encoding automatically.
+  \item \Q{Can we declare an interface method as \texttt{private} or \texttt{protected}?}
+        Interface abstract methods must be \texttt{public}. However, starting from Java 9, we can declare \texttt{private} and \texttt{private static} helper methods inside interfaces. \texttt{protected} is never allowed.
         
-  \item \Q{Why do we wrap a \texttt{FileReader} inside a \texttt{BufferedReader}?}
-        Wrapping inside a \texttt{BufferedReader} reduces disk I/O requests by reading data blocks into an internal buffer. It also provides the convenient \texttt{readLine()} method.
+  \item \Q{What is the default access modifier in an interface?}
+        All fields are implicitly \texttt{public static final}. All abstract methods are implicitly \texttt{public abstract}.
         
-  \item \Q{What is the difference between \texttt{ArrayList} and \texttt{Vector}?}
-        \texttt{ArrayList} is non-synchronized, fast, and not thread-safe. \texttt{Vector} is synchronized, has thread-safe methods, and carries a significant performance overhead.
+  \item \Q{What is a static import in Java?}
+        A static import allows importing static members (variables and methods) of a class directly (e.g., \texttt{import static java.lang.Math.sqrt;}). This allows invoking them without prepending the class name.
         
-  \item \Q{Why does a LinkedList consume more memory than an ArrayList?}
-        An ArrayList stores elements contiguously inside a backing array. A LinkedList stores elements inside node wrappers that also hold memory addresses for the previous and next nodes.
+  \item \Q{What is the difference between \texttt{package} and \texttt{import} statements?}
+        The \texttt{package} statement declares which package/directory the current class belongs to. The \texttt{import} statement tells the compiler where to find other classes referenced in the file.
         
-  \item \Q{How does the \texttt{throws} keyword differ from the \texttt{throw} keyword?}
-        \texttt{throw} is used to explicitly throw a single exception instance inside a method block. \texttt{throws} is used in a method declaration to list possible checked exceptions.
+  \item \Q{How does the JVM resolve name conflicts between classes in different imported packages?}
+        If a class with the same name exists in two imported packages (e.g., \texttt{java.util.Date} and \texttt{java.sql.Date}), the compiler forces the developer to use the fully qualified class name in code to resolve ambiguity.
 \end{enumerate}
 \end{tcolorbox}
 
-\begin{tcolorbox}[tikzbox, title={Comparison: Try-Catch-Finally vs. Try-With-Resources}]
+\begin{tcolorbox}[tikzbox, title={Java Access Modifier Visibility Matrix}]
 \centering
 {\renewcommand{\arraystretch}{1.45}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\begin{tabularx}{\linewidth}{|B{2.8cm}|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|>{\centering\arraybackslash}X|}
 \hline
-\textbf{Metric} & \textbf{Standard Try-Catch-Finally} & \textbf{Try-With-Resources (Java 7+)} \\
+\textbf{Modifier} & \textbf{Same Class} & \textbf{Same Package} & \textbf{Subclass} & \textbf{Everywhere} \\
 \hline
-\textbf{Resource Closing} & Manual (must write stream close calls in finally). & Automatic (handled by compiler behind the scenes). \\
+\textbf{\texttt{private}} & Yes & No & No & No \\
 \hline
-\textbf{Boilerplate Code} & High (requires nested try-catch blocks in finally). & Minimal (declared inside try parameters). \\
+\textbf{Default} & Yes & Yes & No & No \\
 \hline
-\textbf{Exception Suppression} & Primary exception can be lost if close fails. & Retains primary exception; close errors suppressed. \\
+\textbf{\texttt{protected}} & Yes & Yes & Yes & No \\
 \hline
-\textbf{Target Classes} & Any standard classes. & Only classes implementing \texttt{AutoCloseable}. \\
+\textbf{\texttt{public}} & Yes & Yes & Yes & Yes \\
 \hline
 \end{tabularx}}
+\tcbset{after={\color{black}}}
 \end{tcolorbox}
 
 \end{document}

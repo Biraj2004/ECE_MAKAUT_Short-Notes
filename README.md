@@ -24,7 +24,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 4th SEM | 🔲 Planned | — |
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
-| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (5 modules) |
+| 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (10 modules) |
 | 8th SEM | 🔲 Planned | — |
 
 ---
@@ -291,12 +291,17 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 
 | File | Topics |
 |---|---|
-| `OE-EC704A_Module1_Notes.pdf` | Web Development Basics: Client-Server architecture flow, HTML skeletal document structure, XML vs HTML, Block-level vs Inline elements, lists, hyperlinks, tables, forms, CSS syntax selectors, box model and sizing |
-| `OE-EC704A_Module2_Notes.pdf` | Introduction to Java Programming: JDK vs JRE vs JVM, execution compile-and-run flow, characteristics (platform independence), stack and heap memory models, data types, operators, control flow (labeled break/continue), constructors, static fields/methods, inner classes |
-| `OE-EC704A_Module3_Notes.pdf` | OOP Principles, Inheritance \& Interfaces: 4 pillars of Java OOP (Encapsulation, Abstraction, Inheritance, Polymorphism), super keyword, method overriding vs overloading, dynamic method dispatch, abstract classes, packages and access modifiers, Root Object methods, Composition vs Inheritance, SOLID design principles |
-| `OE-EC704A_Module4_Notes.pdf` | Exception Handling, Strings, I/O \& Collections: try-catch-finally, throws, custom exceptions, String vs StringBuffer, immutability pool, byte/character streams, console/file I/O, collections hierarchy, ArrayList vs LinkedList |
-| `OE-EC704A_Module5_Notes.pdf` | Applet Life Cycle, Events \& AWT: Applet skeleton, lifecycle methods, security sandbox, delegation event model, listener interfaces, adapter classes, anonymous inner classes, AWT hierarchy vs Swing, layout managers (Flow/Border/Grid) |
-| `OE-EC704A_Web_Technology.pdf` | **Combined** — all 5 modules, 161 KB |
+| `OE-EC704A_Module1_Notes.pdf` | Web Development Basics: Client-Server architecture flow, HTML skeletal document structure, XML vs HTML, Block-level vs Inline elements, lists, hyperlinks, tables, forms, frame, CSS syntax selectors, box model, HTML5 semantic elements, and CSS3 layout models (Flexbox, Grid) |
+| `OE-EC704A_Module2_Notes.pdf` | Introduction to Java Programming: JDK vs JRE vs JVM, compile-and-run execution flow, Java characteristics, JVM memory model (heap, stack, method area), data types, operators, expressions, control flow (selection, iteration, jump statements) |
+| `OE-EC704A_Module3_Notes.pdf` | Classes \& Inheritance: Class declarations and instantiations, Constructors (Default, Parameterized, Copy), argument passing mechanisms (pass-by-value myth), static keyword (fields, methods, blocks, nested classes), inner classes (member, local, anonymous), inheritance trees, super keyword, method overloading vs overriding, dynamic method dispatch, abstract classes, and final keyword |
+| `OE-EC704A_Module4_Notes.pdf` | Interface \& Package: Packages folder mapping, import keyword, visibility access control matrix, Interface constants and abstracts, dynamic method lookup callback binding, and interface default, static, and private methods |
+| `OE-EC704A_Module5_Notes.pdf` | Exception Handling: Checked vs unchecked exception hierarchy, try-catch-finally blocks, throw vs throws keyword delegation, try-with-resources, AutoCloseable interface, and domain-specific custom exceptions |
+| `OE-EC704A_Module6_Notes.pdf` | String Handling: Immutable String, String Constant Pool (SCP) memory allocation, String vs StringBuffer mutability, character extraction, string search and modifications, valueOf() and toString(), and StringBuffer capacity vs length |
+| `OE-EC704A_Module7_Notes.pdf` | Java I/O Stream: Input/Output Stream abstractions, 8-bit Byte streams vs 16-bit Character streams, console I/O reading (BufferedReader, Scanner), File I/O reading and writing (FileInputStream, FileOutputStream, FileReader, FileWriter), and buffered stream wrapper patterns |
+| `OE-EC704A_Module8_Notes.pdf` | Java Utility Package (Collections): Collections framework architecture, List interface, ArrayList contiguous backing array, LinkedList doubly-linked node layout, and traversing collections via Iterator (fail-fast behavior) vs enhanced For-Each loop |
+| `OE-EC704A_Module9_Notes.pdf` | Applet Architecture: Client-side Applet class, browser execution lifecycle methods, setForeground() and setBackground(), showStatus() window, HTML Applet tag, parameter passing (getParameter()), getCodeBase() and getDocumentBase() resource loading, and strict security sandbox rules |
+| `OE-EC704A_Module10_Notes.pdf` | Event Handling \& AWT: Delegation Event Model (sources, events, listeners), Adapter classes, anonymous inner classes for inline handlers, heavyweight AWT controls (Label, Button, TextField), and FlowLayout, BorderLayout, and GridLayout container arrangement managers |
+| `OE-EC704A_Web_Technology.pdf` | **Combined** — all 10 modules, 68 pages, 245.8 KB |
 
 ---
 
@@ -427,7 +432,7 @@ ECE_MAKAUT_Short-Notes/
 │   ├── 10. Web Technology/
 │   │   ├── OE-EC704A_Module1_Notes.tex / .pdf
 │   │   ├── ...
-│   │   ├── OE-EC704A_Module5_Notes.tex / .pdf
+│   │   ├── OE-EC704A_Module10_Notes.tex / .pdf
 │   │   ├── OE-EC704A_Combined_Notes.tex
 │   │   └── OE-EC704A_Web_Technology.pdf
 │   └── sem7.pdf

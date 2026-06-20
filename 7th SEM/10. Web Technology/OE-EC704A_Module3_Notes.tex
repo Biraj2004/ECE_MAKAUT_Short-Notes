@@ -177,10 +177,9 @@
 \begin{center}
   {\LARGE\bfseries\color{myred} OE-EC704A --- Web Technology}\\[5pt]
   {\normalsize\color{mydark} Semester VII \quad$\bullet$\quad 3L:0T:0P \quad$\bullet$\quad 3 Credits}\\[3pt]
-  {\normalsize\color{myteal}\textbf{Module 3 Exam Notes: OOP Principles, Inheritance, Polymorphism, Packages \& Interfaces}}\\[3pt]
+  {\normalsize\color{myteal}\textbf{Module 3 Exam Notes: Classes, Inheritance \& Polymorphism}}\\[3pt]
   {\small\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27) \;$|$\; \textit{Biraj Sarkar}}
 \end{center}
-\vspace{2pt}
 \noindent{\color{myred}\rule{\linewidth}{1.5pt}}
 \vspace{2pt}
 
@@ -190,45 +189,77 @@
 \newpage
 
 % ===============================================================================
-\section{Core Object-Oriented Programming (OOP) Principles}
+\section{Class Fundamentals and Objects}
 % ===============================================================================
 
-Java is a pure object-oriented programming language designed around four fundamental concepts.
+In Java, all program logic resides within classes. A class acts as a blueprint, and objects are active physical instances of that blueprint.
 
-\begin{tcolorbox}[defbox, title={\textbf{The Four Pillars of Object-Oriented Programming}}]
-\begin{enumerate}[leftmargin=*, itemsep=4pt]
-  \item \textbf{Encapsulation (Data Hiding):} Wrapping variables and methods together into a single unit (class) while restricting direct outside access using the \texttt{private} modifier and exposing access via \texttt{public} getters and setters.
-  \item \textbf{Abstraction:} Hiding internal execution complexity and showing only the essential feature interfaces to the outer user. Implemented using \textbf{Abstract Classes} and \textbf{Interfaces}.
-  \item \textbf{Inheritance:} The mechanism by which one class (subclass/child) inherits the state variables and functional behaviors of another class (superclass/parent) to facilitate code reusability.
-  \item \textbf{Polymorphism:} The ability of a reference to take on multiple forms. It is divided into:
-        \begin{itemize}[leftmargin=*, label=--]
-          \item \textbf{Compile-time (Static):} Resolved by compiler signatures via \textbf{Method Overloading}.
-          \item \textbf{Runtime (Dynamic):} Resolved at execution via \textbf{Method Overriding} and Dynamic Method Dispatch.
-        \end{itemize}
-\end{enumerate}
+\begin{tcolorbox}[defbox, title={\textbf{Class Declaration \& Object Creation}}]
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Declaring a Class:} Declared using the \texttt{class} keyword. It encapsulates state (instance variables) and behavior (methods).
+  \item \textbf{Creating Instances:} Objects are created dynamically on the heap using the \texttt{new} keyword, which allocates memory and invokes the constructor.
+\end{itemize}
 \end{tcolorbox}
 
-\begin{tcolorbox}[tikzbox, title={Encapsulation Boundary \& Data Protection Shield}]
+\begin{tcolorbox}[tikzbox, title={Object Creation and Reference Linkage}]
 \centering
 \begin{tikzpicture}[scale=0.9]
-  % Inner Core (Private Data)
-  \draw[draw=myred, fill=hdrred, line width=1.5pt] (0,0) circle (1.5);
-  \node[align=center, color=myred, font=\small\bfseries] at (0,0) {Private Fields\\(Data Core)\\{\tiny id, name, balance}};
+  % Stack Side
+  \draw[draw=mydark, fill=hdrteal, line width=1pt] (-4,0) rectangle (-1,1.5);
+  \node at (-2.5, 1.1) {\small\bfseries Stack Frame};
+  \node[draw=myteal, fill=white, font=\tiny\ttfamily, minimum width=2.4cm] (var) at (-2.5, 0.4) {Box b = ref};
 
-  % Outer Ring (Public Access methods)
-  \draw[draw=myteal, fill=none, line width=2pt, dashed] (0,0) circle (2.8);
-  \node[color=myteal, font=\small\bfseries, fill=mygray, inner sep=3pt, rounded corners=2pt] at (0, 2.8) {Public Access Shield (Getters / Setters)};
+  % Heap Side
+  \draw[draw=mydark, fill=hdrred, line width=1pt] (2,-0.5) rectangle (5.5,2);
+  \node at (3.75, 1.6) {\small\bfseries Heap Memory};
+  \node[draw=myred, fill=white, font=\tiny\ttfamily, align=left, minimum width=3cm] (obj) at (3.75, 0.5) {Box Object\\width = 10.0\\height = 20.0\\depth = 15.0};
 
-  % Arrows representing external calls
-  \draw[arrow] (-4.5, 1.4) -- (-2.2, 0.7) node[midway, sloped, above, font=\tiny] {\texttt{getExternalCall()}};
-  \draw[arrow] (-4.5, -1.4) -- (-2.2, -0.7) node[midway, sloped, below, font=\tiny] {\texttt{setExternalCall()}};
-  
-  % Blocked direct access
-  \draw[redarrow, line width=1.2pt] (-4.5, 0) -- (-1.9, 0) node[midway, above, font=\tiny\bfseries] {Direct Access Blocked};
-  \node[draw=myred, fill=hdrred, circle, inner sep=1.5pt] at (-1.9,0) {\color{myred}\textbf{X}};
+  % Arrow
+  \draw[arrow] (var.east) -- (obj.west) node[midway, above, font=\tiny\bfseries] {\texttt{new Box()}};
 \end{tikzpicture}
-\tcbset{after={\color{black}}}
 \end{tcolorbox}
+
+\subsection{Constructors in Java}
+A constructor initializes the state of a newly created object. It has no return type and must have the same name as the class.
+
+\begin{itemize}[leftmargin=*, itemsep=4pt]
+  \item \textbf{Default Constructor:} Automatically provided by the compiler if no explicit constructor is defined. It initializes primitives to their default values (e.g., \texttt{0}, \texttt{false}) and object references to \texttt{null}.
+  \item \textbf{Parameterized Constructor:} User-defined constructor that accepts parameters to initialize instances with custom values.
+  \item \textbf{Copy Constructor:} A constructor that initializes a new object using an existing object of the same class:
+        \begin{verbatim}
+        class Box {
+            double width, height;
+            Box(Box ob) { // Copy Constructor
+                this.width = ob.width;
+                this.height = ob.height;
+            }
+        }
+        \end{verbatim}
+\end{itemize}
+
+\subsection{Argument Passing in Java}
+Java uses a single parameter passing mechanism: \textbf{Pass-by-Value}.
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Primitive Arguments:} A copy of the value is passed. Changes made inside the method do not affect the original variable.
+  \item \textbf{Object Arguments:} A copy of the reference address is passed. The method can modify the object's contents (since they both point to the same object on the heap), but reassigning the reference variable inside the method does not affect the caller's original reference.
+\end{itemize}
+
+\subsection{The \texttt{static} Keyword}
+The \texttt{static} keyword is used to create class-level members that are shared across all instances.
+\begin{itemize}[leftmargin=*, itemsep=4pt]
+  \item \textbf{Static Variables:} Single memory copy allocated in the method area, shared by all objects of that class.
+  \item \textbf{Static Methods:} Methods that can be called without creating an instance. They can only access static data and call other static methods. They cannot use the \texttt{this} or \texttt{super} keywords.
+  \item \textbf{Static Blocks:} Used to initialize static variables. Executed automatically when the class is first loaded into memory, before the main method or object constructors.
+\end{itemize}
+
+\subsection{Nested and Inner Classes}
+Java allows defining a class inside another class.
+\begin{itemize}[leftmargin=*, itemsep=4pt]
+  \item \textbf{Member Inner Class:} A non-static class declared inside another. It has access to all members (including private ones) of the outer class. It requires an instance of the outer class to exist.
+  \item \textbf{Static Nested Class:} Declared static. It behaves like a top-level class packaged inside another class. It cannot access non-static outer members.
+  \item \textbf{Local Inner Class:} Defined inside a block or method. It can only access local variables if they are effectively final.
+  \item \textbf{Anonymous Inner Class:} An inner class defined inline without a name, typically used for overriding listener methods or implementing interfaces on the fly.
+\end{itemize}
 
 % ===============================================================================
 \section{Inheritance and Reuse Models}
@@ -354,31 +385,19 @@ When an overridden method is called through a superclass reference, Java determi
 \end{tikzpicture}
 \end{tcolorbox}
 
-% ===============================================================================
-\section{Interfaces, Abstract Classes, and Access Modifiers}
-% ===============================================================================
-
-\subsection{Abstract Class vs. Interface}
-These constructs provide different levels of abstraction:
-
-\par\noindent
-{\renewcommand{\arraystretch}{1.5}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
-\hline
-\textbf{Feature} & \textbf{Abstract Class} & \textbf{Interface} \\
-\hline
-\textbf{Multiple Inheritance} & Allowed to inherit only one abstract parent. & A class can implement multiple interfaces. \\
-\hline
-\textbf{State Variables} & Can contain instance variables (stateful). & Variables must be \texttt{public static final}. \\
-\hline
-\textbf{Methods} & Concrete methods and abstract methods. & Abstract methods (pre-Java 8), defaults allowed. \\
-\hline
-\textbf{Keywords} & Declared with \texttt{abstract class} and \texttt{extends}. & Declared with \texttt{interface} and \texttt{implements}. \\
-\hline
-\end{tabularx}}
+\subsection{Abstract Classes and the \texttt{final} Keyword}
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Abstract Classes:} Declared using the \texttt{abstract} keyword. They cannot be instantiated. They can contain abstract methods (signatures without implementations) and concrete methods. They act as partial templates for subclasses.
+  \item \textbf{The \texttt{final} Keyword:} Used to restrict inheritance and modifications:
+        \begin{itemize}[leftmargin=*, label=--]
+          \item \texttt{final} Variable: Value cannot be reassigned (behaves as a constant).
+          \item \texttt{final} Method: Cannot be overridden by subclasses.
+          \item \texttt{final} Class: Cannot be inherited/extended.
+        \end{itemize}
+\end{itemize}
 
 \subsection{Access Modifiers}
-Java regulates visibility using four access levels:
+Java regulates member visibility using four access levels:
 \begin{itemize}[leftmargin=*, itemsep=3pt]
   \item \textbf{\texttt{private}:} Visible only within the declaring class.
   \item \textbf{Default (no modifier):} Visible only to classes inside the same package.
@@ -386,102 +405,80 @@ Java regulates visibility using four access levels:
   \item \textbf{\texttt{public}:} Accessible from any class anywhere in the project.
 \end{itemize}
 
-% ===============================================================================
-\section{Object Class and SOLID Design Principles}
-% ===============================================================================
-
-\subsection{The Root Object Class}
-Every Java class implicitly extends \texttt{java.lang.Object}. It defines essential methods:
-\begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{\texttt{toString()}:} Returns a string representation of the object (ClassName@HexHashCode).
-  \item \textbf{\texttt{equals(Object obj)}:} Compares reference equality. Overridden to compare values.
-  \item \textbf{\texttt{hashCode()}:} Returns an integer hash code mapped to the object's memory address.
-  \item \textbf{\texttt{clone()}:} Creates a field-by-field copy of the current object.
-\end{itemize}
-
-\subsection{SOLID Design Principles}
-These principles ensure Java classes are maintainable:
-\begin{itemize}[leftmargin=*, itemsep=4pt]
-  \item \textbf{Single Responsibility Principle (SRP):} A class must have exactly one reason to change.
-  \item \textbf{Open/Closed Principle (OCP):} Software entities should be open for extension, closed for modification.
-  \item \textbf{Liskov Substitution Principle (LSP):} Derived classes must be fully substitutable for their base classes.
-  \item \textbf{Interface Segregation Principle (ISP):} Clients should not be forced to depend on interfaces they do not use.
-  \item \textbf{Dependency Inversion Principle (DIP):} Depend on abstractions, not concrete implementations.
-\end{itemize}
-
 \newpage
 % ===============================================================================
 \begin{center}
   {\large\bfseries\color{myred} Quick Revision --- Module 3}\\[3pt]
-  {\small\color{mydark} OOP Principles, Inheritance, Polymorphism, Packages \& Interfaces $|$ OE-EC704A}
+  {\small\color{mydark} Classes, Inheritance \& Polymorphism $|$ OE-EC704A}
 \end{center}
 \noindent{\color{myred}\rule{\linewidth}{1.2pt}}
 \vspace{4pt}
 
-\begin{tcolorbox}[formulabox, title={\textbf{Inheritance, Packages \& Interface Syntax}}]
+\begin{tcolorbox}[formulabox, title={\textbf{Class, Constructor \& Inheritance Syntax}}]
 {\renewcommand{\arraystretch}{1.3}%
 \begin{tabularx}{\linewidth}{l Y}
-\textbf{Concept} & \textbf{Syntax and Structural Format} \\
+\textbf{Concept} & \textbf{Syntax and Example Usage} \\
 \hline
 Subclass Extension & \texttt{class Child extends Parent \{ ... \}} \\
 Super Constructor Call & \texttt{Child(int val) \{ super(val); ... \}} \\
-Interface Declaration & \texttt{interface Flyable \{ void fly(); \}} \\
-Interface Implementation & \texttt{class Bird implements Flyable \{ public void fly() \{ ... \} \}} \\
+Copy Constructor & \texttt{Box(Box b) \{ this.width = b.width; this.height = b.height; \}} \\
+Static Block & \texttt{static \{ staticVar = 10; \}} \\
 \hline
-\textbf{Package Syntax} & \textbf{Access and Import Declarations} \\
+\textbf{Polymorphism \& Variables} & \textbf{Core Declarations \& Reference Types} \\
 \hline
-Package Header & \texttt{package com.cgec.webtech;} \\
-Import Header & \texttt{import com.cgec.webtech.MyClass;} \\
-Abstract Method & \texttt{abstract void calculateScore();} \\
-Constant in Interface & \texttt{int MAX\_RETRY = 5; // Public static final by default} \\
+Dynamic Dispatch Ref & \texttt{Parent p = new Child(); p.overriddenMethod();} \\
+Abstract Class & \texttt{abstract class Shape \{ abstract void draw(); \}} \\
+Final Method & \texttt{final void display() \{ ... \} // cannot be overridden} \\
+Final Variable & \texttt{final int MAX\_SPEED = 120; // cannot be reassigned} \\
 \end{tabularx}}
+\tcbset{after={\color{black}}}
 \end{tcolorbox}
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
 \begin{itemize}[leftmargin=*, itemsep=2pt]
-  \item \textbf{Inheritance:} The mechanism by which a subclass inherits variables and methods from a superclass.
-  \item \textbf{Method Overloading:} Declaring methods with the same name but different parameters in one class.
-  \item \textbf{Method Overriding:} Declaring a method in a subclass with the same signature as in the parent class.
-  \item \textbf{Dynamic Method Dispatch:} Dynamic binding resolution that determines overridden method calls at runtime.
+  \item \textbf{Class:} A user-defined template that defines the structure and behaviors of objects.
+  \item \textbf{Object:} A physical instance of a class allocated in memory.
+  \item \textbf{Copy Constructor:} A constructor that initializes a new object using data from an existing object of the same class.
+  \item \textbf{Pass-by-Value:} Parameter passing where a copy of the argument value (or reference address) is passed.
+  \item \textbf{Static Method:} A method bound to the class itself, executable without class instantiation.
+  \item \textbf{Dynamic Method Dispatch:} Dynamic binding resolution resolving overridden method calls at runtime.
   \item \textbf{Abstract Class:} A class that cannot be instantiated and may contain abstract methods.
-  \item \textbf{Interface:} A contract defining empty method signatures that implementing classes must satisfy.
-  \item \textbf{Package:} A namespace group containing related classes, interfaces, and packages.
-  \item \textbf{SOLID:} A set of five object-oriented design principles for readable and maintainable software.
+  \item \textbf{Inner Class:} A class declared inside the body of another enclosing class.
 \end{itemize}
 \tcbset{after={\color{black}}}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
 \begin{enumerate}[leftmargin=*, label=\textbf{Q\arabic*.}, itemsep=5pt]
-  \item \Q{Why does Java not support multiple inheritance with classes?}
-        To avoid the diamond problem. If class C extends both class A and class B, and both parents define a method with the same signature \texttt{show()}, class C cannot determine which parent version to inherit.
-        
-  \item \Q{How does Java support multiple inheritance then?}
-        Java allows a class to implement multiple interfaces. Since interfaces do not hold instance state and their methods were traditionally empty, there is no duplicate implementation ambiguity.
-        
-  \item \Q{What is the difference between \texttt{this()} and \texttt{super()} constructor calls?}
-        \texttt{this()} invokes another constructor within the same class. \texttt{super()} invokes a constructor of the parent superclass. Both must be the first line of their respective constructors.
+  \item \Q{Does Java support pass-by-reference?}
+        No, Java is strictly pass-by-value. When passing primitive variables, their values are copied. When passing object references, a copy of the heap memory address is passed.
         
   \item \Q{Can an abstract class have constructors? Why?}
         Yes. Although an abstract class cannot be instantiated directly, its constructor is called during subclass instantiation via \texttt{super()} to initialize its fields.
         
-  \item \Q{What is the difference between \texttt{final} class, \texttt{final} method, and \texttt{final} variable?}
-        A \texttt{final} class cannot be inherited. A \texttt{final} method cannot be overridden. A \texttt{final} variable behaves as a constant and cannot be reassigned.
+  \item \Q{What is the difference between \texttt{this()} and \texttt{super()} constructor calls?}
+        \texttt{this()} invokes another constructor within the same class. \texttt{super()} invokes a constructor of the parent superclass. Both must be the first line of their respective constructors.
         
-  \item \Q{What is the contract between \texttt{equals()} and \texttt{hashCode()}?}
-        If two objects are equal according to \texttt{equals()}, they must return the same integer hash code from \texttt{hashCode()}. If overridden, both must be updated to preserve this rule.
+  \item \Q{What is the difference between method overloading and overriding?}
+        Overloading occurs in the same class and is resolved at compile-time (different parameters). Overriding occurs in subclasses and is resolved at runtime (same method signature).
         
-  \item \Q{What is the difference between composition and inheritance?}
-        Inheritance represents an IS-A relationship and creates tight coupling. Composition represents a HAS-A relationship, wrapping objects to provide loose coupling.
+  \item \Q{Why can't static methods use the \texttt{this} keyword?}
+        The \texttt{this} keyword refers to the current object instance. Static methods run without any object instance context, so there is no \texttt{this} instance to reference.
         
-  \item \Q{How does the access level of a subclass method override compare to the parent class method?}
-        An overriding method cannot restrict the access level of the overridden parent method. For example, a \texttt{protected} method in a parent class can only be overridden as \texttt{protected} or \texttt{public}.
+  \item \Q{What is a copy constructor and why do we need it?}
+        A copy constructor takes an object of the same class as a parameter to copy its fields into a new object. It provides control over whether a shallow or deep copy of the object is created.
         
-  \item \Q{What are default methods in interfaces and why were they introduced in Java 8?}
-        Default methods have an implementation inside the interface using the \texttt{default} keyword. They allow adding new methods to interfaces without breaking existing implementing classes.
+  \item \Q{What are the types of inner classes in Java?}
+        Java inner classes are: member inner class (non-static, declared inside class), static nested class (declared static inside class), local inner class (declared inside method), and anonymous inner class (unnamed class defined inline).
         
-  \item \Q{What is the difference between compile-time and runtime polymorphism?}
-        Compile-time polymorphism (overloading) resolves method calls during compilation using static binding. Runtime polymorphism (overriding) resolves method calls during execution using dynamic binding.
+  \item \Q{How does Dynamic Method Dispatch work?}
+        When an overridden method is called through a parent class reference variable, Java resolves it at runtime based on the actual object instance type being referenced, not the reference type.
+        
+  \item \Q{What is the difference between a shallow copy and a deep copy?}
+        A shallow copy copies the object's reference fields (sharing nested objects). A deep copy creates new instances of nested objects, making the new copy independent.
+        
+  \item \Q{Can a final method be overloaded?}
+        Yes. A final method cannot be overridden (redefined in a subclass), but it can be overloaded (defined with different parameters within the same class).
 \end{enumerate}
 \end{tcolorbox}
 
@@ -501,6 +498,7 @@ Constant in Interface & \texttt{int MAX\_RETRY = 5; // Public static final by de
 \textbf{\texttt{public}} & Yes & Yes & Yes & Yes \\
 \hline
 \end{tabularx}}
+\tcbset{after={\color{black}}}
 \end{tcolorbox}
 
 \end{document}

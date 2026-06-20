@@ -96,7 +96,7 @@
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\small\color{myred}\textbf{OE-EC704A}\;\color{mydark}--- Web Technology}
-\fancyhead[R]{\small\color{myteal}\textbf{Module 5 Notes}}
+\fancyhead[R]{\small\color{myteal}\textbf{Module 7 Notes}}
 \fancyfoot[C]{\small\color{mydark}\thepage}
 \fancyfoot[R]{\small\color{watermark}\textit{\copyright\ Biraj}}
 \renewcommand{\headrulewidth}{0.5pt}
@@ -106,7 +106,7 @@
 \hypersetup{
   colorlinks=true, linkcolor=myteal, urlcolor=myteal,
   pdfauthor={Biraj Sarkar},
-  pdftitle={OE-EC704A --- Module 5 Notes}
+  pdftitle={OE-EC704A --- Module 7 Notes}
 }
 
 % ─── tcolorbox styles ──────────────────────────────────────────────────────────
@@ -177,7 +177,7 @@
 \begin{center}
   {\LARGE\bfseries\color{myred} OE-EC704A --- Web Technology}\\[5pt]
   {\normalsize\color{mydark} Semester VII \quad$\bullet$\quad 3L:0T:0P \quad$\bullet$\quad 3 Credits}\\[3pt]
-  {\normalsize\color{myteal}\textbf{Module 5 Exam Notes: Exception Handling}}\\[3pt]
+  {\normalsize\color{myteal}\textbf{Module 7 Exam Notes: Java I/O Streams}}\\[3pt]
   {\small\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27) \;$|$\; \textit{Biraj Sarkar}}
 \end{center}
 \noindent{\color{myred}\rule{\linewidth}{1.5pt}}
@@ -189,191 +189,206 @@
 \newpage
 
 % ===============================================================================
-\section{Java Exception Handling Mechanism}
+\section{Java I/O Stream Basics}
 % ===============================================================================
 
-An exception is an unwanted or unexpected event that occurs during the execution of a program (at runtime) and disrupts the normal flow of instructions.
+An Input/Output (I/O) Stream represents an abstraction of a data source (e.g., keyboard, file) or destination (e.g., console, network socket).
 
-\begin{tcolorbox}[defbox, title={\textbf{Exception Handling Goals}}]
-The primary goal of exception handling is to prevent runtime program crashes and allow the application to handle errors gracefully, releasing resources and reporting descriptive messages.
+\begin{tcolorbox}[defbox, title={\textbf{Stream Concept}}]
+A \textbf{Stream} is a continuous sequence of data bytes. Input streams are used to read data from a source, and Output streams are used to write data to a target.
 \end{tcolorbox}
 
-\begin{tcolorbox}[tikzbox, title={Java Exception Class Hierarchy}]
+\subsection{Byte Stream vs. Character Stream}
+Java's I/O library operates on two primary categories of streams:
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Byte Streams:} Process data as raw 8-bit bytes. They are suitable for binary data (images, sound, zip files).
+  \item \textbf{Character Streams:} Process data as 16-bit Unicode characters. They handle translation of text encoding models automatically.
+\end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Java Stream Hierarchy}]
 \centering
-\begin{tikzpicture}[node distance=1.2cm and 1.5cm,
-  root/.style={rectangle, draw=myred, fill=hdrred, text width=2.4cm,
+\begin{tikzpicture}[node distance=0.8cm and 1.2cm,
+  base/.style={rectangle, draw=myred, fill=hdrred, text width=2.4cm,
     align=center, minimum height=0.7cm, font=\small\bfseries, rounded corners=3pt, line width=0.8pt},
-  node/.style={rectangle, draw=myteal, fill=hdrteal, text width=2.4cm,
-    align=center, minimum height=0.7cm, font=\small, rounded corners=3pt, line width=0.7pt},
-  error/.style={rectangle, draw=myamber, fill=hdramber, text width=2.4cm,
+  sub/.style={rectangle, draw=myteal, fill=hdrteal, text width=2.4cm,
     align=center, minimum height=0.7cm, font=\small, rounded corners=3pt, line width=0.7pt}]
 
-  % Hierarchy Nodes
-  \node[root] (throw) {Throwable};
-  \node[node, below left=0.8cm and 1.5cm of throw] (ex) {Exception};
-  \node[error, below right=0.8cm and 1.5cm of throw] (err) {Error};
+  % Byte Streams
+  \node[base] (is) {InputStream};
+  \node[sub, below=0.6cm of is] (fis) {FileInputStream};
+  \draw[arrow] (fis) -- (is);
   
-  \node[node, below left=0.8cm and 0.8cm of ex] (chk) {IOException\\{\tiny (Checked)}};
-  \node[node, below right=0.8cm and 0.8cm of ex] (rt) {RuntimeException\\{\tiny (Unchecked)}};
-  
-  \node[error, below=0.8cm of err] (oome) {OutOfMemoryError};
-  \node[node, below=0.8cm of rt] (npe) {NullPointer-\\Exception};
+  \node[base, right=0.8cm of is] (os) {OutputStream};
+  \node[sub, below=0.6cm of os] (fos) {FileOutputStream};
+  \draw[arrow] (fos) -- (os);
 
-  % Paths
-  \draw[arrow] (ex) -- (throw);
-  \draw[arrow] (err) -- (throw);
-  \draw[arrow] (chk) -- (ex);
-  \draw[arrow] (rt) -- (ex);
-  \draw[arrow] (npe) -- (rt);
-  \draw[arrow] (oome) -- (err);
+  % Character Streams
+  \node[base, right=1.2cm of os] (rd) {Reader};
+  \node[sub, below=0.6cm of rd] (fr) {FileReader};
+  \draw[arrow] (fr) -- (rd);
+  
+  \node[base, right=0.8cm of rd] (wr) {Writer};
+  \node[sub, below=0.6cm of wr] (fw) {FileWriter};
+  \draw[arrow] (fw) -- (wr);
+
+  % Labels
+  \node[above=0.2cm of $(is.north)!0.5!(os.north)$, font=\footnotesize\bfseries, color=myred] {Byte Streams (8-bit)};
+  \node[above=0.2cm of $(rd.north)!0.5!(wr.north)$, font=\footnotesize\bfseries, color=myred] {Character Streams (16-bit)};
 \end{tikzpicture}
 \end{tcolorbox}
 
-\subsection{Throwable Hierarchy}
-The root class of the exception hierarchy is \texttt{java.lang.Throwable}. Only objects that are instances of this class (or subclasses) can be thrown by the JVM or the Java \texttt{throw} statement.
-\begin{itemize}[leftmargin=*, itemsep=3.5pt]
-  \item \textbf{Error:} Extends \texttt{Throwable}. Represents serious problems that a reasonable application should not try to catch (e.g., \texttt{VirtualMachineError}, \texttt{OutOfMemoryError}, \texttt{StackOverflowError}). They represent infrastructure or JVM failures.
-  \item \textbf{Exception:} Extends \texttt{Throwable}. Represents conditions that a reasonable application might want to catch and handle.
-\end{itemize}
-
-\subsection{Checked vs. Unchecked Exceptions}
-\begin{itemize}[leftmargin=*, itemsep=4pt]
-  \item \textbf{Checked Exceptions:} Classes that extend \texttt{Exception} but do not extend \texttt{RuntimeException}. They are verified by the compiler at compile-time. The program must handle them using try-catch or declare them using the \texttt{throws} clause (e.g., \texttt{IOException}, \texttt{SQLException}, \texttt{ClassNotFoundException}).
-  \item \textbf{Unchecked Exceptions:} Classes that extend \texttt{RuntimeException}. They are not checked by the compiler. They usually result from logical errors or bad program state (e.g., \texttt{NullPointerException}, \texttt{ArithmeticException}, \texttt{ArrayIndexOutOfBoundsException}).
-\end{itemize}
-
 % ===============================================================================
-\section{Exception Keywords \& Handling Structures}
+\section{Console I/O Operations}
 % ===============================================================================
 
-Java exception handling is managed via five keywords: \texttt{try}, \texttt{catch}, \texttt{finally}, \texttt{throw}, and \texttt{throws}.
-
-\subsection{Try-Catch-Finally Blocks}
-\begin{itemize}[leftmargin=*, itemsep=4pt]
-  \item \textbf{\texttt{try}:} Surrounds the block of code that might throw an exception. It must be followed by at least one \texttt{catch} block or a \texttt{finally} block.
-  \item \textbf{\texttt{catch}:} Defines the exception handler. Multiple catch blocks can follow a single try block, starting from the most specific exception subclass to the most general (superclass).
-  \item \textbf{\texttt{finally}:} Executed guaranteed, whether an exception occurs or not, and even if there is a return statement inside try/catch. Used for cleanup tasks like closing resources.
+Java represents console streams using three static variables declared in the \texttt{System} class:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{\texttt{System.in}:} Standard Input Stream (type \texttt{InputStream}), mapped to keyboard input.
+  \item \textbf{\texttt{System.out}:} Standard Output Stream (type \texttt{PrintStream}), mapped to console output.
+  \item \textbf{\texttt{System.err}:} Standard Error Stream (type \texttt{PrintStream}), mapped to console error output.
 \end{itemize}
 
-\subsection{Throw vs. Throws}
-\begin{itemize}[leftmargin=*, itemsep=4.5pt]
-  \item \textbf{\texttt{throw}:} Used to explicitly throw an instance of any class extending \texttt{Throwable} from code (e.g., \texttt{throw new ArithmeticException("Divide by zero");}).
-  \item \textbf{\texttt{throws}:} Used in method declarations to list the checked exceptions that the method might throw, delegating the responsibility of handling to the caller method (e.g., \texttt{public void read() throws IOException \{ ... \}}).
-\end{itemize}
-
-\subsection{Try-with-Resources and the \texttt{AutoCloseable} Interface}
-Introduced in Java 7, the try-with-resources statement is a try block declared with one or more resource declarations.
+\subsection{Reading Console via BufferedReader}
+Because \texttt{System.in} is a byte stream, we wrap it in a character stream (\texttt{InputStreamReader}) and pass it to a \texttt{BufferedReader} to enable line-by-line reading:
 \begin{verbatim}
-try (BufferedReader br = new BufferedReader(new FileReader("test.txt"))) {
-    System.out.println(br.readLine());
+BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+System.out.print("Enter your name: ");
+String name = br.readLine();
+\end{verbatim}
+
+\subsection{Reading Console via Scanner}
+The \texttt{java.util.Scanner} class parses primitives and strings using regular expressions:
+\begin{verbatim}
+Scanner sc = new Scanner(System.in);
+System.out.print("Enter an integer: ");
+int value = sc.nextInt();
+\end{verbatim}
+
+% ===============================================================================
+\section{File I/O Operations}
+% ===============================================================================
+
+\subsection{FileInputStream and FileOutputStream}
+Used to read and write raw bytes from/to a file on disk:
+\begin{verbatim}
+// Copying a binary file byte-by-byte
+try (FileInputStream fis = new FileInputStream("input.jpg");
+     FileOutputStream fos = new FileOutputStream("output.jpg")) {
+    int byteData;
+    while ((byteData = fis.read()) != -1) {
+        fos.write(byteData);
+    }
 } catch (IOException e) {
     e.printStackTrace();
 }
 \end{verbatim}
-\begin{itemize}[leftmargin=*, itemsep=3.5pt]
-  \item Any class declared inside the try parentheses must implement the \texttt{java.lang.AutoCloseable} interface.
-  \item The JVM automatically closes these resources when the try block exits, eliminating the need for verbose manual resource-closing logic inside a \texttt{finally} block.
-\end{itemize}
 
-\subsection{User-Defined / Custom Exceptions}
-Developers can create custom exceptions to represent domain-specific errors.
-\begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item To create a checked exception, extend the \texttt{java.lang.Exception} class.
-  \item To create an unchecked exception, extend the \texttt{java.lang.RuntimeException} class.
-\end{itemize}
+\subsection{FileReader and FileWriter}
+Used to read and write character text data from/to files on disk:
 \begin{verbatim}
-class InvalidAgeException extends Exception {
-    public InvalidAgeException(String message) {
-        super(message);
+try (FileReader fr = new FileReader("file.txt");
+     FileWriter fw = new FileWriter("copy.txt")) {
+    int charData;
+    while ((charData = fr.read()) != -1) {
+        fw.write(charData);
     }
+} catch (IOException e) {
+    e.printStackTrace();
 }
 \end{verbatim}
+
+\subsection{Buffered Stream Wrapper Pattern}
+Disk I/O requests are expensive. To improve performance, we wrap base stream classes inside buffered wrapper classes:
+\begin{itemize}[leftmargin=*, itemsep=3.5pt]
+  \item \textbf{\texttt{BufferedReader}:} Wraps around a \texttt{Reader} (e.g., \texttt{FileReader}) to buffer characters, providing a highly efficient \texttt{readLine()} method.
+  \item \textbf{\texttt{BufferedWriter}:} Wraps around a \texttt{Writer} to buffer written characters, writing to disk only when the buffer is full or when \texttt{flush()} is invoked.
+\end{itemize}
 
 \newpage
 % ===============================================================================
 \begin{center}
-  {\large\bfseries\color{myred} Quick Revision --- Module 5}\\[3pt]
-  {\small\color{mydark} Exception Handling $|$ OE-EC704A}
+  {\large\bfseries\color{myred} Quick Revision --- Module 7}\\[3pt]
+  {\small\color{mydark} Java I/O Streams $|$ OE-EC704A}
 \end{center}
 \noindent{\color{myred}\rule{\linewidth}{1.2pt}}
 \vspace{4pt}
 
-\begin{tcolorbox}[formulabox, title={\textbf{Exception Handling Code Constructs}}]
+\begin{tcolorbox}[formulabox, title={\textbf{Java I/O Stream Syntax}}]
 {\renewcommand{\arraystretch}{1.3}%
 \begin{tabularx}{\linewidth}{l Y}
-\textbf{Structure} & \textbf{Syntax and Example Usage} \\
+\textbf{Construct} & \textbf{Syntax and Example Usage} \\
 \hline
-Try-Catch Block & \texttt{try \{ int val = 10 / 0; \} catch(ArithmeticException e) \{ ... \}} \\
-Try-With-Resources & \texttt{try (FileReader fr = new FileReader("file.txt")) \{ ... \}} \\
-Method Throws Clause & \texttt{public void load() throws IOException, ClassNotFoundException \{ ... \}} \\
-Explicit Throw & \texttt{throw new NullPointerException("Null Reference Encountered");} \\
-Custom Exception & \texttt{class CustomException extends RuntimeException \{ CustomException(String m)\{super(m);\} \}} \\
+Console BufferedReader & \texttt{BufferedReader br = new BufferedReader(new InputStreamReader(System.in));} \\
+Console Scanner & \texttt{Scanner sc = new Scanner(System.in); int val = sc.nextInt();} \\
+File Reader (Text) & \texttt{FileReader fr = new FileReader("input.txt"); int c = fr.read();} \\
+File Writer (Text) & \texttt{FileWriter fw = new FileWriter("output.txt"); fw.write("Hello");} \\
+File Byte Input & \texttt{FileInputStream fis = new FileInputStream("in.dat"); fis.read();} \\
+Buffered Writer Wrapper & \texttt{BufferedWriter bw = new BufferedWriter(new FileWriter("out.txt"));} \\
 \end{tabularx}}
-\tcbset{after={\color{black}}}
 \end{tcolorbox}
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
 \begin{itemize}[leftmargin=*, itemsep=2pt]
-  \item \textbf{Exception:} An event disrupting the normal instruction execution flow.
-  \item \textbf{Checked Exception:} An exception subclass checked at compile-time, requiring try-catch or throws.
-  \item \textbf{Unchecked Exception:} An exception subclass extending RuntimeException, not checked at compile-time.
-  \item \textbf{Error:} A fatal system condition that applications should not attempt to handle.
-  \item \textbf{Try Block:} A block enclosing code that might generate a runtime exception.
-  \item \textbf{Finally Block:} A block executing guaranteed cleanup actions, running after try-catch completion.
-  \item \textbf{Try-with-Resources:} An automatic resource management block closing AutoCloseable targets automatically.
-  \item \textbf{AutoCloseable:} Interface defining the \texttt{close()} contract for automatic try-with-resources cleanups.
+  \item \textbf{Stream:} A logical abstraction of a continuous sequence of data bytes.
+  \item \textbf{Byte Stream:} Stream processing raw 8-bit binary data units.
+  \item \textbf{Character Stream:} Stream processing 16-bit Unicode character data units.
+  \item \textbf{InputStreamReader:} A bridge class converting byte streams into character streams.
+  \item \textbf{BufferedReader:} A character stream wrapper that caches characters in memory to reduce disk calls.
+  \item \textbf{Scanner:} A text scanner utility class parsing primitives using token delimiters.
+  \item \textbf{System.in:} Static instance of InputStream mapped to the client keyboard.
+  \item \textbf{System.out:} Static instance of PrintStream mapped to the standard console output.
 \end{itemize}
 \tcbset{after={\color{black}}}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
 \begin{enumerate}[leftmargin=*, label=\textbf{Q\arabic*.}, itemsep=5pt]
-  \item \Q{What is the difference between Checked and Unchecked exceptions?}
-        Checked exceptions are verified by the compiler at compile-time (e.g., \texttt{IOException}) and must be handled or declared. Unchecked exceptions are RuntimeExceptions (e.g., \texttt{NullPointerException}) and are not compiler-checked.
+  \item \Q{What is the difference between Byte Streams and Character Streams?}
+        Byte streams read/write data as 8-bit bytes (base classes: \texttt{InputStream}, \texttt{OutputStream}), ideal for binary files. Character streams read/write data as 16-bit Unicode characters (base classes: \texttt{Reader}, \texttt{Writer}), ideal for text files.
         
-  \item \Q{What is the difference between \texttt{final}, \texttt{finally}, and \texttt{finalize}?}
-        \texttt{final} is a keyword making variables unassignable, methods override-protected, and classes inheritance-protected. \texttt{finally} is a block for resource cleanup in exception handling. \texttt{finalize} is a method invoked by the Garbage Collector before object reclamation.
+  \item \Q{Why do we wrap a \texttt{FileReader} inside a \texttt{BufferedReader}?}
+        Reading directly from disk is slow. Wrapping in a \texttt{BufferedReader} caches character chunks in memory, reducing physical disk reads, and exposes the convenient \texttt{readLine()} method.
         
-  \item \Q{Can we have a try block without a catch block?}
-        Yes. A try block can be followed by a \texttt{finally} block instead of a catch block, or it can be a try-with-resources statement which handles closing automatically.
+  \item \Q{What is the purpose of the \texttt{InputStreamReader} class?}
+        It acts as a bridge, converting a byte stream (like \texttt{System.in}) into a character stream, translating bytes into characters using the default system charset.
         
-  \item \Q{What is Exception Propagation?}
-        If an exception is not caught in the method where it occurred, it propagates down the call stack to the calling method. This repeats until it is handled or the JVM terminates the thread.
+  \item \Q{What is the difference between \texttt{PrintStream} and \texttt{PrintWriter}?}
+        \texttt{PrintStream} is a byte stream class handling 8-bit output (like \texttt{System.out}). \texttt{PrintWriter} is a character stream class handling 16-bit Unicode character output.
         
-  \item \Q{What is class \texttt{Throwable}? What are its main subclasses?}
-        \texttt{Throwable} is the root class of all exceptions and errors in Java. Its main subclasses are \texttt{java.lang.Exception} and \texttt{java.lang.Error}.
+  \item \Q{What does the method \texttt{flush()} do in output streams?}
+        It forces the output stream to write any cached buffered bytes/characters immediately to the destination device (like the disk file), emptying the local memory buffer.
         
-  \item \Q{How does multi-catch work in Java 7?}
-        A single catch block can handle multiple unrelated exceptions using the pipe symbol (e.g., \texttt{catch (IOException | SQLException e)}). The variable \texttt{e} is implicitly final.
+  \item \Q{What is the default buffer size of a \texttt{BufferedReader}?}
+        The default buffer size is 8192 characters (8 KB), which is large enough to handle most typical text file read sizes efficiently.
         
-  \item \Q{What happens if an exception is thrown in a \texttt{finally} block?}
-        If an exception is thrown in a finally block, it overrides and suppresses any active exception previously thrown in the try or catch blocks, unless handled internally.
+  \item \Q{How does the \texttt{Scanner} class handle delimiters?}
+        By default, the \texttt{Scanner} class uses whitespace (spaces, tabs, newlines) as the token delimiter. This can be customized using the \texttt{useDelimiter()} method.
         
-  \item \Q{Why should more specific catch blocks be declared before general ones?}
-        Java matches catch blocks from top to bottom. If a general exception catch block (like \texttt{Exception}) is placed first, it will catch all subclass exceptions, making subsequent specific catch blocks unreachable and causing compile errors.
+  \item \Q{What is the difference between \texttt{read()} method of \texttt{InputStream} and \texttt{Reader}?}
+        \texttt{InputStream.read()} reads a single byte and returns it as an integer ($0$ to $255$). \texttt{Reader.read()} reads a single Unicode character and returns it as an integer ($0$ to $65535$). Both return $-1$ when reaching EOF.
         
-  \item \Q{What is class \texttt{AutoCloseable}?}
-        It is a functional interface introduced in Java 7 containing a single method: \texttt{void close() throws Exception}. Classes implementing this interface are automatically closed in a try-with-resources construct.
+  \item \Q{What checked exception is commonly thrown during file operations?}
+        \texttt{java.io.IOException} and its subclass \texttt{java.io.FileNotFoundException}. They must be explicitly caught or declared using a \texttt{throws} clause.
         
-  \item \Q{Is it possible to throw a checked exception from static initializer block?}
-        No. A static initializer block runs when the class is loaded and cannot throw checked exceptions since there is no calling method to catch or declare them.
+  \item \Q{What are the standard console stream fields inside the \texttt{System} class?}
+        \texttt{System.in} (standard input - \texttt{InputStream}), \texttt{System.out} (standard output - \texttt{PrintStream}), and \texttt{System.err} (standard error - \texttt{PrintStream}).
 \end{enumerate}
 \end{tcolorbox}
 
-\begin{tcolorbox}[tikzbox, title={Checked vs. Unchecked Exception Comparison}]
+\begin{tcolorbox}[tikzbox, title={Comparison: Reader/Writer vs. InputStream/OutputStream}]
 \centering
 {\renewcommand{\arraystretch}{1.45}%
 \begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
 \hline
-\textbf{Metric} & \textbf{Checked Exception} & \textbf{Unchecked Exception} \\
+\textbf{Metric} & \textbf{Reader / Writer Hierarchy} & \textbf{InputStream / OutputStream Hierarchy} \\
 \hline
-\textbf{Compilation Check} & Checked at compile-time by compiler. & Ignored by compiler during build. \\
+\textbf{Data Unit} & 16-bit Unicode character unit. & 8-bit raw byte unit. \\
 \hline
-\textbf{Handling Rule} & Must use try-catch or declare throws. & Optional to handle; fix logic instead. \\
+\textbf{Primary Target} & Text documents and strings. & Images, sound, ZIP, raw binary data. \\
 \hline
-\textbf{Base Class} & Directly extends \texttt{java.lang.Exception}. & Extends \texttt{java.lang.RuntimeException}. \\
+\textbf{Root Packages} & Lives inside \texttt{java.io} & Lives inside \texttt{java.io} \\
 \hline
-\textbf{Root Cause} & External environment issues (I/O, network). & Program logical errors (null checks, math). \\
+\textbf{Default EOF value} & Returns $-1$ at stream end. & Returns $-1$ at stream end. \\
 \hline
 \end{tabularx}}
 \tcbset{after={\color{black}}}
