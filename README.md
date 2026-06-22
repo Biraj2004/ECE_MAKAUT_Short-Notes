@@ -25,7 +25,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
 | 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (10 modules), OE-EC704C Entrepreneurship (4 modules), OE-EC704B Optimization Technique (6 modules) |
-| 8th SEM | 🔲 Planned | — |
+| 8th SEM | 🟡 In progress | PE-EC801A Antennas and Propagation (7 modules + combined PDF complete) |
 
 ---
 
@@ -328,6 +328,23 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 
 ---
 
+## 8th Semester
+
+### PE-EC801A — Antennas and Propagation
+
+| File | Topics |
+|---|---|
+| `PE-EC801A_Module1_Notes.pdf` | Fundamental Concepts: Radiation mechanism, basic antenna parameters (radiation pattern, radiation intensity, beamwidth, directivity, gain, efficiency, effective aperture, radiation resistance), Friis transmission equation, antenna temperature. |
+| `PE-EC801A_Module2_Notes.pdf` | Radiation from Wires and Loops: Infinitesimal dipole, radiation resistance derivation, half-wave dipole, quarter-wave monopole, small loop antenna. |
+| `PE-EC801A_Module3_Notes.pdf` | Aperture and Reflector Antennas: Huygens' principle, rectangular and circular apertures, horn antennas (E-plane, H-plane, pyramidal), reflector antennas (flat sheet, corner, parabolic reflector, Cassegrain feed). |
+| `PE-EC801A_Module4_Notes.pdf` | Broadband Antennas: Helical antenna (normal and axial modes), Yagi-Uda antenna, log-periodic antenna, biconical antenna. |
+| `PE-EC801A_Module5_Notes.pdf` | Microstrip Antennas: Basic characteristics, feeding methods, transmission line model, cavity model, advantages and limitations. |
+| `PE-EC801A_Module6_Notes.pdf` | Antenna Arrays: N-element uniform linear array, broadside and end-fire arrays, non-uniform amplitude arrays (Binomial and Dolph-Tschebyscheff arrays), planar arrays. |
+| `PE-EC801A_Module7_Notes.pdf` | Smart Antennas & Radio Wave Propagation: Smart antenna concept (switched-beam and adaptive arrays), radio wave propagation modes (ground wave, space wave, troposcatter, ionospheric/sky wave), MUF, critical frequency, virtual height, skip distance. |
+| `PE-EC801A_Antennas_and_Propagation.pdf` | **Combined** — all 7 modules, 54 pages |
+
+---
+
 ## Repository structure
 
 ```
@@ -477,6 +494,13 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── OE-EC704B_Combined_Notes.tex
 │   │   └── OE-EC704B_Optimization_Technique.pdf
 │   └── sem7.pdf
+├── 8th SEM/                        # In progress
+│   └── 01. Antennas and Propagation/
+│       ├── PE-EC801A_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── PE-EC801A_Module7_Notes.tex / .pdf
+│       ├── PE-EC801A_Combined_Notes.tex
+│       └── PE-EC801A_Antennas_and_Propagation.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject
 ├── Notes_Build_Guide.md            # Full authoring guide & style spec
