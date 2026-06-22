@@ -334,13 +334,13 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 
 | File | Topics |
 |---|---|
-| `PE-EC801A_Module1_Notes.pdf` | Fundamental Concepts: Radiation mechanism, basic antenna parameters (radiation pattern, radiation intensity, beamwidth, directivity, gain, efficiency, effective aperture, radiation resistance), Friis transmission equation, antenna temperature. |
-| `PE-EC801A_Module2_Notes.pdf` | Radiation from Wires and Loops: Infinitesimal dipole, radiation resistance derivation, half-wave dipole, quarter-wave monopole, small loop antenna. |
-| `PE-EC801A_Module3_Notes.pdf` | Aperture and Reflector Antennas: Huygens' principle, rectangular and circular apertures, horn antennas (E-plane, H-plane, pyramidal), reflector antennas (flat sheet, corner, parabolic reflector, Cassegrain feed). |
-| `PE-EC801A_Module4_Notes.pdf` | Broadband Antennas: Helical antenna (normal and axial modes), Yagi-Uda antenna, log-periodic antenna, biconical antenna. |
-| `PE-EC801A_Module5_Notes.pdf` | Microstrip Antennas: Basic characteristics, feeding methods, transmission line model, cavity model, advantages and limitations. |
-| `PE-EC801A_Module6_Notes.pdf` | Antenna Arrays: N-element uniform linear array, broadside and end-fire arrays, non-uniform amplitude arrays (Binomial and Dolph-Tschebyscheff arrays), planar arrays. |
-| `PE-EC801A_Module7_Notes.pdf` | Smart Antennas & Radio Wave Propagation: Smart antenna concept (switched-beam and adaptive arrays), radio wave propagation modes (ground wave, space wave, troposcatter, ionospheric/sky wave), MUF, critical frequency, virtual height, skip distance. |
+| `PE-EC801A_Module1_Notes.pdf` | Fundamental Concepts: Physical concept of radiation, radiation pattern, near/far-field regions, reciprocity, directivity, gain, effective aperture, polarization, input impedance, efficiency, Friis transmission equation, radiation integrals and auxiliary potential functions. |
+| `PE-EC801A_Module2_Notes.pdf` | Radiation from Wires and Loops: Infinitesimal dipole (full field derivation, radiation resistance), short dipole, finite-length dipole, half-wave dipole, linear elements near conductors (image theory), quarter-wave monopole, small circular loop antenna. |
+| `PE-EC801A_Module3_Notes.pdf` | Aperture and Reflector Antennas: Huygens' principle, field equivalence principle, rectangular and circular apertures, Babinet's principle and slot antennas (Booker's relation), E-plane / H-plane / pyramidal horn antennas, prime-focus parabolic reflector, Cassegrain antenna. |
+| `PE-EC801A_Module4_Notes.pdf` | Broadband Antennas: Yagi-Uda antenna, Log-Periodic Dipole Array (LPDA), frequency-independent antennas (Rumsey's principle, biconical, equiangular spiral), broadcast antennas (turnstile, vertical mast radiators, anti-fading height). |
+| `PE-EC801A_Module5_Notes.pdf` | Microstrip Antennas: Basic characteristics, fringing fields, all 4 feeding methods (microstrip, coaxial, aperture-coupled, proximity-coupled), transmission line model, cavity model, full-wave analysis, rectangular and circular patch design equations. |
+| `PE-EC801A_Module6_Notes.pdf` | Antenna Arrays: Two-element and N-element ULA, broadside and end-fire arrays, non-uniform arrays (Binomial and Dolph-Tschebyscheff), planar arrays with 3D beam steering, Schelkunoff polynomial method, Woodward-Lawson synthesis. |
+| `PE-EC801A_Module7_Notes.pdf` | Smart Antennas and Radio Wave Propagation: Smart antenna concept, fixed-weight and adaptive beamforming (LMS/RLS/MUSIC), ground wave, space wave (LOS, duct propagation), sky wave (ionospheric layers D/E/F1/F2), critical frequency, MUF (Secant Law), virtual height, skip distance, LUF, OWF. |
 | `PE-EC801A_Antennas_and_Propagation.pdf` | **Combined** — all 7 modules, 51 pages |
 
 ---
