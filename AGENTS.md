@@ -369,5 +369,11 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | OE-EC704C Entrepreneurship | 4 | ✅ All compiled | `OE-EC704C_Entrepreneurship.pdf` | 33 |
 | OE-EC704B Optimization Technique | 6 | ✅ All compiled | `OE-EC704B_Optimization_Technique.pdf` | 36 |
 
+**8th SEM — complete and compiled:**
+
+| Subject | Modules | Module PDFs | Combined PDF | Pages |
+|---|---|---|---|---|
+| PE-EC801A Antennas and Propagation | 7 | ✅ All compiled | `PE-EC801A_Antennas_and_Propagation.pdf` | 51 |
+
 **1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
-**8th SEM:** Not started.
+**8th SEM:** Antennas and Propagation (PE-EC801A) is complete (7 modules + combined PDF).

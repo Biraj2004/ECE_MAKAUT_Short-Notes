@@ -25,7 +25,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
 | 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (10 modules), OE-EC704C Entrepreneurship (4 modules), OE-EC704B Optimization Technique (6 modules) |
-| 8th SEM | 🟡 In progress | PE-EC801A Antennas and Propagation (7 modules + combined PDF complete) |
+| 8th SEM | ✅ Complete | PE-EC801A Antennas and Propagation (7 modules + combined PDF) |
 
 ---
 
@@ -341,7 +341,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC801A_Module5_Notes.pdf` | Microstrip Antennas: Basic characteristics, feeding methods, transmission line model, cavity model, advantages and limitations. |
 | `PE-EC801A_Module6_Notes.pdf` | Antenna Arrays: N-element uniform linear array, broadside and end-fire arrays, non-uniform amplitude arrays (Binomial and Dolph-Tschebyscheff arrays), planar arrays. |
 | `PE-EC801A_Module7_Notes.pdf` | Smart Antennas & Radio Wave Propagation: Smart antenna concept (switched-beam and adaptive arrays), radio wave propagation modes (ground wave, space wave, troposcatter, ionospheric/sky wave), MUF, critical frequency, virtual height, skip distance. |
-| `PE-EC801A_Antennas_and_Propagation.pdf` | **Combined** — all 7 modules, 54 pages |
+| `PE-EC801A_Antennas_and_Propagation.pdf` | **Combined** — all 7 modules, 51 pages |
 
 ---
 
@@ -494,7 +494,7 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── OE-EC704B_Combined_Notes.tex
 │   │   └── OE-EC704B_Optimization_Technique.pdf
 │   └── sem7.pdf
-├── 8th SEM/                        # In progress
+├── 8th SEM/                        # Complete
 │   └── 01. Antennas and Propagation/
 │       ├── PE-EC801A_Module1_Notes.tex / .pdf
 │       ├── ...
