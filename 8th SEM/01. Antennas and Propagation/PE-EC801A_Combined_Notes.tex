@@ -383,7 +383,11 @@ The reciprocity theorem states that the electrical characteristics (such as radi
   G = \eta_{cd} D
   \]
   where $\eta_{cd}$ is the antenna radiation efficiency ($0 \le \eta_{cd} \le 1$), representing conduction and dielectric losses.
-\end{itemize}
+  \item \textbf{Narrow-Beam Directivity Approximation:} For antennas with a well-defined beam in both principal planes, directivity can be estimated directly from the half-power beamwidths (in degrees):
+  \[
+  D \approx \frac{41253}{\Theta_{E} \cdot \Theta_{H}}
+  \]
+  where $\Theta_E$ and $\Theta_H$ are the HPBW in the E-plane and H-plane respectively (in degrees). This formula is accurate to within $\pm 1\,\text{dB}$ for most practical antennas.\end{itemize}
 
 % ===============================================================================
 \section{Effective Aperture and Polarization}
@@ -562,6 +566,7 @@ Radiation Intensity ($U$) & $U = r^2 W_{rad}$ \quad (Watts/steradian) \\[4pt]
 Directivity ($D$) & $D = \frac{4\pi U}{P_{rad}}$ \\[4pt]
 Gain ($G$) & $G = \eta_{cd} D = \frac{4\pi U}{P_{in}}$ \\[4pt]
 Effective Aperture-Gain Relation & $A_{em} = \frac{\lambda^2}{4\pi} D_0$ \\[4pt]
+Narrow-Beam Directivity Approx. & $D \approx \frac{41253}{\Theta_E \cdot \Theta_H}$ \quad ($\Theta$ in degrees) \\[4pt]
 Friis Transmission Equation & $P_r = P_t G_t G_r \left( \frac{\lambda}{4\pi r} \right)^{\!2} (PLF)$ \\[4pt]
 Helmholtz Equation Solution & $\vec{A} = \frac{\mu}{4\pi} \iiint \vec{J} \frac{e^{-jkR}}{R} dV'$ \\[4pt]
 Helmholtz Wave Number ($k$) & $k = \frac{2\pi}{\lambda} = \omega\sqrt{\mu\epsilon}$ \\[4pt]
@@ -995,23 +1000,35 @@ In electromagnetics, Schelkunoff's Equivalence Principle allows us to replace ac
 \]
 where $\hat{n}$ is the unit outward normal vector to the surface $S$, and $\vec{E}$, $\vec{H}$ are the fields on $S$. This is critical for solving radiation patterns of aperture antennas.
 
-\begin{tcolorbox}[tikzbox, title={Huygens' Wavelet propagation}]
+\begin{tcolorbox}[tikzbox, title={Huygens' Wavelet Propagation}]
 \centering
-\begin{tikzpicture}[scale=0.9]
-  % Original wavefront
-  \draw[very thick, color=mydark] (0,-1.5) to[bend left=20] (0,1.5);
-  \node[left, font=\small] at (0,0) {Wavefront at $t_1$};
+\begin{tikzpicture}[scale=1.0]
+  % ── Original wavefront (left, slightly curved) ────────────────────────────
+  \draw[very thick, color=mydark] (-2.5,-2.0) .. controls (-2.2,-1.0) and (-2.2,1.0) .. (-2.5,2.0);
+  \node[left=4pt, align=right, font=\small\bfseries\color{mydark}] at (-2.5,0) {Wavefront at $t_1$};
 
-  % Wavelet centers
-  \foreach \y in {-1.0, -0.5, 0.0, 0.5, 1.0} {
-    \fill[myred] (0.07*\y*\y, \y) circle (0.07);
-    \draw[color=myteal, dashed, thin] (0.07*\y*\y, \y) circle (0.8);
-    \draw[-Stealth, color=myteal, thin] (0.07*\y*\y, \y) -- +(0.8,0);
+  % ── Secondary wavelet sources (5 points on the primary wavefront) ──────────
+  \foreach \y/\xo in {-1.6/-0.15, -0.8/-0.05, 0.0/0.0, 0.8/-0.05, 1.6/-0.15} {
+    % Source dot
+    \fill[myred] (\xo, \y) circle (0.09);
+    % Wavelet circle
+    \draw[color=myteal, dashed, line width=0.8pt] (\xo, \y) circle (1.0);
+    % Arrow showing propagation direction
+    \draw[-Stealth, color=myteal, thick] (\xo, \y) -- ++(1.0, 0);
   }
 
-  % New wavefront (envelope)
-  \draw[very thick, color=myamber] (0.8,-1.5) to[bend left=20] (0.8,1.5);
-  \node[right, font=\small\color{myamber}] at (0.9,0) {New Wavefront at $t_1 + \Delta t$};
+  % ── New wavefront envelope (right, tangent to all wavelets) ─────────────────
+  \draw[very thick, color=myamber]
+    (0.85,-2.0) .. controls (1.0,-1.0) and (1.0,1.0) .. (0.85,2.0);
+
+  % ── Labels ────────────────────────────────────────────────────────────────
+  \node[right=6pt, align=left, font=\small\bfseries\color{myamber}] at (0.9, 0) {New Wavefront at $t_1 + \Delta t$};
+  \node[font=\tiny\color{myteal}] at (-0.9, 1.8) {Secondary wavelets};
+  \draw[-Stealth, thin, color=myteal] (-0.5, 1.7) -- (0.1, 1.05);
+
+  % ── Propagation direction arrow ────────────────────────────────────────────
+  \draw[-Stealth, line width=1.5pt, color=mydark] (-2.8, -2.5) -- (2.2, -2.5)
+    node[right, font=\scriptsize\bfseries] {Propagation direction};
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -1245,7 +1262,11 @@ A paraboloidal reflector is a surface of revolution formed by rotating a parabol
   \item Converts a spherical wavefront radiating from the feed into a highly directive plane wavefront.
   \item All path lengths from the feed to the reflector and out to the aperture plane are identical: $r + r\cos\theta = 2f$.
   \item The $f/D$ ratio (focal length to diameter) is a critical design parameter that determines the curvature of the dish and feed antenna illumination requirements.
-\end{itemize}
+  \item \textbf{Gain:} The power gain of a parabolic reflector of diameter $D$ with aperture efficiency $\eta_{ap}$ is:
+  \[
+  G = \eta_{ap} \left( \frac{\pi D}{\lambda} \right)^{\!2}
+  \]
+  where $\eta_{ap} \approx 0.5$–$0.7$ for practical dishes (accounts for spillover, illumination taper, phase errors, and blockage). For a typical $\eta_{ap} = 0.55$: a 3 m dish at 10 GHz gives $G \approx 3 \times 10^4$ ($\approx 45\,\text{dBi}$).\end{itemize}
 
 \subsection{Cassegrain Antenna (Dual-Reflector)}
 A \textbf{Cassegrain antenna} uses a primary parabolic main reflector and a secondary hyperbolic sub-reflector.
@@ -1287,6 +1308,7 @@ Aperture Max Directivity & $D_{max} = \frac{4\pi}{\lambda^2} A_p$ \quad (uniform
 Circular Apertity Null & $\theta_{null} \approx 1.22 \frac{\lambda}{2a}$ \\[4pt]
 Booker's Relation & $Z_{slot} Z_{dipole} = \frac{\eta_0^2}{4} \approx 35476\,\Omega^2$ \\[4pt]
 Resonant Slot Impedance & $Z_{slot} \approx 485\,\Omega$ \quad (complementary to $73\,\Omega$ dipole) \\[4pt]
+Parabolic Reflector Gain & $G = \eta_{ap} \left(\frac{\pi D}{\lambda}\right)^2$ \quad ($\eta_{ap} \approx 0.55$) \\[4pt]
 Horn Flare Limit (E-plane) & $b^2 < 2\lambda\rho_e$ \quad (limits phase error to $< \pi/2$) \\[4pt]
 Horn Flare Limit (H-plane) & $a^2 < 3\lambda\rho_h$ \quad (limits phase error to $< 3\pi/4$) \\[4pt]
 Parabola Equation & $y^2 = 4fx$ \quad ($f$ = focal length) \\
@@ -1394,10 +1416,16 @@ The parasitic elements are not connected to the feed line. They receive energy t
   \draw[line width=3.5pt, color=myteal] (2.5,-1.3) -- (2.5,1.3);
   \node[above, font=\scriptsize\bfseries\color{myteal}] at (2.5,1.3) {Director 2 ($0.43\lambda$)};
 
-  % Spacing dimension lines
-  \draw[Stealth-Stealth, thick] (-2.5, -2.1) -- (-0.8, -2.1) node[midway, below, font=\tiny] {$0.15\lambda$–$0.25\lambda$};
-  \draw[Stealth-Stealth, thick] (-0.8, -2.1) -- (1.0, -2.1) node[midway, below, font=\tiny] {$0.10\lambda$–$0.15\lambda$};
-  \draw[Stealth-Stealth, thick] (1.0, -2.1) -- (2.5, -2.1) node[midway, below, font=\tiny] {$0.15\lambda$–$0.25\lambda$};
+  % Spacing dimension lines — staggered vertically to prevent overlap
+  \draw[Stealth-Stealth, thick] (-2.5, -2.2) -- (-0.8, -2.2)
+    node[midway, below, font=\tiny] {$0.15\lambda$–$0.25\lambda$};
+  \draw[Stealth-Stealth, thick] (-0.8, -2.6) -- (1.0, -2.6)
+    node[midway, below, font=\tiny] {$0.10\lambda$–$0.15\lambda$};
+  \draw[Stealth-Stealth, thick] (1.0, -2.2) -- (2.5, -2.2)
+    node[midway, below, font=\tiny] {$0.15\lambda$–$0.25\lambda$};
+  % Connector lines for staggered middle arrow
+  \draw[thin, color=mydark] (-0.8,-2.2) -- (-0.8,-2.6);
+  \draw[thin, color=mydark] (1.0,-2.2) -- (1.0,-2.6);
 
   % Radiation Direction Arrow
   \draw[-Stealth, line width=2.5pt, color=mygreen] (-3.0, 2.5) -- (3.0, 2.5) 
@@ -1445,42 +1473,42 @@ The apex angle $2\alpha$ of the structure is related to these ratios by:
 
 \begin{tcolorbox}[tikzbox, title={Log-Periodic Dipole Array (LPDA)}]
 \centering
-\begin{tikzpicture}[scale=0.9]
+\begin{tikzpicture}[scale=0.95]
   % Apex
   \coordinate (A) at (-4, 0);
-  \fill[mydark] (A) circle (0.05) node[left, font=\tiny] {Apex};
-  
-  % Apex boundaries
-  \draw[dashed, color=mgframe] (A) -- (3, 1.8);
-  \draw[dashed, color=mgframe] (A) -- (3, -1.8);
-  \draw[dashed, color=mgframe] (A) -- (3, 0);
+  \fill[myred] (A) circle (0.08);
+  \node[above=4pt, font=\scriptsize\bfseries\color{myred}] at (-4, 0) {Apex};
 
-  % Dipoles
-  % Element 1 (smallest)
-  \draw[line width=2.5pt, color=myteal] (-2.2, -0.45) -- (-2.2, 0.45);
-  \node[above, font=\tiny] at (-2.2, 0.45) {$L_4$};
-  
-  % Element 2
-  \draw[line width=2.5pt, color=myteal] (-1.0, -0.7) -- (-1.0, 0.7);
-  \node[above, font=\tiny] at (-1.0, 0.7) {$L_3$};
-  
-  % Element 3
-  \draw[line width=2.5pt, color=myteal] (0.8, -1.1) -- (0.8, 1.1);
-  \node[above, font=\tiny] at (0.8, 1.1) {$L_2$};
-  
-  % Element 4 (largest)
-  \draw[line width=2.5pt, color=myteal] (3.0, -1.7) -- (3.0, 1.7);
-  \node[above, font=\tiny] at (3.0, 1.7) {$L_1$};
+  % Envelope lines (showing angular geometry)
+  \draw[dashed, color=mgframe, thin] (A) -- (3.2, 1.95);
+  \draw[dashed, color=mgframe, thin] (A) -- (3.2, -1.95);
 
-  % Crossed feed line
-  \draw[thick, color=myred] (-3.8, 0.1) -- (-2.2, 0.1) -- (-1.0, -0.1) -- (0.8, 0.1) -- (3.0, -0.1);
-  \draw[thick, color=myred] (-3.8, -0.1) -- (-2.2, -0.1) -- (-1.0, 0.1) -- (0.8, -0.1) -- (3.0, 0.1);
-  \node[left, font=\tiny\bfseries] at (-3.8, 0) {Feed};
+  % Dipole elements (scaled geometrically, myteal)
+  % L4 (smallest), L3, L2, L1 (largest)
+  \foreach \x/\h/\lab in {-2.1/0.5/$L_4$, -0.8/0.8/$L_3$, 0.9/1.2/$L_2$, 2.9/1.7/$L_1$} {
+    \draw[line width=3pt, color=myteal] (\x, -\h) -- (\x, \h);
+    \node[above=2pt, font=\small\bfseries\color{myteal}] at (\x, \h) {\lab};
+  }
 
-  % Apex Angle
-  \draw[thick, color=myamber] (-2.8,0) arc (0:22:1.2);
-  \node[color=myamber, font=\small\bfseries] at (-2.4, 0.25) {$\alpha$};
+  % Crossed (transposed) feed line — two wires swapping between elements
+  \draw[thick, color=myred] (-3.8, 0.12) -- (-2.1, 0.12) -- (-0.8,-0.12) -- (0.9, 0.12) -- (2.9,-0.12);
+  \draw[thick, color=myred] (-3.8,-0.12) -- (-2.1,-0.12) -- (-0.8, 0.12) -- (0.9,-0.12) -- (2.9, 0.12);
 
+  % Feed connector at apex end
+  \draw[thick, color=myred] (-3.8,-0.12) -- (-3.8, 0.12);
+  \node[below left, font=\scriptsize\bfseries\color{myred}] at (-3.8, 0) {Feed};
+
+  % Apex half-angle
+  \draw[thick, color=myamber] (-2.6, 0) arc (0:23:1.4);
+  \node[font=\small\bfseries\color{myamber}] at (-2.1, 0.32) {$\alpha$};
+
+  % Spacing label d_n between L3 and L2
+  \draw[Stealth-Stealth, thin, color=mydark] (-0.8,-1.1) -- (0.9,-1.1)
+    node[midway, below, font=\tiny] {$d_n$};
+
+  % Radiation direction (toward apex = left)
+  \draw[-Stealth, line width=2pt, color=mygreen] (-0.5, 2.3) -- (-3.5, 2.3)
+    node[midway, above, font=\scriptsize\bfseries\color{mygreen}] {Max. radiation};
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -1512,26 +1540,40 @@ Rumsey's Principle states that an antenna will be frequency-independent if its p
 
 \begin{tcolorbox}[tikzbox, title={Biconical Antenna Geometry}]
 \centering
-\begin{tikzpicture}[scale=0.9]
+\begin{tikzpicture}[scale=0.95]
   % Top Cone
-  \draw[thick, color=mydark, fill=hdrteal] (0,0) -- (-1.2,1.8) -- (1.2,1.8) -- cycle;
+  \draw[thick, color=myteal, fill=hdrteal, fill opacity=0.7]
+    (0,0.08) -- (-1.4,2.1) -- (1.4,2.1) -- cycle;
   % Bottom Cone
-  \draw[thick, color=mydark, fill=hdrteal] (0,0) -- (-1.2,-1.8) -- (1.2,-1.8) -- cycle;
+  \draw[thick, color=myteal, fill=hdrteal, fill opacity=0.7]
+    (0,-0.08) -- (-1.4,-2.1) -- (1.4,-2.1) -- cycle;
 
-  % Axis
-  \draw[dashed, color=mgframe] (0,-2.2) -- (0,2.2);
+  % Axis (dashed centre line)
+  \draw[dashed, color=mgframe, thin] (0,-2.5) -- (0,2.5);
 
-  % Feed points
-  \fill[myred] (0.05, 0.1) circle (0.07);
-  \fill[myred] (-0.05, -0.1) circle (0.07);
-  \draw[thick] (0.05, 0.1) -- (0.5, 0.1);
-  \draw[thick] (-0.05, -0.1) -- (0.5, -0.1) node[right, font=\tiny\bfseries] {Feed};
+  % Cone edge outline for clarity
+  \draw[thick, color=mydark] (0,0.08) -- (-1.4,2.1) -- (1.4,2.1) -- (0,0.08);
+  \draw[thick, color=mydark] (0,-0.08) -- (-1.4,-2.1) -- (1.4,-2.1) -- (0,-0.08);
 
-  % Angle
-  \draw[thick, color=myamber] (0,0.8) arc (90:124:0.8);
-  \node[color=myamber, font=\small\bfseries] at (-0.3, 1.1) {$\theta_c$};
-  \node[font=\small\bfseries\color{mydark}, align=center, text width=2.8cm] at (1.8, 1.0) {Infinite \\ transmission \\ line equivalent};
+  % Half-angle arc and label
+  \draw[thick, color=myamber] (0,0.9) arc (90:123:0.9);
+  \node[font=\small\bfseries\color{myamber}] at (-0.38, 1.18) {$\theta_c$};
 
+  % Feed gap
+  \fill[myred] (0, 0.1) circle (0.09);
+  \fill[myred] (0, -0.1) circle (0.09);
+  \draw[thick, color=myred] (0,0.1) -- (0.55,0.1);
+  \draw[thick, color=myred] (0,-0.1) -- (0.55,-0.1);
+  \node[right, font=\scriptsize\bfseries\color{myred}] at (0.55, 0) {Feed};
+
+  % Dimension: overall length
+  \draw[Stealth-Stealth, thin, color=mydark] (1.7,-2.1) -- (1.7,2.1)
+    node[midway, right, font=\tiny] {$2H$};
+
+  % Label outside (right side, no overlap)
+  \node[right=0.5cm, align=left, font=\scriptsize\color{mydark}] at (1.4, -1.0)
+    {\textbf{Infinite TL}\\\textbf{equivalent}};
+  \draw[-Stealth, thin, color=mydark] (1.4, -1.15) -- (0.95, -1.3);
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -1557,6 +1599,31 @@ A \textbf{turnstile antenna} consists of two identical horizontal half-wave dipo
 
 \subsection{Vertical Mast Radiators}
 For Medium Frequency (MF) AM radio broadcasting, vertical steel towers (mast radiators) of height $H \approx \lambda/4$ or $H \approx 0.583\lambda$ (the anti-fading height, which minimizes sky-wave interference near the ground) are used. The ground acts as a reflector, forming a monopole equivalent.
+
+\textbf{Radiation Pattern:} A vertical monopole of height $H$ over a perfectly conducting ground radiates an omnidirectional pattern in the azimuthal plane (horizontal). The elevation pattern $F(\theta)$ (measured from horizontal) is:
+\[
+F(\theta) = \frac{\cos(kH\sin\theta) - \cos(kH)}{\cos\theta}
+\]
+where $\theta$ is the elevation angle above the horizon. The pattern is maximum at $\theta = 0^\circ$ (horizontal, for ground-wave coverage) and zero at $\theta = 90^\circ$ (straight up).
+
+\textbf{Why Anti-Fading Height ($H = 0.583\lambda$)?}
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item A $\lambda/4$ tower has its maximum radiation at the horizon and also radiates significantly at high angles, which creates strong sky waves. These sky waves reflect off the ionosphere and return as an interfering signal (fading).
+  \item At $H = 0.583\lambda$, the pattern has a \textbf{null at the critical elevation angle} ($\approx 20^\circ$–$30^\circ$) from which ionospheric reflections would cause maximum interference in the primary service area. This suppresses the fading-causing sky wave while maintaining strong ground-wave coverage.
+\end{itemize}
+
+\textbf{Ground System:} A buried radial ground system (typically 120 radials of $\lambda/4$ length) is used to:
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item Provide a low-resistance current return path for the monopole image currents.
+  \item Minimize ground losses and maximize radiation efficiency.
+  \item Without a good ground system, $R_r$ is effectively in series with a high ground resistance, severely reducing efficiency.
+\end{itemize}
+
+\textbf{Effective Height ($h_e$):} The effective height of a monopole (a parameter used to calculate the open-circuit voltage induced in a receiving antenna) is:
+\[
+h_e = \frac{1}{I_0} \int_0^H I(z)\,dz
+\]
+For a $\lambda/4$ monopole with sinusoidal current: $h_e = \lambda/(2\pi) \approx 0.159\lambda$.
 
 % ===============================================================================
 % MANDATORY QUICK REVISION PAGE
@@ -1653,47 +1720,58 @@ The patch acts as a resonant cavity with open-circuited edges. Fringing fields a
 \begin{tikzpicture}[scale=0.95]
   % ── Cross-section view (left) ──────────────────────────────────────────────
   \begin{scope}[xshift=-3.8cm]
-    % Ground plane
-    \draw[thick, fill=hdrgray] (-2.0,-1.3) rectangle (2.0,-1.0);
-    \node[below, font=\tiny\bfseries] at (0,-1.3) {Ground Plane (PEC)};
+    % Ground plane — label above the bar so it doesn't clash with view title
+    \draw[thick, fill=hdrgray] (-2.0,-1.25) rectangle (2.0,-0.95);
+    \node[above=1pt, font=\tiny\bfseries\color{mydark}] at (0,-0.95) {Ground Plane (PEC)};
     % Substrate
-    \draw[thick, fill=hdrteal, fill opacity=0.35] (-2.0,-1.0) rectangle (2.0,0.0);
-    \node[font=\tiny\bfseries\color{myteal}] at (0,-0.5) {Substrate ($\epsilon_r$, $h$)};
+    \draw[thick, fill=hdrteal, fill opacity=0.35] (-2.0,-0.95) rectangle (2.0,0.0);
+    \node[font=\tiny\bfseries\color{myteal}] at (0.6,-0.48) {Substrate ($\epsilon_r$, $h$)};
     % Patch
     \draw[very thick, color=myred, fill=hdrred] (-1.2,0.0) rectangle (1.2,0.18);
-    \node[above, font=\scriptsize\bfseries\color{myred}] at (0,0.18) {Metallic Patch};
-    % Fringing fields at left edge
-    \draw[thick, color=myamber, dashed] (-1.2, 0.0) to[out=130, in=270] (-1.7, -0.5);
-    \draw[thick, color=myamber, dashed] (-1.2, 0.0) to[out=230, in=90] (-1.5, -0.9);
-    % Fringing fields at right edge
-    \draw[thick, color=myamber, dashed] (1.2, 0.0) to[out=50, in=270] (1.7, -0.5);
-    \draw[thick, color=myamber, dashed] (1.2, 0.0) to[out=-50, in=90] (1.5, -0.9);
-    \node[font=\tiny\bfseries\color{myamber}] at (-1.95, -0.35) {Fringing};
-    \node[font=\tiny\bfseries\color{myamber}] at (-1.95, -0.55) {Fields};
-    % Height annotation
-    \draw[Stealth-Stealth, thick, color=mydark] (2.1,-1.0) -- (2.1, 0.0) node[midway, right, font=\tiny] {$h$};
-    \node[font=\small\bfseries\color{mydark}] at (0,-1.65) {(a) Cross-Section View};
+    \node[above=3pt, font=\scriptsize\bfseries\color{myred}] at (0,0.18) {Metallic Patch};
+    % Fringing fields — left edge only (symmetric), label well left
+    \draw[thick, color=myamber, dashed] (-1.2, 0.0) to[out=140, in=20] (-1.9, -0.48);
+    \draw[thick, color=myamber, dashed] (-1.2, 0.0) to[out=220, in=60] (-1.7, -0.88);
+    \draw[thick, color=myamber, dashed] (1.2, 0.0) to[out=40, in=160] (1.9, -0.48);
+    \draw[thick, color=myamber, dashed] (1.2, 0.0) to[out=-40, in=120] (1.7, -0.88);
+    \node[left=2pt, align=right, font=\tiny\bfseries\color{myamber}] at (-2.1, -0.42) {Fringing\\Fields};
+    % Height dimension — right side
+    \draw[Stealth-Stealth, thick, color=mydark] (2.15,-0.95) -- (2.15, 0.0)
+      node[midway, right=1pt, font=\tiny\bfseries] {$h$};
+    % View label — placed well below with extra gap
+    \node[font=\small\bfseries\color{mydark}] at (0,-1.6) {(a) Cross-Section View};
   \end{scope}
 
   % ── Top view (right) ───────────────────────────────────────────────────────
   \begin{scope}[xshift=2.8cm]
-    % Patch boundary
-    \draw[very thick, color=myred, fill=hdrred, fill opacity=0.5] (-1.5,-1.0) rectangle (1.5,1.0);
-    \node[font=\scriptsize\bfseries\color{myred}] at (0,0) {Patch};
-    % W dimension
-    \draw[Stealth-Stealth, thick] (-1.5,-1.3) -- (1.5,-1.3) node[midway, below, font=\tiny] {$W$};
-    % L dimension
-    \draw[Stealth-Stealth, thick] (1.8,-1.0) -- (1.8,1.0) node[midway, right, font=\tiny] {$L$};
-    % Inset feed notch
-    \fill[white] (-0.25,-1.0) rectangle (0.25,-0.4);
-    \draw[thick, color=mydark] (-0.25,-1.0) -- (-0.25,-0.4) -- (0.25,-0.4) -- (0.25,-1.0);
-    % Feed line
-    \draw[very thick, color=myamber] (-0.15,-1.65) rectangle (0.15,-0.4);
-    \node[below, font=\tiny\bfseries\color{myamber}] at (0,-1.65) {Feed Line};
-    % Radiating edges label
-    \draw[Stealth-, thick, color=myteal] (-1.5, 0.0) -- (-2.3, 0.4) node[left, align=center, text width=1.2cm, font=\tiny\bfseries\color{myteal}] {Radiating edge};
-    \draw[Stealth-, thick, color=myteal] (1.5, 0.0) -- (2.0, 0.4) node[right, align=center, text width=1.2cm, font=\tiny\bfseries\color{myteal}] {Radiating edge};
-    \node[font=\small\bfseries\color{mydark}] at (0,-2.05) {(b) Top View};
+    % Patch rectangle
+    \draw[very thick, color=myred, fill=hdrred, fill opacity=0.5]
+      (-1.5,-1.0) rectangle (1.5,1.0);
+    \node[font=\scriptsize\bfseries\color{myred}] at (0, 0.3) {Patch};
+    % W dimension arrow — below patch, clear of feed line
+    \draw[Stealth-Stealth, thick, color=mydark] (-1.5,-1.25) -- (1.5,-1.25)
+      node[midway, below=1pt, font=\tiny\bfseries] {$W$};
+    % L dimension arrow — right side
+    \draw[Stealth-Stealth, thick, color=mydark] (1.75,-1.0) -- (1.75,1.0)
+      node[midway, right=1pt, font=\tiny\bfseries] {$L$};
+    % Inset notch in patch
+    \fill[white] (-0.22,-1.0) rectangle (0.22,-0.35);
+    \draw[thick, color=mydark] (-0.22,-1.0) -- (-0.22,-0.35)
+      -- (0.22,-0.35) -- (0.22,-1.0);
+    % Feed line — short, just below patch
+    \draw[very thick, color=myamber] (-0.13,-1.0) rectangle (0.13,-0.4);
+    % Feed line label — placed to the right with leader, NOT below W arrow
+    \draw[-Stealth, thin, color=myamber] (0.55,-0.7) -- (0.15,-0.7);
+    \node[right=1pt, font=\tiny\bfseries\color{myamber}] at (0.55,-0.7) {Feed};
+    % Radiating edge labels — leader arrows pointing at edges
+    \draw[Stealth-, thick, color=myteal] (-1.5, 0.0) -- (-2.35, 0.45);
+    \node[left=1pt, align=right, text width=1.1cm, font=\tiny\bfseries\color{myteal}]
+      at (-2.35, 0.45) {Radiating\\edge};
+    \draw[Stealth-, thick, color=myteal] (1.5, 0.0) -- (1.95, 0.45);
+    \node[right=1pt, align=left, text width=1.1cm, font=\tiny\bfseries\color{myteal}]
+      at (1.95, 0.45) {Radiating\\edge};
+    % View label
+    \node[font=\small\bfseries\color{mydark}] at (0,-1.6) {(b) Top View};
   \end{scope}
 \end{tikzpicture}
 \end{tcolorbox}
@@ -1742,37 +1820,52 @@ To transfer electromagnetic energy into the patch, several feed techniques are u
 
 \begin{tcolorbox}[tikzbox, title={Microstrip Line Feed vs. Coaxial Probe Feed}]
 \centering
-\begin{tikzpicture}[scale=0.9]
-  % Microstrip Line Feed (top view)
-  \begin{scope}[xshift=-4cm]
-    \draw[thick, fill=hdrgray] (-2,-2) rectangle (2,2);
-    \draw[very thick, fill=myred] (-1.2,-1.2) rectangle (1.2,1.2);
-    % Inset Feed
-    \fill[white] (-0.25,-1.2) rectangle (0.25,-0.6);
-    \draw[thick] (-0.25,-1.2) -- (-0.25,-0.6) -- (0.25,-0.6) -- (0.25,-1.2);
-    \draw[very thick, fill=myamber] (-0.1,-2) rectangle (0.1,-0.6);
-    \node[above, font=\tiny] at (0,-0.6) {Inset feed};
-    \node[font=\small\bfseries\color{mydark}] at (0,-2.3) {(a) Inset Microstrip Line Feed};
+\begin{tikzpicture}[scale=0.95]
+  % ── (a) Inset Microstrip Line Feed (top view) ──────────────────────────────
+  \begin{scope}[xshift=-3.8cm]
+    % Substrate / ground boundary shown as outer box
+    \draw[thick, fill=hdrgray] (-1.8,-2.1) rectangle (1.8,1.9);
+    \node[below, font=\tiny\bfseries\color{mydark}] at (0,-2.1) {Substrate (top view)};
+    % Patch
+    \draw[very thick, fill=myred, fill opacity=0.75] (-1.3,-0.3) rectangle (1.3,1.6);
+    \node[font=\scriptsize\bfseries\color{white}] at (0, 0.65) {Patch};
+    % Inset notch cut into patch
+    \fill[hdrgray] (-0.22,-0.3) rectangle (0.22,0.35);
+    \draw[thick, color=mydark] (-0.22,-0.3) -- (-0.22,0.35) -- (0.22,0.35) -- (0.22,-0.3);
+    % Feed line (amber strip coming from bottom)
+    \draw[very thick, fill=myamber] (-0.11,-2.1) rectangle (0.11,0.35);
+    % Inset feed label
+    \draw[-Stealth, thin, color=mydark] (0.7, 0.35) -- (0.25, 0.35);
+    \node[right, font=\tiny\bfseries] at (0.7, 0.35) {Inset cut};
+    % Dimension arrows
+    \node[font=\tiny\bfseries\color{myamber}, below] at (0,-2.1) {};
+    \node[font=\small\bfseries\color{mydark}] at (0,-2.55) {(a) Inset Microstrip Feed};
   \end{scope}
 
-  % Coaxial Probe Feed (side cross section)
-  \begin{scope}[xshift=3.5cm]
-    % Ground plane
-    \draw[line width=3pt, color=mgframe] (-2.2,-1.0) -- (2.2,-1.0);
-    \node[below, font=\tiny] at (0,-1.0) {Ground Plane};
-    % Substrate
-    \draw[thick, fill=hdrteal, fill opacity=0.3] (-2.2,-1.0) rectangle (2.2,0.2);
-    \node[left, font=\tiny\color{myteal}] at (-1.8,-0.4) {Substrate};
-    % Patch
-    \draw[very thick, color=myred] (-1.5,0.2) -- (1.5,0.2);
-    \node[above, font=\tiny\color{myred}] at (0,0.2) {Patch};
-    
-    % Coaxial pin
-    \draw[line width=1.5pt, color=myamber] (0.5,-1.8) -- (0.5,0.2);
-    \draw[line width=3.5pt, color=mydark, dashed] (0.3,-1.8) -- (0.3,-1.0);
-    \draw[line width=3.5pt, color=mydark, dashed] (0.7,-1.8) -- (0.7,-1.0);
-    \node[right, font=\tiny\color{myamber}] at (0.5,-1.4) {Inner Pin};
-    \node[font=\small\bfseries\color{mydark}] at (0,-2.3) {(b) Coaxial Probe Feed};
+  % ── (b) Coaxial Probe Feed (cross-section view) ────────────────────────────
+  \begin{scope}[xshift=3.2cm]
+    % Ground plane (thick copper bar)
+    \draw[very thick, fill=hdrgray, draw=mydark] (-2.2,-1.05) rectangle (2.2,-0.75);
+    \node[right, font=\tiny\bfseries\color{mydark}] at (2.2,-0.9) {Ground Plane};
+    % Substrate layer
+    \draw[thick, fill=hdrteal, fill opacity=0.4, draw=myteal]
+      (-2.2,-0.75) rectangle (2.2,0.0);
+    \node[font=\tiny\bfseries\color{myteal}] at (-0.5,-0.38) {Substrate ($\epsilon_r$, $h$)};
+    % Patch (top copper strip)
+    \draw[very thick, fill=myred, draw=myred] (-2.2,0.0) rectangle (2.2,0.22);
+    \node[above, font=\tiny\bfseries\color{myred}] at (0,0.22) {Metallic Patch};
+    % Outer conductor of coax (below ground)
+    \draw[very thick, color=mgframe] (0.6,-1.05) -- (0.6,-1.9);
+    \draw[very thick, color=mgframe] (1.0,-1.05) -- (1.0,-1.9);
+    \draw[very thick, color=mgframe] (0.6,-1.9) -- (1.0,-1.9);
+    \node[right, font=\tiny\color{mgframe}] at (1.0,-1.5) {Outer conductor};
+    % Inner pin (amber, goes through substrate to patch)
+    \draw[line width=2.5pt, color=myamber] (0.8,-1.9) -- (0.8, 0.22);
+    \node[left, font=\tiny\bfseries\color{myamber}] at (0.6,-0.45) {Inner pin};
+    \draw[-Stealth, thin, color=myamber] (0.55,-0.45) -- (0.78,-0.45);
+    % Coax label at bottom
+    \draw[-Stealth, thin] (0.8,-1.9) -- (0.0,-2.35) node[below, font=\tiny\bfseries] {Coaxial feed};
+    \node[font=\small\bfseries\color{mydark}] at (0,-2.7) {(b) Coaxial Probe Feed};
   \end{scope}
 \end{tikzpicture}
 \end{tcolorbox}
@@ -1816,8 +1909,135 @@ The design parameters are: substrate height $h$, dielectric constant $\epsilon_r
 \end{enumerate}
 \end{tcolorbox}
 
+\begin{tcolorbox}[examplebox, title={\textbf{Worked Example: Rectangular Patch at 2.4 GHz}}]
+\textbf{Given:} $f_r = 2.4\,\text{GHz}$, FR-4 substrate: $\epsilon_r = 4.4$, $h = 1.6\,\text{mm}$.
+
+\textbf{Step 1 — Width:}
+\[
+W = \frac{3 \times 10^8}{2 \times 2.4 \times 10^9}\sqrt{\frac{2}{4.4+1}} = 0.0625 \times 0.609 \approx 38.0\,\text{mm}
+\]
+
+\textbf{Step 2 — Effective dielectric constant:}
+\[
+\epsilon_{reff} = \frac{4.4+1}{2} + \frac{4.4-1}{2}\left[1 + 12\frac{1.6}{38.0}\right]^{-1/2} = 2.7 + 1.7 \times 0.857 \approx 4.16
+\]
+
+\textbf{Step 3 — Extension:}
+\[
+\Delta L = 0.412 \times 1.6 \times \frac{(4.16+0.3)(38.0/1.6+0.264)}{(4.16-0.258)(38.0/1.6+0.8)} \approx 0.749\,\text{mm}
+\]
+
+\textbf{Step 4 — Physical length:}
+\[
+L = \frac{3\times10^8}{2 \times 2.4\times10^9 \times \sqrt{4.16}} - 2 \times 0.749 = 30.7 - 1.5 \approx 29.2\,\text{mm}
+\]
+
+\textbf{Result:} $W \approx 38\,\text{mm}$, $L \approx 29.2\,\text{mm}$ on a $1.6\,\text{mm}$ FR-4 substrate.
+\end{tcolorbox}
+
 \subsection{Circular Patch Antenna Design}
 For a circular patch of radius $a$ on a substrate of height $h$, the dominant resonant mode is $TM^z_{110}$.
+
+\subsubsection*{Resonant Modes and Radiation Mechanism}
+The circular patch behaves as a \textbf{resonant cavity} bounded by:
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Top and bottom:} Perfect Electric Conductor (PEC) walls — the patch and ground plane.
+  \item \textbf{Side boundary:} Perfect Magnetic Conductor (PMC) wall (fringing field approximation).
+\end{itemize}
+The resonant modes are designated $TM^z_{nmp}$ where:
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item $n$ = number of full-period variations in $\phi$ (azimuthal direction)
+  \item $m$ = number of zeros of $J_n'(\cdot)$ in the radial direction ($m = 1, 2, 3, \dots$)
+  \item $p$ = number of variations in $z$ (always $0$ for thin patches since $h \ll \lambda$)
+\end{itemize}
+
+The \textbf{dominant mode} $TM^z_{110}$ has:
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item One full-period azimuthal variation ($n=1$) and the first radial maximum ($m=1$).
+  \item The constant $1.8412$ is the first root of $J_1'(\chi_{11}) = 0$ (derivative of first-order Bessel function), which defines the resonance condition.
+  \item \textbf{Broadside radiation pattern} — maximum gain perpendicular to the patch surface ($\theta = 0^\circ$).
+  \item \textbf{Linear polarization} — the $E$-field across the radiating edge is linearly polarized.
+\end{itemize}
+
+\subsubsection*{Higher-Order Modes}
+Other useful modes include:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item $TM^z_{010}$: Omnidirectional (monopole-like) radiation; used for low-profile omnidirectional antennas.
+  \item $TM^z_{210}$: Figure-8 pattern; used for circular polarization when combined with $TM^z_{110}$.
+  \item \textbf{Dual-Band Operation:} By stacking two circular patches of different radii on separate substrate layers, two resonant frequencies can be achieved independently.
+\end{itemize}
+
+\subsubsection*{Circular Polarization from a Circular Patch}
+Circular polarization (CP) is an important feature achievable with circular patches:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Single feed CP:} A slight perturbation (small notch or truncation of the circular boundary) splits the degenerate $TM^z_{110}$ mode into two orthogonal modes with a $90^\circ$ phase separation. CP results when the two modes are excited with equal amplitude and $90^\circ$ phase shift.
+  \item \textbf{Two-feed CP:} Two coaxial probes placed at $90^\circ$ apart on the patch perimeter, fed with equal amplitude and a $90^\circ$ hybrid coupler, produce clean CP over a wider bandwidth.
+\end{itemize}
+
+\subsubsection*{Fringing Fields and Effective Radius}
+The fringing fields at the patch edge extend the effective electrical radius beyond the physical radius:
+\[
+a_e = a + \Delta a \quad \text{where} \quad \Delta a = a\left[\sqrt{1 + \frac{2h}{\pi\epsilon_r a}\left(\ln\frac{\pi a}{2h} + 1.7726\right)} - 1\right]
+\]
+Typically $\Delta a / a \approx 1\%$–$5\%$ for standard substrates. A higher $\epsilon_r$ or thinner substrate reduces the fringing correction.
+
+\subsubsection*{Substrate Selection Tradeoffs}
+
+\par\noindent
+{\renewcommand{\arraystretch}{1.55}
+\begin{tabularx}{\linewidth}{|B{3.0cm}|Y|Y|}
+\hline
+\textbf{Parameter} & \textbf{High $\epsilon_r$ (e.g., 10)} & \textbf{Low $\epsilon_r$ (e.g., 2.2)} \\
+\hline
+Patch Size & Smaller (compact) & Larger \\
+\hline
+Bandwidth & Narrower & Wider \\
+\hline
+Radiation Efficiency & Lower (more stored energy) & Higher \\
+\hline
+Surface Wave Loss & Higher & Lower \\
+\hline
+Typical Use & Miniaturised antenna-on-chip & High-performance arrays \\
+\hline
+\end{tabularx}}
+
+\textbf{Design Procedure:}
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*, itemsep=3pt]
+  \item Specify desired resonant frequency $f_r$, substrate $\epsilon_r$ and thickness $h$.
+  \item Compute intermediate parameter $F$ (an estimate of the effective radius assuming no fringing).
+  \item Solve for physical radius $a$ by applying the fringing correction factor.
+  \item Compute effective radius $a_e$.
+  \item Verify by back-calculating $(f_r)_{110}$ — should match the target within $1\%$.
+  \item Choose feed position (coaxial probe offset from centre) to match $50\,\Omega$.
+\end{enumerate}
+
+\textbf{Typical example:} Circular patch at $f_r = 2.4\,\text{GHz}$, FR-4 substrate ($\epsilon_r = 4.4$, $h = 1.6\,\text{mm}$):
+$F \approx 17.5\,\text{mm}$, $a \approx 16.8\,\text{mm}$, $a_e \approx 17.2\,\text{mm}$.
+Bandwidth $\approx 1\%$–$3\%$, directivity $\approx 6$–$7\,\text{dBi}$.
+
+\subsubsection*{Comparison: Circular vs. Rectangular Patch}
+
+\par\noindent
+{\renewcommand{\arraystretch}{1.55}
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Property} & \textbf{Rectangular Patch} & \textbf{Circular Patch} \\
+\hline
+Shape & Rectangular ($W \times L$) & Circular (radius $a$) \\
+\hline
+Resonant parameter & Length $L \approx \lambda/(2\sqrt{\epsilon_{reff}})$ & Radius $a$ from Bessel zero \\
+\hline
+Dominant mode & $TM^x_{100}$ & $TM^z_{110}$ \\
+\hline
+Bandwidth & $\approx 1\%$–$5\%$ & $\approx 1\%$–$3\%$ (slightly narrower) \\
+\hline
+Circular Polarization & Possible with square patch + notch & Easier — natural symmetry aids CP \\
+\hline
+Compactness & Larger footprint & More compact (round shape) \\
+\hline
+Design Complexity & Simpler formulas & Slightly more involved (Bessel functions) \\
+\hline
+\end{tabularx}}
 
 \begin{tcolorbox}[formulabox, title={\textbf{Circular Patch Design Equations}}]
 The physical radius $a$ is calculated as:
@@ -1989,6 +2209,25 @@ Summing this geometric progression:
     \end{itemize}
 \end{enumerate}
 
+\subsection{Key ULA Performance Formulas}
+For a uniform linear array of $N$ elements with spacing $d$:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Broadside HPBW:}
+  \[
+  \text{HPBW} \approx \frac{0.886\,\lambda}{N d} \text{ rad} = \frac{50.8^\circ \lambda}{Nd}
+  \]
+  The beamwidth narrows as $N$ or $d$ increases — doubling the array length halves the HPBW.
+  \item \textbf{Broadside Directivity:}
+  \[
+  D \approx \frac{2Nd}{\lambda} \quad \text{(for } d \le \lambda/2 \text{)}
+  \]
+  \item \textbf{End-Fire HPBW:}
+  \[
+  \text{HPBW} \approx 2\sqrt{\frac{2\lambda}{Nd}} \text{ rad}
+  \]
+  \item \textbf{First Sidelobe Level (Uniform Excitation):} $-13.5\,\text{dB}$ below the main beam — independent of $N$.
+\end{itemize}
+
 % ===============================================================================
 \section{Non-Uniform Amplitude Arrays}
 % ===============================================================================
@@ -2016,6 +2255,19 @@ T_m(z) = \cos(m \cos^{-1} z) \quad (|z| \le 1)
 T_m(z) = \cosh(m \cosh^{-1} z) \quad (|z| > 1)
 \]
 This method optimizes the trade-off by ensuring that all sidelobes are at the exact same specified level (e.g., $-20\,\text{dB}$ or $-30\,\text{dB}$).
+
+\textbf{Design Procedure:}
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*, itemsep=3pt]
+  \item Specify the number of elements $N$ (array order $m = N-1$) and the desired sidelobe level ratio $R$ (e.g., $R = 26.3$ for $-20\,\text{dB}$ SLL; $R = 10^{SLL_{dB}/20}$).
+  \item Compute the parameter $z_0$ that maps the main lobe maximum to $T_m(z_0)$:
+  \[
+  z_0 = \cosh\!\left[ \frac{1}{m} \cosh^{-1}(R) \right]
+  \]
+  \item Substitute $z = z_0 \cos\!\left(\frac{\psi}{2}\right)$ into $T_m(z)$ to obtain the array polynomial. The AF takes the form $AF(\psi) = T_m\!\left(z_0 \cos\frac{\psi}{2}\right)$.
+  \item Extract the excitation coefficients $a_n$ by expanding the Chebyshev polynomial in powers of $\cos^n\!\left(\frac{\psi}{2}\right)$.
+\end{enumerate}
+
+\textbf{Key result:} For a 5-element array with $-20\,\text{dB}$ SLL, the excitation amplitudes are approximately $1 : 2.41 : 3.14 : 2.41 : 1$ (compare to binomial $1:4:6:4:1$ — Dolph gives a narrower beam for the same SLL).
 
 % ===============================================================================
 \section{Extension to Planar Arrays}
@@ -2053,10 +2305,38 @@ Schelkunoff represented the array factor of an $N$-element linear array as a pol
 \[
 AF = \sum_{n=0}^{N-1} a_n z^n = a_{N-1} (z - z_1)(z - z_2) \dots (z - z_{N-1})
 \]
-where $z_i$ are the roots (zeros) of the polynomial. Since $z$ lies on the unit circle ($|z| = 1$), the nulls in the radiation pattern correspond to the roots that lie on the unit circle. This allows designers to synthesize specific radiation pattern shapes by selecting root locations on the complex plane.
+where $z_i$ are the roots (zeros) of the polynomial. Since $z$ lies on the unit circle ($|z| = 1$), the nulls in the radiation pattern correspond to the roots that lie on the unit circle.
+
+\textbf{Visible Region:} As $\theta$ varies from $0^\circ$ to $180^\circ$, $\psi = kd\cos\theta + \beta$ traces an arc on the unit circle in the complex $z$-plane. This arc is called the \textbf{visible region}:
+\[
+-kd + \beta \le \psi \le kd + \beta
+\]
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item For $d = \lambda/2$ and $\beta = 0$: visible region spans $-\pi \le \psi \le \pi$ (full circle).
+  \item For $d < \lambda/2$: visible region is less than a full circle — some roots in the \textbf{invisible region} do not contribute to the radiation pattern.
+  \item Placing a root \textit{inside} the visible region creates a null in the pattern. Placing a root \textit{outside} the visible region eliminates that null.
+\end{itemize}
+This allows designers to synthesize specific patterns by precisely controlling which roots lie on vs. off the visible arc.
 
 \subsection{Woodward-Lawson Method}
-The Woodward-Lawson method synthesizes a desired source pattern by superimposing several independent, orthogonal beams (beams centered at different angles, each having a $\frac{\sin(N\psi/2)}{N\sin(\psi/2)}$ shape). The excitation coefficients of the array are found by sampling the desired pattern at the center coordinates of these orthogonal beams.
+The Woodward-Lawson method synthesizes a desired source pattern by superimposing several independent, orthogonal beams (each having a $\frac{\sin(N\psi/2)}{N\sin(\psi/2)}$ shape centred at different angles). The excitation coefficients are found by sampling the desired pattern at the beam centres.
+
+\textbf{Sampling formula:} For $N$ elements, the array factor is:
+\[
+AF(\psi) = \sum_{m=-(N-1)/2}^{(N-1)/2} c_m \cdot \frac{\sin\!\left[\frac{N}{2}(\psi - \psi_m)\right]}{N\sin\!\left[\frac{1}{2}(\psi - \psi_m)\right]}
+\]
+where each beam is centred at $\psi_m = \frac{2\pi m}{N}$ and the sampling coefficients $c_m$ are found by evaluating the desired pattern $F_d(\psi)$ at those points:
+\[
+c_m = F_d(\psi_m) = F_d\!\left(\frac{2\pi m}{N}\right)
+\]
+
+\textbf{Key properties:}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item The synthesized pattern passes exactly through the desired sample values.
+  \item Between sample points, the approximation may deviate (Gibbs-like ripple for abrupt transitions).
+  \item Adding more elements $N$ increases the number of sample points and improves accuracy.
+  \item Suitable for pencil-beam, sector, flat-top, or shaped beam synthesis.
+\end{itemize}
 
 % ===============================================================================
 % MANDATORY QUICK REVISION PAGE
@@ -2075,6 +2355,8 @@ The Woodward-Lawson method synthesizes a desired source pattern by superimposing
 N-Element ULA Array Factor ($AF$) & $AF = \frac{\sin(N\psi/2)}{\sin(\psi/2)}$ \quad where $\psi = kd\cos\theta + \beta$ \\[4pt]
 Broadside Phase Shift ($\beta$) & $\beta = 0$ \\[4pt]
 End-Fire Phase Shift ($\beta$) & $\beta = \mp kd$ \quad (for $\theta = 0^\circ$ or $180^\circ$ main beam) \\[4pt]
+Broadside HPBW & $\text{HPBW} \approx \frac{0.886\lambda}{Nd}$ rad $\approx \frac{50.8^\circ\lambda}{Nd}$ \\[4pt]
+Broadside Directivity & $D \approx \frac{2Nd}{\lambda}$ \quad (uniform excitation, $d \le \lambda/2$) \\[4pt]
 Binomial Array Coefficients & $a_n = \binom{N-1}{n} = \frac{(N-1)!}{n!(N-1-n)!}$ \\[4pt]
 Planar Beam Steering Phase & $\beta_x = -k d_x \sin\theta_0 \cos\phi_0, \quad \beta_y = -k d_y \sin\theta_0 \sin\phi_0$ \\[4pt]
 Schelkunoff Complex Variable ($z$) & $z = e^{j\psi} = e^{j(kd\cos\theta + \beta)}$ \\
@@ -2149,40 +2431,68 @@ A typical smart antenna receiver consists of an antenna array, an RF downconvert
 
 \begin{tcolorbox}[tikzbox, title={Smart Antenna Receiver Block Diagram}]
 \centering
-\begin{tikzpicture}[node distance=0.35cm and 0.65cm,
-  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=1.75cm,
+\begin{tikzpicture}[
+  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=1.8cm,
     align=center, minimum height=0.85cm, font=\small,
-    rounded corners=3pt, line width=0.7pt}]
-  
-  % Antenna array
-  \node[snode] (a1) at (0, 0.8) {Ant 1};
-  \node[snode] (a2) at (0, 0.0) {Ant 2};
-  \node[snode] (a3) at (0,-0.8) {Ant N};
-  \draw[dashed, thick] (a2) -- (a3);
-  
-  % RF Downconverters
-  \node[sblock, right=0.6cm of a1] (rf1) {RF Down\\Converter};
-  \node[sblock, right=0.6cm of a3] (rf3) {RF Down\\Converter};
-  
-  % ADCs
-  \node[sblock, right=0.6cm of rf1] (adc1) {ADC};
-  \node[sblock, right=0.6cm of rf3] (adc3) {ADC};
-  
-  % DSP Processor
-  \node[draw=myred, fill=hdrred, line width=0.8pt, rounded corners=4pt, 
-        minimum height=2.8cm, text width=2.2cm, align=center, right=0.8cm of adc1, yshift=-0.8cm] (dsp) 
-        {\textbf{DSP Unit}\\ \scriptsize (DOA Estimation, Weight Update, Beamforming)};
-        
-  % Connections
-  \draw[arrow] (a1) -- (rf1);
-  \draw[arrow] (a3) -- (rf3);
-  \draw[arrow] (rf1) -- (adc1);
-  \draw[arrow] (rf3) -- (adc3);
-  \draw[arrow] (adc1) -- (dsp.150);
-  \draw[arrow] (adc3) -- (dsp.210);
-  
-  % Output
-  \draw[arrow] (dsp) -- +(1.8, 0) node[right, font=\small\bfseries] {Output};
+    rounded corners=3pt, line width=0.7pt},
+  ablock/.style={circle, draw=mypurple, fill=hdrpurple,
+    minimum size=0.72cm, font=\small, line width=0.7pt}]
+
+  % ── Row y-coordinates: evenly spaced ─────────────────────────────────────
+  % Row 1 (Ant 1) at y=1.5, Row 2 (Ant 2) at y=0, Row N at y=-1.5
+  % Dot row midway between rows 2 and N at y=-0.75
+
+  % ── Column x-coordinates ──────────────────────────────────────────────────
+  % Ant: x=0, RF: x=2.4, ADC: x=4.65, DSP: x=7.0
+
+  % ── Antenna column ────────────────────────────────────────────────────────
+  \node[ablock] (a1) at (0,  1.5) {Ant 1};
+  \node[ablock] (a2) at (0,  0.0) {Ant 2};
+  \node[ablock] (aN) at (0, -1.5) {Ant N};
+
+  % ── RF Downconverter column ───────────────────────────────────────────────
+  \node[sblock] (rf1) at (2.6,  1.5) {RF Down\\Converter};
+  \node[sblock] (rf2) at (2.6,  0.0) {RF Down\\Converter};
+  \node[sblock] (rfN) at (2.6, -1.5) {RF Down\\Converter};
+
+  % ── ADC column ────────────────────────────────────────────────────────────
+  \node[sblock] (adc1) at (4.9,  1.5) {ADC};
+  \node[sblock] (adc2) at (4.9,  0.0) {ADC};
+  \node[sblock] (adcN) at (4.9, -1.5) {ADC};
+
+  % ── DSP Unit — centred at y=0, height spans all 3 rows ────────────────────
+  \node[draw=myred, fill=hdrred, line width=0.9pt, rounded corners=5pt,
+        minimum height=3.8cm, text width=2.2cm, align=center]
+       (dsp) at (7.25, 0)
+       {\textbf{DSP Unit}\\[6pt]
+        \scriptsize DOA Estimation\\[4pt]
+        \scriptsize Weight Update\\[4pt]
+        \scriptsize Beamforming};
+
+  % ── Dot rows — centred in the gap between row 2 and row N ─────────────────
+  \node[font=\normalsize, color=mgframe] at (0,   -0.77) {$\vdots$};
+  \node[font=\normalsize, color=mgframe] at (2.6, -0.77) {$\vdots$};
+  \node[font=\normalsize, color=mgframe] at (4.9, -0.77) {$\vdots$};
+
+  % ── Connections — row 1 ───────────────────────────────────────────────────
+  \draw[arrow] (a1)   -- (rf1);
+  \draw[arrow] (rf1)  -- (adc1);
+  \draw[arrow] (adc1.east) -- ++(0.35,0) |- (dsp.155);
+
+  % ── Connections — row 2 ───────────────────────────────────────────────────
+  \draw[arrow] (a2)   -- (rf2);
+  \draw[arrow] (rf2)  -- (adc2);
+  \draw[arrow] (adc2.east) -- (dsp.west);
+
+  % ── Connections — row N ───────────────────────────────────────────────────
+  \draw[arrow] (aN)   -- (rfN);
+  \draw[arrow] (rfN)  -- (adcN);
+  \draw[arrow] (adcN.east) -- ++(0.35,0) |- (dsp.205);
+
+  % ── Output ────────────────────────────────────────────────────────────────
+  \draw[arrow, line width=1.2pt] (dsp.east) -- ++(1.4,0)
+    node[right, font=\small\bfseries\color{mydark}] {Output};
+
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -2196,6 +2506,42 @@ A typical smart antenna receiver consists of an antenna array, an RF downconvert
       \item \textbf{RLS (Recursive Least Squares):} Fast convergence, high complexity.
       \item \textbf{MUSIC / ESPRIT:} High-resolution algorithms used to find the Direction of Arrival (DOA) of incoming signals.
     \end{itemize}
+\end{itemize}
+
+\subsection{Weight Vector Formulation}
+Let the $N$-element array receive a signal. The received signal vector is:
+\[
+\mathbf{x}(t) = [x_1(t),\ x_2(t),\ \dots,\ x_N(t)]^T
+\]
+The array output is a linear combination of the received signals weighted by a complex weight vector $\mathbf{w} = [w_1, w_2, \dots, w_N]^T$:
+\[
+y(t) = \mathbf{w}^H \mathbf{x}(t) = \sum_{n=1}^{N} w_n^* x_n(t)
+\]
+where $(\cdot)^H$ denotes the Hermitian (conjugate transpose). The weights control both the amplitude and phase applied to each antenna element output.
+
+\textbf{Fixed-weight (Conventional) Beamformer:} For steering toward direction $\theta_0$, the optimal weights are the \textbf{steering vector} $\mathbf{a}(\theta_0)$:
+\[
+\mathbf{w} = \mathbf{a}(\theta_0) = [1,\ e^{j\psi},\ e^{j2\psi},\ \dots,\ e^{j(N-1)\psi}]^T, \quad \psi = kd\cos\theta_0
+\]
+This applies a phase ramp across the array to align and coherently add the signals from direction $\theta_0$.
+
+\subsection{LMS Adaptive Algorithm}
+The \textbf{Least Mean Squares (LMS)} algorithm updates the weight vector iteratively to minimize the mean square error between the array output $y(k)$ and a reference signal $d(k)$ (desired signal):
+
+\begin{tcolorbox}[formulabox, title={\textbf{LMS Weight Update Rule}}]
+\[
+e(k) = d(k) - \mathbf{w}^H(k)\,\mathbf{x}(k) \quad \text{(error signal)}
+\]
+\[
+\mathbf{w}(k+1) = \mathbf{w}(k) + 2\mu\, \mathbf{x}(k)\, e^*(k) \quad \text{(weight update)}
+\]
+where $\mu$ is the step-size parameter ($0 < \mu < \frac{1}{N \cdot P_{in}}$, $P_{in}$ = input power).
+\end{tcolorbox}
+
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Small $\mu$:} Slow convergence, low misadjustment (stable, accurate steady state).
+  \item \textbf{Large $\mu$:} Fast convergence, high misadjustment (may diverge if too large).
+  \item The LMS algorithm steers the main beam toward the desired user while automatically placing nulls in the directions of interferers — no explicit knowledge of interferer locations is needed.
 \end{itemize}
 
 \begin{tcolorbox}[tikzbox, title={Switched-Beam vs. Adaptive Array Patterns}]
@@ -2349,22 +2695,59 @@ n = \sqrt{1 - \frac{81 N}{f^2}}
 \]
 where $N$ is the electron density (electrons/$\text{m}^3$) and $f$ is the wave frequency (Hz).
 
+\textbf{Physical Interpretation:} When a sky wave enters the ionosphere at an oblique angle, successive layers of increasing electron density bend the wave progressively away from vertical (like Snell's law in optics). Eventually, at the height where $n = \cos\theta_i$, the wave is totally reflected and returns to Earth. If the frequency is too high, $n$ never equals $\cos\theta_i$ and the wave escapes into space.
+
+\subsection{Virtual Height}
+The \textbf{virtual height} ($h_{virt}$) is the apparent height from which a short pulse of radio energy appears to be reflected, assuming the wave traveled at the speed of light in free space for the entire round trip. It is always greater than the actual reflection height because the wave slows down as electron density increases.
+\[
+h_{virt} = \frac{c \cdot \Delta t}{2}
+\]
+where $\Delta t$ is the round-trip time for a vertically launched pulse.
+
+\subsection{Lowest Usable Frequency (LUF)}
+The \textbf{LUF} is the lowest frequency at which sky-wave communication is possible over a given path. Below the LUF, the D-layer absorption becomes so severe that the signal is absorbed before reaching the receiver. The LUF depends on:
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item Solar activity (higher absorption during daytime and solar maxima).
+  \item Path length and required signal level.
+  \item Transmitter power (higher power lowers the effective LUF).
+\end{itemize}
+The \textbf{Optimum Working Frequency (OWF)} is typically chosen as $85\%$ of the MUF to provide a safety margin against day-to-day variability:
+\[
+f_{OWF} \approx 0.85 \times f_{MUF}
+\]
+
 \begin{tcolorbox}[formulabox, title={\textbf{Key Sky-Wave Design Parameters}}]
 \begin{enumerate}[leftmargin=*, label=\textbf{\arabic*.}, itemsep=3pt, topsep=1pt]
   \item \textbf{Critical Frequency ($f_c$):} The highest frequency that is reflected back to Earth when launched vertically ($90^\circ$ elevation):
   \[
   f_c = 9\sqrt{N_{max}}
   \]
-  \item \textbf{Maximum Usable Frequency (MUF):} The highest frequency reflected back to Earth when launched at an oblique angle of incidence $\theta_i$:
+  where $N_{max}$ is the maximum electron density in the reflecting layer (electrons/m$^3$).
+  \item \textbf{Maximum Usable Frequency (MUF):} The highest frequency reflected back to Earth when launched at an oblique angle of incidence $\theta_i$ (measured from vertical):
   \[
   f_{MUF} = f_c \sec\theta_i = \frac{f_c}{\cos\theta_i} \quad (\text{Secant Law})
   \]
-  \item \textbf{Skip Distance ($D_{skip}$):} The minimum distance from the transmitter where a sky wave of frequency $f$ ($f > f_c$) returns to Earth:
+  For a flat Earth approximation with path length $D$ and reflection height $h$:
+  \[
+  \sec\theta_i = \sqrt{1 + \left(\frac{D}{2h}\right)^{\!2}}
+  \]
+  \item \textbf{Skip Distance ($D_{skip}$):} The minimum distance from the transmitter where a sky wave of frequency $f$ ($f > f_c$) returns to Earth. Within this distance, no sky-wave signal is received — this region is called the \textbf{skip zone}:
   \[
   D_{skip} = 2 h_{virt} \sqrt{\left(\frac{f_{MUF}}{f_c}\right)^{\!2} - 1}
   \]
+  \item \textbf{Optimum Working Frequency (OWF):}
+  \[
+  f_{OWF} \approx 0.85 \times f_{MUF}
+  \]
 \end{enumerate}
 \end{tcolorbox}
+
+\subsection{Skip Zone and Dead Zone}
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Skip Zone (Dead Zone):} The annular region around the transmitter where neither the ground wave (which has died out) nor the sky wave (which overshoots) can be received. For a sky wave of frequency $f$, the inner edge of the skip zone is at the skip distance $D_{skip}$.
+  \item \textbf{Effect of Frequency:} As frequency increases toward the MUF, the skip distance increases. As frequency decreases toward $f_c$, the skip distance decreases to zero (the wave returns almost vertically).
+  \item \textbf{Multiple Hops:} Sky waves can undergo successive reflections between the ionosphere and the Earth's surface, allowing communication over very long distances ($> 10{,}000\,\text{km}$).
+\end{itemize}
 
 % ===============================================================================
 % MANDATORY QUICK REVISION PAGE
