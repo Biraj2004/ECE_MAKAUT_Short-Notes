@@ -201,56 +201,68 @@ A typical smart antenna receiver consists of an antenna array, an RF downconvert
 
 \begin{tcolorbox}[tikzbox, title={Smart Antenna Receiver Block Diagram}]
 \centering
-\begin{tikzpicture}[node distance=0.4cm and 0.7cm,
+\begin{tikzpicture}[
   sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=1.8cm,
-    align=center, minimum height=0.9cm, font=\small,
+    align=center, minimum height=0.85cm, font=\small,
     rounded corners=3pt, line width=0.7pt},
   ablock/.style={circle, draw=mypurple, fill=hdrpurple,
-    minimum size=0.7cm, font=\small, line width=0.7pt}]
+    minimum size=0.72cm, font=\small, line width=0.7pt}]
 
-  % ── Antenna elements ──────────────────────────────────────────────────────
-  \node[ablock] (a1) at (0,  1.4) {Ant 1};
+  % ── Row y-coordinates: evenly spaced ─────────────────────────────────────
+  % Row 1 (Ant 1) at y=1.5, Row 2 (Ant 2) at y=0, Row N at y=-1.5
+  % Dot row midway between rows 2 and N at y=-0.75
+
+  % ── Column x-coordinates ──────────────────────────────────────────────────
+  % Ant: x=0, RF: x=2.4, ADC: x=4.65, DSP: x=7.0
+
+  % ── Antenna column ────────────────────────────────────────────────────────
+  \node[ablock] (a1) at (0,  1.5) {Ant 1};
   \node[ablock] (a2) at (0,  0.0) {Ant 2};
-  \node[font=\large, color=mgframe] at (0, -0.8) {$\vdots$};
-  \node[ablock] (aN) at (0, -1.6) {Ant N};
+  \node[ablock] (aN) at (0, -1.5) {Ant N};
 
-  % ── RF Downconverters ─────────────────────────────────────────────────────
-  \node[sblock, right=0.7cm of a1] (rf1) {RF Down\\Converter};
-  \node[sblock, right=0.7cm of a2] (rf2) {RF Down\\Converter};
-  \node[sblock, right=0.7cm of aN] (rfN) {RF Down\\Converter};
+  % ── RF Downconverter column ───────────────────────────────────────────────
+  \node[sblock] (rf1) at (2.6,  1.5) {RF Down\\Converter};
+  \node[sblock] (rf2) at (2.6,  0.0) {RF Down\\Converter};
+  \node[sblock] (rfN) at (2.6, -1.5) {RF Down\\Converter};
 
-  % ── ADCs ─────────────────────────────────────────────────────────────────
-  \node[sblock, right=0.6cm of rf1] (adc1) {ADC};
-  \node[sblock, right=0.6cm of rf2] (adc2) {ADC};
-  \node[sblock, right=0.6cm of rfN] (adcN) {ADC};
+  % ── ADC column ────────────────────────────────────────────────────────────
+  \node[sblock] (adc1) at (4.9,  1.5) {ADC};
+  \node[sblock] (adc2) at (4.9,  0.0) {ADC};
+  \node[sblock] (adcN) at (4.9, -1.5) {ADC};
 
-  % ── DSP Unit ──────────────────────────────────────────────────────────────
+  % ── DSP Unit — centred at y=0, height spans all 3 rows ────────────────────
   \node[draw=myred, fill=hdrred, line width=0.9pt, rounded corners=5pt,
-        minimum height=4.2cm, text width=2.3cm, align=center,
-        right=0.8cm of adc2] (dsp)
-       {\textbf{DSP Unit}\\[4pt]
-        \scriptsize DOA\\[-2pt]Estimation\\[3pt]
-        \scriptsize Weight\\[-2pt]Update\\[3pt]
-        \scriptsize Beam-\\[-2pt]forming};
+        minimum height=3.8cm, text width=2.2cm, align=center]
+       (dsp) at (7.25, 0)
+       {\textbf{DSP Unit}\\[6pt]
+        \scriptsize DOA Estimation\\[4pt]
+        \scriptsize Weight Update\\[4pt]
+        \scriptsize Beamforming};
 
-  % ── Connections ───────────────────────────────────────────────────────────
-  \draw[arrow] (a1) -- (rf1);
-  \draw[arrow] (a2) -- (rf2);
-  \draw[arrow] (aN) -- (rfN);
-  \draw[arrow] (rf1) -- (adc1);
-  \draw[arrow] (rf2) -- (adc2);
-  \draw[arrow] (rfN) -- (adcN);
-  \draw[arrow] (adc1.east) -- ++(0.4,0) |- (dsp.160);
+  % ── Dot rows — centred in the gap between row 2 and row N ─────────────────
+  \node[font=\normalsize, color=mgframe] at (0,   -0.77) {$\vdots$};
+  \node[font=\normalsize, color=mgframe] at (2.6, -0.77) {$\vdots$};
+  \node[font=\normalsize, color=mgframe] at (4.9, -0.77) {$\vdots$};
+
+  % ── Connections — row 1 ───────────────────────────────────────────────────
+  \draw[arrow] (a1)   -- (rf1);
+  \draw[arrow] (rf1)  -- (adc1);
+  \draw[arrow] (adc1.east) -- ++(0.35,0) |- (dsp.155);
+
+  % ── Connections — row 2 ───────────────────────────────────────────────────
+  \draw[arrow] (a2)   -- (rf2);
+  \draw[arrow] (rf2)  -- (adc2);
   \draw[arrow] (adc2.east) -- (dsp.west);
-  \draw[arrow] (adcN.east) -- ++(0.4,0) |- (dsp.200);
 
-  % ── Dots between rf2/adcN rows ─────────────────────────────────────────────
-  \node[font=\large, color=mgframe] at ([xshift=1.2cm]0,-0.8) {$\vdots$};
-  \node[font=\large, color=mgframe] at ([xshift=3.3cm]0,-0.8) {$\vdots$};
+  % ── Connections — row N ───────────────────────────────────────────────────
+  \draw[arrow] (aN)   -- (rfN);
+  \draw[arrow] (rfN)  -- (adcN);
+  \draw[arrow] (adcN.east) -- ++(0.35,0) |- (dsp.205);
 
-  % ── Output ───────────────────────────────────────────────────────────────
-  \draw[arrow, line width=1.2pt] (dsp.east) -- ++(1.5,0)
+  % ── Output ────────────────────────────────────────────────────────────────
+  \draw[arrow, line width=1.2pt] (dsp.east) -- ++(1.4,0)
     node[right, font=\small\bfseries\color{mydark}] {Output};
+
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -264,6 +276,42 @@ A typical smart antenna receiver consists of an antenna array, an RF downconvert
       \item \textbf{RLS (Recursive Least Squares):} Fast convergence, high complexity.
       \item \textbf{MUSIC / ESPRIT:} High-resolution algorithms used to find the Direction of Arrival (DOA) of incoming signals.
     \end{itemize}
+\end{itemize}
+
+\subsection{Weight Vector Formulation}
+Let the $N$-element array receive a signal. The received signal vector is:
+\[
+\mathbf{x}(t) = [x_1(t),\ x_2(t),\ \dots,\ x_N(t)]^T
+\]
+The array output is a linear combination of the received signals weighted by a complex weight vector $\mathbf{w} = [w_1, w_2, \dots, w_N]^T$:
+\[
+y(t) = \mathbf{w}^H \mathbf{x}(t) = \sum_{n=1}^{N} w_n^* x_n(t)
+\]
+where $(\cdot)^H$ denotes the Hermitian (conjugate transpose). The weights control both the amplitude and phase applied to each antenna element output.
+
+\textbf{Fixed-weight (Conventional) Beamformer:} For steering toward direction $\theta_0$, the optimal weights are the \textbf{steering vector} $\mathbf{a}(\theta_0)$:
+\[
+\mathbf{w} = \mathbf{a}(\theta_0) = [1,\ e^{j\psi},\ e^{j2\psi},\ \dots,\ e^{j(N-1)\psi}]^T, \quad \psi = kd\cos\theta_0
+\]
+This applies a phase ramp across the array to align and coherently add the signals from direction $\theta_0$.
+
+\subsection{LMS Adaptive Algorithm}
+The \textbf{Least Mean Squares (LMS)} algorithm updates the weight vector iteratively to minimize the mean square error between the array output $y(k)$ and a reference signal $d(k)$ (desired signal):
+
+\begin{tcolorbox}[formulabox, title={\textbf{LMS Weight Update Rule}}]
+\[
+e(k) = d(k) - \mathbf{w}^H(k)\,\mathbf{x}(k) \quad \text{(error signal)}
+\]
+\[
+\mathbf{w}(k+1) = \mathbf{w}(k) + 2\mu\, \mathbf{x}(k)\, e^*(k) \quad \text{(weight update)}
+\]
+where $\mu$ is the step-size parameter ($0 < \mu < \frac{1}{N \cdot P_{in}}$, $P_{in}$ = input power).
+\end{tcolorbox}
+
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Small $\mu$:} Slow convergence, low misadjustment (stable, accurate steady state).
+  \item \textbf{Large $\mu$:} Fast convergence, high misadjustment (may diverge if too large).
+  \item The LMS algorithm steers the main beam toward the desired user while automatically placing nulls in the directions of interferers — no explicit knowledge of interferer locations is needed.
 \end{itemize}
 
 \begin{tcolorbox}[tikzbox, title={Switched-Beam vs. Adaptive Array Patterns}]

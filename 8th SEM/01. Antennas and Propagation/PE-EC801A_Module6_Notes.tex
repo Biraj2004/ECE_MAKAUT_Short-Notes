@@ -292,6 +292,19 @@ T_m(z) = \cosh(m \cosh^{-1} z) \quad (|z| > 1)
 \]
 This method optimizes the trade-off by ensuring that all sidelobes are at the exact same specified level (e.g., $-20\,\text{dB}$ or $-30\,\text{dB}$).
 
+\textbf{Design Procedure:}
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*, itemsep=3pt]
+  \item Specify the number of elements $N$ (array order $m = N-1$) and the desired sidelobe level ratio $R$ (e.g., $R = 26.3$ for $-20\,\text{dB}$ SLL; $R = 10^{SLL_{dB}/20}$).
+  \item Compute the parameter $z_0$ that maps the main lobe maximum to $T_m(z_0)$:
+  \[
+  z_0 = \cosh\!\left[ \frac{1}{m} \cosh^{-1}(R) \right]
+  \]
+  \item Substitute $z = z_0 \cos\!\left(\frac{\psi}{2}\right)$ into $T_m(z)$ to obtain the array polynomial. The AF takes the form $AF(\psi) = T_m\!\left(z_0 \cos\frac{\psi}{2}\right)$.
+  \item Extract the excitation coefficients $a_n$ by expanding the Chebyshev polynomial in powers of $\cos^n\!\left(\frac{\psi}{2}\right)$.
+\end{enumerate}
+
+\textbf{Key result:} For a 5-element array with $-20\,\text{dB}$ SLL, the excitation amplitudes are approximately $1 : 2.41 : 3.14 : 2.41 : 1$ (compare to binomial $1:4:6:4:1$ — Dolph gives a narrower beam for the same SLL).
+
 % ===============================================================================
 \section{Extension to Planar Arrays}
 % ===============================================================================
@@ -328,10 +341,38 @@ Schelkunoff represented the array factor of an $N$-element linear array as a pol
 \[
 AF = \sum_{n=0}^{N-1} a_n z^n = a_{N-1} (z - z_1)(z - z_2) \dots (z - z_{N-1})
 \]
-where $z_i$ are the roots (zeros) of the polynomial. Since $z$ lies on the unit circle ($|z| = 1$), the nulls in the radiation pattern correspond to the roots that lie on the unit circle. This allows designers to synthesize specific radiation pattern shapes by selecting root locations on the complex plane.
+where $z_i$ are the roots (zeros) of the polynomial. Since $z$ lies on the unit circle ($|z| = 1$), the nulls in the radiation pattern correspond to the roots that lie on the unit circle.
+
+\textbf{Visible Region:} As $\theta$ varies from $0^\circ$ to $180^\circ$, $\psi = kd\cos\theta + \beta$ traces an arc on the unit circle in the complex $z$-plane. This arc is called the \textbf{visible region}:
+\[
+-kd + \beta \le \psi \le kd + \beta
+\]
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item For $d = \lambda/2$ and $\beta = 0$: visible region spans $-\pi \le \psi \le \pi$ (full circle).
+  \item For $d < \lambda/2$: visible region is less than a full circle — some roots in the \textbf{invisible region} do not contribute to the radiation pattern.
+  \item Placing a root \textit{inside} the visible region creates a null in the pattern. Placing a root \textit{outside} the visible region eliminates that null.
+\end{itemize}
+This allows designers to synthesize specific patterns by precisely controlling which roots lie on vs. off the visible arc.
 
 \subsection{Woodward-Lawson Method}
-The Woodward-Lawson method synthesizes a desired source pattern by superimposing several independent, orthogonal beams (beams centered at different angles, each having a $\frac{\sin(N\psi/2)}{N\sin(\psi/2)}$ shape). The excitation coefficients of the array are found by sampling the desired pattern at the center coordinates of these orthogonal beams.
+The Woodward-Lawson method synthesizes a desired source pattern by superimposing several independent, orthogonal beams (each having a $\frac{\sin(N\psi/2)}{N\sin(\psi/2)}$ shape centred at different angles). The excitation coefficients are found by sampling the desired pattern at the beam centres.
+
+\textbf{Sampling formula:} For $N$ elements, the array factor is:
+\[
+AF(\psi) = \sum_{m=-(N-1)/2}^{(N-1)/2} c_m \cdot \frac{\sin\!\left[\frac{N}{2}(\psi - \psi_m)\right]}{N\sin\!\left[\frac{1}{2}(\psi - \psi_m)\right]}
+\]
+where each beam is centred at $\psi_m = \frac{2\pi m}{N}$ and the sampling coefficients $c_m$ are found by evaluating the desired pattern $F_d(\psi)$ at those points:
+\[
+c_m = F_d(\psi_m) = F_d\!\left(\frac{2\pi m}{N}\right)
+\]
+
+\textbf{Key properties:}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item The synthesized pattern passes exactly through the desired sample values.
+  \item Between sample points, the approximation may deviate (Gibbs-like ripple for abrupt transitions).
+  \item Adding more elements $N$ increases the number of sample points and improves accuracy.
+  \item Suitable for pencil-beam, sector, flat-top, or shaped beam synthesis.
+\end{itemize}
 
 % ===============================================================================
 % MANDATORY QUICK REVISION PAGE
