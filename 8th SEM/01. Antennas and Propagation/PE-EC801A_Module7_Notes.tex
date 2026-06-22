@@ -201,40 +201,56 @@ A typical smart antenna receiver consists of an antenna array, an RF downconvert
 
 \begin{tcolorbox}[tikzbox, title={Smart Antenna Receiver Block Diagram}]
 \centering
-\begin{tikzpicture}[node distance=0.35cm and 0.65cm,
-  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=1.75cm,
-    align=center, minimum height=0.85cm, font=\small,
-    rounded corners=3pt, line width=0.7pt}]
-  
-  % Antenna array
-  \node[snode] (a1) at (0, 0.8) {Ant 1};
-  \node[snode] (a2) at (0, 0.0) {Ant 2};
-  \node[snode] (a3) at (0,-0.8) {Ant N};
-  \draw[dashed, thick] (a2) -- (a3);
-  
-  % RF Downconverters
-  \node[sblock, right=0.6cm of a1] (rf1) {RF Down\\Converter};
-  \node[sblock, right=0.6cm of a3] (rf3) {RF Down\\Converter};
-  
-  % ADCs
+\begin{tikzpicture}[node distance=0.4cm and 0.7cm,
+  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=1.8cm,
+    align=center, minimum height=0.9cm, font=\small,
+    rounded corners=3pt, line width=0.7pt},
+  ablock/.style={circle, draw=mypurple, fill=hdrpurple,
+    minimum size=0.7cm, font=\small, line width=0.7pt}]
+
+  % ── Antenna elements ──────────────────────────────────────────────────────
+  \node[ablock] (a1) at (0,  1.4) {Ant 1};
+  \node[ablock] (a2) at (0,  0.0) {Ant 2};
+  \node[font=\large, color=mgframe] at (0, -0.8) {$\vdots$};
+  \node[ablock] (aN) at (0, -1.6) {Ant N};
+
+  % ── RF Downconverters ─────────────────────────────────────────────────────
+  \node[sblock, right=0.7cm of a1] (rf1) {RF Down\\Converter};
+  \node[sblock, right=0.7cm of a2] (rf2) {RF Down\\Converter};
+  \node[sblock, right=0.7cm of aN] (rfN) {RF Down\\Converter};
+
+  % ── ADCs ─────────────────────────────────────────────────────────────────
   \node[sblock, right=0.6cm of rf1] (adc1) {ADC};
-  \node[sblock, right=0.6cm of rf3] (adc3) {ADC};
-  
-  % DSP Processor
-  \node[draw=myred, fill=hdrred, line width=0.8pt, rounded corners=4pt, 
-        minimum height=2.8cm, text width=2.2cm, align=center, right=0.8cm of adc1, yshift=-0.8cm] (dsp) 
-        {\textbf{DSP Unit}\\ \scriptsize (DOA Estimation, Weight Update, Beamforming)};
-        
-  % Connections
+  \node[sblock, right=0.6cm of rf2] (adc2) {ADC};
+  \node[sblock, right=0.6cm of rfN] (adcN) {ADC};
+
+  % ── DSP Unit ──────────────────────────────────────────────────────────────
+  \node[draw=myred, fill=hdrred, line width=0.9pt, rounded corners=5pt,
+        minimum height=4.2cm, text width=2.3cm, align=center,
+        right=0.8cm of adc2] (dsp)
+       {\textbf{DSP Unit}\\[4pt]
+        \scriptsize DOA\\[-2pt]Estimation\\[3pt]
+        \scriptsize Weight\\[-2pt]Update\\[3pt]
+        \scriptsize Beam-\\[-2pt]forming};
+
+  % ── Connections ───────────────────────────────────────────────────────────
   \draw[arrow] (a1) -- (rf1);
-  \draw[arrow] (a3) -- (rf3);
+  \draw[arrow] (a2) -- (rf2);
+  \draw[arrow] (aN) -- (rfN);
   \draw[arrow] (rf1) -- (adc1);
-  \draw[arrow] (rf3) -- (adc3);
-  \draw[arrow] (adc1) -- (dsp.150);
-  \draw[arrow] (adc3) -- (dsp.210);
-  
-  % Output
-  \draw[arrow] (dsp) -- +(1.8, 0) node[right, font=\small\bfseries] {Output};
+  \draw[arrow] (rf2) -- (adc2);
+  \draw[arrow] (rfN) -- (adcN);
+  \draw[arrow] (adc1.east) -- ++(0.4,0) |- (dsp.160);
+  \draw[arrow] (adc2.east) -- (dsp.west);
+  \draw[arrow] (adcN.east) -- ++(0.4,0) |- (dsp.200);
+
+  % ── Dots between rf2/adcN rows ─────────────────────────────────────────────
+  \node[font=\large, color=mgframe] at ([xshift=1.2cm]0,-0.8) {$\vdots$};
+  \node[font=\large, color=mgframe] at ([xshift=3.3cm]0,-0.8) {$\vdots$};
+
+  % ── Output ───────────────────────────────────────────────────────────────
+  \draw[arrow, line width=1.2pt] (dsp.east) -- ++(1.5,0)
+    node[right, font=\small\bfseries\color{mydark}] {Output};
 \end{tikzpicture}
 \end{tcolorbox}
 
