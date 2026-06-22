@@ -397,24 +397,106 @@ The design parameters are: substrate height $h$, dielectric constant $\epsilon_r
 \subsection{Circular Patch Antenna Design}
 For a circular patch of radius $a$ on a substrate of height $h$, the dominant resonant mode is $TM^z_{110}$.
 
-\textbf{Resonant Mode:} The superscript $z$ indicates that the $z$-component of the magnetic vector potential $A_z$ is used. The subscripts $(1,1,0)$ denote: 1 variation in $\rho$ (radial), 1 variation in $\phi$ (azimuthal), and 0 variation in $z$. This mode produces broadside radiation (maximum perpendicular to the patch plane) and is the dominant mode for most designs. The constant $1.8412$ is the first zero of the derivative of the Bessel function $J_1'(x) = 0$.
+\subsubsection*{Resonant Modes and Radiation Mechanism}
+The circular patch behaves as a \textbf{resonant cavity} bounded by:
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Top and bottom:} Perfect Electric Conductor (PEC) walls — the patch and ground plane.
+  \item \textbf{Side boundary:} Perfect Magnetic Conductor (PMC) wall (fringing field approximation).
+\end{itemize}
+The resonant modes are designated $TM^z_{nmp}$ where:
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item $n$ = number of full-period variations in $\phi$ (azimuthal direction)
+  \item $m$ = number of zeros of $J_n'(\cdot)$ in the radial direction ($m = 1, 2, 3, \dots$)
+  \item $p$ = number of variations in $z$ (always $0$ for thin patches since $h \ll \lambda$)
+\end{itemize}
 
-\textbf{Effect of Fringing Fields:} Just as in the rectangular patch, the fringing fields at the circular patch edge make it electrically larger than its physical radius $a$. The effective radius $a_e > a$ accounts for this extension.
+The \textbf{dominant mode} $TM^z_{110}$ has:
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item One full-period azimuthal variation ($n=1$) and the first radial maximum ($m=1$).
+  \item The constant $1.8412$ is the first root of $J_1'(\chi_{11}) = 0$ (derivative of first-order Bessel function), which defines the resonance condition.
+  \item \textbf{Broadside radiation pattern} — maximum gain perpendicular to the patch surface ($\theta = 0^\circ$).
+  \item \textbf{Linear polarization} — the $E$-field across the radiating edge is linearly polarized.
+\end{itemize}
+
+\subsubsection*{Higher-Order Modes}
+Other useful modes include:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item $TM^z_{010}$: Omnidirectional (monopole-like) radiation; used for low-profile omnidirectional antennas.
+  \item $TM^z_{210}$: Figure-8 pattern; used for circular polarization when combined with $TM^z_{110}$.
+  \item \textbf{Dual-Band Operation:} By stacking two circular patches of different radii on separate substrate layers, two resonant frequencies can be achieved independently.
+\end{itemize}
+
+\subsubsection*{Circular Polarization from a Circular Patch}
+Circular polarization (CP) is an important feature achievable with circular patches:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Single feed CP:} A slight perturbation (small notch or truncation of the circular boundary) splits the degenerate $TM^z_{110}$ mode into two orthogonal modes with a $90^\circ$ phase separation. CP results when the two modes are excited with equal amplitude and $90^\circ$ phase shift.
+  \item \textbf{Two-feed CP:} Two coaxial probes placed at $90^\circ$ apart on the patch perimeter, fed with equal amplitude and a $90^\circ$ hybrid coupler, produce clean CP over a wider bandwidth.
+\end{itemize}
+
+\subsubsection*{Fringing Fields and Effective Radius}
+The fringing fields at the patch edge extend the effective electrical radius beyond the physical radius:
+\[
+a_e = a + \Delta a \quad \text{where} \quad \Delta a = a\left[\sqrt{1 + \frac{2h}{\pi\epsilon_r a}\left(\ln\frac{\pi a}{2h} + 1.7726\right)} - 1\right]
+\]
+Typically $\Delta a / a \approx 1\%$–$5\%$ for standard substrates. A higher $\epsilon_r$ or thinner substrate reduces the fringing correction.
+
+\subsubsection*{Substrate Selection Tradeoffs}
+
+\par\noindent
+{\renewcommand{\arraystretch}{1.55}
+\begin{tabularx}{\linewidth}{|B{3.0cm}|Y|Y|}
+\hline
+\textbf{Parameter} & \textbf{High $\epsilon_r$ (e.g., 10)} & \textbf{Low $\epsilon_r$ (e.g., 2.2)} \\
+\hline
+Patch Size & Smaller (compact) & Larger \\
+\hline
+Bandwidth & Narrower & Wider \\
+\hline
+Radiation Efficiency & Lower (more stored energy) & Higher \\
+\hline
+Surface Wave Loss & Higher & Lower \\
+\hline
+Typical Use & Miniaturised antenna-on-chip & High-performance arrays \\
+\hline
+\end{tabularx}}
 
 \textbf{Design Procedure:}
 \begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*, itemsep=3pt]
-  \item Choose substrate parameters: $\epsilon_r$ and $h$ based on availability and bandwidth requirements.
-  \item Calculate the intermediate parameter $F$ from the desired resonant frequency $f_r$.
-  \item Solve for physical radius $a$ (which already includes the first fringing correction).
-  \item Calculate the effective radius $a_e$ for verification.
-  \item Verify the resonant frequency using $(f_r)_{110}$.
+  \item Specify desired resonant frequency $f_r$, substrate $\epsilon_r$ and thickness $h$.
+  \item Compute intermediate parameter $F$ (an estimate of the effective radius assuming no fringing).
+  \item Solve for physical radius $a$ by applying the fringing correction factor.
+  \item Compute effective radius $a_e$.
+  \item Verify by back-calculating $(f_r)_{110}$ — should match the target within $1\%$.
+  \item Choose feed position (coaxial probe offset from centre) to match $50\,\Omega$.
 \end{enumerate}
 
-\textbf{Typical values:} For a circular patch at $2.4\,\text{GHz}$ on FR-4 substrate ($\epsilon_r = 4.4$, $h = 1.6\,\text{mm}$):
-\begin{itemize}[leftmargin=*, itemsep=2pt]
-  \item $F \approx 17.5\,\text{mm}$, $a \approx 16.8\,\text{mm}$, $a_e \approx 17.2\,\text{mm}$
-  \item Bandwidth $\approx 1\%$–$3\%$, similar to rectangular patch
-\end{itemize}
+\textbf{Typical example:} Circular patch at $f_r = 2.4\,\text{GHz}$, FR-4 substrate ($\epsilon_r = 4.4$, $h = 1.6\,\text{mm}$):
+$F \approx 17.5\,\text{mm}$, $a \approx 16.8\,\text{mm}$, $a_e \approx 17.2\,\text{mm}$.
+Bandwidth $\approx 1\%$–$3\%$, directivity $\approx 6$–$7\,\text{dBi}$.
+
+\subsubsection*{Comparison: Circular vs. Rectangular Patch}
+
+\par\noindent
+{\renewcommand{\arraystretch}{1.55}
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Property} & \textbf{Rectangular Patch} & \textbf{Circular Patch} \\
+\hline
+Shape & Rectangular ($W \times L$) & Circular (radius $a$) \\
+\hline
+Resonant parameter & Length $L \approx \lambda/(2\sqrt{\epsilon_{reff}})$ & Radius $a$ from Bessel zero \\
+\hline
+Dominant mode & $TM^x_{100}$ & $TM^z_{110}$ \\
+\hline
+Bandwidth & $\approx 1\%$–$5\%$ & $\approx 1\%$–$3\%$ (slightly narrower) \\
+\hline
+Circular Polarization & Possible with square patch + notch & Easier — natural symmetry aids CP \\
+\hline
+Compactness & Larger footprint & More compact (round shape) \\
+\hline
+Design Complexity & Simpler formulas & Slightly more involved (Bessel functions) \\
+\hline
+\end{tabularx}}
 
 \begin{tcolorbox}[formulabox, title={\textbf{Circular Patch Design Equations}}]
 The physical radius $a$ is calculated as:
