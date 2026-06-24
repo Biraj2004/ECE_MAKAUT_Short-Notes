@@ -9,7 +9,7 @@
 
 This is a LaTeX note-writing project for **MAKAUT B.Tech ECE (2023–27)** by Biraj Sarkar (CGEC).
 
-The goal is exam-ready, module-wise PDF notes for every subject across all 8 semesters. Currently **6th SEM and 7th SEM are complete**. Earlier semesters (1st–5th) are planned but empty. 8th is future work.
+The goal is exam-ready, module-wise PDF notes for every subject across all 8 semesters. Currently **6th SEM, 7th SEM and portions of 8th SEM are complete**. Earlier semesters (1st–5th) are planned but empty.
 
 Each subject is broken into modules matching the MAKAUT syllabus. Every module is a **self-contained `.tex` file** that compiles to a PDF. A combined PDF per subject is also generated automatically.
 
@@ -374,6 +374,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | Subject | Modules | Module PDFs | Combined PDF | Pages |
 |---|---|---|---|---|
 | PE-EC801A Antennas and Propagation | 7 | ✅ All compiled | `PE-EC801A_Antennas_and_Propagation.pdf` | 51 |
+| PE-EC801C Error Correcting Codes | 5 | ✅ All compiled | `PE-EC801C_Error_Correcting_Codes.pdf` | 49 |
 
 **1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
-**8th SEM:** Antennas and Propagation (PE-EC801A) is complete (7 modules + combined PDF).
+**8th SEM:** Antennas and Propagation (PE-EC801A) and Error Correcting Codes (PE-EC801C) are complete.

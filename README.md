@@ -25,7 +25,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
 | 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (10 modules), OE-EC704C Entrepreneurship (4 modules), OE-EC704B Optimization Technique (6 modules) |
-| 8th SEM | ✅ Complete | PE-EC801A Antennas and Propagation (7 modules + combined PDF) |
+| 8th SEM | ✅ Complete | PE-EC801A Antennas and Propagation (7 modules + combined PDF), PE-EC801C Error Correcting Codes (5 modules + combined PDF) |
 
 ---
 
@@ -343,6 +343,17 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC801A_Module7_Notes.pdf` | Smart Antennas and Radio Wave Propagation: Smart antenna concept, fixed-weight and adaptive beamforming (LMS/RLS/MUSIC), ground wave, space wave (LOS, duct propagation), sky wave (ionospheric layers D/E/F1/F2), critical frequency, MUF (Secant Law), virtual height, skip distance, LUF, OWF. |
 | `PE-EC801A_Antennas_and_Propagation.pdf` | **Combined** — all 7 modules, 51 pages |
 
+### PE-EC801C — Error Correcting Codes
+
+| File | Topics |
+|---|---|
+| `PE-EC801C_Module1_Notes.pdf` | Linear Block Codes: Systematic codes, Generator matrix $G$ and parity check matrix $H$, BSC channel and ML decoding rule, syndrome decoding, standard array layout, Hamming codes, weight enumerator polynomial, MacWilliams identities, perfect codes (Hamming, Golay). |
+| `PE-EC801C_Module2_Notes.pdf` | Galois Fields and Cyclic Codes: Finite fields (GF($2^m$)), groups, rings, fields, extensions, primitive elements, minimal polynomials, factorization of $X^n-1$, Cyclic codes definition, Systematic encoding using shift-registers, syndrome calculator circuits. |
+| `PE-EC801C_Module3_Notes.pdf` | BCH, Reed-Solomon and Special Codes: BCH codes definition and generator polynomial lcm construction, idempotents, Mattson-Solomon polynomials, Reed-Solomon codes, Justeen codes, MDS codes and Singleton bound, Alterant codes, Goppa codes. |
+| `PE-EC801C_Module4_Notes.pdf` | Decoding of BCH and RS Codes: Decoding pipeline, syndrome polynomial, Key Equation, Berlekamp-Massey algorithm, Massey's FSR synthesis model, Chien search, Forney's algorithm for error values, formal derivative in binary fields. |
+| `PE-EC801C_Module5_Notes.pdf` | Convolutional Codes \& Decoding: Convolutional encoders, constraint length $K$, code rate, State/Tree/Trellis diagrams, free distance $d_{free}$, catastrophic error propagation, Viterbi decoding algorithm (ACS, survivor paths, traceback), sequential decoding (Wozencraft, Fano, Stack algorithm). |
+| `PE-EC801C_Error_Correcting_Codes.pdf` | **Combined** — all 5 modules, 49 pages |
+
 ---
 
 ## Repository structure
@@ -495,12 +506,18 @@ ECE_MAKAUT_Short-Notes/
 │   │   └── OE-EC704B_Optimization_Technique.pdf
 │   └── sem7.pdf
 ├── 8th SEM/                        # Complete
-│   └── 01. Antennas and Propagation/
-│       ├── PE-EC801A_Module1_Notes.tex / .pdf
+│   ├── 01. Antennas and Propagation/
+│   │   ├── PE-EC801A_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC801A_Module7_Notes.tex / .pdf
+│   │   ├── PE-EC801A_Combined_Notes.tex
+│   │   └── PE-EC801A_Antennas_and_Propagation.pdf
+│   └── 03. Error Correcting Codes/
+│       ├── PE-EC801C_Module1_Notes.tex / .pdf
 │       ├── ...
-│       ├── PE-EC801A_Module7_Notes.tex / .pdf
-│       ├── PE-EC801A_Combined_Notes.tex
-│       └── PE-EC801A_Antennas_and_Propagation.pdf
+│       ├── PE-EC801C_Module5_Notes.tex / .pdf
+│       ├── PE-EC801C_Combined_Notes.tex
+│       └── PE-EC801C_Error_Correcting_Codes.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject
 ├── Notes_Build_Guide.md            # Full authoring guide & style spec
