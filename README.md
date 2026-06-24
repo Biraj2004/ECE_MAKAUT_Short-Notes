@@ -25,7 +25,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
 | 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (10 modules), OE-EC704C Entrepreneurship (4 modules), OE-EC704B Optimization Technique (6 modules) |
-| 8th SEM | ✅ Complete | PE-EC801A Antennas and Propagation (7 modules + combined PDF), PE-EC801C Error Correcting Codes (5 modules + combined PDF) |
+| 8th SEM | ✅ Complete | PE-EC801A Antennas and Propagation (7 modules + combined PDF), PE-EC801B Fiber Optic Communication (5 modules + combined PDF), PE-EC801C Error Correcting Codes (5 modules + combined PDF) |
 
 ---
 
@@ -341,7 +341,18 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC801A_Module5_Notes.pdf` | Microstrip Antennas: Basic characteristics, fringing fields, all 4 feeding methods (microstrip, coaxial, aperture-coupled, proximity-coupled), transmission line model, cavity model, full-wave analysis, rectangular and circular patch design equations. |
 | `PE-EC801A_Module6_Notes.pdf` | Antenna Arrays: Two-element and N-element ULA, broadside and end-fire arrays, non-uniform arrays (Binomial and Dolph-Tschebyscheff), planar arrays with 3D beam steering, Schelkunoff polynomial method, Woodward-Lawson synthesis. |
 | `PE-EC801A_Module7_Notes.pdf` | Smart Antennas and Radio Wave Propagation: Smart antenna concept, fixed-weight and adaptive beamforming (LMS/RLS/MUSIC), ground wave, space wave (LOS, duct propagation), sky wave (ionospheric layers D/E/F1/F2), critical frequency, MUF (Secant Law), virtual height, skip distance, LUF, OWF. |
-| `PE-EC801A_Antennas_and_Propagation.pdf` | **Combined** — all 7 modules, 51 pages |
+| `PE-EC801A_Antennas_and_Propagation.pdf` | **Combined** — all 7 modules, 58 pages |
+
+### PE-EC801B — Fiber Optic Communication
+
+| File | Topics |
+|---|---|
+| `PE-EC801B_Module1_Notes.pdf` | Introduction and Wave Guiding: Vector nature of light, electromagnetic wave fundamentals, propagation of light (reflection, refraction, Snell's law, TIR), ray model (acceptance angle, numerical aperture, meridional and skew rays), wave model (modes, normalized frequency/V-number, step-index modal analysis, characteristic equation, hybrid and LP modes), classification of fibers (SMF, MMSI, MMGI comparison). |
+| `PE-EC801B_Module2_Notes.pdf` | Signal Degradation, Fabrication, and Measurement: Attenuation (absorption, Rayleigh/Mie scattering, macro/microbending losses), dispersion (modal, chromatic/intramodal, waveguide, PMD), fabrication methods (MCVD, OVD, VAD, double-crucible), measurements (cutback attenuation, dispersion, OTDR principle and trace analysis). |
+| `PE-EC801B_Module3_Notes.pdf` | Sources, Detectors, and Link Design: Optical sources (LED structures, Laser Diode threshold condition, rate equations, source-to-fiber coupling), photodetectors (PIN and APD working, quantum efficiency, responsivity, multiplication factor, noise sources, receiver sensitivity), optical link design (power budget, rise-time budget, BER, Q-factor, quantum limit, power penalties). |
+| `PE-EC801B_Module4_Notes.pdf` | Optical Switches and Amplifiers: Optical switches (performance metrics, coupled-mode analysis of directional couplers, coupling length), Mach-Zehnder Modulators (MZM), optical amplifiers (EDFA working, gain spectrum, pumping configurations, Raman amplifier, SRS, distributed vs. lumped, EDFA vs. Raman comparison). |
+| `PE-EC801B_Module5_Notes.pdf` | WDM Networks and Nonlinear Effects: WDM and DWDM systems, WDM components (multiplexers, demultiplexers, AWG, FBG, circulators), WDM networks (optical cross-connects (OXC), protection paths), nonlinear effects (SPM, XPM, FWM, SBS, SRS), group velocity dispersion (GVD), soliton-based communication. |
+| `PE-EC801B_Fiber_Optic_Communication.pdf` | **Combined** — all 5 modules, 46 pages |
 
 ### PE-EC801C — Error Correcting Codes
 
@@ -512,6 +523,12 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── PE-EC801A_Module7_Notes.tex / .pdf
 │   │   ├── PE-EC801A_Combined_Notes.tex
 │   │   └── PE-EC801A_Antennas_and_Propagation.pdf
+│   ├── 02. Fiber Optic Communication/
+│   │   ├── PE-EC801B_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC801B_Module5_Notes.tex / .pdf
+│   │   ├── PE-EC801B_Combined_Notes.tex
+│   │   └── PE-EC801B_Fiber_Optic_Communication.pdf
 │   └── 03. Error Correcting Codes/
 │       ├── PE-EC801C_Module1_Notes.tex / .pdf
 │       ├── ...
