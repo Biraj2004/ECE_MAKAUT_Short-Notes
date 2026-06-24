@@ -25,7 +25,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
 | 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (10 modules), OE-EC704C Entrepreneurship (4 modules), OE-EC704B Optimization Technique (6 modules) |
-| 8th SEM | ✅ Complete | PE-EC801A Antennas and Propagation (7 modules + combined PDF), PE-EC801B Fiber Optic Communication (5 modules + combined PDF), PE-EC801C Error Correcting Codes (5 modules + combined PDF) |
+| 8th SEM | ✅ Complete | PE-EC801A Antennas and Propagation (7 modules + combined PDF), PE-EC801B Fiber Optic Communication (5 modules + combined PDF), PE-EC801C Error Correcting Codes (5 modules + combined PDF), PE-EC802A Mixed Signal Design (5 modules + combined PDF) |
 
 ---
 
@@ -365,6 +365,17 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC801C_Module5_Notes.pdf` | Convolutional Codes \& Decoding: Convolutional encoders, constraint length $K$, code rate, State/Tree/Trellis diagrams, free distance $d_{free}$, catastrophic error propagation, Viterbi decoding algorithm (ACS, survivor paths, traceback), sequential decoding (Wozencraft, Fano, Stack algorithm). |
 | `PE-EC801C_Error_Correcting_Codes.pdf` | **Combined** — all 5 modules, 49 pages |
 
+### PE-EC802A — Mixed Signal Design
+
+| File | Topics |
+|---|---|
+| `PE-EC802A_Module1_Notes.pdf` | Sampling and Aliasing: Sampling theorem, Nyquist rate, anti-aliasing filter, signal reconstruction, Butterworth and Chebyshev filters, Sallen-Key second-order low-pass active filter, Tow-Thomas biquad, active Gm-C filters and tuning, Z-Transform and ROC, Bilinear Transformation (BLT) and frequency warping. |
+| `PE-EC802A_Module2_Notes.pdf` | Switched-Capacitor Filters: Switched-Capacitor (SC) resistor equivalence derivation, non-overlapping clocks, MOS switch non-idealities (charge injection, clock feedthrough, kT/C thermal noise), stray-insensitive integrators (delaying/non-delaying), Fleischer-Laker biquads. |
+| `PE-EC802A_Module3_Notes.pdf` | Data Converters: Static metrics (DNL and INL, missing codes), quantization error power derivation ($\Delta^2/12$), SQNR formula, Flash ADC, Successive Approximation Register (SAR) ADC, Dual-slope integrator ADC, Delta-Sigma ($\Delta\Sigma$) modulator (oversampling, noise shaping), R-2R ladder DAC, current-steering DAC. |
+| `PE-EC802A_Module4_Notes.pdf` | Layout \& Signaling: Mixed-signal layout issues, substrate noise coupling, guard rings (p+ and n+), power supply noise and ground bounce, device matching (systematic vs. random, common-centroid matching for capacitors), single-ended vs. differential signaling, Low-Voltage Differential Signaling (LVDS) transceivers. |
+| `PE-EC802A_Module5_Notes.pdf` | PLLs \& DLLs: Phase-Locked Loops (PLL) components (PFD, CP, Loop Filter, VCO, Feedback Divider), mathematical loop dynamics derivation for Type-II CP-PLL, Delay-Locked Loops (DLL) architecture, stability vs. PLL, jitter accumulation, Digital PLL (DPLL) and All-Digital PLL (ADPLL), frequency synthesizers (integer-N and fractional-N). |
+| `PE-EC802A_Mixed_Signal_Design.pdf` | **Combined** — all 5 modules, 35 pages |
+
 ---
 
 ## Repository structure
@@ -529,12 +540,18 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── PE-EC801B_Module5_Notes.tex / .pdf
 │   │   ├── PE-EC801B_Combined_Notes.tex
 │   │   └── PE-EC801B_Fiber_Optic_Communication.pdf
-│   └── 03. Error Correcting Codes/
-│       ├── PE-EC801C_Module1_Notes.tex / .pdf
+│   ├── 03. Error Correcting Codes/
+│   │   ├── PE-EC801C_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC801C_Module5_Notes.tex / .pdf
+│   │   ├── PE-EC801C_Combined_Notes.tex
+│   │   └── PE-EC801C_Error_Correcting_Codes.pdf
+│   └── 04. Mixed Signal Design/
+│       ├── PE-EC802A_Module1_Notes.tex / .pdf
 │       ├── ...
-│       ├── PE-EC801C_Module5_Notes.tex / .pdf
-│       ├── PE-EC801C_Combined_Notes.tex
-│       └── PE-EC801C_Error_Correcting_Codes.pdf
+│       ├── PE-EC802A_Module5_Notes.tex / .pdf
+│       ├── PE-EC802A_Combined_Notes.tex
+│       └── PE-EC802A_Mixed_Signal_Design.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject
 ├── Notes_Build_Guide.md            # Full authoring guide & style spec

@@ -226,7 +226,8 @@ foreach ($folder in $subjectFolders) {
 \usepackage{array}
 \usepackage{amsmath}
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns}
+\usepackage[american]{circuitikz}
 \usepackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
 \usepackage{hyperref}
