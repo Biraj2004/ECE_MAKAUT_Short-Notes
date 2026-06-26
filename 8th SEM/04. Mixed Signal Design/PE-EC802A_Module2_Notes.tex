@@ -169,6 +169,55 @@
 A \textbf{Switched-Capacitor (SC) circuit} is a discrete-time signal processing circuit that implements resistors by rapidly switching charge back and forth between capacitors using non-overlapping clock phases. SC circuits are highly preferred in CMOS technology because precise on-chip resistors are difficult to fabricate, whereas capacitor ratios can be matched with extremely high accuracy (up to $0.1\%$).
 \end{tcolorbox}
 
+\subsection{Switched-Capacitor Filter Architectures}
+A practical SC biquad (second-order section) is built using two SC integrators in a feedback loop. The \textbf{Fleischer-Laker biquad} is the standard SC biquad implementing LP, HP, and BP outputs simultaneously.
+
+\begin{tcolorbox}[tikzbox, title={Fleischer-Laker SC Biquad Block Structure}]
+\centering
+\begin{tikzpicture}[scale=0.88, transform shape]
+  % Two SC integrator blocks
+  \node[block, text width=2.0cm] (int1) at (1.5, 0) {SC Integrator 1\\ (Non-Inv.)};
+  \node[block, text width=2.0cm] (int2) at (5.0, 0) {SC Integrator 2\\ (Inv.)};
+  \node[sumjunc] (sum) at (-1.5, 0) {$\Sigma$};
+
+  % Forward path
+  \draw[-Stealth, thick] (sum.east) -- (int1.west) node[midway, above, font=\tiny]{$V_A$};
+  \draw[thick] (int1.east) -- (3.2, 0) node[midway, above, font=\tiny]{$V_B$ (BP out)};
+  \draw[-Stealth, thick] (3.2, 0) -- (int2.west);
+  \draw[-Stealth, thick] (int2.east) -- (6.8, 0);
+  \draw[-Stealth, thick] (6.8, 0) -- (7.8, 0) node[right, font=\small]{$V_{LP}$};
+
+  % Feedback paths
+  \draw[thick] (6.8, 0) to[short, *-] (6.8, -1.6) -- (-1.5, -1.6) -- (-1.5, -1.0);
+  \draw[thick] (3.2, 0) to[short, *-] (3.2, -1.0) to[short, -*] (-1.5, -1.0);
+  \draw[-Stealth, thick] (-1.5, -1.0) -- (sum.south);
+
+  % Input
+  \draw[-Stealth, thick] (-3.2, 0) node[left, font=\small]{$V_{in}$} -- (sum.west);
+
+  % Capacitor ratio labels on feedback
+  \node[above, font=\tiny\color{mydark}] at (0.5, -0.9) {$C_a/C_{int1}$};
+  \node[below, font=\tiny\color{mydark}] at (0.5, -1.6) {$C_b/C_{int2}$};
+
+  % Clock label
+  \node[font=\tiny, color=myamber] at (2.5, 1.0) {$\phi_1$, $\phi_2$ (two-phase non-overlapping clock)};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\textbf{How the Fleischer-Laker Biquad Sets Frequency and Q:}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item Pole frequency: $\omega_0 \propto \frac{f_{clk} \cdot C_{sampling}}{C_{integrating}}$ --- set purely by capacitor ratios and clock frequency.
+  \item Quality factor $Q$: set by the feedback capacitor ratio. Changing $C_a$ and $C_b$ independently controls $\omega_0$ and $Q$ without interaction.
+\end{itemize}
+
+\subsection{Switched-Capacitor Filter Applications}
+\begin{itemize}[leftmargin=*, itemsep=2.5pt]
+  \item \textbf{Audio CODEC:} Anti-aliasing and reconstruction filters in 16--24-bit audio codecs (e.g., CD player, smartphone DAC) where precise $\pm 0.01\%$ corner frequency tolerance is required.
+  \item \textbf{$\Delta\Sigma$ ADC Front-End:} SC integrators inside $\Delta\Sigma$ modulators perform the summation and integration operations that shape quantization noise to high frequencies.
+  \item \textbf{DTMF (Dual-Tone Multi-Frequency) Decoding:} Narrow-band bandpass SC filters detect individual telephone dial tones.
+  \item \textbf{Biomedical Instrumentation:} Low-frequency, high-accuracy SC filters for ECG/EEG signal conditioning, where process-insensitive frequency accuracy is essential.
+\end{itemize}
+
 \subsection{Derivation of SC Resistor Equivalence}
 Consider a capacitor $C$ connected between two voltage nodes $V_1$ and $V_2$ via two single-pole single-throw switches controlled by non-overlapping clock phases $\Phi_1$ and $\Phi_2$ with a clock frequency $f_c = 1/T_c$.
 
@@ -425,8 +474,24 @@ Clock Feedthrough Offset & $\Delta V = V_{CLK} \left( \frac{C_{ov}}{C_{ov} + C} 
   \item \textbf{Clock Feedthrough:} Direct capacitive coupling of the clock transition to the node via overlap capacitance.
   \item \textbf{Stray-Insensitive Integrator:} SC integrator topology immune to parasitics of capacitors to substrate/ground.
   \item \textbf{kT/C Noise:} The fundamental thermodynamic limit on sampled voltage accuracy, equal to $k_B T / C$.
-  \item \textbf{Bottom-Plate Sampling:} A technique where the bottom plate of a capacitor is disconnected first to eliminate input-dependent charge injection.
+  \item \textbf{Stray-Insensitive SC Integrator:} An SC integrator topology where parasitic capacitances at the virtual ground node of the op-amp are shielded and do not contribute to the transfer function.
 \end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{Continuous-Time vs.~Switched-Capacitor Filter Comparison}}]
+\centering
+\par\noindent
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|B{2.8cm}|Y|Y|}
+\hline
+\textbf{Property} & \textbf{Active RC Filter} & \textbf{Switched-Capacitor Filter} \\ \hline
+\textbf{$\omega_c$ accuracy} & Depends on absolute $R$, $C$ ($\pm20\%$) & Set by $C$ ratio $\times$ $f_{clk}$ ($<0.1\%$) \\ \hline
+\textbf{Tuning} & Manual trim required & Reprogram $f_{clk}$ \\ \hline
+\textbf{Frequency range} & DC to $>1\,$GHz & DC to $\sim f_{clk}/2$ (audio/kHz range) \\ \hline
+\textbf{Clock noise} & Not applicable & Clock feedthrough adds noise floor \\ \hline
+\textbf{Silicon area} & Needs large R, C & Compact (capacitors only) \\ \hline
+\textbf{CMOS compatible} & Requires resistors & Fully CMOS-compatible \\ \hline
+\end{tabularx}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]

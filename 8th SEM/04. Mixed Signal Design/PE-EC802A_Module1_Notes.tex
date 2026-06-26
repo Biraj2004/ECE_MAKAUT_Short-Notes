@@ -193,7 +193,7 @@ If $f_s < 2 f_{max}$, high-frequency components fold back into the lower frequen
   \node[font=\small\bfseries] at (0, -0.6) {(a) Continuous Signal Spectrum};
 
   % Axes for (b) Sampled Spectrum (No Aliasing)
-  \begin{scope}[yshift=-2.2cm]
+  \begin{scope}[yshift=-2.8cm]
     \draw[-Stealth, thin] (-3.5, 0) -- (3.5, 0) node[right, font=\scriptsize] {$f$};
     \draw[-Stealth, thin] (0, 0) -- (0, 1.1) node[above, font=\scriptsize] {$|X_s(f)|$};
     % Center
@@ -211,7 +211,7 @@ If $f_s < 2 f_{max}$, high-frequency components fold back into the lower frequen
   \end{scope}
 
   % Axes for (c) Aliased Spectrum
-  \begin{scope}[yshift=-4.4cm]
+  \begin{scope}[yshift=-5.6cm]
     \draw[-Stealth, thin] (-3.5, 0) -- (3.5, 0) node[right, font=\scriptsize] {$f$};
     \draw[-Stealth, thin] (0, 0) -- (0, 1.1) node[above, font=\scriptsize] {$|X_s(f)|$};
     % Center
@@ -244,6 +244,33 @@ In practice, a non-ideal \textbf{Zero-Order Hold (ZOH)} is used, which introduce
   \item \textbf{Chebyshev Filter (Type I):} Permits \textbf{equiripple behavior} in the passband to achieve a sharper transition band (faster roll-off) for the same filter order $N$.
 \end{itemize}
 \end{tcolorbox}
+
+\subsection{Passive RC and RL Filters}
+A passive filter uses only resistors, capacitors, and inductors. No power supply is needed, but no gain is possible. Passive filters are commonly used as anti-aliasing front-ends before ADC inputs.
+
+\begin{tcolorbox}[formulabox, title={\textbf{First-Order Passive Filter Transfer Functions}}]
+\textbf{RC Low-Pass Filter} (series $R$, shunt $C$):
+\[
+H_{LP}(s) = \frac{1/sC}{R + 1/sC} = \frac{\omega_c}{s + \omega_c} \qquad \omega_c = \frac{1}{RC}
+\]
+\textbf{RC High-Pass Filter} (series $C$, shunt $R$):
+\[
+H_{HP}(s) = \frac{R}{R + 1/sC} = \frac{s}{s + \omega_c}
+\]
+\textbf{RL Low-Pass Filter} (series $R$, shunt $L$):
+\[
+H_{LP}(s) = \frac{sL}{R + sL} \rightarrow \frac{\omega_c}{s + \omega_c} \qquad \omega_c = \frac{R}{L}
+\]
+Roll-off rate: $-20\,$dB/decade per filter order. At $\omega = \omega_c$: $|H| = 1/\sqrt{2}$ ($-3\,$dB point).
+\end{tcolorbox}
+
+\textbf{Limitations of Passive Filters:}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Insertion Loss:} Even in the passband, passive filters attenuate the signal (no gain possible).
+  \item \textbf{Loading Effect:} Connecting a load changes the effective cutoff frequency unless a buffer is added.
+  \item \textbf{Slow Roll-off:} Only $-20\,$dB/decade per order; higher-order cascaded passive stages are impractical.
+\end{itemize}
+Active filters (Sallen-Key, Tow-Thomas) solve these limitations using op-amps for isolation and gain.
 
 \subsection{Sallen-Key Active Biquad Filter}
 The Sallen-Key is a popular second-order active filter stage (biquad). It uses a single operational amplifier configured as a voltage follower (gain $K \ge 1$) and two RC sections.
@@ -398,8 +425,24 @@ Unit circle frequency map & $z = e^{j\omega T_s}$ \\[4pt]
   \item \textbf{Biquad Filter:} A second-order active filter block implementing a pair of poles and optionally zeros.
   \item \textbf{Gm-C Filter:} A high-frequency filter using transconductance amplifiers and capacitors.
   \item \textbf{ROC:} The region in the z-plane where the Z-transform power series converges.
-  \item \textbf{Frequency Warping:} Nonlinear frequency mapping introduced by the bilinear transformation.
+  \item \textbf{Frequency Warping:} Nonlinear compression of the continuous frequency axis introduced by the bilinear transformation.
 \end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{Analog Filter Topology Comparison}}]
+\centering
+\par\noindent
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|B{2.6cm}|Y|Y|Y|}
+\hline
+\textbf{Type} & \textbf{Active Elements} & \textbf{Key Property} & \textbf{Use Case} \\ \hline
+\textbf{Passive RC/RL} & None & No gain, simple & AAF, RF matching \\ \hline
+\textbf{Butterworth} & Op-amp & Maximally flat passband & General purpose LP \\ \hline
+\textbf{Chebyshev} & Op-amp & Equiripple, sharp cutoff & Steeper rolloff needed \\ \hline
+\textbf{Sallen-Key} & 1 op-amp & 2nd-order, easy design & Active LP/HP/BP \\ \hline
+\textbf{Tow-Thomas} & 3 op-amps & Tunable $\omega_0$, $Q$ & Precision biquad \\ \hline
+\textbf{Gm-C} & OTA (no R) & High-freq, tunable & $>100\,$MHz filters \\ \hline
+\end{tabularx}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]

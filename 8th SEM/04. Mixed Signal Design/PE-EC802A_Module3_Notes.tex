@@ -238,32 +238,32 @@ A Flash ADC uses $2^N - 1$ comparators biased by a resistor ladder divider to sa
 \centering
 \begin{tikzpicture}[scale=0.9, transform shape]
   % Resistor ladder
-  \draw[thick] (0, 3) node[above] {$V_{REF}$} to[R, l=$R$] (0, 2) to[R, l=$R$] (0, 1) to[R, l=$R$] (0, 0) to[R, l=$R$] (0, -1) to[R, l=$R$] (0, -2) to[R, l=$R$] (0, -3) to[R, l=$R$] (0, -4) -- (0, -4.5) node[ground] {};
+  \draw[thick] (0, 3.2) node[above] {$V_{REF}$} -- (0, 3) to[R, l=$R$] (0, 2) to[R, l=$R$] (0, 1) to[R, l=$R$] (0, 0) to[R, l=$R$] (0, -1) to[R, l=$R$] (0, -2) to[R, l=$R$] (0, -3) to[R, l=$R$] (0, -4) -- (0, -4.4) node[ground] {};
 
   % Comparators
-  \foreach \y/\i in {2.5/3, 1.5/2, 0.5/1, -0.5/0, -1.5/-1, -2.5/-2, -3.5/-3} {
-    \draw[thick] (2.2, \y) -- (2.2, \y+0.4) -- (3.0, \y+0.2) -- cycle;
-    \node[font=\tiny] at (2.4, \y+0.3) {$+$};
-    \node[font=\tiny] at (2.4, \y+0.1) {$-$};
-    \node[right, font=\tiny] at (3.0, \y+0.2) {$D_{\i}$};
+  \foreach \y/\i in {3/7, 2/6, 1/5, 0/4, -1/3, -2/2, -3/1} {
+    \draw[thick] (2.2, \y-0.2) -- (2.2, \y+0.2) -- (3.0, \y) -- cycle;
+    \node[font=\tiny] at (2.4, \y+0.1) {$+$};
+    \node[font=\tiny] at (2.4, \y-0.1) {$-$};
+    \node[right, font=\tiny] at (3.0, \y) {$D_{\i}$};
     
     % Connections
-    \draw (0, \y) -- (2.2, \y+0.1); % connects to negative
+    \draw (0, \y) -- (2.2, \y-0.1); % connects to negative
   }
 
   % Common input line Vin
-  \draw[thick] (-2, 2.8) node[left] {$V_{in}$} -- (1.5, 2.8) -- (1.5, -3.2);
-  \foreach \y in {2.5, 1.5, 0.5, -0.5, -1.5, -2.5, -3.5} {
-    \draw (1.5, \y+0.3) -- (2.2, \y+0.3); % connects to positive
+  \draw[thick] (-1.5, 3.4) node[left] {$V_{in}$} -- (1.5, 3.4) -- (1.5, -2.9);
+  \foreach \y in {3, 2, 1, 0, -1, -2, -3} {
+    \draw (1.5, \y+0.1) -- (2.2, \y+0.1); % connects to positive
   }
 
   % Encoder Block
-  \draw[thick, fill=hdrteal, draw=myteal] (4.2, -3.8) rectangle (5.8, 3.2);
-  \node[rotate=-90, font=\small\bfseries, align=center] at (5.0, -0.3) {Priority\\Encoder};
+  \draw[thick, fill=hdrteal, draw=myteal] (4.2, -3.8) rectangle (5.8, 3.4);
+  \node[rotate=-90, font=\small\bfseries, align=center] at (5.0, -0.2) {Priority\\Encoder};
   
   % Connections from comparators to encoder
-  \foreach \y/\i in {2.5/3, 1.5/2, 0.5/1, -0.5/0, -1.5/-1, -2.5/-2, -3.5/-3} {
-    \draw[-Stealth] (3.0, \y+0.2) -- (4.2, \y+0.2);
+  \foreach \y in {3, 2, 1, 0, -1, -2, -3} {
+    \draw[-Stealth] (3.0, \y) -- (4.2, \y);
   }
 
   % Outputs
@@ -296,35 +296,99 @@ A dual-slope ADC integrates the input voltage for a fixed time $T_1$, then de-in
   \item \textbf{Cons:} Extremely slow ($2^{N+1}$ clock cycles per sample). Used in digital multimeters.
 \end{itemize}
 
-\subsection{4. Delta-Sigma (\texorpdfstring{$\Delta\Sigma$}{Delta-Sigma}) ADC (Oversampling \& Noise Shaping)}
+\subsection{4. Pipeline ADC (High Speed, Medium-High Resolution)}
+A Pipeline ADC achieves high throughput by processing multiple samples concurrently across a chain of stages. Each stage resolves a coarse set of bits, computes the remaining error (residue), amplifies it by $\times 2$, and passes it to the next stage.
+
+\begin{tcolorbox}[tikzbox, title={Pipeline ADC: 1.5-Bit Stage Architecture}]
+\centering
+\begin{tikzpicture}[scale=0.85, transform shape]
+  % Nodes
+  \node[block, text width=1.7cm] (sadc) at (0, 1.2) {1.5-bit\\Sub-ADC};
+  \node[block, text width=1.7cm] (sdac) at (2.6, 1.2) {1.5-bit\\Sub-DAC};
+  \node[sumjunc] (sub) at (2.6, -0.8) {$-$};
+  \node[block, text width=1.7cm] (amp) at (4.8, -0.8) {Residue Amp\\$(\times 2)$};
+
+  % Inputs and Split
+  \draw[thick] (-2.2, -0.8) node[left, font=\small]{$V_{in}$} -- (-1.4, -0.8);
+  \draw[-Stealth, thick] (-1.4, -0.8) |- (sadc.west);
+  \draw[-Stealth, thick] (-1.4, -0.8) -- (sub.west);
+  
+  \node[above left, font=\tiny] at (sub.west) {$+$};
+  \node[above right, font=\tiny] at (sub.north) {$-$};
+
+  % ADC to DAC
+  \draw[-Stealth, thick] (sadc.east) -- (sdac.west) node[midway, above, font=\tiny]{code};
+
+  % Digital output
+  \draw[-Stealth, thick] (sadc.north) -- ++(0, 0.8) node[above, font=\small]{$D_k$ (bits)};
+
+  % DAC to subtractor
+  \draw[-Stealth, thick] (sdac.south) -- (sub.north) node[midway, right, font=\tiny]{$V_{DAC}$};
+
+  % Subtractor to amp
+  \draw[-Stealth, thick] (sub.east) -- (amp.west) node[midway, above, font=\tiny]{$(V_{in}{-}V_{DAC})$};
+
+  % Output to next stage
+  \draw[-Stealth, thick] (amp.east) -- ++(1.4, 0) node[right, font=\small]{Stage $k{+}1$};
+
+  % Stage bounding box
+  \draw[dashed, color=mgframe, rounded corners=4pt] (-2.0, -1.5) rectangle (6.2, 2.3);
+  \node[font=\scriptsize\color{mydark}] at (2.1, 2.5) {Pipeline Stage $k$};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\textbf{Working (1.5-bit/stage):}
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*, itemsep=3pt]
+  \item \textbf{Sub-ADC:} A 2-comparator flash resolves the MSBs using three levels ($+1$, $0$, $-1$) compared against $\pm V_{REF}/4$.
+  \item \textbf{Sub-DAC:} The coarse code is converted back to an analog level $V_{DAC}$.
+  \item \textbf{Residue Amplifier (MDAC):} Computes $V_{res} = 2(V_{in} - V_{DAC})$, scaling the residue to fill the full input range of the next stage.
+  \item \textbf{Pipelining:} While Stage 1 processes sample $n+1$, Stage 2 concurrently processes the residue of sample $n$. This gives one output code per clock cycle after an initial latency of $N_{stages}$ cycles.
+  \item \textbf{Digital Error Correction:} The 0.5-bit redundancy allows the back-end logic to correct comparator offset errors up to $\pm V_{REF}/4$, relaxing hardware specifications significantly.
+\end{enumerate}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Pros:} High throughput (10\,Msps--1\,Gsps), excellent resolution (10--14 bits).
+  \item \textbf{Cons:} Multi-cycle pipeline latency; MDAC gain accuracy critically limits INL.
+\end{itemize}
+
+\subsection{5. Hybrid ADC Structures}
+Hybrid ADCs merge two architectures to combine the speed strength of one with the resolution or power efficiency of the other.
+
+\begin{tcolorbox}[defbox, title={\textbf{Common Hybrid ADC Topologies}}]
+\begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt]
+  \item \textbf{Flash-SAR Hybrid:} A coarse Flash ADC resolves the top $M$ bits in a single cycle; a SAR ADC then refines the residue over $N{-}M$ cycles. Reduces comparator count from $2^N - 1$ (full Flash) to $2^M + N - M$, saving power while maintaining near-Flash speed.
+  \item \textbf{Pipelined-SAR (SAR-assisted Pipeline):} Each pipeline stage employs a short SAR loop (4--6 bits) instead of the traditional 1.5-bit MDAC. This reduces the total number of stages and relaxes the MDAC gain-bandwidth requirement. Dominant in 10--14-bit, 50--500\,Msps ADCs in modern scaled CMOS nodes.
+  \item \textbf{Incremental $\Delta\Sigma$ ADC:} Resets its accumulator after each conversion cycle, combining $\Delta\Sigma$ noise-shaping with discrete Nyquist-rate output. Used in precision multi-channel sensor readout (industrial, medical, weighing systems).
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{6. Delta-Sigma (\texorpdfstring{$\Delta\Sigma$}{Delta-Sigma}) ADC (Oversampling \& Noise Shaping)}
 Delta-Sigma ADCs achieve ultra-high resolution ($16\text{--}24$ bits) by combining \textbf{Oversampling} and \textbf{Noise Shaping}.
 
 \begin{tcolorbox}[tikzbox, title={First-Order Delta-Sigma Modulator Block Diagram}]
 \centering
 \begin{tikzpicture}[scale=0.95, transform shape]
   % Input
-  \node[left] at (-1.5, 0) {$V_{in}$};
-  \draw[thick] (-1.2, 0) to[short, o-*] (-0.8, 0);
+  \node[left] at (-1.6, 0) {$V_{in}$};
   
   % Summer
   \node[draw=myamber, fill=hdramber, circle, minimum size=0.6cm, thick] (sum) at (0, 0) {$+$};
-  \draw[-Stealth, thick] (-0.8, 0) -- (sum);
+  \draw[-Stealth, thick] (-1.5, 0) to[short, o-] (sum.west);
   
   % Integrator
-  \node[draw=myteal, fill=hdrteal, minimum width=1.5cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.4cm] (int) at (2.2, 0) {Integrator\\$H(z) = \frac{z^{-1}}{1-z^{-1}}$};
+  \node[draw=myteal, fill=hdrteal, minimum width=1.5cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.4cm] (int) at (2.6, 0) {Integrator\\$H(z) = \frac{z^{-1}}{1-z^{-1}}$};
   \draw[-Stealth, thick] (sum) -- (int);
   
   % Quantizer (ADC)
-  \node[draw=myteal, fill=hdrteal, minimum width=1.4cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.2cm] (quant) at (4.8, 0) {Quantizer\\(1-Bit ADC)};
+  \node[draw=myteal, fill=hdrteal, minimum width=1.4cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.2cm] (quant) at (5.8, 0) {Quantizer\\(1-Bit ADC)};
   \draw[-Stealth, thick] (int) -- (quant);
   
   % Output
-  \draw[-Stealth, thick] (quant) -- (6.8, 0) node[right, font=\small] {Digital Output};
-  \draw[thick] (6.1, 0) to[short, *-] (6.1, -1.5);
+  \draw[-Stealth, thick] (quant) -- (8.0, 0) node[right, font=\small] {Digital Output};
+  \draw[thick] (7.4, 0) to[short, *-] (7.4, -1.5);
   
   % Feedback DAC
-  \node[draw=mypurple, fill=hdrpurple, minimum width=1.4cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.2cm] (dac) at (3.5, -1.5) {1-Bit DAC};
-  \draw[-Stealth, thick] (6.1, -1.5) -- (dac);
+  \node[draw=mypurple, fill=hdrpurple, minimum width=1.4cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.2cm] (dac) at (3.7, -1.5) {1-Bit DAC};
+  \draw[-Stealth, thick] (7.4, -1.5) -- (dac);
   \draw[-Stealth, thick] (dac) -| (sum) node[left, pos=0.95, font=\scriptsize] {$-$};
 \end{tikzpicture}
 \end{tcolorbox}
@@ -390,7 +454,25 @@ Dual-Slope conversion time & $T_{conv} \approx 2^{N+1} T_{clk}$ \\
   \item \textbf{Monotonicity:} A converter characteristic where the output always increases or stays constant as input increases.
   \item \textbf{Thermometer Code:} A unary code format representing value $K$ by $K$ consecutive ones (e.g., $3 \rightarrow 0000111$).
   \item \textbf{Missing Codes:} An ADC defect where certain output codes are skipped, caused by $\text{DNL} < -1\,\text{LSB}$.
+  \item \textbf{Pipeline ADC:} A high-speed converter using chained 1.5-bit stages with residue amplification, enabling one output per clock cycle.
+  \item \textbf{Hybrid ADC:} A converter combining two architectures (e.g., Flash-SAR, Pipelined-SAR) to trade off speed, resolution, and power.
 \end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{ADC Architecture Comparison at a Glance}}]
+\centering
+\par\noindent
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|B{2.2cm}|Y|Y|Y|Y|}
+\hline
+\textbf{ADC Type} & \textbf{Speed} & \textbf{Resolution} & \textbf{Power} & \textbf{Application} \\ \hline
+\textbf{Flash} & GHz range & $\leq$8 bit & Very High & Oscilloscopes, SerDes \\ \hline
+\textbf{SAR} & $<$100\,Msps & 8--18 bit & Very Low & Sensors, IoT, MCUs \\ \hline
+\textbf{Dual-Slope} & $<$100 sps & 20+ bit & Low & Multimeters \\ \hline
+\textbf{Pipeline} & 10--1000\,Msps & 10--14 bit & Medium & WLAN, Video, RADAR \\ \hline
+\textbf{$\Delta\Sigma$} & $<$10\,Msps & 16--24 bit & Medium & Audio, Precision \\ \hline
+\textbf{Hybrid} & Varies & Varies & Low--Medium & Imaging, Comm. IC \\ \hline
+\end{tabularx}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]

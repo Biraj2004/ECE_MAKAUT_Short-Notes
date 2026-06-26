@@ -209,7 +209,7 @@ If $f_s < 2 f_{max}$, high-frequency components fold back into the lower frequen
   \node[font=\small\bfseries] at (0, -0.6) {(a) Continuous Signal Spectrum};
 
   % Axes for (b) Sampled Spectrum (No Aliasing)
-  \begin{scope}[yshift=-2.2cm]
+  \begin{scope}[yshift=-2.8cm]
     \draw[-Stealth, thin] (-3.5, 0) -- (3.5, 0) node[right, font=\scriptsize] {$f$};
     \draw[-Stealth, thin] (0, 0) -- (0, 1.1) node[above, font=\scriptsize] {$|X_s(f)|$};
     % Center
@@ -227,7 +227,7 @@ If $f_s < 2 f_{max}$, high-frequency components fold back into the lower frequen
   \end{scope}
 
   % Axes for (c) Aliased Spectrum
-  \begin{scope}[yshift=-4.4cm]
+  \begin{scope}[yshift=-5.6cm]
     \draw[-Stealth, thin] (-3.5, 0) -- (3.5, 0) node[right, font=\scriptsize] {$f$};
     \draw[-Stealth, thin] (0, 0) -- (0, 1.1) node[above, font=\scriptsize] {$|X_s(f)|$};
     % Center
@@ -260,6 +260,33 @@ In practice, a non-ideal \textbf{Zero-Order Hold (ZOH)} is used, which introduce
   \item \textbf{Chebyshev Filter (Type I):} Permits \textbf{equiripple behavior} in the passband to achieve a sharper transition band (faster roll-off) for the same filter order $N$.
 \end{itemize}
 \end{tcolorbox}
+
+\subsection{Passive RC and RL Filters}
+A passive filter uses only resistors, capacitors, and inductors. No power supply is needed, but no gain is possible. Passive filters are commonly used as anti-aliasing front-ends before ADC inputs.
+
+\begin{tcolorbox}[formulabox, title={\textbf{First-Order Passive Filter Transfer Functions}}]
+\textbf{RC Low-Pass Filter} (series $R$, shunt $C$):
+\[
+H_{LP}(s) = \frac{1/sC}{R + 1/sC} = \frac{\omega_c}{s + \omega_c} \qquad \omega_c = \frac{1}{RC}
+\]
+\textbf{RC High-Pass Filter} (series $C$, shunt $R$):
+\[
+H_{HP}(s) = \frac{R}{R + 1/sC} = \frac{s}{s + \omega_c}
+\]
+\textbf{RL Low-Pass Filter} (series $R$, shunt $L$):
+\[
+H_{LP}(s) = \frac{sL}{R + sL} \rightarrow \frac{\omega_c}{s + \omega_c} \qquad \omega_c = \frac{R}{L}
+\]
+Roll-off rate: $-20\,$dB/decade per filter order. At $\omega = \omega_c$: $|H| = 1/\sqrt{2}$ ($-3\,$dB point).
+\end{tcolorbox}
+
+\textbf{Limitations of Passive Filters:}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Insertion Loss:} Even in the passband, passive filters attenuate the signal (no gain possible).
+  \item \textbf{Loading Effect:} Connecting a load changes the effective cutoff frequency unless a buffer is added.
+  \item \textbf{Slow Roll-off:} Only $-20\,$dB/decade per order; higher-order cascaded passive stages are impractical.
+\end{itemize}
+Active filters (Sallen-Key, Tow-Thomas) solve these limitations using op-amps for isolation and gain.
 
 \subsection{Sallen-Key Active Biquad Filter}
 The Sallen-Key is a popular second-order active filter stage (biquad). It uses a single operational amplifier configured as a voltage follower (gain $K \ge 1$) and two RC sections.
@@ -414,8 +441,24 @@ Unit circle frequency map & $z = e^{j\omega T_s}$ \\[4pt]
   \item \textbf{Biquad Filter:} A second-order active filter block implementing a pair of poles and optionally zeros.
   \item \textbf{Gm-C Filter:} A high-frequency filter using transconductance amplifiers and capacitors.
   \item \textbf{ROC:} The region in the z-plane where the Z-transform power series converges.
-  \item \textbf{Frequency Warping:} Nonlinear frequency mapping introduced by the bilinear transformation.
+  \item \textbf{Frequency Warping:} Nonlinear compression of the continuous frequency axis introduced by the bilinear transformation.
 \end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{Analog Filter Topology Comparison}}]
+\centering
+\par\noindent
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|B{2.6cm}|Y|Y|Y|}
+\hline
+\textbf{Type} & \textbf{Active Elements} & \textbf{Key Property} & \textbf{Use Case} \\ \hline
+\textbf{Passive RC/RL} & None & No gain, simple & AAF, RF matching \\ \hline
+\textbf{Butterworth} & Op-amp & Maximally flat passband & General purpose LP \\ \hline
+\textbf{Chebyshev} & Op-amp & Equiripple, sharp cutoff & Steeper rolloff needed \\ \hline
+\textbf{Sallen-Key} & 1 op-amp & 2nd-order, easy design & Active LP/HP/BP \\ \hline
+\textbf{Tow-Thomas} & 3 op-amps & Tunable $\omega_0$, $Q$ & Precision biquad \\ \hline
+\textbf{Gm-C} & OTA (no R) & High-freq, tunable & $>100\,$MHz filters \\ \hline
+\end{tabularx}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
@@ -453,6 +496,55 @@ Unit circle frequency map & $z = e^{j\omega T_s}$ \\[4pt]
 \begin{tcolorbox}[defbox, title={\textbf{Switched-Capacitor Circuit Concept}}]
 A \textbf{Switched-Capacitor (SC) circuit} is a discrete-time signal processing circuit that implements resistors by rapidly switching charge back and forth between capacitors using non-overlapping clock phases. SC circuits are highly preferred in CMOS technology because precise on-chip resistors are difficult to fabricate, whereas capacitor ratios can be matched with extremely high accuracy (up to $0.1\%$).
 \end{tcolorbox}
+
+\subsection{Switched-Capacitor Filter Architectures}
+A practical SC biquad (second-order section) is built using two SC integrators in a feedback loop. The \textbf{Fleischer-Laker biquad} is the standard SC biquad implementing LP, HP, and BP outputs simultaneously.
+
+\begin{tcolorbox}[tikzbox, title={Fleischer-Laker SC Biquad Block Structure}]
+\centering
+\begin{tikzpicture}[scale=0.88, transform shape]
+  % Two SC integrator blocks
+  \node[block, text width=2.0cm] (int1) at (1.5, 0) {SC Integrator 1\\ (Non-Inv.)};
+  \node[block, text width=2.0cm] (int2) at (5.0, 0) {SC Integrator 2\\ (Inv.)};
+  \node[sumjunc] (sum) at (-1.5, 0) {$\Sigma$};
+
+  % Forward path
+  \draw[-Stealth, thick] (sum.east) -- (int1.west) node[midway, above, font=\tiny]{$V_A$};
+  \draw[thick] (int1.east) -- (3.2, 0) node[midway, above, font=\tiny]{$V_B$ (BP out)};
+  \draw[-Stealth, thick] (3.2, 0) -- (int2.west);
+  \draw[-Stealth, thick] (int2.east) -- (6.8, 0);
+  \draw[-Stealth, thick] (6.8, 0) -- (7.8, 0) node[right, font=\small]{$V_{LP}$};
+
+  % Feedback paths
+  \draw[thick] (6.8, 0) to[short, *-] (6.8, -1.6) -- (-1.5, -1.6) -- (-1.5, -1.0);
+  \draw[thick] (3.2, 0) to[short, *-] (3.2, -1.0) to[short, -*] (-1.5, -1.0);
+  \draw[-Stealth, thick] (-1.5, -1.0) -- (sum.south);
+
+  % Input
+  \draw[-Stealth, thick] (-3.2, 0) node[left, font=\small]{$V_{in}$} -- (sum.west);
+
+  % Capacitor ratio labels on feedback
+  \node[above, font=\tiny\color{mydark}] at (0.5, -0.9) {$C_a/C_{int1}$};
+  \node[below, font=\tiny\color{mydark}] at (0.5, -1.6) {$C_b/C_{int2}$};
+
+  % Clock label
+  \node[font=\tiny, color=myamber] at (2.5, 1.0) {$\phi_1$, $\phi_2$ (two-phase non-overlapping clock)};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\textbf{How the Fleischer-Laker Biquad Sets Frequency and Q:}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item Pole frequency: $\omega_0 \propto \frac{f_{clk} \cdot C_{sampling}}{C_{integrating}}$ --- set purely by capacitor ratios and clock frequency.
+  \item Quality factor $Q$: set by the feedback capacitor ratio. Changing $C_a$ and $C_b$ independently controls $\omega_0$ and $Q$ without interaction.
+\end{itemize}
+
+\subsection{Switched-Capacitor Filter Applications}
+\begin{itemize}[leftmargin=*, itemsep=2.5pt]
+  \item \textbf{Audio CODEC:} Anti-aliasing and reconstruction filters in 16--24-bit audio codecs (e.g., CD player, smartphone DAC) where precise $\pm 0.01\%$ corner frequency tolerance is required.
+  \item \textbf{$\Delta\Sigma$ ADC Front-End:} SC integrators inside $\Delta\Sigma$ modulators perform the summation and integration operations that shape quantization noise to high frequencies.
+  \item \textbf{DTMF (Dual-Tone Multi-Frequency) Decoding:} Narrow-band bandpass SC filters detect individual telephone dial tones.
+  \item \textbf{Biomedical Instrumentation:} Low-frequency, high-accuracy SC filters for ECG/EEG signal conditioning, where process-insensitive frequency accuracy is essential.
+\end{itemize}
 
 \subsection{Derivation of SC Resistor Equivalence}
 Consider a capacitor $C$ connected between two voltage nodes $V_1$ and $V_2$ via two single-pole single-throw switches controlled by non-overlapping clock phases $\Phi_1$ and $\Phi_2$ with a clock frequency $f_c = 1/T_c$.
@@ -710,8 +802,24 @@ Clock Feedthrough Offset & $\Delta V = V_{CLK} \left( \frac{C_{ov}}{C_{ov} + C} 
   \item \textbf{Clock Feedthrough:} Direct capacitive coupling of the clock transition to the node via overlap capacitance.
   \item \textbf{Stray-Insensitive Integrator:} SC integrator topology immune to parasitics of capacitors to substrate/ground.
   \item \textbf{kT/C Noise:} The fundamental thermodynamic limit on sampled voltage accuracy, equal to $k_B T / C$.
-  \item \textbf{Bottom-Plate Sampling:} A technique where the bottom plate of a capacitor is disconnected first to eliminate input-dependent charge injection.
+  \item \textbf{Stray-Insensitive SC Integrator:} An SC integrator topology where parasitic capacitances at the virtual ground node of the op-amp are shielded and do not contribute to the transfer function.
 \end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{Continuous-Time vs.~Switched-Capacitor Filter Comparison}}]
+\centering
+\par\noindent
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|B{2.8cm}|Y|Y|}
+\hline
+\textbf{Property} & \textbf{Active RC Filter} & \textbf{Switched-Capacitor Filter} \\ \hline
+\textbf{$\omega_c$ accuracy} & Depends on absolute $R$, $C$ ($\pm20\%$) & Set by $C$ ratio $\times$ $f_{clk}$ ($<0.1\%$) \\ \hline
+\textbf{Tuning} & Manual trim required & Reprogram $f_{clk}$ \\ \hline
+\textbf{Frequency range} & DC to $>1\,$GHz & DC to $\sim f_{clk}/2$ (audio/kHz range) \\ \hline
+\textbf{Clock noise} & Not applicable & Clock feedthrough adds noise floor \\ \hline
+\textbf{Silicon area} & Needs large R, C & Compact (capacitors only) \\ \hline
+\textbf{CMOS compatible} & Requires resistors & Fully CMOS-compatible \\ \hline
+\end{tabularx}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
@@ -820,32 +928,32 @@ A Flash ADC uses $2^N - 1$ comparators biased by a resistor ladder divider to sa
 \centering
 \begin{tikzpicture}[scale=0.9, transform shape]
   % Resistor ladder
-  \draw[thick] (0, 3) node[above] {$V_{REF}$} to[R, l=$R$] (0, 2) to[R, l=$R$] (0, 1) to[R, l=$R$] (0, 0) to[R, l=$R$] (0, -1) to[R, l=$R$] (0, -2) to[R, l=$R$] (0, -3) to[R, l=$R$] (0, -4) -- (0, -4.5) node[ground] {};
+  \draw[thick] (0, 3.2) node[above] {$V_{REF}$} -- (0, 3) to[R, l=$R$] (0, 2) to[R, l=$R$] (0, 1) to[R, l=$R$] (0, 0) to[R, l=$R$] (0, -1) to[R, l=$R$] (0, -2) to[R, l=$R$] (0, -3) to[R, l=$R$] (0, -4) -- (0, -4.4) node[ground] {};
 
   % Comparators
-  \foreach \y/\i in {2.5/3, 1.5/2, 0.5/1, -0.5/0, -1.5/-1, -2.5/-2, -3.5/-3} {
-    \draw[thick] (2.2, \y) -- (2.2, \y+0.4) -- (3.0, \y+0.2) -- cycle;
-    \node[font=\tiny] at (2.4, \y+0.3) {$+$};
-    \node[font=\tiny] at (2.4, \y+0.1) {$-$};
-    \node[right, font=\tiny] at (3.0, \y+0.2) {$D_{\i}$};
+  \foreach \y/\i in {3/7, 2/6, 1/5, 0/4, -1/3, -2/2, -3/1} {
+    \draw[thick] (2.2, \y-0.2) -- (2.2, \y+0.2) -- (3.0, \y) -- cycle;
+    \node[font=\tiny] at (2.4, \y+0.1) {$+$};
+    \node[font=\tiny] at (2.4, \y-0.1) {$-$};
+    \node[right, font=\tiny] at (3.0, \y) {$D_{\i}$};
     
     % Connections
-    \draw (0, \y) -- (2.2, \y+0.1); % connects to negative
+    \draw (0, \y) -- (2.2, \y-0.1); % connects to negative
   }
 
   % Common input line Vin
-  \draw[thick] (-2, 2.8) node[left] {$V_{in}$} -- (1.5, 2.8) -- (1.5, -3.2);
-  \foreach \y in {2.5, 1.5, 0.5, -0.5, -1.5, -2.5, -3.5} {
-    \draw (1.5, \y+0.3) -- (2.2, \y+0.3); % connects to positive
+  \draw[thick] (-1.5, 3.4) node[left] {$V_{in}$} -- (1.5, 3.4) -- (1.5, -2.9);
+  \foreach \y in {3, 2, 1, 0, -1, -2, -3} {
+    \draw (1.5, \y+0.1) -- (2.2, \y+0.1); % connects to positive
   }
 
   % Encoder Block
-  \draw[thick, fill=hdrteal, draw=myteal] (4.2, -3.8) rectangle (5.8, 3.2);
-  \node[rotate=-90, font=\small\bfseries, align=center] at (5.0, -0.3) {Priority\\Encoder};
+  \draw[thick, fill=hdrteal, draw=myteal] (4.2, -3.8) rectangle (5.8, 3.4);
+  \node[rotate=-90, font=\small\bfseries, align=center] at (5.0, -0.2) {Priority\\Encoder};
   
   % Connections from comparators to encoder
-  \foreach \y/\i in {2.5/3, 1.5/2, 0.5/1, -0.5/0, -1.5/-1, -2.5/-2, -3.5/-3} {
-    \draw[-Stealth] (3.0, \y+0.2) -- (4.2, \y+0.2);
+  \foreach \y in {3, 2, 1, 0, -1, -2, -3} {
+    \draw[-Stealth] (3.0, \y) -- (4.2, \y);
   }
 
   % Outputs
@@ -878,35 +986,99 @@ A dual-slope ADC integrates the input voltage for a fixed time $T_1$, then de-in
   \item \textbf{Cons:} Extremely slow ($2^{N+1}$ clock cycles per sample). Used in digital multimeters.
 \end{itemize}
 
-\subsection{4. Delta-Sigma (\texorpdfstring{$\Delta\Sigma$}{Delta-Sigma}) ADC (Oversampling \& Noise Shaping)}
+\subsection{4. Pipeline ADC (High Speed, Medium-High Resolution)}
+A Pipeline ADC achieves high throughput by processing multiple samples concurrently across a chain of stages. Each stage resolves a coarse set of bits, computes the remaining error (residue), amplifies it by $\times 2$, and passes it to the next stage.
+
+\begin{tcolorbox}[tikzbox, title={Pipeline ADC: 1.5-Bit Stage Architecture}]
+\centering
+\begin{tikzpicture}[scale=0.85, transform shape]
+  % Nodes
+  \node[block, text width=1.7cm] (sadc) at (0, 1.2) {1.5-bit\\Sub-ADC};
+  \node[block, text width=1.7cm] (sdac) at (2.6, 1.2) {1.5-bit\\Sub-DAC};
+  \node[sumjunc] (sub) at (2.6, -0.8) {$-$};
+  \node[block, text width=1.7cm] (amp) at (4.8, -0.8) {Residue Amp\\$(\times 2)$};
+
+  % Inputs and Split
+  \draw[thick] (-2.2, -0.8) node[left, font=\small]{$V_{in}$} -- (-1.4, -0.8);
+  \draw[-Stealth, thick] (-1.4, -0.8) |- (sadc.west);
+  \draw[-Stealth, thick] (-1.4, -0.8) -- (sub.west);
+  
+  \node[above left, font=\tiny] at (sub.west) {$+$};
+  \node[above right, font=\tiny] at (sub.north) {$-$};
+
+  % ADC to DAC
+  \draw[-Stealth, thick] (sadc.east) -- (sdac.west) node[midway, above, font=\tiny]{code};
+
+  % Digital output
+  \draw[-Stealth, thick] (sadc.north) -- ++(0, 0.8) node[above, font=\small]{$D_k$ (bits)};
+
+  % DAC to subtractor
+  \draw[-Stealth, thick] (sdac.south) -- (sub.north) node[midway, right, font=\tiny]{$V_{DAC}$};
+
+  % Subtractor to amp
+  \draw[-Stealth, thick] (sub.east) -- (amp.west) node[midway, above, font=\tiny]{$(V_{in}{-}V_{DAC})$};
+
+  % Output to next stage
+  \draw[-Stealth, thick] (amp.east) -- ++(1.4, 0) node[right, font=\small]{Stage $k{+}1$};
+
+  % Stage bounding box
+  \draw[dashed, color=mgframe, rounded corners=4pt] (-2.0, -1.5) rectangle (6.2, 2.3);
+  \node[font=\scriptsize\color{mydark}] at (2.1, 2.5) {Pipeline Stage $k$};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\textbf{Working (1.5-bit/stage):}
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*, itemsep=3pt]
+  \item \textbf{Sub-ADC:} A 2-comparator flash resolves the MSBs using three levels ($+1$, $0$, $-1$) compared against $\pm V_{REF}/4$.
+  \item \textbf{Sub-DAC:} The coarse code is converted back to an analog level $V_{DAC}$.
+  \item \textbf{Residue Amplifier (MDAC):} Computes $V_{res} = 2(V_{in} - V_{DAC})$, scaling the residue to fill the full input range of the next stage.
+  \item \textbf{Pipelining:} While Stage 1 processes sample $n+1$, Stage 2 concurrently processes the residue of sample $n$. This gives one output code per clock cycle after an initial latency of $N_{stages}$ cycles.
+  \item \textbf{Digital Error Correction:} The 0.5-bit redundancy allows the back-end logic to correct comparator offset errors up to $\pm V_{REF}/4$, relaxing hardware specifications significantly.
+\end{enumerate}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Pros:} High throughput (10\,Msps--1\,Gsps), excellent resolution (10--14 bits).
+  \item \textbf{Cons:} Multi-cycle pipeline latency; MDAC gain accuracy critically limits INL.
+\end{itemize}
+
+\subsection{5. Hybrid ADC Structures}
+Hybrid ADCs merge two architectures to combine the speed strength of one with the resolution or power efficiency of the other.
+
+\begin{tcolorbox}[defbox, title={\textbf{Common Hybrid ADC Topologies}}]
+\begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt]
+  \item \textbf{Flash-SAR Hybrid:} A coarse Flash ADC resolves the top $M$ bits in a single cycle; a SAR ADC then refines the residue over $N{-}M$ cycles. Reduces comparator count from $2^N - 1$ (full Flash) to $2^M + N - M$, saving power while maintaining near-Flash speed.
+  \item \textbf{Pipelined-SAR (SAR-assisted Pipeline):} Each pipeline stage employs a short SAR loop (4--6 bits) instead of the traditional 1.5-bit MDAC. This reduces the total number of stages and relaxes the MDAC gain-bandwidth requirement. Dominant in 10--14-bit, 50--500\,Msps ADCs in modern scaled CMOS nodes.
+  \item \textbf{Incremental $\Delta\Sigma$ ADC:} Resets its accumulator after each conversion cycle, combining $\Delta\Sigma$ noise-shaping with discrete Nyquist-rate output. Used in precision multi-channel sensor readout (industrial, medical, weighing systems).
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{6. Delta-Sigma (\texorpdfstring{$\Delta\Sigma$}{Delta-Sigma}) ADC (Oversampling \& Noise Shaping)}
 Delta-Sigma ADCs achieve ultra-high resolution ($16\text{--}24$ bits) by combining \textbf{Oversampling} and \textbf{Noise Shaping}.
 
 \begin{tcolorbox}[tikzbox, title={First-Order Delta-Sigma Modulator Block Diagram}]
 \centering
 \begin{tikzpicture}[scale=0.95, transform shape]
   % Input
-  \node[left] at (-1.5, 0) {$V_{in}$};
-  \draw[thick] (-1.2, 0) to[short, o-*] (-0.8, 0);
+  \node[left] at (-1.6, 0) {$V_{in}$};
   
   % Summer
   \node[draw=myamber, fill=hdramber, circle, minimum size=0.6cm, thick] (sum) at (0, 0) {$+$};
-  \draw[-Stealth, thick] (-0.8, 0) -- (sum);
+  \draw[-Stealth, thick] (-1.5, 0) to[short, o-] (sum.west);
   
   % Integrator
-  \node[draw=myteal, fill=hdrteal, minimum width=1.5cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.4cm] (int) at (2.2, 0) {Integrator\\$H(z) = \frac{z^{-1}}{1-z^{-1}}$};
+  \node[draw=myteal, fill=hdrteal, minimum width=1.5cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.4cm] (int) at (2.6, 0) {Integrator\\$H(z) = \frac{z^{-1}}{1-z^{-1}}$};
   \draw[-Stealth, thick] (sum) -- (int);
   
   % Quantizer (ADC)
-  \node[draw=myteal, fill=hdrteal, minimum width=1.4cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.2cm] (quant) at (4.8, 0) {Quantizer\\(1-Bit ADC)};
+  \node[draw=myteal, fill=hdrteal, minimum width=1.4cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.2cm] (quant) at (5.8, 0) {Quantizer\\(1-Bit ADC)};
   \draw[-Stealth, thick] (int) -- (quant);
   
   % Output
-  \draw[-Stealth, thick] (quant) -- (6.8, 0) node[right, font=\small] {Digital Output};
-  \draw[thick] (6.1, 0) to[short, *-] (6.1, -1.5);
+  \draw[-Stealth, thick] (quant) -- (8.0, 0) node[right, font=\small] {Digital Output};
+  \draw[thick] (7.4, 0) to[short, *-] (7.4, -1.5);
   
   % Feedback DAC
-  \node[draw=mypurple, fill=hdrpurple, minimum width=1.4cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.2cm] (dac) at (3.5, -1.5) {1-Bit DAC};
-  \draw[-Stealth, thick] (6.1, -1.5) -- (dac);
+  \node[draw=mypurple, fill=hdrpurple, minimum width=1.4cm, minimum height=0.9cm, font=\small, thick, align=center, text width=2.2cm] (dac) at (3.7, -1.5) {1-Bit DAC};
+  \draw[-Stealth, thick] (7.4, -1.5) -- (dac);
   \draw[-Stealth, thick] (dac) -| (sum) node[left, pos=0.95, font=\scriptsize] {$-$};
 \end{tikzpicture}
 \end{tcolorbox}
@@ -972,7 +1144,25 @@ Dual-Slope conversion time & $T_{conv} \approx 2^{N+1} T_{clk}$ \\
   \item \textbf{Monotonicity:} A converter characteristic where the output always increases or stays constant as input increases.
   \item \textbf{Thermometer Code:} A unary code format representing value $K$ by $K$ consecutive ones (e.g., $3 \rightarrow 0000111$).
   \item \textbf{Missing Codes:} An ADC defect where certain output codes are skipped, caused by $\text{DNL} < -1\,\text{LSB}$.
+  \item \textbf{Pipeline ADC:} A high-speed converter using chained 1.5-bit stages with residue amplification, enabling one output per clock cycle.
+  \item \textbf{Hybrid ADC:} A converter combining two architectures (e.g., Flash-SAR, Pipelined-SAR) to trade off speed, resolution, and power.
 \end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{ADC Architecture Comparison at a Glance}}]
+\centering
+\par\noindent
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|B{2.2cm}|Y|Y|Y|Y|}
+\hline
+\textbf{ADC Type} & \textbf{Speed} & \textbf{Resolution} & \textbf{Power} & \textbf{Application} \\ \hline
+\textbf{Flash} & GHz range & $\leq$8 bit & Very High & Oscilloscopes, SerDes \\ \hline
+\textbf{SAR} & $<$100\,Msps & 8--18 bit & Very Low & Sensors, IoT, MCUs \\ \hline
+\textbf{Dual-Slope} & $<$100 sps & 20+ bit & Low & Multimeters \\ \hline
+\textbf{Pipeline} & 10--1000\,Msps & 10--14 bit & Medium & WLAN, Video, RADAR \\ \hline
+\textbf{$\Delta\Sigma$} & $<$10\,Msps & 16--24 bit & Medium & Audio, Precision \\ \hline
+\textbf{Hybrid} & Varies & Varies & Low--Medium & Imaging, Comm. IC \\ \hline
+\end{tabularx}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
@@ -1069,6 +1259,26 @@ This fluctuation directly modulates the threshold voltages and bias conditions o
 \begin{itemize}[leftmargin=*, itemsep=2pt]
   \item \textbf{Split Supplies:} Separate supply pins and routing traces for analog ($V_{DDA}, V_{SSA}$) and digital ($V_{DDD}, V_{SSD}$) domains.
   \item \textbf{On-Chip Decoupling Capacitors (Decaps):} Placed near supply rails to act as local charge reservoirs, damping high-frequency voltage ripples.
+\end{itemize}
+
+\subsection{3. Interconnect Parasitics \& Signal Integrity}
+At high frequencies, on-chip and on-board wires cannot be treated as ideal conductors. They exhibit distributed resistance ($r$), inductance ($l$), and capacitance ($c$) per unit length.
+
+\begin{tcolorbox}[defbox, title={\textbf{Interconnect Lumped RLC Model}}]
+\begin{itemize}[leftmargin=*, itemsep=2pt, topsep=0pt]
+  \item \textbf{Resistance $r$ ($\Omega$/m):} From metal sheet resistance. Causes $I^2R$ voltage drop and thermal loss.
+  \item \textbf{Capacitance $c$ (F/m):} From metal-to-substrate or metal-to-metal coupling. Acts as a low-pass filter, limiting signal bandwidth: $f_{-3\text{dB}} \approx 1/(2\pi r c \ell^2)$.
+  \item \textbf{Inductance $l$ (H/m):} Dominant at RF frequencies. Causes inductive ringing and reflections at impedance discontinuities.
+\end{itemize}
+\end{tcolorbox}
+
+\textbf{Key Signal Integrity Issues:}
+\begin{itemize}[leftmargin=*, itemsep=2.5pt]
+  \item \textbf{Crosstalk:} Capacitive/inductive coupling between adjacent wires adds interference. Mitigated by inserting grounded shield traces between signal lines.
+  \item \textbf{Reflections:} When a signal reaches an impedance discontinuity ($Z_L \neq Z_0$), part is reflected with coefficient:
+  \[\Gamma = \frac{Z_L - Z_0}{Z_L + Z_0}\]
+  Mitigated by matched termination ($Z_L = Z_0$, e.g., $50\,\Omega$ for coaxial cables).
+  \item \textbf{Propagation Delay:} Signal propagation velocity is $v_p = 1/\sqrt{lc} \approx c_0/\sqrt{\varepsilon_r}$. For FR4 PCB ($\varepsilon_r \approx 4$): $v_p \approx 1.5 \times 10^8\,$m/s.
 \end{itemize}
 
 % ===============================================================================
@@ -1181,6 +1391,73 @@ LVDS is a high-speed, low-power physical layer interface standard. It operates b
 \end{enumerate}
 
 % ===============================================================================
+\section{Current-Mode Logic (CML) Signaling}
+% ===============================================================================
+
+\begin{tcolorbox}[defbox, title={\textbf{Current-Mode Logic (CML) Concept}}]
+\textbf{Current-Mode Logic (CML)} routes a constant tail current $I_{SS}$ through a differential transistor pair. The input data steers the current between two complementary output branches. Since the total current is always constant, the power rails see no transient spikes, and switching speed is limited only by the transistor $f_T$ and the load $R_L C_{load}$ time constant --- enabling multi-gigabit ($>$10\,Gbps) signaling.
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={CML Differential Pair Gate Schematic}]
+\centering
+\begin{tikzpicture}[scale=0.95, transform shape]
+  % VDD rail
+  \draw[thick] (0.5, 3.8) -- (6.5, 3.8);
+  \node[above, font=\small] at (3.5, 3.8) {$V_{DD}$};
+
+  % Left load R_L
+  \draw (1.5, 3.8) to[R, l=$R_L$] (1.5, 2.4);
+
+  % Right load R_L
+  \draw (5.5, 3.8) to[R, l_=$R_L$] (5.5, 2.4);
+
+  % Transistors
+  \node[nmos] (M1) at (1.5, 1.5) {};
+  \node[nmos, xscale=-1] (M2) at (5.5, 1.5) {};
+  
+  \node[right, font=\scriptsize] at (1.8, 1.5) {$M_1$};
+  \node[left, font=\scriptsize] at (5.2, 1.5) {$M_2$};
+
+  % Connections to D and D_bar
+  \draw[thick] (M1.gate) -- (-0.4, 1.5) node[left, font=\small] {$D$};
+  \draw[thick] (M2.gate) -- (7.4, 1.5) node[right, font=\small] {$\bar{D}$};
+
+  % Output terminals Q and Q_bar
+  \draw (1.5, 2.4) -- (M1.drain);
+  \draw (5.5, 2.4) -- (M2.drain);
+  
+  \draw (1.5, 2.4) to[short, *-o] (0.7, 2.4) node[left, font=\small\color{myred}] {$\overline{Q}$};
+  \draw (5.5, 2.4) to[short, *-o] (6.3, 2.4) node[right, font=\small\color{myred}] {$Q$};
+
+  % Sources connected to tail current
+  \draw[thick] (M1.source) -- (1.5, 0.5) -- (3.5, 0.5);
+  \draw[thick] (M2.source) -- (5.5, 0.5) -- (3.5, 0.5);
+  
+  \node[draw=mydark, circle, minimum size=0.7cm, thick, font=\small] (iss) at (3.5, -0.2) {$I_{SS}$};
+  \draw[thick] (3.5, 0.5) -- (iss);
+  \draw[thick] (iss) -- (3.5, -0.9) node[ground] {};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\textbf{Key CML Equations:}
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*, itemsep=3.5pt]
+  \item \textbf{Output Swing:} The differential voltage is set by the tail current and load resistance:
+  \begin{tcolorbox}[formulabox, title={\textbf{CML Output Swing and Bandwidth}}]
+  \[
+  \Delta V_{out} = I_{SS} \times R_L \qquad \text{(Typical: } 200\,\text{mV} - 800\,\text{mV)}
+  \]
+  \[
+  f_{-3\text{dB}} = \frac{1}{2\pi\, R_L\, C_{load}} \qquad \text{(bandwidth set by RC time constant)}
+  \]
+  \end{tcolorbox}
+  \item \textbf{Constant Current:} $P = V_{DD} \times I_{SS}$ is independent of switching activity --- no transient supply spikes, making CML ideal for mixed-signal environments.
+  \item \textbf{Common-Mode Level:} The output common mode is biased by the load: $V_{CM} = V_{DD} - I_{SS} R_L / 2$, allowing direct DC cascading of multiple CML stages.
+\end{enumerate}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Applications:} SerDes transceivers, high-speed clock distribution, PCIe/Ethernet physical layers, multi-gigabit backplanes.
+\end{itemize}
+
+% ===============================================================================
 % QUICK REVISION PAGE
 % ===============================================================================
 \newpage
@@ -1210,8 +1487,27 @@ LVDS Common-Mode Voltage & $V_{CM} = 1.2\,$V \\[4pt]
   \item \textbf{Systematic Mismatch:} Mismatch on silicon caused by deterministic spatial gradients across the wafer.
   \item \textbf{Random Mismatch:} Mismatch on silicon caused by microscopic statistical variations (e.g., dopant fluctuations).
   \item \textbf{Common-Centroid Layout:} Symmetrical layout arrangement of matched devices around a single central point to cancel linear gradients.
-  \item \textbf{LVDS:} A high-speed differential signaling standard that transmits data using a $3.5\,$mA current loop over $100\,\Omega$.
+  \item \textbf{LVDS:} A high-speed differential signaling standard transmitting data using a $3.5\,$mA current loop over a $100\,\Omega$ termination.
+  \item \textbf{CML:} Current-Mode Logic --- routes a constant tail current $I_{SS}$ through a differential pair for multi-gigabit signaling.
+  \item \textbf{Interconnect Parasitics:} Distributed R, L, C of on-chip/board wires causing RC delay, reflections, and crosstalk.
+  \item \textbf{Reflection Coefficient:} $\Gamma = (Z_L - Z_0)/(Z_L + Z_0)$; zero for matched termination ($Z_L = Z_0$).
 \end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{High-Speed Signaling Interface Comparison}}]
+\centering
+\par\noindent
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|B{2.4cm}|Y|Y|Y|}
+\hline
+\textbf{Parameter} & \textbf{CMOS (Single-Ended)} & \textbf{LVDS} & \textbf{CML} \\ \hline
+\textbf{Signal Swing} & $V_{DD}$ (full rail) & $350\,$mV diff & $200$--$800\,$mV diff \\ \hline
+\textbf{Current Mode} & Dynamic ($CV f$) & $3.5\,$mA (const.) & $I_{SS}$ (constant) \\ \hline
+\textbf{Max Speed} & $\sim$1\,Gbps & $\sim$1.2\,Gbps & $>10\,$Gbps \\ \hline
+\textbf{Noise Immunity} & Low (single-ended) & High (CMR) & High (CMR) \\ \hline
+\textbf{Power} & Activity-dependent & Low-constant & Constant \\ \hline
+\textbf{Application} & General IC logic & PCB data links & SerDes, backplane \\ \hline
+\end{tabularx}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
@@ -1336,6 +1632,67 @@ Comparing this with the standard second-order system denominator $s^2 + 2\zeta\o
 \end{tcolorbox}
 The resistor $R$ is critical; it introduces a zero in the open-loop transfer function, stabilizing the second-order feedback loop by providing adequate phase margin (damping).
 
+\subsection{VCO Design: Ring Oscillator vs.~LC-Tank}
+The VCO is the most noise-sensitive block in the PLL. Two dominant topologies are used:
+
+\begin{tcolorbox}[tikzbox, title={3-Stage Ring Oscillator and LC-Tank Resonator Diagrams}]
+\centering
+\begin{tikzpicture}[scale=0.9, transform shape]
+  % Ring Oscillator (Left)
+  \begin{scope}[xshift=0cm]
+    % 3 inverters
+    \foreach \i in {1, 2, 3} {
+      \pgfmathsetmacro{\x}{(\i-1)*2.2}
+      % Triangle
+      \draw[thick, fill=hdrteal, draw=myteal] (\x, 0.4) -- (\x, -0.4) -- (\x+0.8, 0) -- cycle;
+      % Circle
+      \draw[thick, draw=myteal, fill=white] (\x+0.9, 0) circle (0.1);
+      \node[below, font=\scriptsize] at (\x+0.4, -0.4) {Inv \i};
+    }
+    
+    % Connections between inverters
+    \draw[thick] (0.9+0.1, 0) -- (2.2, 0);
+    \draw[thick] (2.2+0.9+0.1, 0) -- (4.4, 0);
+    \draw[thick] (4.4+0.9+0.1, 0) -- (6.0, 0);
+    
+    % Feedback loop
+    \draw[thick] (5.8, 0) to[short, *-] (5.8, -0.8) -- (-0.6, -0.8) -- (-0.6, 0) -- (0, 0);
+    \draw[-Stealth, thick] (6.0, 0) -- (6.6, 0) node[right, font=\scriptsize] {$V_{out}$};
+    
+    \node[font=\small\bfseries] at (2.6, -1.3) {(a) 3-Stage Ring Oscillator};
+  \end{scope}
+
+  % LC Resonator (Right)
+  \begin{scope}[xshift=9.0cm, yshift=0.3cm]
+    % Parallel L and C
+    \draw[thick] (0, 0) to[L, l=$L$, *-*] (0, -1.6);
+    \draw[thick] (1.5, 0) to[C, l=$C$, *-*] (1.5, -1.6);
+    
+    % Top and bottom rails
+    \draw[thick] (-0.8, 0) -- (2.3, 0);
+    \draw[thick] (-0.8, -1.6) -- (2.3, -1.6) node[ground] {};
+    
+    \node[font=\small\bfseries] at (0.75, -2.1) {(b) Parallel LC Resonator};
+  \end{scope}
+\end{tikzpicture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={Ring Oscillator vs.~LC-Tank VCO Comparison}]
+\centering
+\par\noindent
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|B{3.0cm}|Y|Y|}
+\hline
+\textbf{Property} & \textbf{Ring Oscillator VCO} & \textbf{LC-Tank VCO} \\ \hline
+\textbf{Structure} & $N$ cascaded inverter/delay stages in a ring & Parallel LC resonator with varactor for tuning \\ \hline
+\textbf{Phase Noise} & Poor ($-90$ to $-100\,$dBc/Hz at 1\,MHz) & Excellent ($-120$ to $-145\,$dBc/Hz at 1\,MHz) \\ \hline
+\textbf{Tuning Range} & Very wide ($>2\times$) & Narrow ($\sim 10$--$20\%$) \\ \hline
+\textbf{Silicon Area} & Very compact (inverters only) & Large (on-chip inductor is bulky) \\ \hline
+\textbf{Frequency} & DC to $>10\,$GHz (digital CMOS) & $500\,$MHz to $>60\,$GHz \\ \hline
+\textbf{Applications} & Digital CDR, on-chip clocking & RF synthesizers, wireless transceivers \\ \hline
+\end{tabularx}
+\end{tcolorbox}
+
 % ===============================================================================
 \section{Delay-Locked Loop (DLL) Architecture \& Working}
 % ===============================================================================
@@ -1451,6 +1808,22 @@ Integer-N output & $F_{OUT} = N F_{REF}$ \\
   \item \textbf{ADPLL:} A phase-locked loop consisting entirely of digital components (TDC, Digital Filter, DCO).
   \item \textbf{Fractional-N Synthesizer:} A frequency synthesizer that achieves fractional division ratios by dynamically switching divider counts.
 \end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{PLL vs.~DLL Architecture Comparison}}]
+\centering
+\par\noindent
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|B{3.0cm}|Y|Y|}
+\hline
+\textbf{Property} & \textbf{Phase-Locked Loop (PLL)} & \textbf{Delay-Locked Loop (DLL)} \\ \hline
+\textbf{Core block} & VCO (integrates freq.~to phase) & VCDL (shifts phase, no integration) \\ \hline
+\textbf{System order} & 2nd-order (Type-II), needs $R$ to stabilize & 1st-order, unconditionally stable \\ \hline
+\textbf{Jitter} & Accumulates (VCO noise recirculates) & Non-accumulating (reset each cycle) \\ \hline
+\textbf{Freq.~synthesis} & Yes: $F_{out} = N F_{ref}$ & No (phase shift only) \\ \hline
+\textbf{Lock range} & Limited by VCO tuning range & Limited by VCDL delay range \\ \hline
+\textbf{Application} & Frequency synthesis, clocking & Deskew, phase alignment \\ \hline
+\end{tabularx}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]

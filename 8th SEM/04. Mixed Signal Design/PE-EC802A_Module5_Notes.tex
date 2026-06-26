@@ -254,6 +254,67 @@ Comparing this with the standard second-order system denominator $s^2 + 2\zeta\o
 \end{tcolorbox}
 The resistor $R$ is critical; it introduces a zero in the open-loop transfer function, stabilizing the second-order feedback loop by providing adequate phase margin (damping).
 
+\subsection{VCO Design: Ring Oscillator vs.~LC-Tank}
+The VCO is the most noise-sensitive block in the PLL. Two dominant topologies are used:
+
+\begin{tcolorbox}[tikzbox, title={3-Stage Ring Oscillator and LC-Tank Resonator Diagrams}]
+\centering
+\begin{tikzpicture}[scale=0.9, transform shape]
+  % Ring Oscillator (Left)
+  \begin{scope}[xshift=0cm]
+    % 3 inverters
+    \foreach \i in {1, 2, 3} {
+      \pgfmathsetmacro{\x}{(\i-1)*2.2}
+      % Triangle
+      \draw[thick, fill=hdrteal, draw=myteal] (\x, 0.4) -- (\x, -0.4) -- (\x+0.8, 0) -- cycle;
+      % Circle
+      \draw[thick, draw=myteal, fill=white] (\x+0.9, 0) circle (0.1);
+      \node[below, font=\scriptsize] at (\x+0.4, -0.4) {Inv \i};
+    }
+    
+    % Connections between inverters
+    \draw[thick] (0.9+0.1, 0) -- (2.2, 0);
+    \draw[thick] (2.2+0.9+0.1, 0) -- (4.4, 0);
+    \draw[thick] (4.4+0.9+0.1, 0) -- (6.0, 0);
+    
+    % Feedback loop
+    \draw[thick] (5.8, 0) to[short, *-] (5.8, -0.8) -- (-0.6, -0.8) -- (-0.6, 0) -- (0, 0);
+    \draw[-Stealth, thick] (6.0, 0) -- (6.6, 0) node[right, font=\scriptsize] {$V_{out}$};
+    
+    \node[font=\small\bfseries] at (2.6, -1.3) {(a) 3-Stage Ring Oscillator};
+  \end{scope}
+
+  % LC Resonator (Right)
+  \begin{scope}[xshift=9.0cm, yshift=0.3cm]
+    % Parallel L and C
+    \draw[thick] (0, 0) to[L, l=$L$, *-*] (0, -1.6);
+    \draw[thick] (1.5, 0) to[C, l=$C$, *-*] (1.5, -1.6);
+    
+    % Top and bottom rails
+    \draw[thick] (-0.8, 0) -- (2.3, 0);
+    \draw[thick] (-0.8, -1.6) -- (2.3, -1.6) node[ground] {};
+    
+    \node[font=\small\bfseries] at (0.75, -2.1) {(b) Parallel LC Resonator};
+  \end{scope}
+\end{tikzpicture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={Ring Oscillator vs.~LC-Tank VCO Comparison}]
+\centering
+\par\noindent
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|B{3.0cm}|Y|Y|}
+\hline
+\textbf{Property} & \textbf{Ring Oscillator VCO} & \textbf{LC-Tank VCO} \\ \hline
+\textbf{Structure} & $N$ cascaded inverter/delay stages in a ring & Parallel LC resonator with varactor for tuning \\ \hline
+\textbf{Phase Noise} & Poor ($-90$ to $-100\,$dBc/Hz at 1\,MHz) & Excellent ($-120$ to $-145\,$dBc/Hz at 1\,MHz) \\ \hline
+\textbf{Tuning Range} & Very wide ($>2\times$) & Narrow ($\sim 10$--$20\%$) \\ \hline
+\textbf{Silicon Area} & Very compact (inverters only) & Large (on-chip inductor is bulky) \\ \hline
+\textbf{Frequency} & DC to $>10\,$GHz (digital CMOS) & $500\,$MHz to $>60\,$GHz \\ \hline
+\textbf{Applications} & Digital CDR, on-chip clocking & RF synthesizers, wireless transceivers \\ \hline
+\end{tabularx}
+\end{tcolorbox}
+
 % ===============================================================================
 \section{Delay-Locked Loop (DLL) Architecture \& Working}
 % ===============================================================================
@@ -369,6 +430,22 @@ Integer-N output & $F_{OUT} = N F_{REF}$ \\
   \item \textbf{ADPLL:} A phase-locked loop consisting entirely of digital components (TDC, Digital Filter, DCO).
   \item \textbf{Fractional-N Synthesizer:} A frequency synthesizer that achieves fractional division ratios by dynamically switching divider counts.
 \end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{PLL vs.~DLL Architecture Comparison}}]
+\centering
+\par\noindent
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|B{3.0cm}|Y|Y|}
+\hline
+\textbf{Property} & \textbf{Phase-Locked Loop (PLL)} & \textbf{Delay-Locked Loop (DLL)} \\ \hline
+\textbf{Core block} & VCO (integrates freq.~to phase) & VCDL (shifts phase, no integration) \\ \hline
+\textbf{System order} & 2nd-order (Type-II), needs $R$ to stabilize & 1st-order, unconditionally stable \\ \hline
+\textbf{Jitter} & Accumulates (VCO noise recirculates) & Non-accumulating (reset each cycle) \\ \hline
+\textbf{Freq.~synthesis} & Yes: $F_{out} = N F_{ref}$ & No (phase shift only) \\ \hline
+\textbf{Lock range} & Limited by VCO tuning range & Limited by VCDL delay range \\ \hline
+\textbf{Application} & Frequency synthesis, clocking & Deskew, phase alignment \\ \hline
+\end{tabularx}
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
