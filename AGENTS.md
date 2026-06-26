@@ -143,6 +143,11 @@ ECE_MAKAUT_Short-Notes/
 │       ├── ...
 │       ├── PE-EC802A_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── PE-EC802A_Mixed_Signal_Design.pdf
+│   └── 05. Industrial Automation and Control/ # PE-EC802B — 5 modules (All complete)
+│       ├── PE-EC802B_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── PE-EC802B_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── PE-EC802B_Industrial_Automation_and_Control.pdf
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -398,6 +403,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | PE-EC801B Fiber Optic Communication | 5 | ✅ All compiled | `PE-EC801B_Fiber_Optic_Communication.pdf` | 46 |
 | PE-EC801C Error Correcting Codes | 5 | ✅ All compiled | `PE-EC801C_Error_Correcting_Codes.pdf` | 49 |
 | PE-EC802A Mixed Signal Design | 5 | ✅ All compiled | `PE-EC802A_Mixed_Signal_Design.pdf` | 35 |
+| PE-EC802B Industrial Automation and Control | 5 | ✅ All compiled | `PE-EC802B_Industrial_Automation_and_Control.pdf` | 38 |
 
 **1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
-**8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C) and Mixed Signal Design (PE-EC802A) are complete.
+**8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A) and Industrial Automation and Control (PE-EC802B) are complete.

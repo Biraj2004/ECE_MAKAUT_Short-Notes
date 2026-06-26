@@ -25,7 +25,7 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | EC601 Control System (7 modules), EC602 Computer Network (4 modules), HS-HU601 Economics for Engineers (4 modules), PE-EC603D Information Theory and Coding (3 modules), OE-EC604C Object Oriented Programming (9 modules), PE-EC603A Introduction to MEMS (4 modules), PE-EC603B Bio-Medical Electronics (4 modules), OE-EC604B Operating System (9 modules), OE-EC604A Electronic Measurement and Measuring Instruments (5 modules), PE-EC603C CMOS VLSI Design (6 modules) |
 | 7th SEM | ✅ Complete | HS-HU701 Principles of Management (4 modules), PE-EC701A Microwave Theory and Technique (9 modules), PE-EC701B Satellite Communication (6 modules), PE-EC701C Mobile Communication and Networks (6 modules), PE-EC702A Adaptive Signal Processing (5 modules), PE-EC702B Digital Image and Video Processing (8 modules), PE-EC702C Neural Network and Fuzzy Logic Control (5 modules), PE-EC703A Embedded System (5 modules), PE-EC703B Wireless Sensor Networks (5 modules), PE-EC703C Wavelet Transforms (7 modules), OE-EC704A Web Technology (10 modules), OE-EC704C Entrepreneurship (4 modules), OE-EC704B Optimization Technique (6 modules) |
-| 8th SEM | ✅ Complete | PE-EC801A Antennas and Propagation (7 modules + combined PDF), PE-EC801B Fiber Optic Communication (5 modules + combined PDF), PE-EC801C Error Correcting Codes (5 modules + combined PDF), PE-EC802A Mixed Signal Design (5 modules + combined PDF) |
+| 8th SEM | ✅ Complete | PE-EC801A Antennas and Propagation (7 modules + combined PDF), PE-EC801B Fiber Optic Communication (5 modules + combined PDF), PE-EC801C Error Correcting Codes (5 modules + combined PDF), PE-EC802A Mixed Signal Design (5 modules + combined PDF), PE-EC802B Industrial Automation and Control (5 modules + combined PDF) |
 
 ---
 
@@ -376,6 +376,17 @@ Concise, structured notes for every subject across all 8 semesters of the MAKAUT
 | `PE-EC802A_Module5_Notes.pdf` | PLLs \& DLLs: Phase-Locked Loops (PLL) components (PFD, CP, Loop Filter, VCO, Feedback Divider), mathematical loop dynamics derivation for Type-II CP-PLL, Delay-Locked Loops (DLL) architecture, stability vs. PLL, jitter accumulation, Digital PLL (DPLL) and All-Digital PLL (ADPLL), frequency synthesizers (integer-N and fractional-N). |
 | `PE-EC802A_Mixed_Signal_Design.pdf` | **Combined** — all 5 modules, 35 pages |
 
+### PE-EC802B — Industrial Automation and Control
+
+| File | Topics |
+|---|---|
+| `PE-EC802B_Module1_Notes.pdf` | Sensors and Actuators: Displacement sensors (LVDT, potentiometer loading effect), force sensors (strain gauges, load cells, Wheatstone bridge readout), ultrasonic sensors (ToF principle, sound velocity vs. temperature), temperature sensors (RTD linear model, NTC Steinhart-Hart equation, PTC switches, thermocouples, Seebeck effect, CJC), pressure sensors (piezoelectric and capacitive), DC motor speed control (H-bridge, PWM), stepper motor step angle, microstepping, servo motors, piezoelectric and pneumatic actuators (double-acting cylinders, 5/2 directional control valves). |
+| `PE-EC802B_Module2_Notes.pdf` | Signal Conditioning and Data Transmission: Three-Op-Amp instrumentation amplifier (ideal closed-loop output gain mathematical derivation), Sallen-Key second-order active low-pass filters (transfer function analysis), electrical isolation (optocoupler optical isolation, protection clamping, TVS diodes), 4–20 mA industrial current loops (live zero 4 mA vs. full scale 20 mA, receiver conversion), RS-485 differential signaling, grounding and shielding (star ground, ground loops, electrostatic shielding), systematic/random errors, calibration zero/span adjustments, uncertainty propagation equation. |
+| `PE-EC802B_Module3_Notes.pdf` | Controller Tuning and PID Control: Continuous PID equation (parallel form, physical action of P, I, D terms), offset, integral windup (anti-windup clamping), derivative kick (derivative-on-measurement), Ziegler-Nichols tuning (open-loop open reaction S-curve 1st method, closed-loop ultimate oscillation 2nd method parameters tables), Cohen-Coon tuning (FOPDT model parameters table), analog PID op-amp circuit implementation, digital PID algorithms (positional vs. velocity incremental digital equations, advantages). |
+| `PE-EC802B_Module4_Notes.pdf` | Programmable Logic Controllers (PLC): PLC ruggedized hardware architecture block diagram, operational scan cycle (input scan, program scan, output scan, housekeeping), scan time, watchdog timer (WDT) safety trip, Ladder Diagram (LD) programming (normally open/closed contacts, output coils, motor latching/sealing rung logic), timers and counters (TON, TOF, retentive RTO, CTU/CTD), industrial bottle-filling application conveyor start/stop/fill logic. |
+| `PE-EC802B_Module5_Notes.pdf` | Distributed Control Systems (DCS), SCADA, and Advanced Control: DCS hierarchical architecture levels (Level 0 to 4), redundant hot-standby architectures, SCADA geographically distributed systems components (MTU, RTU, HMI, communication protocols Modbus/DNP3/OPC-UA), Advanced Control Techniques (cascade control primary/secondary loop dynamics block diagram, feedforward control design equation, ratio control parallel/series configurations, split-range control, override selective control limit protection, Internal Model Control (IMC) design). |
+| `PE-EC802B_Industrial_Automation_and_Control.pdf` | **Combined** — all 5 modules, 36 pages |
+
 ---
 
 ## Repository structure
@@ -546,12 +557,18 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── PE-EC801C_Module5_Notes.tex / .pdf
 │   │   ├── PE-EC801C_Combined_Notes.tex
 │   │   └── PE-EC801C_Error_Correcting_Codes.pdf
-│   └── 04. Mixed Signal Design/
-│       ├── PE-EC802A_Module1_Notes.tex / .pdf
+│   ├── 04. Mixed Signal Design/
+│   │   ├── PE-EC802A_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── PE-EC802A_Module5_Notes.tex / .pdf
+│   │   ├── PE-EC802A_Combined_Notes.tex
+│   │   └── PE-EC802A_Mixed_Signal_Design.pdf
+│   └── 05. Industrial Automation and Control/
+│       ├── PE-EC802B_Module1_Notes.tex / .pdf
 │       ├── ...
-│       ├── PE-EC802A_Module5_Notes.tex / .pdf
-│       ├── PE-EC802A_Combined_Notes.tex
-│       └── PE-EC802A_Mixed_Signal_Design.pdf
+│       ├── PE-EC802B_Module5_Notes.tex / .pdf
+│       ├── PE-EC802B_Combined_Notes.tex
+│       └── PE-EC802B_Industrial_Automation_and_Control.pdf
 ├── pdf_compile.ps1                 # Compile all module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs per subject
 ├── Notes_Build_Guide.md            # Full authoring guide & style spec
