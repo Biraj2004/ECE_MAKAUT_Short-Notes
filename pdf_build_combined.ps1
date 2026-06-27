@@ -123,7 +123,8 @@ foreach ($folder in $subjectFolders) {
     # ---- Extract credit line ------------------------------------------------
     $creditMatch = $firstLines | Select-String 'Semester .*Credits' | Select-Object -First 1
     $creditStr   = if ($creditMatch) {
-        ($creditMatch.Line -replace '^\s*\{\\normalsize\\color\{[^}]+\}\s*','') -replace '\}\\\\.*','' -replace '^\s+|\s+$',''
+        $extracted = ($creditMatch.Line -replace '^\s*\{\\normalsize\\color\{[^}]+\}\s*','') -replace '\}\\\\.*','' -replace '^\s+|\s+$',''
+        $extracted -replace '\d+L:\d+T:\d+P', 'ECE'
     } else { 'Semester' }
 
     # ---- Extract module titles from first \section of each module -----------
@@ -351,6 +352,19 @@ foreach ($folder in $subjectFolders) {
 
     # -- Title page -----------------------------------------------------------
     [void]$sb.AppendLine('\thispagestyle{empty}')
+    [void]$sb.AppendLine('')
+    [void]$sb.AppendLine('% ─── Page Border (TikZ Overlay) ────────────────────────────────────────────────')
+    [void]$sb.AppendLine('\begin{tikzpicture}[remember picture, overlay]')
+    [void]$sb.AppendLine('  % Outer border (fine line in mgframe)')
+    [void]$sb.AppendLine('  \draw[color=mgframe, line width=1.5pt] ')
+    [void]$sb.AppendLine('    ($(current page.north west) + (0.6in, -0.6in)$) rectangle ')
+    [void]$sb.AppendLine('    ($(current page.south east) + (-0.6in, 0.6in)$);')
+    [void]$sb.AppendLine('  % Inner border (finer accent line in myred)')
+    [void]$sb.AppendLine('  \draw[color=myred, line width=0.8pt] ')
+    [void]$sb.AppendLine('    ($(current page.north west) + (0.65in, -0.65in)$) rectangle ')
+    [void]$sb.AppendLine('    ($(current page.south east) + (-0.65in, 0.65in)$);')
+    [void]$sb.AppendLine('\end{tikzpicture}')
+    [void]$sb.AppendLine('')
     [void]$sb.AppendLine('\vspace*{1.0cm}')
     [void]$sb.AppendLine('\begin{center}')
     [void]$sb.AppendLine('  {\Huge\bfseries\color{myred} ' + $subjectCode + '}\\[10pt]')
@@ -359,8 +373,7 @@ foreach ($folder in $subjectFolders) {
     [void]$sb.AppendLine('  {\Large\color{myteal}\textbf{Combined Module Notes}}\\[8pt]')
     [void]$sb.AppendLine('  {\large\color{mydark} Modules 1 -- ' + $moduleFiles.Count + '}\\[40pt]')
     [void]$sb.AppendLine('  {\normalsize\color{mydark} ' + $creditStr + '}\\[12pt]')
-    [void]$sb.AppendLine('  {\normalsize\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27)}\\[6pt]')
-    [void]$sb.AppendLine('  {\normalsize\color{mydark}\textit{Biraj Sarkar}}')
+    [void]$sb.AppendLine('  {\normalsize\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27)}')
     [void]$sb.AppendLine('\end{center}')
     [void]$sb.AppendLine('\vspace{1.0cm}')
     [void]$sb.AppendLine('\begin{center}')
@@ -369,6 +382,14 @@ foreach ($folder in $subjectFolders) {
     [void]$sb.AppendLine('    \textbf{Disclaimer / Study Guide Notice:}\\')
     [void]$sb.AppendLine('    These are condensed \textbf{Short Notes} focusing on core theory, key formulas, block/circuit diagrams, and standard viva Q\&As for university exam revision. Exhaustive numerical practice problems and derivation edge cases are not covered. This serves as a quick-revision reference guide for students.')
     [void]$sb.AppendLine('  \end{tcolorbox}')
+    [void]$sb.AppendLine('\end{center}')
+    [void]$sb.AppendLine('\vfill')
+    [void]$sb.AppendLine('\vspace{0.6cm}')
+    [void]$sb.AppendLine('\begin{center}')
+    [void]$sb.AppendLine('  {\large\bfseries\color{mypurple} Biraj Sarkar}\\[16pt]')
+    [void]$sb.AppendLine('  {\footnotesize\color{watermark}\textbf{IN ASSOCIATION WITH}}\\[8pt]')
+    [void]$sb.AppendLine('  {\small\bfseries\color{mydark} MAKAUT Wingman \quad$\bullet$\quad MAKAUT Future Minds}\\[12pt]')
+    [void]$sb.AppendLine('  {\large\bfseries\color{myteal} Cooch Behar Government Engineering College}')
     [void]$sb.AppendLine('\end{center}')
     [void]$sb.AppendLine('\vfill')
     [void]$sb.AppendLine('\begin{center}{\small\color{watermark}\textit{Exam-Ready Notes}}\end{center}')

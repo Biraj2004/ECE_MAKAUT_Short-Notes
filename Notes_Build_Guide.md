@@ -508,6 +508,24 @@ Replace `<CODE>`, `<Subject Name>`, and `Module N` per file.
 \newpage
 ```
 
+### Combined Notes Cover Page
+
+For combined subject-wise notes, a full-page cover sheet is generated dynamically by the builder script using the layout from [`Combined_Notes_Cover_Page.tex`](Combined_Notes_Cover_Page.tex).
+
+**Design Specifications:**
+1. **Page Border:** Drawn using a TikZ overlay on the empty page style:
+   - **Outer Border:** Line width `1.5pt` in `mgframe` color, inset by `0.6in` from the page edges.
+   - **Inner Border:** Line width `0.8pt` in `myred` accent color, inset by `0.65in` from the page edges.
+2. **Title Block:** Displays the Subject Code in `Huge\bfseries\color{myred}` and the Subject Name in `LARGE\bfseries\color{mydark}`, separated by a `myred` rule (`1.5pt` thick, `0.7\linewidth` wide).
+3. **Course Metadata:** Subtitle "Combined Module Notes" in bold `myteal`, followed by module counts and a semester/department/credits line.
+   - *Note:* The standard L-T-P parameters (e.g. `3L:0T:0P`) are dynamically replaced with `ECE` by the build script for consistency.
+4. **Notice Box:** Uses a light grey `tcolorbox` (`colback=mygray`, `colframe=mgframe`, `boxrule=0.5pt`, `arc=3pt`, `width=0.85\linewidth`) to present the study guide disclaimer.
+5. **Bottom Branding Block:** Positioned via `\vfill` to rest elegantly at the bottom:
+   - **Author Name:** `Biraj Sarkar` in bold purple (`\large\bfseries\color{mypurple}`).
+   - **Affiliation Label:** "IN ASSOCIATION WITH" in small capitals (`\footnotesize\color{watermark}\textbf`).
+   - **Associations:** `MAKAUT Wingman` and `MAKAUT Future Minds` in bold dark text (`\small\bfseries\color{mydark}`).
+   - **College Name:** `Cooch Behar Government Engineering College` highlighted in bold teal (`\large\bfseries\color{myteal}`).
+
 ---
 
 ## 11. Quick Revision Page

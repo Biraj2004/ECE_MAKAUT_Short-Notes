@@ -153,6 +153,8 @@ ECE_MAKAUT_Short-Notes/
 │       ├── ...
 │       ├── PE-EC802C_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── PE-EC802C_VLSI_Design_Automation.pdf
+├── Combined_Notes_Cover_Page.tex   # Standalone cover page template
+├── Combined_Notes_Cover_Page.pdf   # Standalone cover page PDF (compiled output)
 ├── LONG_BOOK/                      # Parallel textbook-style notes folder (EXCLUDED)
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs

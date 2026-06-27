@@ -98,6 +98,10 @@ Requires **XeLaTeX** (TeX Live or MiKTeX) with fonts: `TeX Gyre Pagella`, `TeX G
 .\pdf_build_combined.ps1 -Subject "EC602"
 ```
 
+### Cover Page Template
+
+- [`Combined_Notes_Cover_Page.tex`](Combined_Notes_Cover_Page.tex): Standalone template used by `pdf_build_combined.ps1` to dynamically generate uniform cover pages for combined subject PDFs. It incorporates an elegant double-frame border, dynamic credit/department formatting (using `ECE`), and institutional association details. Preview available at [`Combined_Notes_Cover_Page.pdf`](Combined_Notes_Cover_Page.pdf).
+
 ---
 
 ## Tech stack
