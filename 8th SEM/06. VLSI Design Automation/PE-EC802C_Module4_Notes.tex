@@ -206,6 +206,37 @@ Models digital circuits at the transistor level by representing MOS transistors 
 \end{itemize}
 
 % ===============================================================================
+\section{Combinational Logic Synthesis}
+% ===============================================================================
+
+Logic synthesis converts high-level RTL descriptions (Verilog/VHDL) into an optimized gate-level netlist. The combinational logic synthesis process consists of two primary sequential phases:
+
+\subsection{1. Technology-Independent Optimization}
+Optimizes the Boolean behavior of the network without considering specific library gates. The circuit is modeled as a \textbf{Boolean Network} (a Directed Acyclic Graph where nodes represent Boolean functions and edges represent signal flow).
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Restructuring Operations:}
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1.5pt]
+          \item \textbf{Decomposition:} Splitting a complex node function into smaller, simpler functions.
+          \item \textbf{Extraction:} Identifying common sub-expressions across multiple nodes and creating a new node to share them, reducing overall literal count.
+          \item \textbf{Factoring:} Converting SOP forms to factored forms (e.g. $ab + ac \rightarrow a(b+c)$) to minimize transistor count.
+          \item \textbf{Substitution:} Expressing a node's function in terms of other existing nodes.
+          \item \textbf{Collapsing:} Merging a node into its fan-out nodes to eliminate intermediate nodes, reducing delay at the expense of area.
+        \end{itemize}
+  \item \textbf{And-Inverter Graphs (AIGs):} A representation where every node is a 2-input AND gate, and edges can contain inversion flags. Highly efficient for Boolean reasoning and logic optimization.
+\end{itemize}
+
+\subsection{2. Technology Mapping}
+Translates the optimized technology-independent Boolean network into standard library cells of the target fabrication process (e.g. static CMOS NAND, NOR, AOI gates).
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Tree Matching (Dagon's Algorithm):}
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1.5pt]
+          \item The Boolean network is partitioned into a collection of trees.
+          \item Library gates are also represented as patterns of trees.
+          \item Dynamic programming is applied to find the minimum-cost cover of standard cells that matches the network tree structures.
+        \end{itemize}
+  \item \textbf{Objectives:} Optimizing for minimum area, minimum delay (critical path), or minimum power dissipation.
+\end{itemize}
+
 \section{Two-Level Logic Synthesis}
 % ===============================================================================
 
@@ -323,31 +354,29 @@ ROBDDs are canonical representations of Boolean functions. For a fixed variable 
 
 \newpage
 
-% ===============================================================================
-\section{Quick Revision Page}
-% ===============================================================================
+% ═══════════════════════════════════════════════════════════════════════════════
+% QUICK REVISION PAGE
+% ═══════════════════════════════════════════════════════════════════════════════
+\begin{center}
+  {\large\bfseries\color{myred} Quick Revision — Module 4}\\[3pt]
+  {\small\color{mydark} Logic Synthesis, Simulation \& BDDs $|$ PE-EC802C}
+\end{center}
+\noindent{\color{myred}\rule{\linewidth}{1.2pt}}
+\vspace{8pt}
 
-\subsection{Key Formulas \& Syntheses}
-\begin{tcolorbox}[formulabox, title={Logic Synthesis \& BDD Formulations}]
-\begin{enumerate}[leftmargin=*, itemsep=4pt]
-  \item \textbf{Shannon's Expansion Theorem:}
-        \begin{equation*}
-          f(x_1, \dots, x_n) = x_1 \cdot f(1, x_2, \dots, x_n) + x_1' \cdot f(0, x_2, \dots, x_n)
-        \end{equation*}
-        This is the mathematical foundation for constructing BDD nodes.
-  \item \textbf{Complexity bounds of exact QM minimization:}
-        \begin{equation*}
-          N_{\text{PI}} \approx \frac{3^n}{n} \quad (\text{worst-case number of prime implicants for } n \text{ variables})
-        \end{equation*}
-  \item \textbf{Event scheduler delay equation:}
-        \begin{equation*}
-          t_{\text{schedule}} = t_{\text{current}} + d_{\text{gate}}
-        \end{equation*}
-\end{enumerate}
+\begin{tcolorbox}[formulabox, title={\textbf{Key Formulas and Metrics at a Glance}}]
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\linewidth}{B{5.0cm} X}
+  Shannon's Expansion & $f = x_i \cdot f_{x_i} + x_i' \cdot f_{x_i'} \quad (\text{foundation for BDD node building})$ \\[4pt]
+  QM Worst-Case Implicants & $N_{\text{PI}} \approx \dfrac{3^n}{n} \quad (\text{for } n \text{ variables})$ \\[4pt]
+  Event Scheduler Delay & $t_{\text{schedule}} = t_{\text{current}} + d_{\text{gate}} \quad (\text{event propagation delay})$
+\end{tabularx}
 \end{tcolorbox}
 
-\subsection{One-Line Definitions}
-\begin{itemize}[leftmargin=*, itemsep=3pt]
+\vspace{6pt}
+
+\begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
+\begin{itemize}[leftmargin=*, itemsep=3pt, topsep=0pt]
   \item \textbf{Time Wheel:} A circular scheduler queue used in event-driven simulators to track gate updates.
   \item \textbf{Switch-Level:} Transistor-level logic simulation where nodes represent strengths and states.
   \item \textbf{Prime Implicant:} A product term (cube) that cannot be combined with any other term to form a simpler term.
@@ -357,41 +386,12 @@ ROBDDs are canonical representations of Boolean functions. For a fixed variable 
   \item \textbf{ROBDD:} A canonical directed acyclic graph representing a Boolean function, minimized using reduction rules.
   \item \textbf{Canonical Form:} A unique representation of a mathematical object, allowing easy comparison.
 \end{itemize}
+\end{tcolorbox}
 
-\subsection{Comparison: Simulators \& BDDs}
-\textbf{Gate-Level vs. Switch-Level Simulation:}\par\noindent
-{\renewcommand{\arraystretch}{1.4}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
-\hline
-\textbf{Feature} & \textbf{Gate-Level Simulator} & \textbf{Switch-Level Simulator} \\
-\hline
-\textbf{Primitive Element} & Boolean logic gates (AND, OR, XOR). & MOS transistors (nodes, switches). \\
-\hline
-\textbf{Execution Speed} & Very fast (evaluates only on logic changes). & Slow (calculates charge flows and transistor strengths). \\
-\hline
-\textbf{Accuracy} & Ideal logic behavior. & Captures bi-directional pass transistor behavior. \\
-\hline
-\end{tabularx}}
+\vspace{6pt}
 
-\vspace{8pt}
-\textbf{BDD vs. ROBDD:}\par\noindent
-{\renewcommand{\arraystretch}{1.4}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
-\hline
-\textbf{Feature} & \textbf{Binary Decision Diagram (BDD)} & \textbf{Reduced Ordered BDD (ROBDD)} \\
-\hline
-\textbf{Ordering} & No fixed order of variables along paths. & Strict, identical variable ordering along all paths. \\
-\hline
-\textbf{Uniqueness} & Not unique (multiple representations). & Canonical (unique representation). \\
-\hline
-\textbf{Leaf Nodes} & Contains duplicate $0$ and $1$ terminal leaves. & Contains exactly one $0$ and one $1$ terminal. \\
-\hline
-\end{tabularx}}
-
-\newpage
-\subsection{Frequently Asked Questions / Viva Questions}
-\begin{tcolorbox}[exambox, title={Exam Q\&A}]
-\begin{enumerate}[leftmargin=*, itemsep=6pt]
+\begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
+\begin{enumerate}[leftmargin=*, topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=6pt]
   \item \Q{Explain the advantage of event-driven simulation over compiler-driven simulation.}
         Compiler-driven simulation evaluates every gate in the circuit during every time step, which is slow. Event-driven simulation only evaluates gates whose inputs undergo a transition (an event). Since only $2-10\%$ of gates change states in a clock cycle, event-driven simulation is 10 times faster.
         
@@ -422,6 +422,39 @@ ROBDDs are canonical representations of Boolean functions. For a fixed variable 
   \item \Q{Why do we need logic synthesis tools?}
         Logic synthesis automatically translates high-level functional code (Verilog/VHDL) into an optimized gate netlist. This speeds up design, guarantees logical correctness, and optimizes the gate count to meet timing and area constraints.
 \end{enumerate}
+\end{tcolorbox}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{Comparison Snapshot}}]
+\textbf{Gate-Level vs. Switch-Level Simulation:}\par\vspace{6pt}\noindent
+{\renewcommand{\arraystretch}{1.35}%
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Feature} & \textbf{Gate-Level Simulator} & \textbf{Switch-Level Simulator} \\
+\hline
+Primitive Element & Boolean logic gates (AND, OR, XOR). & MOS transistors (nodes, switches). \\
+\hline
+Execution Speed & Very fast (evaluates only on logic changes). & Slow (calculates charge flows and transistor strengths). \\
+\hline
+Accuracy & Ideal logic behavior. & Captures bi-directional pass transistor behavior. \\
+\hline
+\end{tabularx}}
+
+\vspace{12pt}
+\textbf{BDD vs. ROBDD:}\par\vspace{6pt}\noindent
+{\renewcommand{\arraystretch}{1.35}%
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Feature} & \textbf{Binary Decision Diagram (BDD)} & \textbf{Reduced Ordered BDD (ROBDD)} \\
+\hline
+Ordering & No fixed order of variables along paths. & Strict, identical variable ordering along all paths. \\
+\hline
+Uniqueness & Not unique (multiple representations). & Canonical (unique representation). \\
+\hline
+Leaf Nodes & Contains duplicate $0$ and $1$ terminal leaves. & Contains exactly one $0$ and one $1$ terminal. \\
+\hline
+\end{tabularx}}
 \end{tcolorbox}
 
 \end{document}

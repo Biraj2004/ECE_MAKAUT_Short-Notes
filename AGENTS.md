@@ -267,7 +267,8 @@ These are non-negotiable. Violating them causes compile errors or broken output.
 
 ### Tables
 - Always `\begin{tabularx}{\linewidth}{...}`.
-- Add `\par\noindent` before any table that immediately follows inline text.
+- Add `\par\vspace{6pt}\noindent` before any table that immediately follows inline text or headings (prevents the table top boundary line from colliding with the text baseline). Use `\vspace{12pt}` before subsequent headings.
+- Never use plain `X` columns for text cells. Because hyphenation is disabled globally (`\hyphenpenalty=10000`), plain `X` will produce ugly, uneven gaps between words due to full justification. Always use `Y` (ragged-right `X`) columns instead.
 - Never use `C{fixed-width}` inside `tabularx` — use `>{\centering\arraybackslash}X`.
 - Never use `\dfrac` inside table cells — use `\displaystyle\frac`.
 - For `\multirow` blocks: do NOT use `\hline` inside the multirow span. Use `\cline{start-end}` (e.g. `\cline{2-3}`) for inner rows to avoid cutting through the group text.

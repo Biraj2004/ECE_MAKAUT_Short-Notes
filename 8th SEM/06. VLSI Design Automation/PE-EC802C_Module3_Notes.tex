@@ -263,6 +263,34 @@ Routing is divided into two sequential steps to manage complexity:
   \item \textbf{Detailed Routing:} Assigns nets to precise metal tracks and layers within the channels planned by the global router.
 \end{enumerate}
 
+\subsection{Classification of Routing Problems \& Methods}
+Routing problems are classified based on the geometrical constraints and abstraction levels:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Local Routing Problems:} Connecting terminal pins within a localized region.
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1pt]
+          \item \textbf{Grid-based Routing:} The routing area is discretized into a uniform grid. Wires can only run along grid tracks, and vias can only be placed at grid intersections. Easy to model but consumes significant memory.
+          \item \textbf{Gridless (Continuous) Routing:} Wires can be placed at any coordinate, restricted only by design rule boundaries (minimum spacing and width). Highly memory efficient and supports variable wire widths.
+        \end{itemize}
+  \item \textbf{Area Routing:} Connecting pins across a general 2D area (often containing arbitrary blockages and obstacles). Examples include maze routers (Lee's, Soukup's) and line-probe routers (Mikami-Tabuchi, Hightower).
+  \item \textbf{Channel Routing:} Connecting pins along two parallel rows (boundaries) using horizontal segments on one layer and vertical segments on another (detailed in Section 4).
+\end{itemize}
+
+\subsection{Global Routing \& Algorithms}
+Global routing plans the approximate path of each net to avoid congestion across the chip area. The chip is modeled as a \textbf{Grid Graph} $G_c = (V_c, E_c)$, where each vertex $v_i$ represents a routing region (bin) and each edge $e_{ij}$ represents the boundary between adjacent regions with a capacity constraint $c_{ij}$ (maximum number of wires allowed to cross).
+
+\subsubsection{Key Global Routing Algorithms}
+\begin{enumerate}[leftmargin=*, itemsep=4pt]
+  \item \textbf{Rectilinear Minimum Steiner Tree (RMST):} A Steiner tree connects a set of pins by introducing auxiliary vertices called \textbf{Steiner points} to minimize total wirelength using only horizontal and vertical segments. Finding the RMST is NP-complete, so heuristics (e.g., Hwang's theorem, FLUTE) are used.
+  \item \textbf{Rectilinear Steiner Arborescence (RSA):} A directed Steiner tree routed from a source pin (root) to multiple sink pins such that the path from the root to any sink is a shortest rectilinear path.
+  \item \textbf{Sequential Routing with Rip-up and Re-route:}
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1pt]
+          \item Router routes nets one by one sequentially (e.g. using Dijkstra's algorithm).
+          \item Early nets take the shortest paths, causing congestion and capacity violations for later nets.
+          \item \textbf{Rip-up and Re-route:} Congested nets are ripped up, edge weights are increased to penalize congestion, and the nets are rerouted until all capacity constraints are satisfied.
+        \end{itemize}
+  \item \textbf{ILP-based Global Routing:} Formulates global routing as a multi-commodity flow problem to route all nets simultaneously, optimizing total wirelength subject to capacity constraints.
+\end{enumerate}
+
 \subsection{Lee's Maze Routing Algorithm}
 Lee's algorithm uses a Breadth-First Search (BFS) grid expansion technique to find the shortest path between a source ($S$) and target ($T$) grid cell. It guarantees finding a path if one exists and always finds the shortest path.
 
@@ -363,33 +391,32 @@ To prevent wire overlaps, the channel router must respect two types of constrain
 
 \newpage
 
-% ===============================================================================
-\section{Quick Revision Page}
-% ===============================================================================
+% ═══════════════════════════════════════════════════════════════════════════════
+% QUICK REVISION PAGE
+% ═══════════════════════════════════════════════════════════════════════════════
+\begin{center}
+  {\large\bfseries\color{myred} Quick Revision — Module 3}\\[3pt]
+  {\small\color{mydark} Floorplanning \& Routing $|$ PE-EC802C}
+\end{center}
+\noindent{\color{myred}\rule{\linewidth}{1.2pt}}
+\vspace{8pt}
 
-\subsection{Key Formulas \& Sizing Concepts}
-\begin{tcolorbox}[formulabox, title={Floorplanning \& Routing Formulations}]
-\begin{enumerate}[leftmargin=*, itemsep=4pt]
-  \item \textbf{Shape Function Composition (Sizing):}
-        \begin{align*}
-          \text{Horizontal Cut (+):} \quad & h_{\text{parent}} = h_1 + h_2, \quad w_{\text{parent}} = \max(w_1, w_2) \\[4pt]
-          \text{Vertical Cut (*):} \quad & w_{\text{parent}} = w_1 + w_2, \quad h_{\text{parent}} = \max(h_1, h_2)
-        \end{align*}
-  \item \textbf{Lee's Router Wave expansion labeling limit:}
-        \begin{equation*}
-          \text{Label value } L \le \text{Manhattan Distance } (|x_s - x_t| + |y_s - y_t|)
-        \end{equation*}
-  \item \textbf{Channel routing density ($d_{\max}$):}
-        \begin{equation*}
-          d(x) = \text{number of active nets crossing column } x \quad \Rightarrow \quad \text{Lower Bound on Tracks } = \max_x d(x)
-        \end{equation*}
-\end{enumerate}
+\begin{tcolorbox}[formulabox, title={\textbf{Key Formulas and Metrics at a Glance}}]
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\linewidth}{B{5.0cm} X}
+  Horizontal Cut (+) & $h_{\text{parent}} = h_1 + h_2, \quad w_{\text{parent}} = \max(w_1, w_2)$ \\[4pt]
+  Vertical Cut (*) & $w_{\text{parent}} = w_1 + w_2, \quad h_{\text{parent}} = \max(h_1, h_2)$ \\[4pt]
+  Lee's Wave Expansion & $\text{Label value } L \le |x_s - x_t| + |y_s - y_t| \quad (\text{Manhattan limit})$ \\[4pt]
+  Channel Routing Tracks & $\text{Lower Bound on Tracks } = \max_x d(x) \quad (d_{\max} \text{ density})$
+\end{tabularx}
 \tcblower
 The maximum channel density $d_{\max}$ represents the minimum number of tracks required to route the channel without overlap.
 \end{tcolorbox}
 
-\subsection{One-Line Definitions}
-\begin{itemize}[leftmargin=*, itemsep=3pt]
+\vspace{6pt}
+
+\begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
+\begin{itemize}[leftmargin=*, itemsep=3pt, topsep=0pt]
   \item \textbf{Floorplanning:} Finding optimal block locations and aspect ratios prior to cell placement.
   \item \textbf{Slicing Cut:} A cut line that splits a floorplan region completely into two sub-regions.
   \item \textbf{Polish Expression:} A postfix notation string describing slicing sequences and leaf blocks.
@@ -399,41 +426,12 @@ The maximum channel density $d_{\max}$ represents the minimum number of tracks r
   \item \textbf{Left-Edge Algorithm:} A track allocation algorithm that routes nets sorted by their left-most coordinate.
   \item \textbf{Vertical Constraint Graph:} A directed graph indicating which net must be placed above another to avoid overlaps.
 \end{itemize}
+\end{tcolorbox}
 
-\subsection{Comparison: Floorplans \& Routing}
-\textbf{Slicing vs. Non-Slicing Floorplans:}\par\noindent
-{\renewcommand{\arraystretch}{1.4}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
-\hline
-\textbf{Feature} & \textbf{Slicing Floorplan} & \textbf{Non-Slicing Floorplan} \\
-\hline
-\textbf{Representation} & Binary trees, Polish expressions. & Constraint graphs (BSG, Sequence Pairs). \\
-\hline
-\textbf{Complexity} & Optimization is fast ($O(n \log n)$). & Optimization is slow and computationally complex. \\
-\hline
-\textbf{Optimal Sizing} & Can be solved optimally in polynomial time. & Sizing is NP-complete. \\
-\hline
-\end{tabularx}}
+\vspace{6pt}
 
-\vspace{8pt}
-\textbf{Global Routing vs. Detailed Routing:}\par\noindent
-{\renewcommand{\arraystretch}{1.4}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
-\hline
-\textbf{Feature} & \textbf{Global Routing} & \textbf{Detailed Routing} \\
-\hline
-\textbf{Abstraction} & Coarse grid, ignores specific tracks. & Actual grid, routes on precise metal tracks. \\
-\hline
-\textbf{Objective} & Allocates nets to routing regions to avoid congestion. & Resolves layout design rules, placing vias and wires. \\
-\hline
-\textbf{Algorithm} & Steiner trees, maze routers, network flows. & Left-Edge algorithm, dogleg routers, grid maze. \\
-\hline
-\end{tabularx}}
-
-\newpage
-\subsection{Frequently Asked Questions / Viva Questions}
-\begin{tcolorbox}[exambox, title={Exam Q\&A}]
-\begin{enumerate}[leftmargin=*, itemsep=6pt]
+\begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
+\begin{enumerate}[leftmargin=*, topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=6pt]
   \item \Q{What is a normalized Polish expression, and why is it important?}
         A Polish expression is normalized if it has no consecutive identical operators (e.g. $AB++$ is not normalized, whereas $AB+C+$ is). Normalization guarantees a 1-to-1 mapping between Polish expressions and slicing floorplans, which reduces the search space during optimization.
         
@@ -464,6 +462,39 @@ The maximum channel density $d_{\max}$ represents the minimum number of tracks r
   \item \Q{What is channel density, and why is it important?}
         Channel density is the maximum number of nets crossing any vertical slice of a routing channel. It represents the mathematical lower bound on the number of tracks required to route the channel without overlaps.
 \end{enumerate}
+\end{tcolorbox}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{Comparison Snapshot}}]
+\textbf{Slicing vs. Non-Slicing Floorplans:}\par\vspace{6pt}\noindent
+{\renewcommand{\arraystretch}{1.35}%
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Feature} & \textbf{Slicing Floorplan} & \textbf{Non-Slicing Floorplan} \\
+\hline
+Representation & Binary trees, Polish expressions. & Constraint graphs (BSG, Sequence Pairs). \\
+\hline
+Complexity & Optimization is fast ($O(n \log n)$). & Optimization is slow and computationally complex. \\
+\hline
+Optimal Sizing & Can be solved optimally in polynomial time. & Sizing is NP-complete. \\
+\hline
+\end{tabularx}}
+
+\vspace{12pt}
+\textbf{Global Routing vs. Detailed Routing:}\par\vspace{6pt}\noindent
+{\renewcommand{\arraystretch}{1.35}%
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Feature} & \textbf{Global Routing} & \textbf{Detailed Routing} \\
+\hline
+Abstraction & Coarse grid, ignores specific tracks. & Actual grid, routes on precise metal tracks. \\
+\hline
+Objective & Allocates nets to routing regions to avoid congestion. & Resolves layout design rules, placing vias and wires. \\
+\hline
+Algorithm & Steiner trees, maze routers, network flows. & Left-Edge algorithm, dogleg routers, grid maze. \\
+\hline
+\end{tabularx}}
 \end{tcolorbox}
 
 \end{document}

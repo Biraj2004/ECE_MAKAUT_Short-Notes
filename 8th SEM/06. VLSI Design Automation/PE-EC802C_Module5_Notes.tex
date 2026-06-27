@@ -176,6 +176,19 @@ The HLS process consists of three main subproblems that are closely coupled:
   \item \textbf{Binding (Assignment):} Mapping each operation to a specific allocated functional unit (e.g., mapping multiplication $v_3$ to multiplier $M_1$) and mapping variables to specific registers.
 \end{enumerate}
 
+\subsection{Hardware \& Architecture Models in HLS}
+HLS tools map behavioral code onto specific structural hardware templates. The primary target model is the \textbf{Controller-Datapath Model} (Finite State Machine with Datapath, FSMD):
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Datapath:} Contains functional units (ALUs, multipliers, adders) for arithmetic execution, registers/memories for data storage, and multiplexers/buses for routing data.
+  \item \textbf{Controller:} An FSM that generates control signals (write enables, mux select lines) for each control step and reads status signals (flags, comparisons) from the datapath.
+\end{itemize}
+Microarchitectural models of functional units include:
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Combinational Units:} Complete execution within a single clock cycle (e.g. basic adders).
+  \item \textbf{Multi-cycle Units:} Take $d \ge 2$ clock cycles to execute. No new inputs can be accepted until execution finishes (e.g. non-pipelined dividers).
+  \item \textbf{Pipelined Units:} Take $d \ge 2$ clock cycles but can accept new inputs every $II$ (Initiation Interval) cycles (e.g. pipelined multipliers).
+\end{itemize}
+
 \subsection{Internal Representations}
 \begin{itemize}[leftmargin=*, itemsep=2pt]
   \item \textbf{Data Flow Graph (DFG):} A directed acyclic graph where vertices represent arithmetic operations ($+, -, \times$) and directed edges represent data dependencies (values passed from one operation to another).
@@ -312,6 +325,26 @@ FDS is a latency-constrained algorithm that minimizes resource costs by distribu
 
 Binding maps variables to registers and operations to functional units.
 
+\subsection{The Assignment (Binding) Problem Formulation}
+The binding (assignment) problem maps operations to functional units (resource allocation constraint) and variables to registers (storage allocation constraint). It can be formulated in different mathematical ways:
+\begin{itemize}[leftmargin=*, itemsep=4pt]
+  \item \textbf{Graph Coloring / Max-Clique Formulation:}
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=2pt]
+          \item Create a \textbf{Compatibility Graph} where vertices represent operations (or variables) and edges connect vertices that can share the same resource (i.e., operations scheduled in different control steps, or variables with non-overlapping lifetimes).
+          \item Finding a minimum clique partition in the compatibility graph (or coloring the conflict/clash graph) yields the optimal number of resources.
+        \end{itemize}
+  \item \textbf{Bipartite Matching Formulation:}
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=2pt]
+          \item Maps operations to compatible functional units as a bipartite matching problem to minimize total steering logic (multiplexers and buses).
+        \end{itemize}
+  \item \textbf{Integer Linear Programming (ILP) Formulation:}
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=2pt]
+          \item Let $x_{v,f} = 1$ if operation $v$ is bound to functional unit $f$.
+          \item Subject to: $\sum_{f} x_{v,f} = 1$ (every operation is bound to exactly one unit).
+          \item Subject to: $x_{v_1,f} + x_{v_2,f} \le 1$ for any two operations $v_1, v_2$ scheduled in the same control step (resource sharing constraint).
+        \end{itemize}
+\end{itemize}
+
 \subsection{1. Register Binding (Left-Edge Algorithm)}
 Variables that do not have overlapping lifetimes can share the same hardware register.
 \begin{itemize}[leftmargin=*, itemsep=2pt]
@@ -329,35 +362,30 @@ Before scheduling, HLS tools optimize the algorithmic code structure to improve 
 
 \newpage
 
-% ===============================================================================
-\section{Quick Revision Page}
-% ===============================================================================
+% ═══════════════════════════════════════════════════════════════════════════════
+% QUICK REVISION PAGE
+% ═══════════════════════════════════════════════════════════════════════════════
+\begin{center}
+  {\large\bfseries\color{myred} Quick Revision — Module 5}\\[3pt]
+  {\small\color{mydark} High-Level Synthesis $|$ PE-EC802C}
+\end{center}
+\noindent{\color{myred}\rule{\linewidth}{1.2pt}}
+\vspace{8pt}
 
-\subsection{Key Formulas \& Core Concepts}
-\begin{tcolorbox}[formulabox, title={High-Level Synthesis Formulations}]
-\begin{enumerate}[leftmargin=*, itemsep=4pt]
-  \item \textbf{Operation Mobility (Slack):}
-        \begin{equation*}
-          \text{Mobility } \mu_i = t_{i,\text{ALAP}} - t_{i,\text{ASAP}}
-        \end{equation*}
-        Operations with $\mu_i = 0$ are critical and cannot be delayed.
-  \item \textbf{ASAP Scheduling Recursion:}
-        \begin{equation*}
-          t_{i,\text{ASAP}} = \max_{j \in \text{Pred}(i)} \left( t_{j,\text{ASAP}} + d_j \right)
-        \end{equation*}
-  \item \textbf{ALAP Scheduling Recursion:}
-        \begin{equation*}
-          t_{i,\text{ALAP}} = \min_{k \in \text{Succ}(i)} \left( t_{k,\text{ALAP}} \right) - d_i
-        \end{equation*}
-  \item \textbf{Operation Probability (FDS):}
-        \begin{equation*}
-          p_i(t) = \frac{1}{t_{i,\text{ALAP}} - t_{i,\text{ASAP}} + 1} \quad \text{for } t \in [t_{i,\text{ASAP}}, t_{i,\text{ALAP}}]
-        \end{equation*}
-\end{enumerate}
+\begin{tcolorbox}[formulabox, title={\textbf{Key Formulas and Metrics at a Glance}}]
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\linewidth}{B{5.0cm} X}
+  Operation Mobility & $\mu_i = t_{i,\text{ALAP}} - t_{i,\text{ASAP}} \quad (\text{slack or scheduling freedom})$ \\[4pt]
+  ASAP Scheduling & $t_{i,\text{ASAP}} = \max_{j \in \text{Pred}(i)} \left( t_{j,\text{ASAP}} + d_j \right)$ \\[4pt]
+  ALAP Scheduling & $t_{i,\text{ALAP}} = \min_{k \in \text{Succ}(i)} \left( t_{k,\text{ALAP}} \right) - d_i$ \\[4pt]
+  FDS Operation Prob. & $p_i(t) = \dfrac{1}{\mu_i + 1} \quad \text{for } t \in [t_{i,\text{ASAP}}, t_{i,\text{ALAP}}]$
+\end{tabularx}
 \end{tcolorbox}
 
-\subsection{One-Line Definitions}
-\begin{itemize}[leftmargin=*, itemsep=3pt]
+\vspace{6pt}
+
+\begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
+\begin{itemize}[leftmargin=*, itemsep=3pt, topsep=0pt]
   \item \textbf{Datapath:} The hardware block containing ALUs, multipliers, registers, and multiplexers that process data.
   \item \textbf{Controller:} The FSM block that generates control signals to coordinate datapath operations.
   \item \textbf{ASAP:} An unconstrained scheduling method that schedules operations at their earliest possible cycle.
@@ -368,41 +396,12 @@ Before scheduling, HLS tools optimize the algorithmic code structure to improve 
   \item \textbf{Loop Unrolling:} A compiler optimization that replicates loop bodies to increase parallel operation opportunities.
   \item \textbf{Tree Height Reduction:} Reducing the depth of an expression tree using algebraic laws to speed up evaluation.
 \end{itemize}
+\end{tcolorbox}
 
-\subsection{Comparison: Scheduling \& Graphs}
-\textbf{ASAP vs. ALAP Scheduling:}\par\noindent
-{\renewcommand{\arraystretch}{1.4}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
-\hline
-\textbf{Feature} & \textbf{ASAP Scheduling} & \textbf{ALAP Scheduling} \\
-\hline
-\textbf{Constraints} & Unconstrained (assumes infinite resources). & Latency-constrained (limited to $L$ cycles). \\
-\hline
-\textbf{Goal} & Finds the minimum possible latency boundary. & Finds the latest start times to delay operations. \\
-\hline
-\textbf{Search Order} & Topological search starting from source nodes. & Reverse topological search starting from sink nodes. \\
-\hline
-\end{tabularx}}
+\vspace{6pt}
 
-\vspace{8pt}
-\textbf{DFG vs. CDFG:}\par\noindent
-{\renewcommand{\arraystretch}{1.4}%
-\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
-\hline
-\textbf{Feature} & \textbf{Data Flow Graph (DFG)} & \textbf{Control Data Flow Graph (CDFG)} \\
-\hline
-\textbf{Information} & Models only data dependencies and arithmetic operations. & Models both data dependencies and control decisions. \\
-\hline
-\textbf{Branches/Loops} & Cannot represent loops or conditional branches. & Explicitly models loop jumps and conditional branches. \\
-\hline
-\textbf{Use Case} & Used for basic scheduling and binding. & Used for full behavioral synthesis of systems. \\
-\hline
-\end{tabularx}}
-
-\newpage
-\subsection{Frequently Asked Questions / Viva Questions}
-\begin{tcolorbox}[exambox, title={Exam Q\&A}]
-\begin{enumerate}[leftmargin=*, itemsep=6pt]
+\begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
+\begin{enumerate}[leftmargin=*, topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=6pt]
   \item \Q{What are the three main subproblems in High-Level Synthesis?}
         (1) Scheduling (assigning operations to clock cycles), (2) Allocation (determining the type and number of hardware resources), and (3) Binding (assigning operations and variables to specific hardware units).
         
@@ -433,6 +432,39 @@ Before scheduling, HLS tools optimize the algorithmic code structure to improve 
   \item \Q{Why is high-level synthesis preferred over writing manual RTL?}
         HLS allows designing at a higher level of abstraction (C/C++), which speeds up development, makes verification easier, and allows designers to quickly explore different trade-offs between area and speed by changing scheduling constraints.
 \end{enumerate}
+\end{tcolorbox}
+
+\vspace{6pt}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{Comparison Snapshot}}]
+\textbf{ASAP vs. ALAP Scheduling:}\par\vspace{6pt}\noindent
+{\renewcommand{\arraystretch}{1.35}%
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Feature} & \textbf{ASAP Scheduling} & \textbf{ALAP Scheduling} \\
+\hline
+Constraints & Unconstrained (assumes infinite resources). & Latency-constrained (limited to $L$ cycles). \\
+\hline
+Goal & Finds the minimum possible latency boundary. & Finds the latest start times to delay operations. \\
+\hline
+Search Order & Topological search starting from source nodes. & Reverse topological search starting from sink nodes. \\
+\hline
+\end{tabularx}}
+
+\vspace{12pt}
+\textbf{DFG vs. CDFG:}\par\vspace{6pt}\noindent
+{\renewcommand{\arraystretch}{1.35}%
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Feature} & \textbf{Data Flow Graph (DFG)} & \textbf{Control Data Flow Graph (CDFG)} \\
+\hline
+Information & Models only data dependencies and arithmetic operations. & Models both data dependencies and control decisions. \\
+\hline
+Branches/Loops & Cannot represent loops or conditional branches. & Explicitly models loop jumps and conditional branches. \\
+\hline
+Use Case & Used for basic scheduling and binding. & Used for full behavioral synthesis of systems. \\
+\hline
+\end{tabularx}}
 \end{tcolorbox}
 
 \end{document}

@@ -306,11 +306,20 @@ If a table immediately follows a `\textbf{Label:}` line (no blank line between),
 
 | | Column spec | Notes |
 |---|---|---|
-| ✅ Correct | `>{\centering\arraybackslash}X` | Stretch column — use for all non-first columns |
+| ✅ Correct | `Y` (pre-defined) | Left-aligned ragged-right stretch column — **MUST use for all text description columns** (prevents justification gaps) |
+| ✅ Correct | `>{\centering\arraybackslash}X` | Centered stretch column — use for short values or metrics |
 | ✅ Correct | `>{\small\bfseries\raggedright\arraybackslash}m{3.2cm}` | Bold-left fixed — first column only (use `m{}` not `p{}`) |
+| ❌ Wrong | Plain `X` | **NEVER use plain `X` for text.** Because hyphenation is disabled globally (`\hyphenpenalty=10000`), LaTeX will stretch spaces to extreme limits to justify the text, causing ugly, uneven gaps between words. Use `Y` instead. |
 | ❌ Wrong | `C{2.6cm}` inside tabularx | Causes phantom extra column on right edge |
 | ❌ Wrong | `p{...}` in any column | Top-aligns text — use `m{...}` for vertical centering |
 | ❌ Wrong | `\multicolumn{1}{...p{...}...}{...}` | Top-aligns header text — use `m{...}` inside `\multicolumn` |
+
+### ⚠ Table Heading Gaps (No Collisions with Heading Text)
+
+When placing a table immediately following a bold heading or label, ensure there is adequate vertical space so that the table's top horizontal line does not touch the baseline of the heading text:
+- **Always use `\par\vspace{6pt}\noindent`:** When starting a table after a label/heading, use `\par\vspace{6pt}\noindent` before the `\begin{tabularx}` or local stretch group. Do NOT use just `\par\noindent` or extremely small spaces like `\vspace{2pt}`.
+- **Intermediate spacing:** If there are multiple tables in the same box separated by text headings, use `\vspace{12pt}` before the subsequent heading to cleanly separate it from the preceding table.
+
 
 ### ⚠ Multicolumn Column Types
 When overriding column types using `\multicolumn` (e.g. in table headers), you must explicitly use `m{...}` rather than `p{...}` to maintain the vertical centering of the text:
