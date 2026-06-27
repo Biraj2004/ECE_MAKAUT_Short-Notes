@@ -104,6 +104,15 @@ Requires **XeLaTeX** (TeX Live or MiKTeX) with fonts: `TeX Gyre Pagella`, `TeX G
 
 ---
 
+## Formatting & Syllabus Standards
+
+*   **100% Syllabus Alignment:** Every module is verified against the official MAKAUT ECE syllabus. Recent updates added missing topics in physical design (global routing algorithms), logic synthesis (technology-independent optimizations and Dagon's technology mapping), and high-level synthesis (FSMD hardware models and ILP binding formulations).
+*   **Clean Word Spacing:** Standard justified `X` columns inside `tabularx` are replaced with left-aligned `Y` columns. Since word-breaking is globally disabled (`\hyphenpenalty=10000`), this ensures clean, natural spacing between words.
+*   **Overlap-Free TikZ Diagrams:** TikZ graphs and flowcharts use isolated node styles for vertices, ensuring edge weight labels render as clean text without huge circle backgrounds overlapping lines.
+*   **Table-to-Text Spacing:** Proactively uses `\par\vspace{6pt}\noindent` before tables and `\vspace{12pt}` before subsequent headings to prevent borders from colliding with text baselines.
+
+---
+
 ## Tech stack
 
 - **Compiler:** XeLaTeX
