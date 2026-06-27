@@ -153,6 +153,7 @@ ECE_MAKAUT_Short-Notes/
 │       ├── ...
 │       ├── PE-EC802C_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── PE-EC802C_VLSI_Design_Automation.pdf
+├── LONG_BOOK/                      # Parallel textbook-style notes folder (EXCLUDED)
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -160,6 +161,12 @@ ECE_MAKAUT_Short-Notes/
 ├── CLAUDE.md                       # LLM behaviour guidelines
 └── README.md
 ```
+
+---
+
+## Folder exclusions (Critical)
+
+- **LONG_BOOK/ directory:** This folder contains parallel textbook-style long notes. It is **always excluded** from all compilation, building, automated scripts, file edits, and scanning operations by default. Do not process, modify, or reference any files in `LONG_BOOK/` unless the user explicitly requests it.
 
 ---
 
