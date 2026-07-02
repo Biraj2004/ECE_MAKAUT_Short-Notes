@@ -172,6 +172,16 @@ The primary HTTP verbs used in IoT APIs include:
   \item \textbf{DELETE:} Remove a device instance from the registry database.
 \end{itemize}
 
+Common HTTP response status codes returned by IoT APIs:
+\begin{itemize}[leftmargin=*, itemsep=2.5pt]
+  \item \textbf{200 OK:} Request succeeded (e.g. GET returned sensor reading).
+  \item \textbf{201 Created:} Resource successfully created (e.g. POST registered a new device).
+  \item \textbf{400 Bad Request:} Invalid syntax or malformed JSON payload.
+  \item \textbf{401 Unauthorized:} Missing or invalid API key / authentication token.
+  \item \textbf{404 Not Found:} Target device or resource URL does not exist.
+  \item \textbf{500 Internal Server Error:} Server-side runtime database/connection failure.
+\end{itemize}
+
 Data is commonly formatted in \textbf{JSON (JavaScript Object Notation)} due to its low parsing overhead and human-readable, key-value structure:
 \begin{verbatim}
 {
@@ -180,7 +190,34 @@ Data is commonly formatted in \textbf{JSON (JavaScript Object Notation)} due to 
   "status": "active"
 }
 \end{verbatim}
+\subsection{Writing a New API (Backend Endpoint)}
+Writing a new REST API endpoint involves setting up a server runtime (e.g. Node.js with Express or Python with Flask) that accepts incoming JSON payloads, processes them, and returns standard HTTP response codes.
+\begin{tcolorbox}[examplebox, title={Express.js IoT Server-Side Logging API}]
+  Below is a standard server-side Node.js script that listens for HTTP \texttt{POST} requests from IoT sensor nodes and saves the reading:
+\begin{verbatim}
+const express = require('express');
+const app = express();
+app.use(express.json()); // Parse JSON payloads
 
+app.post('/api/telemetry', (req, res) => {
+  const { device_id, temperature } = req.body;
+  
+  if (!device_id || temperature === undefined) {
+    return res.status(400).json({ error: "Missing parameters" });
+  }
+  
+  console.log(`Log from ${device_id}: ${temperature} C`);
+  // (In production: Insert data into MongoDB or PostgreSQL database)
+  
+  res.status(201).json({ 
+    message: "Data logged successfully", 
+    timestamp: new Date() 
+  });
+});
+
+app.listen(3000, () => console.log('IoT Server running on port 3000'));
+\end{verbatim}
+\end{tcolorbox}
 \subsection{Real-Time Reactions: Polling vs. WebSockets}
 IoT systems need to push real-time events (e.g., triggering an alarm).
 \begin{itemize}[leftmargin=*, itemsep=3.5pt]
@@ -191,45 +228,59 @@ IoT systems need to push real-time events (e.g., triggering an alarm).
 
 \begin{tcolorbox}[tikzbox, title={HTTP Polling vs. WebSockets Communication Flow}]
 \centering
-\begin{tikzpicture}[scale=0.88, transform shape]
-  % Vertical Lifelines - Polling
-  \node[font=\scriptsize\bfseries] at (-5, 3.8) {HTTP Polling};
-  \draw[line width=1.5pt] (-6, 3.5) -- (-6, -1.8) node[below, font=\tiny] {Client};
-  \draw[line width=1.5pt] (-4, 3.5) -- (-4, -1.8) node[below, font=\tiny] {Server};
+\begin{tikzpicture}[scale=0.85, transform shape]
+  % ═══════════════════════════════════════════════════════════════════════════════
+  % LEFT SIDE: HTTP POLLING (Wider spacing, sloped text labels)
+  % ═══════════════════════════════════════════════════════════════════════════════
+  \node[font=\small\bfseries\color{myred}] at (-6.0, 3.8) {HTTP Polling};
+  \draw[line width=1.5pt, color=mydark] (-7.5, 3.5) -- (-7.5, -3.8) node[below, font=\tiny\bfseries] {Client};
+  \draw[line width=1.5pt, color=mydark] (-4.5, 3.5) -- (-4.5, -3.8) node[below, font=\tiny\bfseries] {Server};
 
-  % Polling Exchanges
-  \draw[arrow, color=myred] (-6, 3.0) -- node[above, font=\tiny, scale=0.8] {GET (Request)} (-4, 2.7);
-  \draw[arrow, color=myred] (-4, 2.5) -- node[below, font=\tiny, scale=0.8] {200 OK (No Data)} (-6, 2.2);
-  \draw[dashed, color=gray] (-6, 2.0) -- (-4, 2.0) node[midway, above, font=\tiny, scale=0.8] {Conn Closed};
+  % Exchange 1
+  \draw[arrow, color=myred] (-7.5, 3.0) -- node[midway, above, sloped, scale=0.7] {GET (Request)} (-4.5, 2.4);
+  \draw[arrow, color=myred] (-4.5, 2.0) -- node[midway, above, sloped, scale=0.7] {200 OK (No Data)} (-7.5, 1.4);
+  \draw[dashed, color=gray] (-7.5, 1.0) -- (-4.5, 1.0) node[midway, fill=white, scale=0.6] {Connection Closed};
 
-  \draw[arrow, color=myred] (-6, 1.3) -- node[above, font=\tiny, scale=0.8] {GET (Request)} (-4, 1.0);
-  \draw[arrow, color=myred] (-4, 0.8) -- node[below, font=\tiny, scale=0.8] {200 OK (No Data)} (-6, 0.5);
-  \draw[dashed, color=gray] (-6, 0.3) -- (-4, 0.3) node[midway, above, font=\tiny, scale=0.8] {Conn Closed};
+  % Exchange 2
+  \draw[arrow, color=myred] (-7.5, 0.4) -- node[midway, above, sloped, scale=0.7] {GET (Request)} (-4.5, -0.2);
+  \draw[arrow, color=myred] (-4.5, -0.6) -- node[midway, above, sloped, scale=0.7] {200 OK (No Data)} (-7.5, -1.2);
+  \draw[dashed, color=gray] (-7.5, -1.6) -- (-4.5, -1.6) node[midway, fill=white, scale=0.6] {Connection Closed};
 
-  \draw[arrow, color=myred] (-6, -0.4) -- node[above, font=\tiny, scale=0.8] {GET (Request)} (-4, -0.7);
-  \draw[arrow, color=mygreen] (-4, -0.9) -- node[below, font=\tiny, scale=0.8] {200 OK (New Temp)} (-6, -1.2);
-  \draw[dashed, color=gray] (-6, -1.4) -- (-4, -1.4) node[midway, above, font=\tiny, scale=0.8] {Conn Closed};
+  % Exchange 3
+  \draw[arrow, color=myred] (-7.5, -2.2) -- node[midway, above, sloped, scale=0.7] {GET (Request)} (-4.5, -2.8);
+  \draw[arrow, color=mygreen] (-4.5, -3.0) -- node[midway, above, sloped, scale=0.7] {200 OK (Temp=24.5C)} (-7.5, -3.6);
+  \draw[dashed, color=gray] (-7.5, -3.75) -- (-4.5, -3.75) node[midway, fill=white, scale=0.6] {Connection Closed};
 
-  % Vertical Lifelines - WebSockets
-  \node[font=\scriptsize\bfseries] at (1, 3.8) {WebSockets};
-  \draw[line width=1.5pt] (0, 3.5) -- (0, -1.8) node[below, font=\tiny] {Client};
-  \draw[line width=1.5pt] (2, 3.5) -- (2, -1.8) node[below, font=\tiny] {Server};
 
-  % WebSockets Exchanges
-  \draw[arrow, color=myteal] (0, 3.0) -- node[above, font=\tiny, scale=0.8] {HTTP Handshake} (2, 2.7);
-  \draw[arrow, color=myteal] (2, 2.6) -- node[below, font=\tiny, scale=0.8] {101 Switching Protocols} (0, 2.3);
-  \draw[draw=myteal, fill=hdrteal, opacity=0.3] (-0.1, 2.1) rectangle (2.1, -1.6);
-  
-  \node[font=\tiny, color=myteal, text width=2.2cm, align=left] at (2.4, 0.2) {
-    \textbf{Persistent TCP}\\
-    Full Duplex\\
-    Low Overhead\\
-    Bi-directional
+  % ═══════════════════════════════════════════════════════════════════════════════
+  % RIGHT SIDE: WEBSOCKETS (Wider spacing, side-aligned description box)
+  % ═══════════════════════════════════════════════════════════════════════════════
+  \node[font=\small\bfseries\color{myteal}] at (2.5, 3.8) {WebSockets};
+  \draw[line width=1.5pt, color=mydark] (1.0, 3.5) -- (1.0, -3.8) node[below, font=\tiny\bfseries] {Client};
+  \draw[line width=1.5pt, color=mydark] (4.0, 3.5) -- (4.0, -3.8) node[below, font=\tiny\bfseries] {Server};
+
+  % Handshake (HTTP Upgrade)
+  \draw[arrow, color=myteal] (1.0, 3.0) -- node[midway, above, sloped, scale=0.7] {HTTP Upgrade Request} (4.0, 2.4);
+  \draw[arrow, color=myteal] (4.0, 2.2) -- node[midway, above, sloped, scale=0.7] {101 Switching Protocols} (1.0, 1.6);
+
+  % Persistent Connection Channel Box
+  \draw[draw=myteal, fill=hdrteal, fill opacity=0.15, line width=1pt] (0.85, 1.3) rectangle (4.15, -3.8);
+  \node[right, font=\tiny\bfseries, color=myteal] at (1.2, 1.0) {Persistent TCP Socket Established};
+
+  % Bidirectional Pushes
+  \draw[arrow, color=mygreen] (4.0, 0.4) -- node[midway, above, sloped, scale=0.7] {Data: Temp=24.5C (Push)} (1.0, -0.2);
+  \draw[arrow, color=mygreen] (1.0, -1.0) -- node[midway, above, sloped, scale=0.7] {Data: LED=ON (Write)} (4.0, -1.6);
+  \draw[arrow, color=mygreen] (4.0, -2.4) -- node[midway, above, sloped, scale=0.7] {Data: Temp=25.0C (Push)} (1.0, -3.0);
+
+  % WebSocket Features Box (Placed completely to the right to prevent overlap)
+  \node[draw=myteal, fill=hdrteal, rounded corners=2pt, text width=2.8cm, align=left] at (6.2, -0.8) {
+    \tiny
+    \textbf{\color{myteal}WebSocket Channel:}\\
+    • Persistent TCP Connection\\
+    • Full-Duplex (Both sides push)\\
+    • Low Overhead (2-10 byte frames)\\
+    • Low Latency (no handshake loops)
   };
-
-  \draw[arrow, color=mygreen] (2, 1.4) -- node[above, font=\tiny, scale=0.8] {Data: Temp=24C (Push)} (0, 1.1);
-  \draw[arrow, color=mygreen] (0, 0.4) -- node[above, font=\tiny, scale=0.8] {Data: LED=ON (Write)} (2, 0.1);
-  \draw[arrow, color=mygreen] (2, -0.6) -- node[above, font=\tiny, scale=0.8] {Data: Temp=25C (Push)} (0, -0.9);
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -276,6 +327,31 @@ Many IoT devices run on batteries, requiring strict power management:
   \begin{equation}
     L = \frac{C}{I_{\text{avg}}}
   \end{equation}
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={Numerical Example: IoT Battery Life Calculation}]
+  \textbf{Scenario:} An IoT sensor node wakes up once every $10$ minutes ($600\text{ seconds}$) for a duration of $2\text{ seconds}$ to read a sensor and transmit it via Wi-Fi.
+  \begin{itemize}[leftmargin=*, itemsep=2.5pt]
+    \item Active Current ($I_{\text{active}}$) = $80\text{ mA}$
+    \item Sleep Current ($I_{\text{sleep}}$) = $15\ \mu\text{A} = 0.015\text{ mA}$
+    \item Battery Capacity ($C$) = $2400\text{ mAh}$ (e.g. standard AA cells)
+  \end{itemize}
+  \textbf{Step 1: Calculate Duty Cycle ($D$)}
+  \begin{equation}
+    D = \frac{2\text{ s}}{600\text{ s}} = 0.00333\quad (0.33\%)
+  \end{equation}
+  \textbf{Step 2: Calculate Average Current ($I_{\text{avg}}$)}
+  \begin{equation}
+    I_{\text{avg}} = (0.00333 \cdot 80\text{ mA}) + ((1 - 0.00333) \cdot 0.015\text{ mA})
+  \end{equation}
+  \begin{equation}
+    I_{\text{avg}} \approx 0.2667\text{ mA} + 0.0150\text{ mA} = 0.2817\text{ mA}
+  \end{equation}
+  \textbf{Step 3: Calculate Battery Lifetime ($L$)}
+  \begin{equation}
+    L = \frac{2400\text{ mAh}}{0.2817\text{ mA}} \approx 8519.7\text{ hours} \approx 355\text{ days}
+  \end{equation}
+  Thus, by employing aggressive duty cycling, a standard battery can sustain the node for approximately one full year despite its high $80\text{mA}$ active transmission current.
 \end{tcolorbox}
 
 \subsection{Embedded Debugging Techniques}

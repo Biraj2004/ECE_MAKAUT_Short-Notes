@@ -174,6 +174,16 @@ IoT edge devices choose transport protocols based on power, latency, and reliabi
   \item \textbf{UDP (User Datagram Protocol):} A connectionless, lightweight transport protocol. It sends packets (datagrams) without verifying if the receiver is ready or if the packets arrive. It has minimal header overhead (8 bytes) and low latency, making it ideal for battery-powered sensor nodes (often combined with CoAP).
 \end{itemize}
 
+\begin{tcolorbox}[examplebox, title={TCP Three-Way Handshake Connection Lifecycle}]
+  Establishing a reliable TCP connection requires a three-way handshake before any application data is sent:
+  \begin{enumerate}[leftmargin=*, itemsep=2pt]
+    \item \textbf{SYN (Synchronize):} The client sends a segment with the SYN flag set and an initial sequence number ($Seq = x$) to request a connection.
+    \item \textbf{SYN-ACK (Synchronize-Acknowledge):} The server replies with a segment where both SYN and ACK flags are set, acknowledging the client's sequence ($Ack = x+1$) and sending its own sequence number ($Seq = y$).
+    \item \textbf{ACK (Acknowledge):} The client sends a final segment acknowledging the server's sequence ($Ack = y+1$). The connection is now \texttt{ESTABLISHED}.
+  \end{enumerate}
+  For teardown, a four-step handshake using \textbf{FIN} (Finish) and \textbf{ACK} segments is executed to close both directions of the full-duplex link.
+\end{tcolorbox}
+
 % ===============================================================================
 \section{IP Addressing and Routing}
 % ===============================================================================
@@ -191,6 +201,24 @@ Every node connected to the Internet needs a unique address for routing packets.
 \begin{tcolorbox}[defbox, title={IPv6 Importance in IoT}]
   \textbf{IPv6 (Internet Protocol version 6)} uses $128$-bit addresses, yielding $3.4 \times 10^{38}$ unique addresses, compared to the $32$-bit ($4.3$ billion) address pool of \textbf{IPv4}. IPv6 is critical for IoT because it allows every smart object on Earth to have a unique, globally routable public IP address, eliminating the need for complex Network Address Translation (NAT) gateways.
 \end{tcolorbox}
+
+\par\vspace{6pt}\noindent
+{\renewcommand{\arraystretch}{1.3}%
+\begin{tabularx}{\linewidth}{|B{3.0cm}|Y|Y|}
+\hline
+\textbf{Feature} & \textbf{IPv4 Header} & \textbf{IPv6 Header} \\
+\hline
+Header Size & Variable ($20$ to $60$ bytes). & Fixed ($40$ bytes). \\
+\hline
+Address Size & $32$ bits ($4$ bytes). & $128$ bits ($16$ bytes). \\
+\hline
+Fields Count & $12$ fields. & Only $8$ fields. \\
+\hline
+Checksum Field & Present (must be recomputed at each hop). & Removed (handled by Layer 2 and Layer 4). \\
+\hline
+Fragmentation & Handled by routers and sending hosts. & Handled only by sending hosts (PMTU discovery). \\
+\hline
+\end{tabularx}}
 
 \subsection{MAC Addresses}
 A \textbf{MAC (Media Access Control) Address} is a unique, 48-bit physical hardware identifier burned into a network interface card (NIC) by the manufacturer. While IP addresses change based on location/network, the MAC address remains constant, uniquely identifying the hardware locally.
@@ -210,10 +238,20 @@ MQTT is a lightweight, broker-based publish-subscribe messaging protocol designe
   \item \textbf{Clients:} Publish messages to topics or subscribe to topics to receive messages.
   \item \textbf{Broker:} The central server that receives published messages and distributes them to all subscribed clients.
   \item \textbf{QoS (Quality of Service) Levels:}
-        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1pt]
-          \item \textit{QoS 0 (At most once):} Fire-and-forget; no handshake, no guaranteed delivery.
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=3.0pt]
+          \item \textit{QoS 0 (At most once):} Fire-and-forget; no handshake, no guaranteed delivery. Minimal overhead.
           \item \textit{QoS 1 (At least once):} Guaranteed delivery but duplicates may arrive.
+                \begin{itemize}[leftmargin=*, label=$\circ$, itemsep=1.0pt]
+                  \item Client sends a \texttt{PUBLISH} message containing a unique Packet Identifier.
+                  \item Broker stores and forwards the message, replying with a \texttt{PUBACK} acknowledgment. If the client doesn't receive \texttt{PUBACK} before a timeout, it re-transmits.
+                \end{itemize}
           \item \textit{QoS 2 (Exactly once):} Four-step handshake guarantees delivery with zero duplicates.
+                \begin{itemize}[leftmargin=*, label=$\circ$, itemsep=1.0pt]
+                  \item Client sends \texttt{PUBLISH}.
+                  \item Broker stores packet ID and sends \texttt{PUBREC} (Publish Received).
+                  \item Client receives \texttt{PUBREC} and sends \texttt{PUBREL} (Publish Release) to unlock broker storage.
+                  \item Broker processes/distributes message, replying with \texttt{PUBCOMP} (Publish Complete).
+                \end{itemize}
         \end{itemize}
 \end{itemize}
 
@@ -221,48 +259,38 @@ MQTT is a lightweight, broker-based publish-subscribe messaging protocol designe
 \centering
 \begin{tikzpicture}[scale=0.88, transform shape]
   % Publisher (Left)
-  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.0cm] (pub) at (-4.5, 0) {
+  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.1cm] (pub) at (-5.0, 0) {
     \textbf{\color{myamber}Publisher}\\
     \scriptsize DHT11 Sensor Node\\
-    \itshape\tiny (home/temp)
+    \itshape\tiny (Topic: \texttt{home/temp})
   };
 
   % Broker (Center)
-  \node[draw=myred, fill=hdrred, rounded corners=6pt, line width=1.2pt, text width=3.2cm, align=center, minimum height=1.2cm] (broker) at (0, 0) {
+  \node[draw=myred, fill=hdrred, rounded corners=6pt, line width=1.2pt, text width=3.2cm, align=center, minimum height=1.3cm] (broker) at (0, 0) {
     \textbf{\color{myred}MQTT Broker}\\
     \scriptsize Central Message Router\\
     \tiny Topic Filters \& Client Registry
   };
 
   % Subscriber 1 (Top Right)
-  \node[draw=myteal, fill=hdrteal, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.0cm] (sub1) at (4.5, 1.3) {
+  \node[draw=myteal, fill=hdrteal, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.1cm] (sub1) at (5.0, 1.4) {
     \textbf{\color{myteal}Subscriber A}\\
     \scriptsize Mobile Phone App\\
-    \itshape\tiny (home/temp)
+    \itshape\tiny Subscribed to \texttt{home/temp}
   };
 
   % Subscriber 2 (Bottom Right)
-  \node[draw=mygreen, fill=hdrgreen, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.0cm] (sub2) at (4.5, -1.3) {
+  \node[draw=mygreen, fill=hdrgreen, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.1cm] (sub2) at (5.0, -1.4) {
     \textbf{\color{mygreen}Subscriber B}\\
     \scriptsize Smart Thermostat\\
-    \itshape\tiny (home/temp)
+    \itshape\tiny Subscribed to \texttt{home/temp}
   };
 
-  % Connections
-  \draw[arrow, line width=1.1pt] (pub) -- node[above, font=\tiny\bfseries] {Publish} node[below, font=\tiny] {"24.5 C" to "home/temp"} (broker);
+  % Connections - Straight and Sloped to avoid overlap
+  \draw[arrow, line width=1.1pt] (pub) -- node[above=2pt, font=\tiny\bfseries] {Publish} node[below=2pt, font=\tiny] {"24.5 C" to \texttt{home/temp}} (broker);
   
-  \draw[arrow, line width=1.0pt] (broker.east) -- ++(0.8, 0) |- (sub1.west) 
-    node[pos=0.75, above, font=\tiny\bfseries] {Forward} node[pos=0.75, below, font=\tiny] {"24.5 C"};
-    
-  \draw[arrow, line width=1.0pt] (broker.east) -- ++(0.8, 0) |- (sub2.west) 
-    node[pos=0.75, above, font=\tiny\bfseries] {Forward} node[pos=0.75, below, font=\tiny] {"24.5 C"};
-
-  % Subscriptions
-  \draw[arrow, dashed, color=gray] (sub1.west) -- ++(-1.2, 0) |- ($(broker.north)+(0.3,0)$) 
-    node[pos=0.3, above, font=\tiny, color=gray] {Subscribe "home/temp"};
-    
-  \draw[arrow, dashed, color=gray] (sub2.west) -- ++(-1.2, 0) |- ($(broker.south)+(0.3,0)$) 
-    node[pos=0.3, below, font=\tiny, color=gray] {Subscribe "home/temp"};
+  \draw[arrow, line width=1.0pt] (broker) -- node[midway, above=3pt, font=\tiny\bfseries, sloped] {Forward "24.5 C"} (sub1);
+  \draw[arrow, line width=1.0pt] (broker) -- node[midway, below=3pt, font=\tiny\bfseries, sloped] {Forward "24.5 C"} (sub2);
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -277,23 +305,23 @@ CoAP is a web transfer protocol designed for constrained nodes and networks:
 \centering
 \begin{tikzpicture}[scale=0.9, transform shape]
   % Client Box
-  \node[draw=myteal, fill=hdrteal, rounded corners=3pt, line width=1pt, text width=3.4cm, align=center, minimum height=1.3cm] (client) at (-3.5, 0) {
+  \node[draw=myteal, fill=hdrteal, rounded corners=3pt, line width=1pt, text width=3.4cm, align=center, minimum height=1.6cm] (client) at (-3.8, 0) {
     \textbf{\color{myteal}CoAP Client}\\
     \scriptsize Smart Gateway\\
     \itshape\tiny (Application Layer)
   };
 
   % Server Box
-  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=1pt, text width=3.4cm, align=center, minimum height=1.3cm] (server) at (3.5, 0) {
+  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=1pt, text width=3.4cm, align=center, minimum height=1.6cm] (server) at (3.8, 0) {
     \textbf{\color{myamber}CoAP Server}\\
     \scriptsize Smart Water Valve\\
     \itshape\tiny (Application Layer)
   };
 
-  % Communication flow lines
-  \draw[arrow, line width=1.1pt, color=mydark] ($(client.east)+(0,0.3)$) -- node[above=2pt, font=\scriptsize\bfseries] {GET /valve/status} node[below=2pt, font=\tiny\itshape, color=mydark] {UDP Port 5683 [Confirmable]} ($(server.west)+(0,0.3)$);
+  % Communication flow lines - Increased gap to Y=+0.5 and Y=-0.5
+  \draw[arrow, line width=1.1pt, color=mydark] ($(client.east)+(0,0.5)$) -- node[midway, above=2pt, font=\scriptsize\bfseries] {GET /valve/status} node[midway, below=2pt, font=\tiny\itshape, color=mydark] {UDP Port 5683 [Confirmable]} ($(server.west)+(0,0.5)$);
   
-  \draw[arrow, line width=1.1pt, color=mydark] ($(server.west)+(0,-0.3)$) -- node[above=2pt, font=\scriptsize\bfseries] {2.05 Content} node[below=2pt, font=\tiny\itshape, color=mydark] {value="Open" [Acknowledge]} ($(client.east)+(0,-0.3)$);
+  \draw[arrow, line width=1.1pt, color=mydark] ($(server.west)+(0,-0.5)$) -- node[midway, above=2pt, font=\scriptsize\bfseries] {2.05 Content} node[midway, below=2pt, font=\tiny\itshape, color=mydark] {value="Open" [Acknowledge]} ($(client.east)+(0,-0.5)$);
 
   % Transport Layer Labels (Bottom)
   \node[below=0.6cm of client, font=\tiny, color=mydark] {Sends stateless requests via UDP};

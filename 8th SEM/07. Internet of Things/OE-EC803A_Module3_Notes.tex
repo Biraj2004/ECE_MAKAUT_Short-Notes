@@ -179,7 +179,7 @@ Prototyping is the iterative process of quickly assembling a working model of a 
 IoT edge nodes interface directly with the physical world using sensors and actuators.
 
 \subsection{Basic Quantities}
-\begin{tcolorbox}[formulabox, title={Ohm's Law and Power}]
+\begin{tcolorbox}[formulabox, title={Ohm's Law and Electrical Power}]
   \textbf{Ohm's Law} relates voltage ($V$), current ($I$), and resistance ($R$):
   \begin{equation}
     V = I \cdot R
@@ -187,6 +187,21 @@ IoT edge nodes interface directly with the physical world using sensors and actu
   Electrical power ($P$) in watts is given by:
   \begin{equation}
     P = V \cdot I = I^2 \cdot R
+  \end{equation}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={Voltage Dividers and Analog-to-Digital Conversion (ADC)}]
+  \textbf{Voltage Divider Formula:} Reduces a high analog voltage ($V_{\text{in}}$) to a safe range ($V_{\text{out}}$) for microcontroller pins:
+  \begin{equation}
+    V_{\text{out}} = V_{\text{in}} \cdot \left( \frac{R_2}{R_1 + R_2} \right)
+  \end{equation}
+  \textbf{ADC Resolution:} Quantizes an analog voltage into a digital integer. For an $n$-bit ADC with reference voltage $V_{\text{ref}}$, the step size (Resolution) is:
+  \begin{equation}
+    \text{Step Size (LSB)} = \frac{V_{\text{ref}}}{2^n}
+  \end{equation}
+  The measured digital value $D$ for an input voltage $V_{\text{in}}$ is:
+  \begin{equation}
+    D = \text{round}\left( \frac{V_{\text{in}}}{\text{Step Size}} \right) = \text{round}\left( V_{\text{in}} \cdot \frac{2^n}{V_{\text{ref}}} \right)
   \end{equation}
 \end{tcolorbox}
 
@@ -216,8 +231,9 @@ IoT designs select hardware platforms based on processing power, OS requirements
 \begin{tcolorbox}[tikzbox, title={Microcontroller Internal Architecture (System Bus Model)}]
 \centering
 \begin{tikzpicture}[scale=0.92, transform shape]
-  % System Bus (Central Backbone)
-  \draw[line width=4pt, color=mydark] (-3.8, 0) -- (3.8, 0) node[right, font=\scriptsize\bfseries] {Internal System Bus (Data / Address / Control)};
+  % System Bus (Central Backbone) - Label placed in center with white background to avoid boundary collision
+  \draw[line width=4pt, color=mydark] (-3.8, 0) -- (3.8, 0);
+  \node[font=\tiny\bfseries, fill=white, draw=mydark, rounded corners=1pt, inner sep=2pt] at (0,0) {System Bus (Data / Address / Control)};
 
   % Blocks above bus
   \node[draw=myred, fill=hdrred, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (cpu) at (-2.5, 1.3) {
@@ -263,21 +279,51 @@ IoT designs select hardware platforms based on processing power, OS requirements
   \node[draw=myred, dashed, line width=1.2pt, fit=(cpu) (ram) (flash) (gpio) (adc) (serial), inner sep=0.45cm] (mcu) {};
   \node[above=0.15cm of mcu, font=\bfseries\color{myred}] {Single Microcontroller Die (MCU)};
   
-  % External interfaces
-  \draw[arrow, line width=1pt] (gpio.south) -- ++(0, -0.5) node[below, font=\tiny\bfseries] {Sensors/Actuators};
-  \draw[arrow, line width=1pt] (adc.south) -- ++(0, -0.5) node[below, font=\tiny\bfseries] {Analog Signals};
-  \draw[arrow, line width=1pt] (serial.south) -- ++(0, -0.5) node[below, font=\tiny\bfseries] {External ICs};
+  % External interfaces - Lengthened arrows to Y=-2.8 to clear dashed boundary
+  \draw[arrow, line width=1pt] (gpio.south) -- ++(0, -0.9) node[below, font=\tiny\bfseries] {Sensors/Actuators};
+  \draw[arrow, line width=1pt] (adc.south) -- ++(0, -0.9) node[below, font=\tiny\bfseries] {Analog Signals};
+  \draw[arrow, line width=1pt] (serial.south) -- ++(0, -0.9) node[below, font=\tiny\bfseries] {External ICs};
 \end{tikzpicture}
 \end{tcolorbox}
 
 \subsection{Hardware Platforms Overview}
-\begin{enumerate}[leftmargin=*, itemsep=3.5pt]
-  \item \textbf{Arduino:} Open-source microcontroller board. Ideal for real-time bare-metal control, low power states, and simple sensor interfacing. Programmed in C++ using the Arduino IDE.
-  \item \textbf{Raspberry Pi:} A Single-Board Computer (SBC) running a full Linux OS. Features built-in Wi-Fi, Bluetooth, HDMI, and high computing power. Handles edge gateway routing and computer vision.
-  \item \textbf{BeagleBone Black:} An industrial-grade Linux board featuring two \textbf{PRUs (Programmable Real-Time Units)}. PRUs are independent auxiliary CPU cores that handle high-speed, deterministic real-time I/O bypass operations, making the BBB superior for precise motor control.
-  \item \textbf{Electric Imp:} A Wi-Fi connectivity module integrated with a cloud service. It uses the \textbf{Squirrel} programming language and automatically manages secure cloud communication and OTA firmware updates.
-  \item \textbf{Mobile Phone and Tablets:} High-performance consumer devices containing built-in screen displays, cellular/Wi-Fi/Bluetooth networking, and integrated sensors (GPS, accelerometer, gyroscope, camera). Ideal for rapid application-level prototyping and user interface testing.
-  \item \textbf{Plug Computing:} Compact, wall-plug-sized, always-on servers containing a microprocessor, RAM, storage, and Ethernet. They act as low-power home automation gateways.
+\begin{enumerate}[leftmargin=*, itemsep=4.0pt]
+  \item \textbf{Arduino (Microcontroller-Based):} 
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1.5pt]
+          \item Powered by the \textbf{ATmega328P} 8-bit MCU operating at $16\text{ MHz}$, containing $32\text{ KB}$ Flash, $2\text{ KB}$ SRAM, and $1\text{ KB}$ EEPROM.
+          \item Programmed in C++ using bare-metal register manipulation (e.g. setting \texttt{DDRB |= (1 << 5)} to configure Pin 13 as output, and writing to \texttt{PORTB} to toggle pins) compiled via \texttt{avr-gcc}.
+          \item Ideal for low-power sleep modes ($<15\ \mu\text{A}$ in power-down mode) and deterministic, timing-critical sensor polling.
+        \end{itemize}
+  \item \textbf{Raspberry Pi (Single-Board Computer):}
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1.5pt]
+          \item Powered by a Broadcom \textbf{System-on-Chip (SoC)} containing a quad-core 64-bit ARM Cortex processor, up to $8\text{ GB}$ RAM, and GPU.
+          \item Runs a fully pre-emptive Linux OS (Raspberry Pi OS) from an SD card. This introduces OS scheduling latency (non-deterministic) but allows full network stacks, file systems, and high-level runtimes (Python, Node.js).
+          \item Used as local edge gateways, database hosts, and for CPU-intensive tasks like computer vision or edge AI inference.
+        \end{itemize}
+  \item \textbf{BeagleBone Black (PRU Co-processors):}
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1.5pt]
+          \item Features a $1\text{ GHz}$ ARM Cortex-A8 processor running Linux, augmented with two auxiliary \textbf{PRUs (Programmable Real-Time Units)}.
+          \item Each PRU is a 32-bit RISC core operating at $200\text{ MHz}$ with direct access to hardware I/O pins and shared RAM, operating independently of the Linux kernel's interrupts or process schedules.
+          \item Solves the "non-deterministic OS" issue, enabling sub-microsecond GPIO toggling, precise high-speed industrial motor control, and custom hardware protocol decoding.
+        \end{itemize}
+  \item \textbf{Electric Imp (Cloud-Integrated Module):}
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1.5pt]
+          \item A secure hardware module featuring an ARM Cortex processor and Wi-Fi interface.
+          \item Utilizes a \textbf{Cloud-Device Split Model}: Code is split into a local \textit{Device} script (interfacing with pins) and a cloud-based \textit{Agent} script (running in Electric Imp's secure VM, handling HTTPS/OAuth).
+          \item Programmed in the \textbf{Squirrel} scripting language. Features built-in secure boot, automated secure OTA firmware updates, and managed cloud routing.
+        \end{itemize}
+  \item \textbf{Mobile Phone and Tablets (Sensors \& Application Runtimes):}
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1.5pt]
+          \item High-performance mobile devices equipped with gigabytes of RAM, multi-core CPUs, and multi-Gbps cellular/Wi-Fi/Bluetooth networking.
+          \item Host rich integrated sensors (dual-frequency GPS, 3-axis accelerometers, gyroscopes, magnetometers, ambient light sensors, cameras, and microphones).
+          \item Used for rapid application-level prototyping, mobile dashboard display, and utilizing internal sensors as edge input devices.
+        \end{itemize}
+  \item \textbf{Plug Computing (Always-On Mini-Servers):}
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1.5pt]
+          \item Compact, wall-plug-sized, always-on servers containing a low-power MPU (e.g. Marvell Kirkwood ARM), RAM, flash storage, and an Ethernet/Wi-Fi connection.
+          \item Run headless Linux server distributions (e.g., Debian).
+          \item Act as quiet, unobtrusive, low-power local gateways, print servers, and local home automation hub controllers.
+        \end{itemize}
 \end{enumerate}
 
 \newpage
