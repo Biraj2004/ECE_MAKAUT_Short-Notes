@@ -205,6 +205,29 @@ Models digital circuits at the transistor level by representing MOS transistors 
   \item \textbf{Strengths:} Signals are assigned strengths to resolve bus contention (e.g. supply strength, pull strength, charge storage strength). An active pull-up transistor overrides a weak pull-down resistor.
 \end{itemize}
 
+\subsection{Compiled-Code vs. Event-Driven Simulation}
+Gate-level simulators evaluate logic gates using two primary simulation paradigms:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Compiled-Code Simulation:} The digital circuit is translated into a sequence of machine instructions that are executed line-by-line. It evaluates the logic value of every gate in strict topological order during every simulation cycle, regardless of whether its input values have changed. It is highly efficient for circuits with very high switching activity, but extremely wasteful for typical circuits where only a small fraction ($<10\%$) of gate inputs change state at any step.
+  \item \textbf{Event-Driven Simulation:} Only evaluates a logic gate when a transition (event) occurs on at least one of its inputs. It schedules events dynamically using a priority queue (event queue or time wheel). While it avoids redundant gate evaluations, it incurs runtime overhead for queue management. It is the preferred method for large digital systems with low-to-medium active switching.
+\end{itemize}
+
+\par\vspace{6pt}\noindent
+{\renewcommand{\arraystretch}{1.35}%
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Feature} & \textbf{Compiled-Code Simulation} & \textbf{Event-Driven Simulation} \\
+\hline
+Evaluation Rule & Evaluates all gates in every simulation cycle. & Evaluates gates only when input signals switch states. \\
+\hline
+Overhead & Zero scheduling or queue management overhead. & Dynamic scheduling and queue sorting overhead. \\
+\hline
+Optimal Activity & Best suited for high switching activity circuits. & Best suited for low-to-medium switching activity ($<10\%$). \\
+\hline
+Delay Modeling & Strictly cycle-based; difficult to model gate delays. & Models detailed gate propagation and inertial delays. \\
+\hline
+\end{tabularx}}
+
 % ===============================================================================
 \section{Combinational Logic Synthesis}
 % ===============================================================================
@@ -351,6 +374,24 @@ An \textbf{Ordered BDD (OBDD)} is a BDD where variables are evaluated in a fixed
 \tcblower
 ROBDDs are canonical representations of Boolean functions. For a fixed variable ordering, every Boolean function has exactly one unique ROBDD.
 \end{tcolorbox}
+
+\subsection{The BDD Apply Operation}
+The BDD \textbf{Apply} algorithm is the fundamental operation used to combine two BDDs with a binary Boolean operator (such as AND, OR, XOR). Given BDDs for $f$ and $g$, the algorithm computes the BDD for $h = f \text{ op } g$ in $O(|f| \cdot |g|)$ polynomial time.
+
+\textbf{Recursive Algorithm Principle (Shannon Expansion):}
+Let $x$ be the variable with the highest priority (lowest index in the variable ordering) among the root variables of BDDs $f$ and $g$. We can expand $f \text{ op } g$ about $x$ as:
+\begin{equation}
+  f \text{ op } g = x \cdot (f_x \text{ op } g_x) + x' \cdot (f_{x'} \text{ op } g_{x'})
+\end{equation}
+where $f_x$ and $f_{x'}$ are cofactors of $f$ with respect to $x$ ($f_x = f(1)$ and $f_{x'} = f(0)$). If $f$ does not depend on $x$, then $f_x = f_{x'} = f$.
+
+\textbf{Algorithmic Flow:}
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Base Cases:} If $f$ and $g$ are terminal nodes ($0$ or $1$), evaluate the operation directly (e.g., $1 \text{ AND } 0 = 0$).
+  \item \textbf{Memoization (Computed Table):} Before recursively expanding, check if the triple $(f, g, \text{op})$ has already been computed. If yes, return the cached result. This avoids exponential recursive redundancy.
+  \item \textbf{Recursion:} Compute the cofactors, and recursively call the Apply algorithm on the positive cofactors $h_{\text{high}} = \text{Apply}(\text{op}, f_x, g_x)$ and negative cofactors $h_{\text{low}} = \text{Apply}(\text{op}, f_{x'}, g_{x'})$.
+  \item \textbf{Reduction:} If $h_{\text{high}} == h_{\text{low}}$, return $h_{\text{low}}$ (redundant node elimination). Otherwise, find or create a node for variable $x$ pointing to $h_{\text{high}}$ (as high child) and $h_{\text{low}}$ (as low child), and store the result in the computed table.
+\end{enumerate}
 
 \newpage
 

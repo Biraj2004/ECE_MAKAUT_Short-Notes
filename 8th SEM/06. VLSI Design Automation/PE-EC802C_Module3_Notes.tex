@@ -253,6 +253,17 @@ The shape function of a block describes its width $w$ as a function of height $h
 \end{itemize}
 Sizing algorithms recursively combine child shape functions at internal tree nodes using horizontal or vertical addition rules, choosing the combination that minimizes total layout area.
 
+\subsection{Non-Slicing Floorplan Representations}
+For non-slicing floorplans (which contain wheel-like cyclic configurations that cannot be cut recursively), binary trees and Polish expressions are insufficient. Common representation models include:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Sequence Pair (SP):} Represents a floorplan using a pair of block permutations, e.g., $(\alpha, \beta)$. The spatial relation between any two blocks $X$ and $Y$ is defined by their relative order in the two permutations:
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1pt]
+          \item $(X \text{ is before } Y \text{ in } \alpha) \text{ and } (X \text{ is before } Y \text{ in } \beta) \Rightarrow X$ is to the left of $Y$.
+          \item $(X \text{ is before } Y \text{ in } \alpha) \text{ and } (X \text{ is after } Y \text{ in } \beta) \Rightarrow X$ is above $Y$.
+        \end{itemize}
+  \item \textbf{Bounded Slicing Grid (BSG):} A grid structure of horizontal and vertical line segments that defines placement slots. It allows representing any general topological structure without restricting cuts to slicing boundaries.
+\end{itemize}
+
 % ===============================================================================
 \section{Circuit Routing}
 % ===============================================================================
@@ -362,6 +373,13 @@ Shortest path found: $S(0) \rightarrow (1) \rightarrow (2) \rightarrow (3) \righ
   \item \textbf{High Memory Overhead:} Storing wave expansion numbers on a large grid of size $N \times N$ requires $O(N^2)$ memory.
   \item \textbf{Slow Execution:} Expanding wavefronts in all directions behaves like a BFS, taking $O(N^2)$ time.
   \item \textbf{Optimizations:} \textbf{Soukup's Router} uses a heuristic search (DFS) towards the target to speed up propagation, falling back to Lee's algorithm only when blocked. \textbf{Line-Probe Router} routes lines instead of cells, reducing memory usage.
+\end{itemize}
+
+\subsection{Line-Probe Area Routing}
+To overcome the high memory $O(N^2)$ and execution time constraints of grid-based BFS expansion in Lee's maze router, line-probe algorithms are used:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Mikami-Tabuchi Algorithm:} Shoots orthogonal horizontal and vertical probe lines from both the source $S$ and the target $T$. When a line generated from $S$ intersects any line generated from $T$, a path is established. It runs in time proportional to the number of probe lines ($O(L)$), drastically reducing search time and memory usage.
+  \item \textbf{Hightower's Algorithm:} Similar to Mikami-Tabuchi, but instead of shooting probes from all intersection points, it only shoots escape lines from the boundaries of obstacles obstructing the straight path. It is faster than Mikami-Tabuchi but does not guarantee finding a path even if one exists.
 \end{itemize}
 
 % ===============================================================================

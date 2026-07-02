@@ -280,6 +280,25 @@ Physical design is the process of converting the synthesized netlist into a geom
   \item \textbf{Compaction:} Shrinking the layout to its absolute minimum size while adhering to the technological design rules (spacing, width rules).
 \end{enumerate}
 
+\subsection{VLSI Design Automation Tools Overview}
+Modern VLSI design flows rely heavily on Electronic Design Automation (EDA) tools from major vendors (such as Synopsys, Cadence, and Siemens EDA) as well as open-source projects. These tools automate different stages of the design cycle:
+
+\par\vspace{6pt}\noindent
+{\renewcommand{\arraystretch}{1.35}%
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Design Phase} & \textbf{Commercial / Industry Standard} & \textbf{Academic / Open-Source} \\
+\hline
+Logic Synthesis & Synopsys Design Compiler, Cadence Genus & Yosys, ABC \\
+\hline
+Placement \& Routing & Synopsys IC Compiler II, Cadence Innovus & OpenROAD, Graywolf \\
+\hline
+Physical Verification & Siemens EDA Calibre, Synopsys IC Validator & Magic, Netgen \\
+\hline
+Simulation & Synopsys VCS, Cadence Xcelium, ModelSim & Icarus Verilog, Verilator \\
+\hline
+\end{tabularx}}
+
 % ===============================================================================
 \section{Algorithmic Graph Theory \& Complexity}
 % ===============================================================================
@@ -365,6 +384,29 @@ VLSI design problems involve thousands of components, making algorithm efficienc
 \end{itemize}
 
 Since most physical design steps (partitioning, placement, routing) are NP-hard optimization problems, VLSI CAD tools must use \textbf{heuristic algorithms} (like simulated annealing, genetic algorithms) to find near-optimal solutions in reasonable computing time.
+
+\subsection{Data Structures \& Algorithms in VLSI CAD}
+VLSI design automation tools utilize classic computer science data structures and algorithms to model, analyze, and optimize physical circuits:
+
+\par\vspace{6pt}\noindent
+{\renewcommand{\arraystretch}{1.35}%
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Concept} & \textbf{VLSI Application / Example} & \textbf{Core Role in Automation} \\
+\hline
+Graphs \& Hypergraphs & Netlists, routing grids, horizontal/vertical constraint graphs. & Models pin connectivity and track ordering. \\
+\hline
+Adjacency Matrix/List & Grid representation, component connection lists. & Back-end database for topological analysis. \\
+\hline
+Trees (Steiner / Slicing) & Global routing trees, slicing floorplan blocks, BDDs. & Optimizes wirelength, layout structures, and Boolean functions. \\
+\hline
+Priority Queues (Heaps) & Time-wheel event simulation, list scheduling priority queues. & Tracks next scheduled simulation events or operations. \\
+\hline
+Dijkstra / BFS / DFS & Maze routing (Lee's algorithm), reachability analysis. & Finds shortest routing paths around layout obstacles. \\
+\hline
+Graph Coloring & Register binding / allocation during HLS. & Assigns registers to non-overlapping variable lifetimes. \\
+\hline
+\end{tabularx}}
 
 % ===============================================================================
 \section{Combinatorial Optimization \& Heuristic Methods}
@@ -654,6 +696,15 @@ Min-Cut placement uses a top-down divide-and-conquer strategy:
 \begin{tcolorbox}[defbox, title={Circuit Partitioning}]
   \textbf{Circuit Partitioning} is the process of dividing a circuit (modeled as a graph or hypergraph) into two or more sub-circuits (partitions) such that the size of each partition is balanced (respecting capacity limits) and the number of connections between the partitions (the cut size) is minimized.
 \end{tcolorbox}
+
+\subsection{Circuit Representation}
+Before applying partitioning or placement algorithms, the physical netlist must be modeled mathematically. The common circuit representation models are:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Standard Graph ($G = (V, E)$):} Vertices $V$ represent electronic components (gates, standard cells), and edges $E$ represent electrical connections. While simple, graphs are limited because they can only model two-terminal nets.
+  \item \textbf{Hypergraph ($H = (V, E_h)$):} A generalization of a graph where a hyperedge $e \in E_h$ can connect any subset of vertices. Hypergraphs are the most accurate model for circuits because actual nets often connect three or more pins.
+  \item \textbf{Connectivity Matrix ($C$):} An $n \times n$ symmetric matrix where the entry $c_{ij}$ represents the connectivity strength (number of common nets) between component $i$ and component $j$.
+  \item \textbf{Laplacian Matrix ($L$):} Formulated as $L = D - C$, where $D$ is the diagonal degree matrix ($d_{ii} = \sum_j c_{ij}$). The Laplacian matrix is central to analytical, force-directed placement algorithms, converting wirelength minimization into a system of linear equations ($L x = f$).
+\end{itemize}
 
 \subsection{Kernighan-Lin (KL) Algorithm}
 The KL algorithm is an iterative, heuristic bipartitioning algorithm for undirected graphs. It starts with an initial balanced partition $(A, B)$ of size $n$ each ($|V| = 2n$), and swaps pairs of nodes to reduce the cut cost.
@@ -989,6 +1040,17 @@ The shape function of a block describes its width $w$ as a function of height $h
 \end{itemize}
 Sizing algorithms recursively combine child shape functions at internal tree nodes using horizontal or vertical addition rules, choosing the combination that minimizes total layout area.
 
+\subsection{Non-Slicing Floorplan Representations}
+For non-slicing floorplans (which contain wheel-like cyclic configurations that cannot be cut recursively), binary trees and Polish expressions are insufficient. Common representation models include:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Sequence Pair (SP):} Represents a floorplan using a pair of block permutations, e.g., $(\alpha, \beta)$. The spatial relation between any two blocks $X$ and $Y$ is defined by their relative order in the two permutations:
+        \begin{itemize}[leftmargin=*, label=$\bullet$, itemsep=1pt]
+          \item $(X \text{ is before } Y \text{ in } \alpha) \text{ and } (X \text{ is before } Y \text{ in } \beta) \Rightarrow X$ is to the left of $Y$.
+          \item $(X \text{ is before } Y \text{ in } \alpha) \text{ and } (X \text{ is after } Y \text{ in } \beta) \Rightarrow X$ is above $Y$.
+        \end{itemize}
+  \item \textbf{Bounded Slicing Grid (BSG):} A grid structure of horizontal and vertical line segments that defines placement slots. It allows representing any general topological structure without restricting cuts to slicing boundaries.
+\end{itemize}
+
 % ===============================================================================
 \section{Circuit Routing}
 % ===============================================================================
@@ -1098,6 +1160,13 @@ Shortest path found: $S(0) \rightarrow (1) \rightarrow (2) \rightarrow (3) \righ
   \item \textbf{High Memory Overhead:} Storing wave expansion numbers on a large grid of size $N \times N$ requires $O(N^2)$ memory.
   \item \textbf{Slow Execution:} Expanding wavefronts in all directions behaves like a BFS, taking $O(N^2)$ time.
   \item \textbf{Optimizations:} \textbf{Soukup's Router} uses a heuristic search (DFS) towards the target to speed up propagation, falling back to Lee's algorithm only when blocked. \textbf{Line-Probe Router} routes lines instead of cells, reducing memory usage.
+\end{itemize}
+
+\subsection{Line-Probe Area Routing}
+To overcome the high memory $O(N^2)$ and execution time constraints of grid-based BFS expansion in Lee's maze router, line-probe algorithms are used:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Mikami-Tabuchi Algorithm:} Shoots orthogonal horizontal and vertical probe lines from both the source $S$ and the target $T$. When a line generated from $S$ intersects any line generated from $T$, a path is established. It runs in time proportional to the number of probe lines ($O(L)$), drastically reducing search time and memory usage.
+  \item \textbf{Hightower's Algorithm:} Similar to Mikami-Tabuchi, but instead of shooting probes from all intersection points, it only shoots escape lines from the boundaries of obstacles obstructing the straight path. It is faster than Mikami-Tabuchi but does not guarantee finding a path even if one exists.
 \end{itemize}
 
 % ===============================================================================
@@ -1281,6 +1350,29 @@ Models digital circuits at the transistor level by representing MOS transistors 
   \item \textbf{Strengths:} Signals are assigned strengths to resolve bus contention (e.g. supply strength, pull strength, charge storage strength). An active pull-up transistor overrides a weak pull-down resistor.
 \end{itemize}
 
+\subsection{Compiled-Code vs. Event-Driven Simulation}
+Gate-level simulators evaluate logic gates using two primary simulation paradigms:
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Compiled-Code Simulation:} The digital circuit is translated into a sequence of machine instructions that are executed line-by-line. It evaluates the logic value of every gate in strict topological order during every simulation cycle, regardless of whether its input values have changed. It is highly efficient for circuits with very high switching activity, but extremely wasteful for typical circuits where only a small fraction ($<10\%$) of gate inputs change state at any step.
+  \item \textbf{Event-Driven Simulation:} Only evaluates a logic gate when a transition (event) occurs on at least one of its inputs. It schedules events dynamically using a priority queue (event queue or time wheel). While it avoids redundant gate evaluations, it incurs runtime overhead for queue management. It is the preferred method for large digital systems with low-to-medium active switching.
+\end{itemize}
+
+\par\vspace{6pt}\noindent
+{\renewcommand{\arraystretch}{1.35}%
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Feature} & \textbf{Compiled-Code Simulation} & \textbf{Event-Driven Simulation} \\
+\hline
+Evaluation Rule & Evaluates all gates in every simulation cycle. & Evaluates gates only when input signals switch states. \\
+\hline
+Overhead & Zero scheduling or queue management overhead. & Dynamic scheduling and queue sorting overhead. \\
+\hline
+Optimal Activity & Best suited for high switching activity circuits. & Best suited for low-to-medium switching activity ($<10\%$). \\
+\hline
+Delay Modeling & Strictly cycle-based; difficult to model gate delays. & Models detailed gate propagation and inertial delays. \\
+\hline
+\end{tabularx}}
+
 % ===============================================================================
 \section{Combinational Logic Synthesis}
 % ===============================================================================
@@ -1427,6 +1519,24 @@ An \textbf{Ordered BDD (OBDD)} is a BDD where variables are evaluated in a fixed
 \tcblower
 ROBDDs are canonical representations of Boolean functions. For a fixed variable ordering, every Boolean function has exactly one unique ROBDD.
 \end{tcolorbox}
+
+\subsection{The BDD Apply Operation}
+The BDD \textbf{Apply} algorithm is the fundamental operation used to combine two BDDs with a binary Boolean operator (such as AND, OR, XOR). Given BDDs for $f$ and $g$, the algorithm computes the BDD for $h = f \text{ op } g$ in $O(|f| \cdot |g|)$ polynomial time.
+
+\textbf{Recursive Algorithm Principle (Shannon Expansion):}
+Let $x$ be the variable with the highest priority (lowest index in the variable ordering) among the root variables of BDDs $f$ and $g$. We can expand $f \text{ op } g$ about $x$ as:
+\begin{equation}
+  f \text{ op } g = x \cdot (f_x \text{ op } g_x) + x' \cdot (f_{x'} \text{ op } g_{x'})
+\end{equation}
+where $f_x$ and $f_{x'}$ are cofactors of $f$ with respect to $x$ ($f_x = f(1)$ and $f_{x'} = f(0)$). If $f$ does not depend on $x$, then $f_x = f_{x'} = f$.
+
+\textbf{Algorithmic Flow:}
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Base Cases:} If $f$ and $g$ are terminal nodes ($0$ or $1$), evaluate the operation directly (e.g., $1 \text{ AND } 0 = 0$).
+  \item \textbf{Memoization (Computed Table):} Before recursively expanding, check if the triple $(f, g, \text{op})$ has already been computed. If yes, return the cached result. This avoids exponential recursive redundancy.
+  \item \textbf{Recursion:} Compute the cofactors, and recursively call the Apply algorithm on the positive cofactors $h_{\text{high}} = \text{Apply}(\text{op}, f_x, g_x)$ and negative cofactors $h_{\text{low}} = \text{Apply}(\text{op}, f_{x'}, g_{x'})$.
+  \item \textbf{Reduction:} If $h_{\text{high}} == h_{\text{low}}$, return $h_{\text{low}}$ (redundant node elimination). Otherwise, find or create a node for variable $x$ pointing to $h_{\text{high}}$ (as high child) and $h_{\text{low}}$ (as low child), and store the result in the computed table.
+\end{enumerate}
 
 \newpage
 
