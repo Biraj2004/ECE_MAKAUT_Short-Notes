@@ -15,7 +15,7 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 | 2nd – 5th SEM | 🔲 Planned | — |
 | 6th SEM | ✅ Complete | 10 subjects |
 | 7th SEM | ✅ Complete | 13 subjects |
-| 8th SEM | ✅ Complete | 6 subjects |
+| 8th SEM | ✅ Complete | 7 subjects |
 
 ---
 
@@ -74,6 +74,7 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 | PE-EC802A | Mixed Signal Design | 5 |
 | PE-EC802B | Industrial Automation and Control | 5 |
 | PE-EC802C | VLSI Design Automation | 5 |
+| OE-EC803A | Internet of Things | 6 |
 
 ---
 

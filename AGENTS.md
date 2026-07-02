@@ -153,6 +153,12 @@ ECE_MAKAUT_Short-Notes/
 │       ├── ...
 │       ├── PE-EC802C_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │       └── PE-EC802C_VLSI_Design_Automation.pdf
+│   └── 07. Internet of Things/        # OE-EC803A — 6 modules (All complete)
+│       ├── OE-EC803A_Module1_Notes.tex / .pdf
+│       ├── ...
+│       ├── OE-EC803A_Module6_Notes.tex / .pdf
+│       ├── OE-EC803A_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│       └── OE-EC803A_Internet_of_Things.pdf
 ├── Combined_Notes_Cover_Page.tex   # Standalone cover page template
 ├── Combined_Notes_Cover_Page.pdf   # Standalone cover page PDF (compiled output)
 ├── LONG_BOOK/                      # Parallel textbook-style notes folder (EXCLUDED)
@@ -420,6 +426,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | PE-EC802A Mixed Signal Design | 5 | ✅ All compiled | `PE-EC802A_Mixed_Signal_Design.pdf` | 35 |
 | PE-EC802B Industrial Automation and Control | 5 | ✅ All compiled | `PE-EC802B_Industrial_Automation_and_Control.pdf` | 38 |
 | PE-EC802C VLSI Design Automation | 5 | ✅ All compiled | `PE-EC802C_VLSI_Design_Automation.pdf` | 44 |
+| OE-EC803A Internet of Things | 6 | ✅ All compiled | `OE-EC803A_Internet_of_Things.pdf` | 37 |
 
 **1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
-**8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B) and VLSI Design Automation (PE-EC802C) are complete.
+**8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C) and Internet of Things (OE-EC803A) are complete.
