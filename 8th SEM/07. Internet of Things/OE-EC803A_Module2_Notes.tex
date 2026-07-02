@@ -217,16 +217,52 @@ MQTT is a lightweight, broker-based publish-subscribe messaging protocol designe
         \end{itemize}
 \end{itemize}
 
-\begin{tcolorbox}[tikzbox, title={MQTT Publish-Subscribe Model}]
+\begin{tcolorbox}[tikzbox, title={MQTT Publish-Subscribe Architecture}]
 \centering
-\begin{tikzpicture}[scale=0.9, transform shape, node distance=1.8cm]
-  \node[block, draw=myamber, fill=hdramber] (pub) {\textbf{Publisher}\\(DHT11 Node)};
-  \node[block, right=2.0cm of pub, draw=myred, fill=hdrred] (broker) {\textbf{MQTT Broker}\\(Central Server)};
-  \node[block, right=2.0cm of broker, draw=myteal, fill=hdrteal] (sub) {\textbf{Subscriber}\\(Mobile App)};
+\begin{tikzpicture}[scale=0.88, transform shape]
+  % Publisher (Left)
+  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.0cm] (pub) at (-4.5, 0) {
+    \textbf{\color{myamber}Publisher}\\
+    \scriptsize DHT11 Sensor Node\\
+    \itshape\tiny (home/temp)
+  };
 
-  \draw[arrow] (pub) -- node[above, font=\scriptsize] {Publish: ``temp/25C''} (broker);
-  \draw[arrow] (sub) -- node[above, font=\scriptsize] {Subscribe ``temp''} (broker);
-  \draw[arrow, bend right=25] (broker) to node[below, font=\scriptsize] {Forward: ``temp/25C''} (sub);
+  % Broker (Center)
+  \node[draw=myred, fill=hdrred, rounded corners=6pt, line width=1.2pt, text width=3.2cm, align=center, minimum height=1.2cm] (broker) at (0, 0) {
+    \textbf{\color{myred}MQTT Broker}\\
+    \scriptsize Central Message Router\\
+    \tiny Topic Filters \& Client Registry
+  };
+
+  % Subscriber 1 (Top Right)
+  \node[draw=myteal, fill=hdrteal, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.0cm] (sub1) at (4.5, 1.3) {
+    \textbf{\color{myteal}Subscriber A}\\
+    \scriptsize Mobile Phone App\\
+    \itshape\tiny (home/temp)
+  };
+
+  % Subscriber 2 (Bottom Right)
+  \node[draw=mygreen, fill=hdrgreen, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.0cm] (sub2) at (4.5, -1.3) {
+    \textbf{\color{mygreen}Subscriber B}\\
+    \scriptsize Smart Thermostat\\
+    \itshape\tiny (home/temp)
+  };
+
+  % Connections
+  \draw[arrow, line width=1.1pt] (pub) -- node[above, font=\tiny\bfseries] {Publish} node[below, font=\tiny] {"24.5 C" to "home/temp"} (broker);
+  
+  \draw[arrow, line width=1.0pt] (broker.east) -- ++(0.8, 0) |- (sub1.west) 
+    node[pos=0.75, above, font=\tiny\bfseries] {Forward} node[pos=0.75, below, font=\tiny] {"24.5 C"};
+    
+  \draw[arrow, line width=1.0pt] (broker.east) -- ++(0.8, 0) |- (sub2.west) 
+    node[pos=0.75, above, font=\tiny\bfseries] {Forward} node[pos=0.75, below, font=\tiny] {"24.5 C"};
+
+  % Subscriptions
+  \draw[arrow, dashed, color=gray] (sub1.west) -- ++(-1.2, 0) |- ($(broker.north)+(0.3,0)$) 
+    node[pos=0.3, above, font=\tiny, color=gray] {Subscribe "home/temp"};
+    
+  \draw[arrow, dashed, color=gray] (sub2.west) -- ++(-1.2, 0) |- ($(broker.south)+(0.3,0)$) 
+    node[pos=0.3, below, font=\tiny, color=gray] {Subscribe "home/temp"};
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -239,12 +275,29 @@ CoAP is a web transfer protocol designed for constrained nodes and networks:
 
 \begin{tcolorbox}[tikzbox, title={CoAP Request-Response over UDP}]
 \centering
-\begin{tikzpicture}[scale=0.9, transform shape, node distance=2.2cm]
-  \node[block, draw=myteal, fill=hdrteal] (client) {\textbf{CoAP Client}\\(Controller)};
-  \node[block, right=3.5cm of client, draw=myamber, fill=hdramber] (server) {\textbf{CoAP Server}\\(Smart Valve)};
+\begin{tikzpicture}[scale=0.9, transform shape]
+  % Client Box
+  \node[draw=myteal, fill=hdrteal, rounded corners=3pt, line width=1pt, text width=3.4cm, align=center, minimum height=1.3cm] (client) at (-3.5, 0) {
+    \textbf{\color{myteal}CoAP Client}\\
+    \scriptsize Smart Gateway\\
+    \itshape\tiny (Application Layer)
+  };
 
-  \draw[arrow] (client.north east) -- node[above, font=\scriptsize] {GET /valve/status} (server.north west);
-  \draw[arrow] (server.south west) -- node[below, font=\scriptsize] {2.05 Content (value=Open)} (client.south east);
+  % Server Box
+  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=1pt, text width=3.4cm, align=center, minimum height=1.3cm] (server) at (3.5, 0) {
+    \textbf{\color{myamber}CoAP Server}\\
+    \scriptsize Smart Water Valve\\
+    \itshape\tiny (Application Layer)
+  };
+
+  % Communication flow lines
+  \draw[arrow, line width=1.1pt, color=mydark] ($(client.east)+(0,0.3)$) -- node[above=2pt, font=\scriptsize\bfseries] {GET /valve/status} node[below=2pt, font=\tiny\itshape, color=mydark] {UDP Port 5683 [Confirmable]} ($(server.west)+(0,0.3)$);
+  
+  \draw[arrow, line width=1.1pt, color=mydark] ($(server.west)+(0,-0.3)$) -- node[above=2pt, font=\scriptsize\bfseries] {2.05 Content} node[below=2pt, font=\tiny\itshape, color=mydark] {value="Open" [Acknowledge]} ($(client.east)+(0,-0.3)$);
+
+  % Transport Layer Labels (Bottom)
+  \node[below=0.6cm of client, font=\tiny, color=mydark] {Sends stateless requests via UDP};
+  \node[below=0.6cm of server, font=\tiny, color=mydark] {Responds statelessly via UDP};
 \end{tikzpicture}
 \end{tcolorbox}
 

@@ -213,26 +213,60 @@ IoT designs select hardware platforms based on processing power, OS requirements
   \item \textbf{Microprocessor (MPU):} Contains only the CPU. Requires external RAM, Flash, and support ICs. Runs complex Operating Systems (Linux). High power consumption. Example: ARM Cortex-A72.
 \end{itemize}
 
-\begin{tcolorbox}[tikzbox, title={Microcontroller Internal Architecture}]
+\begin{tcolorbox}[tikzbox, title={Microcontroller Internal Architecture (System Bus Model)}]
 \centering
-\begin{tikzpicture}[scale=0.95, transform shape]
-  % Blocks
-  \node[block] (cpu) at (0,1.2) {\textbf{CPU}\\(Logic/ALU)};
-  \node[block, right=0.8cm of cpu] (ram) at (1.8,1.2) {\textbf{RAM}\\(Data Storage)};
-  \node[block, below=0.6cm of cpu] (flash) at (0,0) {\textbf{Flash Memory}\\(Program Code)};
-  \node[block, right=0.8cm of flash] (gpio) at (1.8,0) {\textbf{GPIO / Peripherals}\\(ADC, SPI, I2C)};
+\begin{tikzpicture}[scale=0.92, transform shape]
+  % System Bus (Central Backbone)
+  \draw[line width=4pt, color=mydark] (-3.8, 0) -- (3.8, 0) node[right, font=\scriptsize\bfseries] {Internal System Bus (Data / Address / Control)};
 
-  % Boundary Box
-  \node[draw=myred, dashed, line width=1pt, fit=(cpu) (ram) (flash) (gpio), inner sep=0.3cm] (mcu) {};
-  \node[above=0.1cm of mcu, font=\bfseries\color{myred}] {Single Microcontroller Die (MCU)};
-
-  % Connections
-  \draw[line, <->] (cpu) -- (ram);
-  \draw[line, <->] (cpu) -- (flash);
-  \draw[line, <->] (cpu) -- (gpio);
+  % Blocks above bus
+  \node[draw=myred, fill=hdrred, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (cpu) at (-2.5, 1.3) {
+    \textbf{\color{myred}CPU Core}\\
+    \tiny ALU \& Registers
+  };
   
-  % External interface
-  \draw[arrow] (gpio.east) -- ++(1.0,0) node[right, font=\scriptsize] {To Sensors \& Actuators};
+  \node[draw=myteal, fill=hdrteal, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (ram) at (0, 1.3) {
+    \textbf{\color{myteal}RAM}\\
+    \tiny Data Storage
+  };
+
+  \node[draw=mygreen, fill=hdrgreen, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (flash) at (2.5, 1.3) {
+    \textbf{\color{mygreen}Flash ROM}\\
+    \tiny Program Code
+  };
+
+  % Blocks below bus
+  \node[draw=myamber, fill=hdramber, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (gpio) at (-2.5, -1.3) {
+    \textbf{\color{myamber}GPIO Port}\\
+    \tiny Digital I/O
+  };
+
+  \node[draw=mypurple, fill=hdrpurple, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (adc) at (0, -1.3) {
+    \textbf{\color{mypurple}ADC / DAC}\\
+    \tiny Analog Interfaces
+  };
+
+  \node[draw=myteal, fill=hdrteal, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (serial) at (2.5, -1.3) {
+    \textbf{\color{myteal}SPI / I2C}\\
+    \tiny Serial Peripherals
+  };
+
+  % Bus taps (arrows)
+  \draw[arrow, <->, line width=1.1pt] (cpu) -- (cpu |- 0, 0.08);
+  \draw[arrow, <->, line width=1.1pt] (ram) -- (ram |- 0, 0.08);
+  \draw[arrow, <->, line width=1.1pt] (flash) -- (flash |- 0, 0.08);
+  \draw[arrow, <->, line width=1.1pt] (gpio) -- (gpio |- 0, -0.08);
+  \draw[arrow, <->, line width=1.1pt] (adc) -- (adc |- 0, -0.08);
+  \draw[arrow, <->, line width=1.1pt] (serial) -- (serial |- 0, -0.08);
+
+  % Boundary Box (MCU Die)
+  \node[draw=myred, dashed, line width=1.2pt, fit=(cpu) (ram) (flash) (gpio) (adc) (serial), inner sep=0.45cm] (mcu) {};
+  \node[above=0.15cm of mcu, font=\bfseries\color{myred}] {Single Microcontroller Die (MCU)};
+  
+  % External interfaces
+  \draw[arrow, line width=1pt] (gpio.south) -- ++(0, -0.5) node[below, font=\tiny\bfseries] {Sensors/Actuators};
+  \draw[arrow, line width=1pt] (adc.south) -- ++(0, -0.5) node[below, font=\tiny\bfseries] {Analog Signals};
+  \draw[arrow, line width=1pt] (serial.south) -- ++(0, -0.5) node[below, font=\tiny\bfseries] {External ICs};
 \end{tikzpicture}
 \end{tcolorbox}
 

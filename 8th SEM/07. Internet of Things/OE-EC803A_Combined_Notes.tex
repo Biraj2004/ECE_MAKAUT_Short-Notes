@@ -217,26 +217,46 @@ The IoT system is built upon a multi-tier architectural stack:
   \item \textbf{Cloud/Application Layer:} Analyzes incoming data streams, executes business logic, manages databases, and provides API endpoints and user dashboards.
 \end{enumerate}
 
-\begin{tcolorbox}[tikzbox, title={IoT 3-Tier Architecture}]
+\begin{tcolorbox}[tikzbox, title={IoT 3-Tier Architecture Hierarchy}]
 \centering
-\begin{tikzpicture}[scale=0.95, transform shape]
-  % Cloud Layer
-  \node[block, draw=myred, fill=hdrred, text width=3.2cm] (cloud) at (0,3.6) {\textbf{Application Layer}\\Cloud Server / Database\\Data Analytics};
-  
-  % Gateway Layer
-  \node[block, draw=myteal, fill=hdrteal, text width=3.2cm] (gate) at (0,1.8) {\textbf{Network Layer}\\Gateway / Router\\Protocol Translation};
-  
-  % Edge Layer
-  \node[block, draw=myamber, fill=hdramber, text width=3.2cm] (edge) at (0,0) {\textbf{Edge Layer}\\Sensors \& Actuators\\Smart Things};
+\begin{tikzpicture}[scale=0.9, transform shape]
+  % Cloud Layer (Top)
+  \node[draw=myred, fill=hdrred, rounded corners=6pt, line width=1.2pt, text width=6.0cm, align=center, minimum height=1.1cm] (cloud) at (0,4.2) {
+    \textbf{\color{myred}Cloud / Application Layer}\\
+    \scriptsize Database Storage, Web Interfaces, Big Data Analytics, APIs
+  };
+
+  % Gateway Layer (Middle)
+  \node[draw=myteal, fill=hdrteal, rounded corners=4pt, line width=1.1pt, text width=5.0cm, align=center, minimum height=1.0cm] (gate) at (0,2.1) {
+    \textbf{\color{myteal}Network / Gateway Layer}\\
+    \scriptsize Protocol Translation, Router, WAN Gateway, Packet Routing
+  };
+
+  % Edge Nodes (Bottom)
+  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=0.8pt, text width=2.5cm, align=center, minimum height=0.9cm] (sensor) at (-2.0,0) {
+    \textbf{\color{myamber}Sensor Node}\\
+    \scriptsize DHT11, LDR, ADC
+  };
+
+  \node[draw=mygreen, fill=hdrgreen, rounded corners=3pt, line width=0.8pt, text width=2.5cm, align=center, minimum height=0.9cm] (actuator) at (2.0,0) {
+    \textbf{\color{mygreen}Actuator Node}\\
+    \scriptsize Relays, Motors, Solenoids
+  };
 
   % Connections
-  \draw[arrow, <->, line width=1.1pt] (edge) -- (gate);
-  \draw[arrow, <->, line width=1.1pt] (gate) -- (cloud);
+  \draw[arrow, <->, line width=1.2pt, color=mydark] (cloud) -- node[right, font=\scriptsize\itshape] {WAN / HTTPS / MQTT} (gate);
+  \draw[arrow, <->, line width=1.0pt, color=mydark] (gate.south) -- ++(-1.8, -0.4) -- (sensor.north);
+  \draw[arrow, <->, line width=1.0pt, color=mydark] (gate.south) -- ++(1.8, -0.4) -- (actuator.north);
 
-  % Details (Right side)
-  \node[right=1.2cm of cloud, font=\scriptsize, align=left, color=mydark] {• Cloud APIs \& Dashboards\\• Big Data Analytics};
-  \node[right=1.2cm of gate, font=\scriptsize, align=left, color=mydark] {• Wi-Fi / Cellular / LoRa\\• Packet Routing};
-  \node[right=1.2cm of edge, font=\scriptsize, align=left, color=mydark] {• Raw Data Collection\\• Local Control Actions};
+  % Labels/Side brackets
+  \draw[thick, decoration={brace, amplitude=5pt}, decorate, color=mydark] ($(cloud.north east)+(0.4,0)$) -- ($(cloud.south east)+(0.4,0)$) 
+    node[midway, right=8pt, font=\tiny\bfseries, text width=4.5cm, align=left] {Centralized Data Processing \& Global Access};
+
+  \draw[thick, decoration={brace, amplitude=5pt}, decorate, color=mydark] ($(gate.north east)+(0.9,0)$) -- ($(gate.south east)+(0.9,0)$) 
+    node[midway, right=8pt, font=\tiny\bfseries, text width=4.5cm, align=left] {Local Network Access \& Protocol Conversion};
+
+  \draw[thick, decoration={brace, amplitude=5pt}, decorate, color=mydark] ($(actuator.north east)+(0.6,0)$) -- ($(actuator.south east)+(0.6,0)$) 
+    node[midway, right=8pt, font=\tiny\bfseries, text width=4.5cm, align=left] {Physical Interactivity (Environment Sensing / Actuation)};
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -427,16 +447,52 @@ MQTT is a lightweight, broker-based publish-subscribe messaging protocol designe
         \end{itemize}
 \end{itemize}
 
-\begin{tcolorbox}[tikzbox, title={MQTT Publish-Subscribe Model}]
+\begin{tcolorbox}[tikzbox, title={MQTT Publish-Subscribe Architecture}]
 \centering
-\begin{tikzpicture}[scale=0.9, transform shape, node distance=1.8cm]
-  \node[block, draw=myamber, fill=hdramber] (pub) {\textbf{Publisher}\\(DHT11 Node)};
-  \node[block, right=2.0cm of pub, draw=myred, fill=hdrred] (broker) {\textbf{MQTT Broker}\\(Central Server)};
-  \node[block, right=2.0cm of broker, draw=myteal, fill=hdrteal] (sub) {\textbf{Subscriber}\\(Mobile App)};
+\begin{tikzpicture}[scale=0.88, transform shape]
+  % Publisher (Left)
+  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.0cm] (pub) at (-4.5, 0) {
+    \textbf{\color{myamber}Publisher}\\
+    \scriptsize DHT11 Sensor Node\\
+    \itshape\tiny (home/temp)
+  };
 
-  \draw[arrow] (pub) -- node[above, font=\scriptsize] {Publish: ``temp/25C''} (broker);
-  \draw[arrow] (sub) -- node[above, font=\scriptsize] {Subscribe ``temp''} (broker);
-  \draw[arrow, bend right=25] (broker) to node[below, font=\scriptsize] {Forward: ``temp/25C''} (sub);
+  % Broker (Center)
+  \node[draw=myred, fill=hdrred, rounded corners=6pt, line width=1.2pt, text width=3.2cm, align=center, minimum height=1.2cm] (broker) at (0, 0) {
+    \textbf{\color{myred}MQTT Broker}\\
+    \scriptsize Central Message Router\\
+    \tiny Topic Filters \& Client Registry
+  };
+
+  % Subscriber 1 (Top Right)
+  \node[draw=myteal, fill=hdrteal, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.0cm] (sub1) at (4.5, 1.3) {
+    \textbf{\color{myteal}Subscriber A}\\
+    \scriptsize Mobile Phone App\\
+    \itshape\tiny (home/temp)
+  };
+
+  % Subscriber 2 (Bottom Right)
+  \node[draw=mygreen, fill=hdrgreen, rounded corners=3pt, line width=1pt, text width=2.6cm, align=center, minimum height=1.0cm] (sub2) at (4.5, -1.3) {
+    \textbf{\color{mygreen}Subscriber B}\\
+    \scriptsize Smart Thermostat\\
+    \itshape\tiny (home/temp)
+  };
+
+  % Connections
+  \draw[arrow, line width=1.1pt] (pub) -- node[above, font=\tiny\bfseries] {Publish} node[below, font=\tiny] {"24.5 C" to "home/temp"} (broker);
+  
+  \draw[arrow, line width=1.0pt] (broker.east) -- ++(0.8, 0) |- (sub1.west) 
+    node[pos=0.75, above, font=\tiny\bfseries] {Forward} node[pos=0.75, below, font=\tiny] {"24.5 C"};
+    
+  \draw[arrow, line width=1.0pt] (broker.east) -- ++(0.8, 0) |- (sub2.west) 
+    node[pos=0.75, above, font=\tiny\bfseries] {Forward} node[pos=0.75, below, font=\tiny] {"24.5 C"};
+
+  % Subscriptions
+  \draw[arrow, dashed, color=gray] (sub1.west) -- ++(-1.2, 0) |- ($(broker.north)+(0.3,0)$) 
+    node[pos=0.3, above, font=\tiny, color=gray] {Subscribe "home/temp"};
+    
+  \draw[arrow, dashed, color=gray] (sub2.west) -- ++(-1.2, 0) |- ($(broker.south)+(0.3,0)$) 
+    node[pos=0.3, below, font=\tiny, color=gray] {Subscribe "home/temp"};
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -449,12 +505,29 @@ CoAP is a web transfer protocol designed for constrained nodes and networks:
 
 \begin{tcolorbox}[tikzbox, title={CoAP Request-Response over UDP}]
 \centering
-\begin{tikzpicture}[scale=0.9, transform shape, node distance=2.2cm]
-  \node[block, draw=myteal, fill=hdrteal] (client) {\textbf{CoAP Client}\\(Controller)};
-  \node[block, right=3.5cm of client, draw=myamber, fill=hdramber] (server) {\textbf{CoAP Server}\\(Smart Valve)};
+\begin{tikzpicture}[scale=0.9, transform shape]
+  % Client Box
+  \node[draw=myteal, fill=hdrteal, rounded corners=3pt, line width=1pt, text width=3.4cm, align=center, minimum height=1.3cm] (client) at (-3.5, 0) {
+    \textbf{\color{myteal}CoAP Client}\\
+    \scriptsize Smart Gateway\\
+    \itshape\tiny (Application Layer)
+  };
 
-  \draw[arrow] (client.north east) -- node[above, font=\scriptsize] {GET /valve/status} (server.north west);
-  \draw[arrow] (server.south west) -- node[below, font=\scriptsize] {2.05 Content (value=Open)} (client.south east);
+  % Server Box
+  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=1pt, text width=3.4cm, align=center, minimum height=1.3cm] (server) at (3.5, 0) {
+    \textbf{\color{myamber}CoAP Server}\\
+    \scriptsize Smart Water Valve\\
+    \itshape\tiny (Application Layer)
+  };
+
+  % Communication flow lines
+  \draw[arrow, line width=1.1pt, color=mydark] ($(client.east)+(0,0.3)$) -- node[above=2pt, font=\scriptsize\bfseries] {GET /valve/status} node[below=2pt, font=\tiny\itshape, color=mydark] {UDP Port 5683 [Confirmable]} ($(server.west)+(0,0.3)$);
+  
+  \draw[arrow, line width=1.1pt, color=mydark] ($(server.west)+(0,-0.3)$) -- node[above=2pt, font=\scriptsize\bfseries] {2.05 Content} node[below=2pt, font=\tiny\itshape, color=mydark] {value="Open" [Acknowledge]} ($(client.east)+(0,-0.3)$);
+
+  % Transport Layer Labels (Bottom)
+  \node[below=0.6cm of client, font=\tiny, color=mydark] {Sends stateless requests via UDP};
+  \node[below=0.6cm of server, font=\tiny, color=mydark] {Responds statelessly via UDP};
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -602,26 +675,60 @@ IoT designs select hardware platforms based on processing power, OS requirements
   \item \textbf{Microprocessor (MPU):} Contains only the CPU. Requires external RAM, Flash, and support ICs. Runs complex Operating Systems (Linux). High power consumption. Example: ARM Cortex-A72.
 \end{itemize}
 
-\begin{tcolorbox}[tikzbox, title={Microcontroller Internal Architecture}]
+\begin{tcolorbox}[tikzbox, title={Microcontroller Internal Architecture (System Bus Model)}]
 \centering
-\begin{tikzpicture}[scale=0.95, transform shape]
-  % Blocks
-  \node[block] (cpu) at (0,1.2) {\textbf{CPU}\\(Logic/ALU)};
-  \node[block, right=0.8cm of cpu] (ram) at (1.8,1.2) {\textbf{RAM}\\(Data Storage)};
-  \node[block, below=0.6cm of cpu] (flash) at (0,0) {\textbf{Flash Memory}\\(Program Code)};
-  \node[block, right=0.8cm of flash] (gpio) at (1.8,0) {\textbf{GPIO / Peripherals}\\(ADC, SPI, I2C)};
+\begin{tikzpicture}[scale=0.92, transform shape]
+  % System Bus (Central Backbone)
+  \draw[line width=4pt, color=mydark] (-3.8, 0) -- (3.8, 0) node[right, font=\scriptsize\bfseries] {Internal System Bus (Data / Address / Control)};
 
-  % Boundary Box
-  \node[draw=myred, dashed, line width=1pt, fit=(cpu) (ram) (flash) (gpio), inner sep=0.3cm] (mcu) {};
-  \node[above=0.1cm of mcu, font=\bfseries\color{myred}] {Single Microcontroller Die (MCU)};
-
-  % Connections
-  \draw[line, <->] (cpu) -- (ram);
-  \draw[line, <->] (cpu) -- (flash);
-  \draw[line, <->] (cpu) -- (gpio);
+  % Blocks above bus
+  \node[draw=myred, fill=hdrred, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (cpu) at (-2.5, 1.3) {
+    \textbf{\color{myred}CPU Core}\\
+    \tiny ALU \& Registers
+  };
   
-  % External interface
-  \draw[arrow] (gpio.east) -- ++(1.0,0) node[right, font=\scriptsize] {To Sensors \& Actuators};
+  \node[draw=myteal, fill=hdrteal, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (ram) at (0, 1.3) {
+    \textbf{\color{myteal}RAM}\\
+    \tiny Data Storage
+  };
+
+  \node[draw=mygreen, fill=hdrgreen, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (flash) at (2.5, 1.3) {
+    \textbf{\color{mygreen}Flash ROM}\\
+    \tiny Program Code
+  };
+
+  % Blocks below bus
+  \node[draw=myamber, fill=hdramber, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (gpio) at (-2.5, -1.3) {
+    \textbf{\color{myamber}GPIO Port}\\
+    \tiny Digital I/O
+  };
+
+  \node[draw=mypurple, fill=hdrpurple, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (adc) at (0, -1.3) {
+    \textbf{\color{mypurple}ADC / DAC}\\
+    \tiny Analog Interfaces
+  };
+
+  \node[draw=myteal, fill=hdrteal, rounded corners=2pt, line width=1pt, text width=2.1cm, align=center, minimum height=0.9cm] (serial) at (2.5, -1.3) {
+    \textbf{\color{myteal}SPI / I2C}\\
+    \tiny Serial Peripherals
+  };
+
+  % Bus taps (arrows)
+  \draw[arrow, <->, line width=1.1pt] (cpu) -- (cpu |- 0, 0.08);
+  \draw[arrow, <->, line width=1.1pt] (ram) -- (ram |- 0, 0.08);
+  \draw[arrow, <->, line width=1.1pt] (flash) -- (flash |- 0, 0.08);
+  \draw[arrow, <->, line width=1.1pt] (gpio) -- (gpio |- 0, -0.08);
+  \draw[arrow, <->, line width=1.1pt] (adc) -- (adc |- 0, -0.08);
+  \draw[arrow, <->, line width=1.1pt] (serial) -- (serial |- 0, -0.08);
+
+  % Boundary Box (MCU Die)
+  \node[draw=myred, dashed, line width=1.2pt, fit=(cpu) (ram) (flash) (gpio) (adc) (serial), inner sep=0.45cm] (mcu) {};
+  \node[above=0.15cm of mcu, font=\bfseries\color{myred}] {Single Microcontroller Die (MCU)};
+  
+  % External interfaces
+  \draw[arrow, line width=1pt] (gpio.south) -- ++(0, -0.5) node[below, font=\tiny\bfseries] {Sensors/Actuators};
+  \draw[arrow, line width=1pt] (adc.south) -- ++(0, -0.5) node[below, font=\tiny\bfseries] {Analog Signals};
+  \draw[arrow, line width=1pt] (serial.south) -- ++(0, -0.5) node[below, font=\tiny\bfseries] {External ICs};
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -739,6 +846,50 @@ Physical design defines the mechanical structure, look, and user feel of an IoT 
   \item \textbf{Iteration:} Generating digital CAD models and manufacturing initial prototypes.
   \item \textbf{Testing:} Assembling the electronics inside the case to check for connector alignment, heat dissipation, and physical tolerances.
 \end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={Iterative Physical Prototyping Loop}]
+\centering
+\begin{tikzpicture}[scale=0.9, transform shape, node distance=1.5cm]
+  % Nodes in a loop
+  \node[draw=myred, fill=hdrred, rounded corners=3pt, line width=1pt, text width=2.4cm, align=center, minimum height=0.8cm] (prep) at (0, 2.2) {
+    \textbf{\color{myred}1. Preparation}\\
+    \tiny Dimension Audit
+  };
+
+  \node[draw=myteal, fill=hdrteal, rounded corners=3pt, line width=1pt, text width=2.4cm, align=center, minimum height=0.8cm] (sketch) at (2.2, 0.7) {
+    \textbf{\color{myteal}2. 2D Sketching}\\
+    \tiny Concept Exploration
+  };
+
+  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=1pt, text width=2.4cm, align=center, minimum height=0.8cm] (cad) at (1.4, -1.8) {
+    \textbf{\color{myamber}3. 3D CAD}\\
+    \tiny Digital Modeling
+  };
+
+  \node[draw=mypurple, fill=hdrpurple, rounded corners=3pt, line width=1pt, text width=2.4cm, align=center, minimum height=0.8cm] (fab) at (-1.4, -1.8) {
+    \textbf{\color{mypurple}4. Fabrication}\\
+    \tiny 3D Print / Laser Cut
+  };
+
+  \node[draw=mygreen, fill=hdrgreen, rounded corners=3pt, line width=1pt, text width=2.4cm, align=center, minimum height=0.8cm] (test) at (-2.2, 0.7) {
+    \textbf{\color{mygreen}5. Assembly Test}\\
+    \tiny Fit \& Heat Check
+  };
+
+  % Loop Arrows
+  \draw[arrow, bend left=15, line width=1.1pt] (prep) to (sketch);
+  \draw[arrow, bend left=15, line width=1.1pt] (sketch) to (cad);
+  \draw[arrow, bend left=15, line width=1.1pt] (cad) to (fab);
+  \draw[arrow, bend left=15, line width=1.1pt] (fab) to (test);
+  \draw[arrow, bend left=15, line width=1.1pt] (test) to (prep);
+
+  % Central node
+  \node[draw=mydark, fill=mygray, circle, inner sep=2pt, font=\scriptsize\bfseries, align=center] (center) at (0, -0.2) {Iterate\\until\\perfect};
+  
+  \draw[arrow, dashed, color=gray] (test) -- (center);
+  \draw[arrow, dashed, color=gray] (center) -- (cad);
+\end{tikzpicture}
+\end{tcolorbox}
 
 % ===============================================================================
 \section{Prototyping Methods}
@@ -897,6 +1048,50 @@ IoT systems need to push real-time events (e.g., triggering an alarm).
   \item \textbf{HTTP Long Polling:} The server holds the client's request open until new data is available, responding immediately, then closing the connection.
   \item \textbf{WebSockets:} Establishes a persistent, bi-directional TCP connection. Both client and server can send data packets at any time with minimal header overhead, enabling sub-millisecond real-time reactions.
 \end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={HTTP Polling vs. WebSockets Communication Flow}]
+\centering
+\begin{tikzpicture}[scale=0.88, transform shape]
+  % Vertical Lifelines - Polling
+  \node[font=\scriptsize\bfseries] at (-5, 3.8) {HTTP Polling};
+  \draw[line width=1.5pt] (-6, 3.5) -- (-6, -1.8) node[below, font=\tiny] {Client};
+  \draw[line width=1.5pt] (-4, 3.5) -- (-4, -1.8) node[below, font=\tiny] {Server};
+
+  % Polling Exchanges
+  \draw[arrow, color=myred] (-6, 3.0) -- node[above, font=\tiny, scale=0.8] {GET (Request)} (-4, 2.7);
+  \draw[arrow, color=myred] (-4, 2.5) -- node[below, font=\tiny, scale=0.8] {200 OK (No Data)} (-6, 2.2);
+  \draw[dashed, color=gray] (-6, 2.0) -- (-4, 2.0) node[midway, above, font=\tiny, scale=0.8] {Conn Closed};
+
+  \draw[arrow, color=myred] (-6, 1.3) -- node[above, font=\tiny, scale=0.8] {GET (Request)} (-4, 1.0);
+  \draw[arrow, color=myred] (-4, 0.8) -- node[below, font=\tiny, scale=0.8] {200 OK (No Data)} (-6, 0.5);
+  \draw[dashed, color=gray] (-6, 0.3) -- (-4, 0.3) node[midway, above, font=\tiny, scale=0.8] {Conn Closed};
+
+  \draw[arrow, color=myred] (-6, -0.4) -- node[above, font=\tiny, scale=0.8] {GET (Request)} (-4, -0.7);
+  \draw[arrow, color=mygreen] (-4, -0.9) -- node[below, font=\tiny, scale=0.8] {200 OK (New Temp)} (-6, -1.2);
+  \draw[dashed, color=gray] (-6, -1.4) -- (-4, -1.4) node[midway, above, font=\tiny, scale=0.8] {Conn Closed};
+
+  % Vertical Lifelines - WebSockets
+  \node[font=\scriptsize\bfseries] at (1, 3.8) {WebSockets};
+  \draw[line width=1.5pt] (0, 3.5) -- (0, -1.8) node[below, font=\tiny] {Client};
+  \draw[line width=1.5pt] (2, 3.5) -- (2, -1.8) node[below, font=\tiny] {Server};
+
+  % WebSockets Exchanges
+  \draw[arrow, color=myteal] (0, 3.0) -- node[above, font=\tiny, scale=0.8] {HTTP Handshake} (2, 2.7);
+  \draw[arrow, color=myteal] (2, 2.6) -- node[below, font=\tiny, scale=0.8] {101 Switching Protocols} (0, 2.3);
+  \draw[draw=myteal, fill=hdrteal, opacity=0.3] (-0.1, 2.1) rectangle (2.1, -1.6);
+  
+  \node[font=\tiny, color=myteal, text width=2.2cm, align=left] at (2.4, 0.2) {
+    \textbf{Persistent TCP}\\
+    Full Duplex\\
+    Low Overhead\\
+    Bi-directional
+  };
+
+  \draw[arrow, color=mygreen] (2, 1.4) -- node[above, font=\tiny, scale=0.8] {Data: Temp=24C (Push)} (0, 1.1);
+  \draw[arrow, color=mygreen] (0, 0.4) -- node[above, font=\tiny, scale=0.8] {Data: LED=ON (Write)} (2, 0.1);
+  \draw[arrow, color=mygreen] (2, -0.6) -- node[above, font=\tiny, scale=0.8] {Data: Temp=25C (Push)} (0, -0.9);
+\end{tikzpicture}
+\end{tcolorbox}
 
 \subsection{Other Messaging Protocols}
 \begin{itemize}[leftmargin=*, itemsep=2.5pt]
@@ -1088,6 +1283,53 @@ Before manufacturing, developers must define the physical scope of their product
   \item \textbf{What are you Producing?:} Is the product a raw sub-assembly component, an industrial sensor node, or a polished end-user consumer product? This determines the enclosure design and target user experience.
   \item \textbf{Designing Kits:} Many IoT systems begin as developer kits (e.g. SparkFun/Adafruit starter kits). Designing a kit requires organizing components, color-coding wire connectors, providing clear assembly diagrams, and bundling software library links to reduce the user's first-time configuration friction.
 \end{itemize}
+
+\begin{tcolorbox}[tikzbox, title={IoT Product Development and Manufacturing Lifecycle}]
+\centering
+\begin{tikzpicture}[scale=0.9, transform shape]
+  % Nodes
+  \node[draw=myred, fill=hdrred, rounded corners=3pt, line width=1pt, text width=2.4cm, align=center, minimum height=1.0cm] (proto) at (-4.5, 0) {
+    \textbf{\color{myred}1. Prototype}\\
+    \scriptsize Breadboard\\
+    \scriptsize Open Hardware
+  };
+
+  \node[draw=myteal, fill=hdrteal, rounded corners=3pt, line width=1pt, text width=2.4cm, align=center, minimum height=1.0cm] (dfm) at (-1.5, 0) {
+    \textbf{\color{myteal}2. DFM}\\
+    \scriptsize Design for\\
+    \scriptsize Manufacturing
+  };
+
+  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=1pt, text width=2.4cm, align=center, minimum height=1.0cm] (tool) at (1.5, 0) {
+    \textbf{\color{myamber}3. Design / Tooling}\\
+    \scriptsize PCB Gerber Files\\
+    \scriptsize Enclosure Molds
+  };
+
+  \node[draw=mypurple, fill=hdrpurple, rounded corners=3pt, line width=1pt, text width=2.4cm, align=center, minimum height=1.0cm] (cert) at (4.5, 0) {
+    \textbf{\color{mypurple}4. Certification}\\
+    \scriptsize FCC, CE, RoHS\\
+    \scriptsize Lab Compliance
+  };
+
+  \node[draw=mygreen, fill=hdrgreen, rounded corners=6pt, line width=1.2pt, text width=3.0cm, align=center, minimum height=1.1cm] (prod) at (0, -2.4) {
+    \textbf{\color{mygreen}5. Mass Production}\\
+    \scriptsize SMT Assembly \& Injection Molding\\
+    \scriptsize Scaling Software (OTA Updates)
+  };
+
+  % Connections
+  \draw[arrow, line width=1.1pt] (proto) -- (dfm);
+  \draw[arrow, line width=1.1pt] (dfm) -- (tool);
+  \draw[arrow, line width=1.1pt] (tool) -- (cert);
+  
+  \draw[arrow, line width=1.1pt] (cert.south) -- ++(0, -0.6) -| (prod.east) 
+    node[pos=0.25, below, font=\tiny\bfseries] {Passes};
+    
+  \draw[arrow, line width=1.1pt] (prod.west) |- ++(-1.5, 1.8) -- (dfm.south) 
+    node[pos=0.75, left, font=\tiny, color=myred] {Bugs Found};
+\end{tikzpicture}
+\end{tcolorbox}
 
 \subsection{Designing and Manufacturing PCBs}
 \begin{enumerate}[leftmargin=*, itemsep=3.5pt]

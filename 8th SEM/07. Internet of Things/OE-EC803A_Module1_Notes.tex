@@ -183,26 +183,46 @@ The IoT system is built upon a multi-tier architectural stack:
   \item \textbf{Cloud/Application Layer:} Analyzes incoming data streams, executes business logic, manages databases, and provides API endpoints and user dashboards.
 \end{enumerate}
 
-\begin{tcolorbox}[tikzbox, title={IoT 3-Tier Architecture}]
+\begin{tcolorbox}[tikzbox, title={IoT 3-Tier Architecture Hierarchy}]
 \centering
-\begin{tikzpicture}[scale=0.95, transform shape]
-  % Cloud Layer
-  \node[block, draw=myred, fill=hdrred, text width=3.2cm] (cloud) at (0,3.6) {\textbf{Application Layer}\\Cloud Server / Database\\Data Analytics};
-  
-  % Gateway Layer
-  \node[block, draw=myteal, fill=hdrteal, text width=3.2cm] (gate) at (0,1.8) {\textbf{Network Layer}\\Gateway / Router\\Protocol Translation};
-  
-  % Edge Layer
-  \node[block, draw=myamber, fill=hdramber, text width=3.2cm] (edge) at (0,0) {\textbf{Edge Layer}\\Sensors \& Actuators\\Smart Things};
+\begin{tikzpicture}[scale=0.9, transform shape]
+  % Cloud Layer (Top)
+  \node[draw=myred, fill=hdrred, rounded corners=6pt, line width=1.2pt, text width=6.0cm, align=center, minimum height=1.1cm] (cloud) at (0,4.2) {
+    \textbf{\color{myred}Cloud / Application Layer}\\
+    \scriptsize Database Storage, Web Interfaces, Big Data Analytics, APIs
+  };
+
+  % Gateway Layer (Middle)
+  \node[draw=myteal, fill=hdrteal, rounded corners=4pt, line width=1.1pt, text width=5.0cm, align=center, minimum height=1.0cm] (gate) at (0,2.1) {
+    \textbf{\color{myteal}Network / Gateway Layer}\\
+    \scriptsize Protocol Translation, Router, WAN Gateway, Packet Routing
+  };
+
+  % Edge Nodes (Bottom)
+  \node[draw=myamber, fill=hdramber, rounded corners=3pt, line width=0.8pt, text width=2.5cm, align=center, minimum height=0.9cm] (sensor) at (-2.0,0) {
+    \textbf{\color{myamber}Sensor Node}\\
+    \scriptsize DHT11, LDR, ADC
+  };
+
+  \node[draw=mygreen, fill=hdrgreen, rounded corners=3pt, line width=0.8pt, text width=2.5cm, align=center, minimum height=0.9cm] (actuator) at (2.0,0) {
+    \textbf{\color{mygreen}Actuator Node}\\
+    \scriptsize Relays, Motors, Solenoids
+  };
 
   % Connections
-  \draw[arrow, <->, line width=1.1pt] (edge) -- (gate);
-  \draw[arrow, <->, line width=1.1pt] (gate) -- (cloud);
+  \draw[arrow, <->, line width=1.2pt, color=mydark] (cloud) -- node[right, font=\scriptsize\itshape] {WAN / HTTPS / MQTT} (gate);
+  \draw[arrow, <->, line width=1.0pt, color=mydark] (gate.south) -- ++(-1.8, -0.4) -- (sensor.north);
+  \draw[arrow, <->, line width=1.0pt, color=mydark] (gate.south) -- ++(1.8, -0.4) -- (actuator.north);
 
-  % Details (Right side)
-  \node[right=1.2cm of cloud, font=\scriptsize, align=left, color=mydark] {• Cloud APIs \& Dashboards\\• Big Data Analytics};
-  \node[right=1.2cm of gate, font=\scriptsize, align=left, color=mydark] {• Wi-Fi / Cellular / LoRa\\• Packet Routing};
-  \node[right=1.2cm of edge, font=\scriptsize, align=left, color=mydark] {• Raw Data Collection\\• Local Control Actions};
+  % Labels/Side brackets
+  \draw[thick, decoration={brace, amplitude=5pt}, decorate, color=mydark] ($(cloud.north east)+(0.4,0)$) -- ($(cloud.south east)+(0.4,0)$) 
+    node[midway, right=8pt, font=\tiny\bfseries, text width=4.5cm, align=left] {Centralized Data Processing \& Global Access};
+
+  \draw[thick, decoration={brace, amplitude=5pt}, decorate, color=mydark] ($(gate.north east)+(0.9,0)$) -- ($(gate.south east)+(0.9,0)$) 
+    node[midway, right=8pt, font=\tiny\bfseries, text width=4.5cm, align=left] {Local Network Access \& Protocol Conversion};
+
+  \draw[thick, decoration={brace, amplitude=5pt}, decorate, color=mydark] ($(actuator.north east)+(0.6,0)$) -- ($(actuator.south east)+(0.6,0)$) 
+    node[midway, right=8pt, font=\tiny\bfseries, text width=4.5cm, align=left] {Physical Interactivity (Environment Sensing / Actuation)};
 \end{tikzpicture}
 \end{tcolorbox}
 
