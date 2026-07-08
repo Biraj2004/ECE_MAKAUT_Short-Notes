@@ -227,10 +227,11 @@ foreach ($folder in $subjectFolders) {
 \usepackage{array}
 \usepackage{amsmath}
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns, backgrounds}
 \usepackage[american]{circuitikz}
 \usepackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
+\usepackage{etoolbox}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
@@ -248,6 +249,7 @@ foreach ($folder in $subjectFolders) {
 
     # -- Colours --------------------------------------------------------------
     [void]$sb.AppendLine($colourBlock)
+    [void]$sb.AppendLine('\AfterEndEnvironment{tcolorbox}{\color{mydark}}')
     [void]$sb.AppendLine('')
 
     # -- Section formatting ---------------------------------------------------
@@ -313,11 +315,12 @@ foreach ($folder in $subjectFolders) {
     [void]$sb.AppendLine($tcbBlock)
     # Enable breakable globally for all boxes to prevent large white spaces
     [void]$sb.AppendLine('\tcbset{breakable}')
+    [void]$sb.AppendLine('\tcbset{coltext=mydark}')
     # CRITICAL FIX: XeLaTeX does not support pdfcol color stacks (used by the
     # tcolorbox breakable library). Without this, coltitle=white leaks out of
     # any breakable box and makes all subsequent body text invisible.
-    # Solution: after every tcolorbox closes, explicitly reset text color to black.
-    [void]$sb.AppendLine('\tcbset{after={\color{black}}}')
+    # Solution: after every tcolorbox closes, explicitly reset text color to mydark.
+    [void]$sb.AppendLine('\tcbset{after={\color{mydark}}}')
     [void]$sb.AppendLine('')
 
     # -- TikZ styles (merged from all modules) --------------------------------
