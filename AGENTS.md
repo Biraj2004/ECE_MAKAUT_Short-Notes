@@ -9,7 +9,7 @@
 
 This is a LaTeX note-writing project for **MAKAUT B.Tech ECE (2023–27)** by Biraj Sarkar (CGEC).
 
-The goal is exam-ready, module-wise PDF notes for every subject across all 8 semesters. Currently **6th SEM, 7th SEM and portions of 8th SEM are complete**. Earlier semesters (1st–5th) are planned but empty.
+The goal is exam-ready, module-wise PDF notes for every subject across all 8 semesters.
 
 Each subject is broken into modules matching the MAKAUT syllabus. Every module is a **self-contained `.tex` file** that compiles to a PDF. A combined PDF per subject is also generated automatically.
 
