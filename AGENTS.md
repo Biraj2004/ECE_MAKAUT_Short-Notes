@@ -427,6 +427,8 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | PE-EC802B Industrial Automation and Control | 5 | ✅ All compiled | `PE-EC802B_Industrial_Automation_and_Control.pdf` | 38 |
 | PE-EC802C VLSI Design Automation | 5 | ✅ All compiled | `PE-EC802C_VLSI_Design_Automation.pdf` | 44 |
 | OE-EC803A Internet of Things | 6 | ✅ All compiled | `OE-EC803A_Internet_of_Things.pdf` | 45 |
+| OE-EC803B Big Data Analysis | 6 | ✅ All compiled | `OE-EC803B_Big_Data_Analysis.pdf` | 38 |
+| OE-EC803C Cyber Security | 4 | ✅ All compiled | `OE-EC803C_Cyber_Security.pdf` | 28 |
 
-**1st SEM:** Chemistry-I is complete (7 modules + combined PDF). 2nd–5th SEM are planned but empty.
-**8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C) and Internet of Things (OE-EC803A) are complete.
+**1st SEM:** Chemistry-I (7 modules + combined PDF) and Physics-I (5 modules + combined PDF) are complete. 2nd–5th SEM are planned but empty.
+**8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C), Internet of Things (OE-EC803A), Big Data Analysis (OE-EC803B), and Cyber Security (OE-EC803C) are complete.
