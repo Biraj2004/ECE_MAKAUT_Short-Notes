@@ -672,9 +672,12 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
 | Node labels | Use `anchor=east` for left-side labels so they don't clip |
 | Topology diagrams | Labels placed with `anchor=north` well above the top node |
 | Colour syntax | Always `\color{myred}` — never `\color=myred` (causes compile error) |
+| Color safety | Use **ONLY** defined preamble palette colors (`myred`, `myteal`, `mydark`, `mypurple`, `myblue`, `mygreen`, `mygray`, `hdrred`, `hdrteal`, `hdrpurple`, `hdrblue`, `hdrgreen`, `mgframe`, `watermark`). Never use undefined colors like `myyellow` or `myorange`. |
 | Horizontal diagrams | Keep total width ≤ 10cm inside a tikzbox to avoid overflow |
 | Block count | ≤4 blocks: use global `block` style. **5+ blocks**: define a local `sblock` with `text width=1.75cm`–`1.9cm` and `right=0.6cm` spacing |
 | Line breaks in nodes | `\\` requires `align=center, text width=` on the node — otherwise compile fails with "Not allowed in LR mode" |
+| Grid Diagrams & Matrices | When drawing grids (e.g. Wumpus World), set unit dimensions `[x=1.8cm, y=1.3cm]` AND set `step=1` on `\draw[line, step=1] (0,0) grid (N, M);` so grid lines match unit coordinate steps rather than defaulting to 1cm physical spacing. |
+| Tree / Hierarchy Distances | Always specify per-level sibling distances (`level 1/.style={sibling distance=3.6cm, level distance=1.4cm}`, `level 2/.style={sibling distance=1.6cm, level distance=1.2cm}`) to prevent child nodes of adjacent parent nodes (e.g. Minimax trees) from colliding at $x=0\text{ cm}$. |
 | Custom style names | Avoid generic names like `axis` — they conflict with library keys. Prefix with `my` or use inline styles |
 | Signal taps | Use distinct `\coordinate` points along the wire; do NOT route taps through other blocks |
 | Text next to diagrams | Use side-by-side `minipage`s (e.g., `0.45\linewidth` and `0.5\linewidth`) inside the `tikzbox` to separate the TikZ drawing from text. Never place paragraphs using absolute coordinates inside TikZ nodes (causes overlapping on page wrapping). |
@@ -694,6 +697,28 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
   ...
   \draw[arrow] (n1) -- (n2);
   ...
+\end{tikzpicture}
+\end{tcolorbox}
+```
+
+### Tree diagram template (with per-level sibling distance)
+
+```latex
+\begin{tcolorbox}[tikzbox, title={Tree Diagram Title}]
+\centering
+\begin{tikzpicture}[
+  level 1/.style={sibling distance=3.6cm, level distance=1.4cm},
+  level 2/.style={sibling distance=1.6cm, level distance=1.2cm}
+]
+  \node [maxnode] {MAX}
+    child {node [minnode] {MIN1}
+      child {node [leaf] {3}}
+      child {node [leaf] {12}}
+    }
+    child {node [minnode] {MIN2}
+      child {node [leaf] {8}}
+      child {node [leaf] {2}}
+    };
 \end{tikzpicture}
 \end{tcolorbox}
 ```
@@ -790,9 +815,9 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
   \node[block] (n2) at (2.5,0) {Block 2}; % Gap is ~0.9cm, arrows render correctly
   ```
 
-### TikZ tree / hierarchy branching
-- **Cause:** Using simple `|-` or `--` connectors to draw lines from a parent node to multiple horizontally-aligned child nodes. This causes arrows to enter nodes horizontally from the side or overlap other paths.
-- **Fix:** Use coordinate math (`calc` library) to compute a branch midpoint, and then use the `-|` operator to route lines horizontally first, then vertically straight down into the child nodes' top centers:
+### TikZ tree / hierarchy branching & node collisions
+- **Cause 1:** Using simple `|-` or `--` connectors to draw lines from a parent node to multiple horizontally-aligned child nodes. This causes arrows to enter nodes horizontally from the side or overlap other paths.
+- **Fix 1:** Use coordinate math (`calc` library) to compute a branch midpoint, and then use the `-|` operator to route lines horizontally first, then vertically straight down into the child nodes' top centers:
   ```latex
   % ✅ Clean tree branch routing
   \draw[line] (parent.south) -- ($(parent.south)!0.5!(middle_child.north)$) coordinate (branch);
@@ -800,6 +825,22 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
   \draw[arrow] (branch) -| (left_child.north);
   \draw[arrow] (branch) -| (right_child.north);
   ```
+- **Cause 2 (Tree Node Collisions):** Setting a single global `sibling distance=X.Xcm` on the root node without specifying level styles when tree depth $\ge 2$. At level 2, the right child of `MIN1` and left child of `MIN2` both land at $x = 0\text{ cm}$ directly overlapping each other.
+- **Fix 2:** Always specify explicit per-level sibling distances:
+  ```latex
+  \begin{tikzpicture}[
+    level 1/.style={sibling distance=3.6cm, level distance=1.4cm},
+    level 2/.style={sibling distance=1.6cm, level distance=1.2cm}
+  ]
+  ```
+
+### TikZ grid coordinate scaling vs. default 1cm grid lines
+- **Cause:** Setting unit scale `[x=1.8cm, y=1.3cm]` on `tikzpicture` but writing `\draw (0,0) grid (4,4);`. In TikZ, `grid` defaults to physical 1cm spacing unless `step=1` is specified, causing grid lines to draw at 1cm physical intervals while text nodes land at coordinate positions, resulting in severe line-text collisions.
+- **Fix:** Always add `step=1` to the grid command: `\draw[line, step=1] (0,0) grid (4,4);`.
+
+### Undefined Color Error (`Package xcolor Error: Undefined color myyellow`)
+- **Cause:** Using arbitrary color names like `myyellow`, `myorange`, `mycyan` inside TikZ or tcolorboxes that are not defined in the master preamble.
+- **Fix:** Use only the 14 defined palette colors (`myred`, `myteal`, `mydark`, `mypurple`, `myblue`, `mygreen`, `mygray`, `hdrred`, `hdrteal`, `hdrpurple`, `hdrblue`, `hdrgreen`, `mgframe`, `watermark`). For gold/amber elements, use `mygreen!30` or `hdramber`.
 
 ### TikZ coordinate scaling vs. node sizes
 - **Cause:** Relying on `scale=X` to shrink a diagram. In TikZ, `scale=X` only scales coordinate values; it does **not** scale node dimensions, font sizes, or padding. Shrinking coordinates without shrinking nodes pushes nodes physically closer, causing text and border overlaps.

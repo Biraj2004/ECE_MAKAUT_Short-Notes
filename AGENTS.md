@@ -429,6 +429,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | OE-EC803A Internet of Things | 6 | ✅ All compiled | `OE-EC803A_Internet_of_Things.pdf` | 45 |
 | OE-EC803B Big Data Analysis | 6 | ✅ All compiled | `OE-EC803B_Big_Data_Analysis.pdf` | 38 |
 | OE-EC803C Cyber Security | 4 | ✅ All compiled | `OE-EC803C_Cyber_Security.pdf` | 28 |
+| OE-EC804A Artificial Intelligence | 6 | ✅ All compiled | `OE-EC804A_Artificial_Intelligence.pdf` | 38 |
 
 **1st SEM:** Chemistry-I (7 modules + combined PDF) and Physics-I (5 modules + combined PDF) are complete. 2nd–5th SEM are planned but empty.
-**8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C), Internet of Things (OE-EC803A), Big Data Analysis (OE-EC803B), and Cyber Security (OE-EC803C) are complete.
+**8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C), Internet of Things (OE-EC803A), Big Data Analysis (OE-EC803B), Cyber Security (OE-EC803C), and Artificial Intelligence (OE-EC804A) are complete.
