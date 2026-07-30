@@ -431,6 +431,8 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | OE-EC803C Cyber Security | 4 | ✅ All compiled | `OE-EC803C_Cyber_Security.pdf` | 28 |
 | OE-EC804A Artificial Intelligence | 6 | ✅ All compiled | `OE-EC804A_Artificial_Intelligence.pdf` | 38 |
 | OE-EC804B Microwave Integrated Circuits | 5 | ✅ All compiled | `OE-EC804B_Microwave_Integrated_Circuits.pdf` | 34 |
+| OE-EC804C Organizational Behavior | 4 | ✅ All compiled | `OE-EC804C_Organizational_Behavior.pdf` | 26 |
 
 **1st SEM:** Chemistry-I (7 modules + combined PDF) and Physics-I (5 modules + combined PDF) are complete. 2nd–5th SEM are planned but empty.
-**8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C), Internet of Things (OE-EC803A), Big Data Analysis (OE-EC803B), Cyber Security (OE-EC803C), Artificial Intelligence (OE-EC804A), and Microwave Integrated Circuits (OE-EC804B) are complete.
+**8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C), Internet of Things (OE-EC803A), Big Data Analysis (OE-EC803B), Cyber Security (OE-EC803C), Artificial Intelligence (OE-EC804A), Microwave Integrated Circuits (OE-EC804B), and Organizational Behavior (OE-EC804C) are complete.
+

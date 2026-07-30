@@ -259,34 +259,36 @@ All tables inside module files must strictly adhere to a standard boxed style. D
 * **No `booktabs` Rules:** Do NOT use `\toprule`, `\midrule`, or `\bottomrule`.
 * **Explicit Grids:** Always enclose all columns with vertical lines (`|`) in the column specifier and separate all rows with `\hline` (top, bottom, and between every row).
 
-### ⚠ Preventing Grid Line Collisions (Cell Padding)
+### ⚠ Preventing Grid Line Collisions (Comprehensive 4-Side Cell Padding)
 
-In boxed tables, text or mathematical symbols (especially subscripts, superscripts, fractions, matrices, sum/product limits, or square roots) can collide with the horizontal `\hline` lines above or below them. To guarantee adequate breathing room (vertical padding) and prevent clipping:
+In boxed tables, text or mathematical symbols can easily collide with vertical column lines (`|`) or horizontal `\hline` rules if cell padding is insufficient. To guarantee clean breathing room on all four sides:
 
-1. **Alternate Row Stretch (`\arraystretch`):**
-   * For any table containing standard equations, subscripts/superscripts, or square roots, wrap the table block in a local group and increase the row stretch to `1.65`:
-     ```latex
-     {\renewcommand{\arraystretch}{1.65}%
-     \begin{tabularx}{\linewidth}{...}
-     ...
-     \end{tabularx}}
-     ```
-   * For tables containing tall fractions (`\frac` or `\displaystyle\frac`), integration `\int`, sum `\sum`, or matrices, increase the row stretch even further to `1.9`:
-     ```latex
-     {\renewcommand{\arraystretch}{1.9}%
-     \begin{tabularx}{\linewidth}{...}
-     ...
-     \end{tabularx}}
-     ```
-2. **Explicit Row Bottom-Padding (`\\[length]`):**
-   * If a cell contains descenders (such as $g$, $p$, $q$, $y$) or subscripts (such as $w_{ij}$) or fractions that get too close to the horizontal line below it, add extra spacing at the end of the row instead of just `\\`:
-     * Use `\\[4pt]` for mild subscripts/descenders.
-     * Use `\\[6pt]` for single fractions or square roots.
-     * Use `\\[8pt]` for complex nested fractions or matrices.
-     * *Example:* `Row content & $w_{ij} = \sum s_i t_j$ \\[6pt]`
-3. **Explicit Row Top-Padding (Struts):**
-   * If a tall mathematical expression touches the `\hline` above it, insert a vertical strut `\rule{0pt}{14pt}` at the start of that cell to force top clearance.
-     * *Example:* `\rule{0pt}{14pt} \sqrt{\frac{x}{y}} & ... \\`
+1. **Horizontal Padding (`\tabcolsep`) \& Hyphenation Handling:**
+   * Wrap the table block in a local `\begingroup ... \endgroup` and set `\setlength{\tabcolsep}{...}`:
+     * For 2 or 3-column tables: `\setlength{\tabcolsep}{5pt}`
+     * For wide multi-column tables (5+ columns across `\linewidth`): Set `\setlength{\tabcolsep}{2.5pt}` (or `3pt`), adjust the first fixed column width (e.g., `p{1.9cm}`), and set `\footnotesize` inside the group.
+   * **Explicit Hyphen Breaking (`\allowbreak`):** Because global hyphenation is disabled (`\hyphenpenalty=10000`, `\exhyphenpenalty=10000`), long hyphenated words in narrow columns (e.g., *Self-actualization*, *Higher-order*) cannot break automatically at `-` and will spill over vertical borders (`|`). Always insert `\allowbreak` after hyphens in narrow cells: `Self-\allowbreak actualization` or `Higher-\allowbreak order`.
+2. **Vertical Top-Padding (`\extrarowheight` strut):**
+   * Set `\setlength{\extrarowheight}{3pt}` inside the table group. This adds a top strut to every row, guaranteeing that capital letters and bold header text never touch the top `\hline`.
+3. **Vertical Bottom-Padding (`\arraystretch`):**
+   * Set `\renewcommand{\arraystretch}{1.35}` for text tables, `1.65` for standard equations, and `1.9` for tall fractions (`\frac`).
+4. **Centered Bold Table Headings (`\multicolumn{1}{c|}{\textbf{...}}`):**
+   * All column titles in the header row must be centered and bold. Use `\multicolumn{1}{|c|}{\textbf{Header}}` for the first column and `\multicolumn{1}{c|}{\textbf{Header}}` for all subsequent columns to guarantee clean centering without overriding vertical borders.
+5. **Standard Table Group Pattern:**
+   ```latex
+   \par\vspace{6pt}\noindent
+   \begingroup
+   \setlength{\tabcolsep}{5pt}% Horizontal cell padding (left & right)
+   \setlength{\extrarowheight}{3pt}% Top vertical padding (strut height)
+   \renewcommand{\arraystretch}{1.35}% Bottom vertical padding
+   \begin{tabularx}{\linewidth}{|>{\raggedright\arraybackslash\bfseries}p{3.5cm}|Y|Y|}
+   \hline
+   \multicolumn{1}{|c|}{\textbf{Feature}} & \multicolumn{1}{c|}{\textbf{Formal Organization}} & \multicolumn{1}{c|}{\textbf{Informal Organization}} \\
+   \hline
+   ...
+   \end{tabularx}
+   \endgroup
+   ```
 
 ### Always use `tabularx` with `\linewidth`
 

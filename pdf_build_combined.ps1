@@ -243,7 +243,7 @@ foreach ($folder in $subjectFolders) {
 \usepackage{setspace}
 \usepackage{multirow}
 \usepackage{tocloft}
-\newcommand{\Q}[1]{\textbf{#1}\par\noindent\ignorespaces}
+\newcommand{\Q}[2]{\item \textbf{#1}\par #2 \vspace{4pt}}
 '@
     [void]$sb.AppendLine($preamble)
 
