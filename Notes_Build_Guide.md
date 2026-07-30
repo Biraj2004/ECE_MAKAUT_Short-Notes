@@ -234,6 +234,7 @@ Follow this order for every topic:
 
 > **⚠ Critical:** Always set both `colbacktitle` **and** `coltitle` for every style.
 > Without `coltitle=white`, dark title backgrounds produce invisible black-on-dark text.
+> **Never use `attach title to upper`** or basebox wrappers with `attach title to upper`. Doing so merges the title into the upper box body background (`colback`), causing invisible white text on light green/teal backgrounds.
 
 ### ⚠ Page Breaking and White Space Mitigation (Strategic Splitting)
 
@@ -841,6 +842,36 @@ Always wrap TikZ diagrams in a `tikzbox` with a descriptive title:
 ### Undefined Color Error (`Package xcolor Error: Undefined color myyellow`)
 - **Cause:** Using arbitrary color names like `myyellow`, `myorange`, `mycyan` inside TikZ or tcolorboxes that are not defined in the master preamble.
 - **Fix:** Use only the 14 defined palette colors (`myred`, `myteal`, `mydark`, `mypurple`, `myblue`, `mygreen`, `mygray`, `hdrred`, `hdrteal`, `hdrpurple`, `hdrblue`, `hdrgreen`, `mgframe`, `watermark`). For gold/amber elements, use `mygreen!30` or `hdramber`.
+
+### tcolorbox White Text on Light Background (`attach title to upper` bug)
+- **Cause:** Using `attach title to upper` inside `basebox` or `tcolorbox` definitions. This eliminates the distinct dark header bar (`title material` with `colbacktitle`), placing the title text (`coltitle=white`) directly inside the light upper body box background (`colback=hdrgreen` / `hdrteal`), producing unreadable white-on-light-green/teal text.
+- **Fix:** Never use `attach title to upper` or custom `basebox` wrappers that include it. Use standard `tcolorbox` definitions with explicit `colbacktitle=<dark_color>` and `coltitle=white` so the title resides in a distinct dark header bar:
+  ```latex
+  defbox/.style={
+    colback=hdrgreen, colframe=mygreen, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=mygreen, coltitle=white, fonttitle=\small\bfseries
+  }
+  ```
+
+### Long Multi-step Equations Overflowing Box Margins (`multiline equals`)
+- **Cause:** Writing long multi-step calculations on a single horizontal line with multiple chained equal signs (`= ... = ... = ... = ...`). Inside tcolorboxes or list environments, this causes the equation to extend past the right margin of the box and collide with the box border line.
+- **Fix:** Format multi-step equations across multiple lines aligned at equal signs (`=`) using `\begin{aligned} ... \end{aligned}` inside `\begin{equation}`:
+  ```latex
+  % ❌ Single-line equation chaining causes right margin overflow
+  \begin{equation}
+    \varepsilon_{eff} = \frac{9.8 + 1}{2} + \frac{9.8 - 1}{2} [1 + 12(1)]^{-1/2} = 5.4 + 4.4 [13]^{-1/2} = 5.4 + \frac{4.4}{3.6055} = 5.4 + 1.2203 = 6.6203
+  \end{equation}
+
+  % ✅ Clean multi-line aligned equation fitting perfectly inside box
+  \begin{equation}
+    \begin{aligned}
+      \varepsilon_{eff} &= \frac{9.8 + 1}{2} + \frac{9.8 - 1}{2} \left[ 1 + 12(1) \right]^{-1/2} \\
+      &= 5.4 + 4.4 \left[ 13 \right]^{-1/2} = 5.4 + \frac{4.4}{3.6055} \\
+      &= 5.4 + 1.2203 = 6.6203
+    \end{aligned}
+  \end{equation}
+  ```
 
 ### TikZ coordinate scaling vs. node sizes
 - **Cause:** Relying on `scale=X` to shrink a diagram. In TikZ, `scale=X` only scales coordinate values; it does **not** scale node dimensions, font sizes, or padding. Shrinking coordinates without shrinking nodes pushes nodes physically closer, causing text and border overlaps.
