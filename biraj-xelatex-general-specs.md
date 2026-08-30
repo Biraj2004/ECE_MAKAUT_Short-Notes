@@ -11,7 +11,17 @@ Global Line spacing: 1.2 (\setstretch{1.2})
 Para indent: 0pt | Para skip: 5pt
 Hyphenation: disabled (\hyphenpenalty=10000, \exhyphenpenalty=10000)
 left aligned, not use justify contents until specified
-use paraindent only for bullet points, bracketed alphabetic points (a), (b), (c), and roman numerals (i., ii., iii.) — DO NOT use direct natural numbers (1, 2, 3) in answer points. Always indent lists INWARDS (Level 1: leftmargin=2.75em, Level 2 subpoints: leftmargin=2.50em, Level 3 subpoints: leftmargin=2.50em) to establish a clear visual hierarchy relative to body text. Choose whichever of (a), (b), (c), bullet points, or i., ii., iii. is most suitable for each answer. Understand first then do it.
+use paraindent only for bullet points, bracketed alphabetic points (a), (b), (c), and roman numerals (i., ii., iii.) — DO NOT use direct natural numbers (1, 2, 3) in answer points. Choose whichever of (a), (b), (c), bullet points, or i., ii., iii. is most suitable as the top-level scheme for each answer.
+
+Only bullet points may nest into sub-levels. Bullet lists nest as a fixed 3-level structure, indented INWARDS:
+  Level 1: filled bullet (•), leftmargin=2.75em
+  Level 2: hollow circle (◦), leftmargin=2.50em
+  Level 3: en-dash (–), leftmargin=2.50em
+Set each marker explicitly via \setlist — never rely on LaTeX's own itemize defaults (• then – then *).
+
+Alphabetic (a)/(b)/(c) and roman i./ii./iii. schemes are used flat, single-level only, when chosen as the top-level point style for an answer — never nested into their own sub-variants (no (i) under (a), no A. under i.), and never used as Level 3 of a bullet nest (Level 3 is always en-dash per the structure above). If a nested sub-point is needed under an alphabetic or roman list, drop down to a bullet sub-list instead.
+
+Understand first, then do it.
 ```
 
 ## Heading Scale & Multi-Line Heading Spacing
