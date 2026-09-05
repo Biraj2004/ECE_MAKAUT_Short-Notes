@@ -34,6 +34,12 @@ function Write-Head { param($m) Write-Host "`n$m"        -ForegroundColor Yellow
 function Write-Step { param($m) Write-Host "  >>  $m"   -ForegroundColor White  }
 
 if (-not $SkipCompile -and -not (Get-Command $COMPILER -ErrorAction SilentlyContinue)) {
+    $tinyTexPath = Join-Path $env:APPDATA "TinyTeX\bin\windows"
+    if (Test-Path (Join-Path $tinyTexPath "xelatex.exe")) {
+        $env:PATH = "$tinyTexPath;$env:PATH"
+    }
+}
+if (-not $SkipCompile -and -not (Get-Command $COMPILER -ErrorAction SilentlyContinue)) {
     Write-Host "[ERROR] xelatex not found in PATH." -ForegroundColor Red; exit 1
 }
 

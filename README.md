@@ -11,11 +11,14 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 
 | Semester | Status | Subjects |
 |---|---|---|
-| 1st SEM | 🟡 In progress | BS-CH101 Chemistry-I (7 modules) |
-| 2nd – 5th SEM | 🔲 Planned | — |
-| 6th SEM | ✅ Complete | 10 subjects |
-| 7th SEM | ✅ Complete | 13 subjects |
-| 8th SEM | ✅ Complete | 8 subjects |
+| 1st SEM | ✅ Complete | 2 subjects (12 modules) |
+| 2nd SEM | ✅ Complete | 2 subjects (12 modules) |
+| 3rd – 5th SEM | 🔲 Planned | — |
+| 6th SEM | ✅ Complete | 10 subjects (55 modules) |
+| 7th SEM | ✅ Complete | 13 subjects (80 modules) |
+| 8th SEM | ✅ Complete | 12 subjects (63 modules) |
+
+> Every semester folder also includes a dedicated `New Syllabus Subjects/` subfolder reserved for new curriculum (NEP 2020) syllabus modules.
 
 ---
 
@@ -24,6 +27,16 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 | Code | Subject | Modules |
 |---|---|---|
 | BS-CH101 | Chemistry-I | 7 |
+| BS-PH101 | Physics-I | 5 |
+
+---
+
+## 2nd Semester
+
+| Code | Subject | Modules |
+|---|---|---|
+| BS-CH101 | Chemistry-I | 7 |
+| BS-PH101 | Physics-I | 5 |
 
 ---
 
@@ -75,7 +88,11 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 | PE-EC802B | Industrial Automation and Control | 5 |
 | PE-EC802C | VLSI Design Automation | 5 |
 | OE-EC803A | Internet of Things | 6 |
-| OE-EC803B | Big Data Analysis | 5 |
+| OE-EC803B | Big Data Analysis | 6 |
+| OE-EC803C | Cyber Security | 4 |
+| OE-EC804A | Artificial Intelligence | 6 |
+| OE-EC804B | Microwave Integrated Circuits | 5 |
+| OE-EC804C | Organizational Behavior | 4 |
 
 ---
 

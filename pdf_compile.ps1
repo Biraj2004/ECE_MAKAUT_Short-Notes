@@ -84,6 +84,12 @@ function Test-MarkdownFormatting {
 
 # ── Check xelatex ─────────────────────────────────────────────────────────────
 if (-not (Get-Command $COMPILER -ErrorAction SilentlyContinue)) {
+    $tinyTexPath = Join-Path $env:APPDATA "TinyTeX\bin\windows"
+    if (Test-Path (Join-Path $tinyTexPath "xelatex.exe")) {
+        $env:PATH = "$tinyTexPath;$env:PATH"
+    }
+}
+if (-not (Get-Command $COMPILER -ErrorAction SilentlyContinue)) {
     Write-Host "[ERROR] '$COMPILER' not found in PATH." -ForegroundColor Red
     Write-Host "        Install TeX Live or MiKTeX and ensure xelatex is on PATH." -ForegroundColor Red
     exit 1

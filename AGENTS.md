@@ -19,149 +19,63 @@ Each subject is broken into modules matching the MAKAUT syllabus. Every module i
 
 ```
 ECE_MAKAUT_Short-Notes/
-├── 1st SEM/ … 5th SEM/            # Empty — planned
+├── 1st SEM/
+│   ├── 01. Chemistry-I/            # BS-CH101 — 7 modules (All complete)
+│   ├── 02. Physics-I/              # BS-PH101 — 5 modules (All complete)
+│   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
+├── 2nd SEM/
+│   ├── 01. Chemistry-I/            # BS-CH101 — 7 modules (All complete)
+│   ├── 02. Physics-I/              # BS-PH101 — 5 modules (All complete)
+│   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
+├── 3rd SEM/ … 5th SEM/             # Planned (each with New Syllabus Subjects/)
 ├── 6th SEM/
-│   ├── 01. Control System/         # EC601 — 7 modules
+│   ├── 01. Control System/         # EC601 — 7 modules (All complete)
 │   │   ├── EC601_Module1_Notes.tex / .pdf
 │   │   ├── ...
 │   │   ├── EC601_Module7_Notes.tex / .pdf
 │   │   ├── EC601_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │   │   └── EC601_Control_System.pdf  (combined output)
-│   └── 02. Computer Network/       # EC602 — 4 modules
-│       ├── EC602_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── EC602_Module4_Notes.tex / .pdf
-│       ├── EC602_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── EC602_Computer_Network.pdf
-│   └── 03. Economics for Engineers/ # HS-HU601 — 4 modules (All complete)
-│       ├── HS-HU601_Module1_Notes.tex / .pdf
-│       ├── HS-HU601_Module2_Notes.tex / .pdf
-│       ├── HS-HU601_Module3_Notes.tex / .pdf
-│       ├── HS-HU601_Module4_Notes.tex / .pdf
-│       ├── HS-HU601_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── HS-HU601_Economics_for_Engineers.pdf
-│   └── 04. Information Theory and Coding/ # PE-EC603D — 3 modules (All complete)
-│       ├── PE-EC603D_Module1_Notes.tex / .pdf
-│       ├── PE-EC603D_Module2_Notes.tex / .pdf
-│       ├── PE-EC603D_Module3_Notes.tex / .pdf
-│       ├── PE-EC603D_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC603D_Information_Theory_and_Coding.pdf
-│   └── 05. Object Oriented Programming/ # OE-EC604C — 9 modules (All complete)
-│       ├── OE-EC604C_Module1_Notes.tex / .pdf
-│       ├── ...
-│       └── OE-EC604C_Module9_Notes.tex / .pdf
-│   └── 06. Introduction to MEMS/       # PE-EC603A — 4 modules (All complete)
-│       ├── PE-EC603A_Module1_Notes.tex / .pdf
-│       ├── ...
-│       └── PE-EC603A_Module4_Notes.tex / .pdf
-│   └── 10. CMOS VLSI Design/           # PE-EC603C — 6 modules (All complete)
-│       ├── PE-EC603C_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC603C_Module6_Notes.tex / .pdf
-│       ├── PE-EC603C_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC603C_CMOS_VLSI_Design.pdf
+│   ├── 02. Computer Network/       # EC602 — 4 modules (All complete)
+│   ├── 03. Economics For Engineers/# HS-HU601 — 4 modules (All complete)
+│   ├── 04. Information Theory and Coding/ # PE-EC603D — 3 modules (All complete)
+│   ├── 05. Object Oriented Programming/   # OE-EC604C — 9 modules (All complete)
+│   ├── 06. Introduction to MEMS/          # PE-EC603A — 4 modules (All complete)
+│   ├── 07. Bio-Medical Electronics/       # PE-EC603B — 4 modules (All complete)
+│   ├── 08. Operating System/              # OE-EC604B — 9 modules (All complete)
+│   ├── 09. Electronic Measurement and Measuring Instruments/ # OE-EC604A — 5 modules (All complete)
+│   ├── 10. CMOS VLSI Design/              # PE-EC603C — 6 modules (All complete)
+│   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
 ├── 7th SEM/
-│   ├── 01. Principles of Management/   # HS-HU701 — 4 modules (All complete)
-│   │   ├── HS-HU701_Module1_Notes.tex / .pdf
-│   │   ├── ...
-│   │   ├── HS-HU701_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│   │   └── HS-HU701_Principles_of_Management.pdf
-│   └── 02. Microwave Theory and Technique/ # PE-EC701A — 9 modules (All complete)
-│       ├── PE-EC701A_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC701A_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC701A_Microwave_Theory_and_Technique.pdf
-│   └── 03. Satellite Communication/       # PE-EC701B — 6 modules (All complete)
-│       ├── PE-EC701B_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC701B_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC701B_Satellite_Communication.pdf
-│   └── 05. Adaptive Signal Processing/ # PE-EC702A — 5 modules (All complete)
-│       ├── PE-EC702A_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC702A_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC702A_Adaptive_Signal_Processing.pdf
-│   └── 06. Digital Image and Video Processing/ # PE-EC702B — 8 modules (All complete)
-│       ├── PE-EC702B_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC702B_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC702B_Digital_Image_and_Video_Processing.pdf
-│   └── 07. Neural Network and Fuzzy Logic Control/ # PE-EC702C — 5 modules (All complete)
-│   │   ├── PE-EC702C_Module1_Notes.tex / .pdf
-│   │   ├── ...
-│   │   ├── PE-EC702C_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│   │   └── PE-EC702C_Neural_Network_and_Fuzzy_Logic_Control.pdf
-│   └── 08. Embedded System/       # PE-EC703A — 5 modules (All complete)
-│       ├── PE-EC703A_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC703A_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC703A_Embedded_System.pdf
-│   └── 09. Wireless Sensor Networks/ # PE-EC703B — 5 modules (All complete)
-│       ├── PE-EC703B_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC703B_Module5_Notes.tex / .pdf
-│       ├── PE-EC703B_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC703B_Wireless_Sensor_Networks.pdf
-│   └── 10. Web Technology/         # OE-EC704A — 10 modules (All complete)
-│       ├── OE-EC704A_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── OE-EC704A_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── OE-EC704A_Web_Technology.pdf
-│   └── 11. Wavelet Transforms/     # PE-EC703C — 7 modules (All complete)
-│       ├── PE-EC703C_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC703C_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC703C_Wavelet_Transforms.pdf
-│   └── 12. Entrepreneurship/       # OE-EC704C — 4 modules (All complete)
-│       ├── OE-EC704C_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── OE-EC704C_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── OE-EC704C_Entrepreneurship.pdf
-│   └── 13. Optimization Technique/ # OE-EC704B — 6 modules (All complete)
-│       ├── OE-EC704B_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── OE-EC704B_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── OE-EC704B_Optimization_Technique.pdf
+│   ├── 01. Principles of Management/      # HS-HU701 — 4 modules (All complete)
+│   ├── 02. Microwave Theory and Technique/# PE-EC701A — 9 modules (All complete)
+│   ├── 03. Satellite Communication/       # PE-EC701B — 6 modules (All complete)
+│   ├── 04. Mobile Communication and Networks/ # PE-EC701C — 6 modules (All complete)
+│   ├── 05. Adaptive Signal Processing/    # PE-EC702A — 5 modules (All complete)
+│   ├── 06. Digital Image and Video Processing/# PE-EC702B — 8 modules (All complete)
+│   ├── 07. Neural Network and Fuzzy Logic Control/ # PE-EC702C — 5 modules (All complete)
+│   ├── 08. Embedded System/               # PE-EC703A — 5 modules (All complete)
+│   ├── 09. Wireless Sensor Networks/      # PE-EC703B — 5 modules (All complete)
+│   ├── 10. Web Technology/                # OE-EC704A — 10 modules (All complete)
+│   ├── 11. Wavelet Transforms/            # PE-EC703C — 7 modules (All complete)
+│   ├── 12. Entrepreneurship/              # OE-EC704C — 4 modules (All complete)
+│   ├── 13. Optimization Technique/        # OE-EC704B — 6 modules (All complete)
+│   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
 ├── 8th SEM/
-│   ├── 01. Antennas and Propagation/ # PE-EC801A — 7 modules (All complete)
-│   │   ├── PE-EC801A_Module1_Notes.tex / .pdf
-│   │   ├── ...
-│   │   ├── PE-EC801A_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│   │   └── PE-EC801A_Antennas_and_Propagation.pdf
-│   ├── 02. Fiber Optic Communication/ # PE-EC801B — 5 modules (All complete)
-│   │   ├── PE-EC801B_Module1_Notes.tex / .pdf
-│   │   ├── ...
-│   │   ├── PE-EC801B_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│   │   └── PE-EC801B_Fiber_Optic_Communication.pdf
-│   └── 03. Error Correcting Codes/    # PE-EC801C — 5 modules (All complete)
-│       ├── PE-EC801C_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC801C_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC801C_Error_Correcting_Codes.pdf
-│   └── 04. Mixed Signal Design/       # PE-EC802A — 5 modules (All complete)
-│       ├── PE-EC802A_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC802A_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC802A_Mixed_Signal_Design.pdf
-│   └── 05. Industrial Automation and Control/ # PE-EC802B — 5 modules (All complete)
-│       ├── PE-EC802B_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC802B_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC802B_Industrial_Automation_and_Control.pdf
-│   └── 06. VLSI Design Automation/       # PE-EC802C — 5 modules (All complete)
-│       ├── PE-EC802C_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── PE-EC802C_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── PE-EC802C_VLSI_Design_Automation.pdf
-│   └── 07. Internet of Things/        # OE-EC803A — 6 modules (All complete)
-│       ├── OE-EC803A_Module1_Notes.tex / .pdf
-│       ├── ...
-│       ├── OE-EC803A_Module6_Notes.tex / .pdf
-│       ├── OE-EC803A_Combined_Notes.tex  (auto-generated — do not hand-edit)
-│       └── OE-EC803A_Internet_of_Things.pdf
+│   ├── 01. Antennas and Propagation/      # PE-EC801A — 7 modules (All complete)
+│   ├── 02. Fiber Optic Communication/     # PE-EC801B — 5 modules (All complete)
+│   ├── 03. Error Correcting Codes/        # PE-EC801C — 5 modules (All complete)
+│   ├── 04. Mixed Signal Design/           # PE-EC802A — 5 modules (All complete)
+│   ├── 05. Industrial Automation and Control/ # PE-EC802B — 5 modules (All complete)
+│   ├── 06. VLSI Design Automation/        # PE-EC802C — 5 modules (All complete)
+│   ├── 07. Internet of Things/            # OE-EC803A — 6 modules (All complete)
+│   ├── 08. Big Data Analysis/             # OE-EC803B — 6 modules (All complete)
+│   ├── 09. Cyber Security/                # OE-EC803C — 4 modules (All complete)
+│   ├── 10. Artificial Intelligence/       # OE-EC804A — 6 modules (All complete)
+│   ├── 11. Microwave Integrated Circuits/ # OE-EC804B — 5 modules (All complete)
+│   ├── 12. Organizational Behavior/       # OE-EC804C — 4 modules (All complete)
+│   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
 ├── Combined_Notes_Cover_Page.tex   # Standalone cover page template
 ├── Combined_Notes_Cover_Page.pdf   # Standalone cover page PDF (compiled output)
-├── LONG_BOOK/                      # Parallel textbook-style notes folder (EXCLUDED)
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
@@ -169,12 +83,6 @@ ECE_MAKAUT_Short-Notes/
 ├── CLAUDE.md                       # LLM behaviour guidelines
 └── README.md
 ```
-
----
-
-## Folder exclusions (Critical)
-
-- **LONG_BOOK/ directory:** This folder contains parallel textbook-style long notes. It is **always excluded** from all compilation, building, automated scripts, file edits, and scanning operations by default. Do not process, modify, or reference any files in `LONG_BOOK/` unless the user explicitly requests it.
 
 ---
 
@@ -433,6 +341,6 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | OE-EC804B Microwave Integrated Circuits | 5 | ✅ All compiled | `OE-EC804B_Microwave_Integrated_Circuits.pdf` | 34 |
 | OE-EC804C Organizational Behavior | 4 | ✅ All compiled | `OE-EC804C_Organizational_Behavior.pdf` | 26 |
 
-**1st SEM:** Chemistry-I (7 modules + combined PDF) and Physics-I (5 modules + combined PDF) are complete. 2nd–5th SEM are planned but empty.
+**1st SEM & 2nd SEM:** Chemistry-I (7 modules + combined PDF) and Physics-I (5 modules + combined PDF) are complete. 3rd–5th SEM are planned. Every semester directory contains a `New Syllabus Subjects/` subfolder reserved for new curriculum subjects.
 **8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C), Internet of Things (OE-EC803A), Big Data Analysis (OE-EC803B), Cyber Security (OE-EC803C), Artificial Intelligence (OE-EC804A), Microwave Integrated Circuits (OE-EC804B), and Organizational Behavior (OE-EC804C) are complete.
 

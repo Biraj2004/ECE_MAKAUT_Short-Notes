@@ -70,9 +70,6 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - Prefer stdlib or already-present packages over new ones.
 - If adding a dependency, state why no existing one suffices.
 
-## 7. Folder Exclusions
-- **LONG_BOOK/ directory:** Always exclude the `LONG_BOOK/` folder and its files from all analysis, compilation, building, and scanning operations. Do not touch or modify anything in `LONG_BOOK/` unless specifically requested by the user.
-
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
