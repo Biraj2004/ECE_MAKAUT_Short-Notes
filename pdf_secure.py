@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 pdf_secure.py — Apply Academic Branding Metadata & Permissions Restrictions to PDFs
-ECE MAKAUT Short Notes (2023–27)
+ECE MAKAUT Short Notes
 
 Restrictions & Permissions:
   - Changing the Document: NOT Allowed (No editing/modifications)
