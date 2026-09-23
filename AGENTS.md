@@ -76,6 +76,7 @@ ECE_MAKAUT_Short-Notes/
 │   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
 ├── Combined_Notes_Cover_Page.tex   # Standalone cover page template
 ├── Combined_Notes_Cover_Page.pdf   # Standalone cover page PDF (compiled output)
+├── docs/                           # Web showcase portal for GitHub Pages (Editorial Neo-Brutalism)
 ├── pdf_compile.ps1                 # Compile module PDFs
 ├── pdf_build_combined.ps1          # Build combined PDFs
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec

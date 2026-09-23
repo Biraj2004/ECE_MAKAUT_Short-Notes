@@ -144,4 +144,23 @@ See [`Notes_Build_Guide.md`](Notes_Build_Guide.md) for the full authoring spec.
 
 ---
 
+## Web Portal
+
+An interactive web showcase and PDF repository portal is hosted directly in [`docs/`](docs/) (deployable via GitHub Pages). It features:
+- **Instant 1-Click PDF Downloads** for official MAKAUT syllabi and comprehensive combined exam notes directly from the repository.
+- **Fast Search & Filter** across all semesters, course codes, and topics.
+- **Light Mode Editorial Neo-Brutalism & Pastel Theme** crafted with zero clutter, crisp typography, and full cross-device responsiveness.
+
+---
+
+## License & Attribution
+
+Copyright (c) 2023–2027 **Biraj Sarkar**, Department of Electronics & Communication Engineering, Cooch Behar Government Engineering College (CGEC).
+
+This project is licensed under the **[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](LICENSE)** license.
+
+> **Strict Non-Commercial Policy:** This repository and all derived materials (including LaTeX sources, compiled PDFs, diagrams, and notes) are provided **100% free of charge for students**. You are strictly prohibited from selling, packaging into paid courses, or monetizing these notes in any format (digital or physical). Any redistribution or remix must prominently credit **Biraj Sarkar (CGEC ECE)** and retain this identical license.
+
+---
+
 *Cooch Behar Government Engineering College · B.Tech ECE (2023–27) · MAKAUT*
