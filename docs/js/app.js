@@ -35,6 +35,7 @@
     licenseTriggerBtn: document.getElementById('licenseTriggerBtn'),
     licenseFooterTrigger: document.getElementById('licenseFooterTrigger'),
     copyCitationBtn: document.getElementById('copyCitationBtn'),
+    scrollToTopBtn: document.getElementById('scrollToTopBtn'),
     toast: document.getElementById('toastBar')
   };
 
@@ -404,6 +405,33 @@
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeLicenseModal();
     });
+
+    // Auto-hiding Scroll to Top Button (Smooth 60fps rAF)
+    if (DOM.scrollToTopBtn) {
+      let isTicking = false;
+      const onScroll = () => {
+        if (window.scrollY > 320) {
+          DOM.scrollToTopBtn.classList.add('visible');
+        } else {
+          DOM.scrollToTopBtn.classList.remove('visible');
+        }
+        isTicking = false;
+      };
+
+      window.addEventListener('scroll', () => {
+        if (!isTicking) {
+          window.requestAnimationFrame(onScroll);
+          isTicking = true;
+        }
+      }, { passive: true });
+
+      DOM.scrollToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
 
     // Hash sync
     window.addEventListener('hashchange', () => {
