@@ -69,13 +69,140 @@ const GitHubSync = (function () {
     return `../${cleanPath}`;
   }
 
+  /**
+   * Fetches latest commit metadata and total commit count from GitHub API
+   * Uses localStorage cache with 5-minute TTL to stay well within unauthenticated rate limits (60/hr).
+   */
+  async function fetchRepoCommitStats() {
+    const CACHE_KEY = 'ece_makaut_gh_commit_stats_v1';
+    const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
+    // 1. Try active cache first for instant render
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Date.now() - parsed.timestamp < CACHE_TTL) {
+          return parsed.data;
+        }
+      }
+    } catch (e) {
+      // localStorage disabled or unavailable
+    }
+
+    // 2. Fetch fresh stats from GitHub API
+    try {
+      const url = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/commits?per_page=1&sha=${CONFIG.branch}`;
+      const res = await fetch(url, {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+
+      if (!res.ok) {
+        // Fallback to stale cache if API failed (e.g. rate limit)
+        const stale = localStorage.getItem(CACHE_KEY);
+        if (stale) return JSON.parse(stale).data;
+        return null;
+      }
+
+      const commits = await res.json();
+      if (!Array.isArray(commits) || commits.length === 0) return null;
+
+      const latestSha = commits[0].sha ? commits[0].sha.substring(0, 7) : null;
+      const latestMsg = commits[0].commit?.message || '';
+
+      // Parse total commits count from Link header rel="last"
+      let totalCommits = null;
+      const linkHeader = res.headers.get('link') || res.headers.get('Link');
+      if (linkHeader) {
+        const match = linkHeader.match(/[?&]page=(\d+)[^>]*>;\s*rel="last"/);
+        if (match && match[1]) {
+          totalCommits = parseInt(match[1], 10);
+        }
+      }
+
+      const result = {
+        latestSha: latestSha || 'a3ea4d9',
+        totalCommits: totalCommits || 108,
+        latestMsg: latestMsg.split('\n')[0]
+      };
+
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify({
+          timestamp: Date.now(),
+          data: result
+        }));
+      } catch (e) {}
+
+      return result;
+    } catch (err) {
+      try {
+        const stale = localStorage.getItem(CACHE_KEY);
+        if (stale) return JSON.parse(stale).data;
+      } catch (e) {}
+      return null;
+    }
+  }
+
+  /**
+   * Initializes and populates the live GitHub commit badge button in the hero stats row
+   */
+  async function initCommitBadge() {
+    const countEl = document.getElementById('ghCommitCount');
+    const hashEl = document.getElementById('ghCommitHash');
+    const btnEl = document.getElementById('heroGithubBtn');
+
+    if (!btnEl && !countEl && !hashEl) return;
+
+    // Apply immediate cached values to eliminate UI flash
+    try {
+      const cached = localStorage.getItem('ece_makaut_gh_commit_stats_v1');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed.data) {
+          if (countEl && parsed.data.totalCommits) countEl.textContent = parsed.data.totalCommits;
+          if (hashEl && parsed.data.latestSha) hashEl.textContent = parsed.data.latestSha;
+          if (btnEl && parsed.data.latestMsg) {
+            btnEl.title = `Latest commit on main: "${parsed.data.latestMsg}" (${parsed.data.latestSha}) · Click to open GitHub`;
+          }
+        }
+      }
+    } catch (e) {}
+
+    // Fetch fresh stats in background and update DOM
+    const stats = await fetchRepoCommitStats();
+    if (stats) {
+      if (countEl && stats.totalCommits) {
+        countEl.textContent = stats.totalCommits;
+      }
+      if (hashEl && stats.latestSha) {
+        hashEl.textContent = stats.latestSha;
+      }
+      if (btnEl && stats.latestMsg) {
+        btnEl.title = `Latest commit on main: "${stats.latestMsg}" (${stats.latestSha}) · Click to open GitHub`;
+      }
+    }
+  }
+
+  // Auto-initialize when document is ready
+  if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initCommitBadge);
+    } else {
+      initCommitBadge();
+    }
+  }
+
   return {
     CONFIG,
     encodePath,
     getRawUrl,
     getBlobUrl,
     getViewerUrl,
-    getLocalFallbackUrl
+    getLocalFallbackUrl,
+    fetchRepoCommitStats,
+    initCommitBadge
   };
 })();
 
