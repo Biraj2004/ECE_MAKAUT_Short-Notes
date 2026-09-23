@@ -228,9 +228,14 @@ foreach ($tex in $texFiles) {
     }
 
     if ($passOk -and (Test-Path $pdfPath)) {
+        # Secure the PDF with permissions from .env
+        $secScript = Join-Path $ROOT "pdf_secure.py"
+        if (Test-Path $secScript) {
+            $null = & python $secScript $pdfPath 2>&1
+        }
         $sizeKB  = [math]::Round((Get-Item $pdfPath).Length / 1KB, 1)
         $sizeStr = "$sizeKB KB"
-        Write-Ok "$name.pdf  ($sizeStr)"
+        Write-Ok "$name.pdf  ($sizeStr) [Secured]"
         $success++
         $results += [PSCustomObject]@{ File=$tex.Name; Status="OK"; Size=$sizeStr }
     } else {

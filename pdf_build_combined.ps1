@@ -490,6 +490,11 @@ foreach ($folder in $subjectFolders) {
         $rawPdf    = Join-Path $folderPath "${subjectCode}_Combined_Notes.pdf"
         if ($outPdf -ne $rawPdf -and (Test-Path $outPdf)) { Remove-Item $outPdf -Force }
         Rename-Item $rawPdf $outPdf -Force
+        # Secure the combined PDF with permissions from .env
+        $secScript = Join-Path $ROOT "pdf_secure.py"
+        if (Test-Path $secScript) {
+            $null = & python $secScript $outPdf 2>&1
+        }
         $pdfKB = [math]::Round((Get-Item $outPdf).Length/1KB, 1)
         $logFile = Join-Path $folderPath "${subjectCode}_Combined_Notes.log"
         $pageInfo = if (Test-Path $logFile) {
@@ -497,7 +502,7 @@ foreach ($folder in $subjectFolders) {
         } else { '' }
         $pages = if ($pageInfo -match '\((\d+) page') { $Matches[1] } else { '?' }
         Remove-Item $logFile -ErrorAction SilentlyContinue
-        Write-Ok "PDF ready: $(Split-Path $outPdf -Leaf)  ($pdfKB KB, $pages pages)"
+        Write-Ok "PDF ready: $(Split-Path $outPdf -Leaf)  ($pdfKB KB, $pages pages) [Secured]"
         $results += [PSCustomObject]@{ Subject=$subjectCode; Modules=$moduleFiles.Count; Status='OK'; PDF=$(Split-Path $outPdf -Leaf); KB=$pdfKB }
     } else {
         $results += [PSCustomObject]@{ Subject=$subjectCode; Modules=$moduleFiles.Count; Status='FAIL'; PDF='-'; KB=0 }
