@@ -198,7 +198,7 @@
                   <span class="sem-code-badge">${sem.code}</span>
                   <h2 class="sem-title-text">${sem.name}</h2>
                 </div>
-                <div class="sem-meta-text">${sem.description}</div>
+                <div class="sem-meta-text">Official Combined Exam Notes</div>
               </div>
               
               <div class="roadmap-card">
