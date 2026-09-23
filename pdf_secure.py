@@ -3,15 +3,14 @@
 pdf_secure.py — Apply Academic Branding Metadata & Permissions Restrictions to PDFs
 ECE MAKAUT Short Notes (2023–27)
 
-Restrictions applied:
-  - Printing: Allowed (High Quality)
+Restrictions & Permissions:
   - Changing the Document: NOT Allowed (No editing/modifications)
-  - Page Extraction: NOT Allowed
-  - Content Copying: NOT Allowed
-  - Content Copying for Accessibility: Allowed
-  - Commenting: Allowed
+  - Page Extraction: NOT Allowed (No page extraction / splitting)
+  - Content Copying: ALLOWED (Students can freely select and copy text, formulas, and definitions)
+  - Printing: Allowed (High Quality printing for study)
+  - Content Copying for Accessibility: Allowed (Screen readers permitted)
+  - Commenting: Allowed (Highlighting and annotation permitted)
   - Filling Form Fields & Signing: Allowed
-  - Document Assembly: Allowed
 
 Metadata applied:
   - Title: Formatted with Subject Code, Name & Module Topic
@@ -21,8 +20,8 @@ Metadata applied:
   - Creator: ECE MAKAUT Short Notes (https://biraj2004.github.io/ECE_MAKAUT_Short-Notes/)
   - Producer: XeLaTeX, TikZ & PyMuPDF (CC BY-NC-SA 4.0)
 
-No password required to open/read/print the PDF (user_pw is empty).
-Owner password is required only to remove restrictions or edit content.
+No password required to open/read/copy/print the PDF (user_pw is empty).
+Owner password is required only to remove restrictions, edit content, or extract pages.
 Password is read from .env (PDF_PERMISSIONS_PASSWORD or PDF_OWNER_PASSWORD).
 """
 
@@ -33,14 +32,16 @@ import argparse
 from pathlib import Path
 import pymupdf
 
-# Target permissions bitmask (Changing & Extraction blocked, Reading/Printing/Accessibility allowed)
+# Target permissions bitmask:
+# Allowed: Printing, High-Res Printing, Content Copying (text/formula copying), Commenting, Form Filling, Accessibility
+# Disallowed: Changing the Document (MODIFY = False), Page Extraction / Document Assembly (ASSEMBLE = False)
 PERMISSIONS = (
     pymupdf.PDF_PERM_PRINT
     | pymupdf.PDF_PERM_PRINT_HQ
+    | pymupdf.PDF_PERM_COPY
     | pymupdf.PDF_PERM_ANNOTATE
     | pymupdf.PDF_PERM_FORM
     | pymupdf.PDF_PERM_ACCESSIBILITY
-    | pymupdf.PDF_PERM_ASSEMBLE
 )
 
 AUTHOR_BRAND = "Biraj Sarkar (CGEC) - Department of Electronics & Communication Engineering"
@@ -151,14 +152,21 @@ def generate_metadata(pdf_path, mod_dict=None):
 
 def is_pdf_secured_and_branded(pdf_path, owner_pw):
     """
-    Check if the PDF is already protected and has author branding.
+    Check if the PDF is already protected with current permissions and has author branding.
     """
     try:
         doc = pymupdf.open(pdf_path)
         is_enc = bool(doc.metadata.get("encryption"))
         has_author = (AUTHOR_BRAND in doc.metadata.get("author", ""))
         has_creator = ("ECE MAKAUT Short Notes" in doc.metadata.get("creator", ""))
-        if not is_enc or not has_author or not has_creator:
+        
+        # Check that Content Copying is allowed (bit 16) and Modifying is blocked (bit 8)
+        perms = doc.permissions
+        copy_allowed = bool(perms & pymupdf.PDF_PERM_COPY)
+        modify_blocked = not bool(perms & pymupdf.PDF_PERM_MODIFY)
+        assemble_blocked = not bool(perms & pymupdf.PDF_PERM_ASSEMBLE)
+
+        if not is_enc or not has_author or not has_creator or not copy_allowed or not modify_blocked or not assemble_blocked:
             doc.close()
             return False, False
 
