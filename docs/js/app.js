@@ -36,7 +36,13 @@
     licenseFooterTrigger: document.getElementById('licenseFooterTrigger'),
     copyCitationBtn: document.getElementById('copyCitationBtn'),
     scrollToTopBtn: document.getElementById('scrollToTopBtn'),
-    toast: document.getElementById('toastBar')
+    toast: document.getElementById('toastBar'),
+    // Mobile menu
+    hamburgerBtn: document.getElementById('hamburgerBtn'),
+    mobileMenuOverlay: document.getElementById('mobileMenuOverlay'),
+    mobileMenuClose: document.getElementById('mobileMenuClose'),
+    mobileMenuTabs: document.getElementById('mobileMenuTabs'),
+    mobileLicenseBtn: document.getElementById('mobileLicenseBtn')
   };
 
   /**
@@ -109,7 +115,43 @@
       history.pushState(null, null, semId === 'all' ? '#' : `#${semId}`);
     }
     renderSemesterTabs();
+    renderMobileMenuTabs();
     renderContentFeed();
+  }
+
+  /**
+   * Render Semester Tabs inside the Mobile Menu Overlay
+   */
+  function renderMobileMenuTabs() {
+    if (!DOM.mobileMenuTabs) return;
+
+    let html = `
+      <button class="tab-btn ${state.activeSemester === 'all' ? 'active' : ''}" data-mob-sem="all">
+        <span class="tab-label">All Semesters</span>
+      </button>
+    `;
+
+    AcademicCatalog.SEMESTERS.forEach(sem => {
+      const isWip = sem.status === 'coming-soon';
+      const isActive = state.activeSemester === sem.id;
+
+      html += `
+        <button class="tab-btn ${isActive ? 'active' : ''} ${isWip ? 'wip' : ''}" data-mob-sem="${sem.id}">
+          <span class="tab-label">${sem.name}</span>
+          ${isWip ? `<span class="tag-soon">Soon</span>` : ''}
+        </button>
+      `;
+    });
+
+    DOM.mobileMenuTabs.innerHTML = html;
+
+    DOM.mobileMenuTabs.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const semId = btn.getAttribute('data-mob-sem');
+        closeMobileMenu();
+        setActiveSemester(semId);
+      });
+    });
   }
 
   /**
@@ -401,10 +443,43 @@
       });
     }
 
-    // ESC key closes modal
+    // ESC key closes modal and mobile menu
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') closeLicenseModal();
+      if (e.key === 'Escape') {
+        closeLicenseModal();
+        closeMobileMenu();
+      }
     });
+
+    // ── Hamburger / Mobile Menu ──────────────────────────────────────────────
+    if (DOM.hamburgerBtn) {
+      DOM.hamburgerBtn.addEventListener('click', () => {
+        if (DOM.mobileMenuOverlay && DOM.mobileMenuOverlay.classList.contains('is-open')) {
+          closeMobileMenu();
+        } else {
+          openMobileMenu();
+        }
+      });
+    }
+
+    if (DOM.mobileMenuClose) {
+      DOM.mobileMenuClose.addEventListener('click', closeMobileMenu);
+    }
+
+    // Close overlay when clicking the backdrop (outside the panel)
+    if (DOM.mobileMenuOverlay) {
+      DOM.mobileMenuOverlay.addEventListener('click', (e) => {
+        if (e.target === DOM.mobileMenuOverlay) closeMobileMenu();
+      });
+    }
+
+    // Mobile license button
+    if (DOM.mobileLicenseBtn) {
+      DOM.mobileLicenseBtn.addEventListener('click', () => {
+        closeMobileMenu();
+        openLicenseModal();
+      });
+    }
 
     // Auto-hiding Scroll to Top Button (Smooth 60fps rAF)
     if (DOM.scrollToTopBtn) {
@@ -439,14 +514,36 @@
     });
   }
 
+  /**
+   * Mobile Menu Open / Close
+   */
+  function openMobileMenu() {
+    if (!DOM.mobileMenuOverlay) return;
+    DOM.mobileMenuOverlay.classList.add('is-open');
+    DOM.mobileMenuOverlay.setAttribute('aria-hidden', 'false');
+    if (DOM.hamburgerBtn) {
+      DOM.hamburgerBtn.classList.add('is-open');
+      DOM.hamburgerBtn.setAttribute('aria-expanded', 'true');
+    }
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMobileMenu() {
+    if (!DOM.mobileMenuOverlay) return;
+    DOM.mobileMenuOverlay.classList.remove('is-open');
+    DOM.mobileMenuOverlay.setAttribute('aria-hidden', 'true');
+    if (DOM.hamburgerBtn) {
+      DOM.hamburgerBtn.classList.remove('is-open');
+      DOM.hamburgerBtn.setAttribute('aria-expanded', 'false');
+    }
+    document.body.style.overflow = '';
+  }
+
   function handleUrlHash() {
     const hash = window.location.hash.replace('#', '');
-    if (hash && (hash === 'all' || AcademicCatalog.SEMESTERS.some(s => s.id === hash))) {
-      state.activeSemester = hash;
-    } else {
-      state.activeSemester = 'all';
-    }
+    state.activeSemester = hash && (hash === 'all' || AcademicCatalog.SEMESTERS.some(s => s.id === hash)) ? hash : 'all';
     renderSemesterTabs();
+    renderMobileMenuTabs();
     renderContentFeed();
 
     if (hash && hash !== 'all') {
@@ -465,6 +562,7 @@
   function init() {
     setupEventListeners();
     handleUrlHash();
+    renderMobileMenuTabs();
   }
 
   if (document.readyState === 'loading') {
