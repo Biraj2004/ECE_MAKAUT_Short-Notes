@@ -1022,6 +1022,7 @@ Both scripts live at the **repo root** and are run from there.
 - Cleans `.aux .toc .out .fls .fdb_latexmk .log` on success
 - Does **not** pass `-synctex=1` — no `.synctex.gz` files generated
 - On failure: prints last 25 lines of the `.log` file
+- **Automatic Post-Compile Security Hook:** Automatically invokes `python pdf_secure.py --file "<compiled_pdf>"` to apply standard academic metadata and AES-256 permissions lock.
 
 ### `pdf_build_combined.ps1` — build combined PDFs
 
@@ -1043,6 +1044,32 @@ Both scripts live at the **repo root** and are run from there.
 - Runs **3 xelatex passes**
 - Output PDF named `<CODE>_<Subject_Name>.pdf` (e.g. `EC601_Control_System.pdf`)
 - The generated `*_Combined_Notes.tex` is auto-built — **do not hand-edit it**
+- **Automatic Post-Compile Security Hook:** Automatically invokes `pdf_secure.py` upon successful generation.
+
+### `pdf_secure.py` — PDF Permissions Protection & Academic Metadata
+
+Automates post-processing of archive PDFs using PyMuPDF (`fitz`) and AES-256 permissions encryption.
+
+```powershell
+# Verify protection status across all PDFs in the repository:
+python pdf_secure.py --check
+
+# Secure and brand a single PDF file:
+python pdf_secure.py --file "path\to\file.pdf"
+
+# Secure and brand all 268+ PDFs across all semesters:
+python pdf_secure.py --all
+```
+
+- **Permissions Policy:**
+  - **Changing the Document:** `NOT Allowed` (tamper-proof against modifications)
+  - **Page Extraction:** `NOT Allowed` (prevents splitting/commercial re-bundling)
+  - **Content Copying:** `ALLOWED` (students can freely copy text, code, formulas)
+  - **Printing:** `ALLOWED` (full high-resolution printing)
+  - **Accessibility:** `ALLOWED` (screen-readers for visually impaired students)
+  - **Open Password:** `None` (opens instantly in all browsers, Acrobat, phone apps)
+- **Password Management:** Reads `PDF_PERMISSIONS_PASSWORD` from `.env`. Never commit `.env` (it is git-ignored; template provided in `.env.example`).
+- **Academic Metadata:** Injects standardized Title, Author (`Biraj Sarkar (CGEC)`), Subject, Keywords, Creator link, and CC BY-NC-SA 4.0 license attribution. Avoids legacy replacement characters (``).
 
 > **Direct xelatex fallback** (if scripts fail):
 > ```powershell
@@ -1111,3 +1138,4 @@ Before submitting or printing the PDF:
 - [ ] No content overflows into footer (`\tcbset{breakable}` is present)
 - [ ] Footer shows `\copyright\ Biraj` on every page
 - [ ] Aux files cleaned after compilation
+- [ ] PDF security permissions and academic metadata applied (automatically handled via `pdf_secure.py` post-hook, or verified with `python pdf_secure.py --check`)

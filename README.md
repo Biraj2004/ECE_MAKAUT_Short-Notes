@@ -115,7 +115,22 @@ Requires **XeLaTeX** (TeX Live or MiKTeX) with fonts: `TeX Gyre Pagella`, `TeX G
 
 # Build combined for one subject
 .\pdf_build_combined.ps1 -Subject "EC602"
+
+# Check security & metadata status across all PDFs:
+python pdf_secure.py --check
+
+# Secure and brand all PDFs across repository:
+python pdf_secure.py --all
 ```
+
+### PDF Security & Academic Metadata
+
+All compiled PDFs are automatically post-processed by `pdf_secure.py` using **PyMuPDF AES-256 encryption**:
+- **Zero Friction for Students:** No open password required — opens instantly in any browser or PDF reader.
+- **Copying & Printing Allowed:** Content copying (formulas, code, definitions) and high-resolution printing are explicitly permitted.
+- **Tamper Protection:** Document modifications and page extraction are restricted to preserve academic integrity and prevent unauthorized commercial re-bundling.
+- **Standardized Metadata:** Injects uniform Title, Author attribution (`Biraj Sarkar (CGEC)`), Subject, Keywords, Creator link, and CC BY-NC-SA 4.0 license metadata.
+- **Environment Configuration:** Permissions password is loaded from `.env` (template provided in `.env.example`).
 
 ### Cover Page Template
 
@@ -138,7 +153,8 @@ Requires **XeLaTeX** (TeX Live or MiKTeX) with fonts: `TeX Gyre Pagella`, `TeX G
 - **Diagrams:** TikZ
 - **Boxes:** tcolorbox (`defbox`, `formulabox`, `examplebox`, `exambox`, `tikzbox`, `masonbox`)
 - **Tables:** tabularx + booktabs
-- **Build:** PowerShell (`pdf_compile.ps1`, `pdf_build_combined.ps1`)
+- **PDF Security & Metadata:** PyMuPDF (`pdf_secure.py` with AES-256 encryption)
+- **Build Automation:** PowerShell (`pdf_compile.ps1`, `pdf_build_combined.ps1`)
 
 See [`Notes_Build_Guide.md`](Notes_Build_Guide.md) for the full authoring spec.
 
@@ -148,8 +164,9 @@ See [`Notes_Build_Guide.md`](Notes_Build_Guide.md) for the full authoring spec.
 
 An interactive web showcase and PDF repository portal is hosted directly in [`docs/`](docs/) (deployable via GitHub Pages). It features:
 - **Instant 1-Click PDF Downloads** for official MAKAUT syllabi and comprehensive combined exam notes directly from the repository.
-- **Fast Search & Filter** across all semesters, course codes, and topics.
+- **Fast Search & Filter** across all semesters, course codes, subjects, and topics in real-time.
 - **Light Mode Editorial Neo-Brutalism & Pastel Theme** crafted with zero clutter, crisp typography, and full cross-device responsiveness.
+- **PWA & SEO Ready:** Includes `site.webmanifest`, `robots.txt`, `sitemap.xml`, high-res OpenGraph social preview assets (`og-image.png`, `og-thumb.png`), and smooth scroll-to-top interaction.
 
 ---
 

@@ -77,8 +77,10 @@ ECE_MAKAUT_Short-Notes/
 ├── Combined_Notes_Cover_Page.tex   # Standalone cover page template
 ├── Combined_Notes_Cover_Page.pdf   # Standalone cover page PDF (compiled output)
 ├── docs/                           # Web showcase portal for GitHub Pages (Editorial Neo-Brutalism)
-├── pdf_compile.ps1                 # Compile module PDFs
-├── pdf_build_combined.ps1          # Build combined PDFs
+├── pdf_compile.ps1                 # Compile module PDFs (with auto-secure hook)
+├── pdf_build_combined.ps1          # Build combined PDFs (with auto-secure hook)
+├── pdf_secure.py                   # PyMuPDF AES-256 permissions & metadata engine
+├── .env.example                    # Environment template for PDF permissions password
 ├── Notes_Build_Guide.md            # THE authoritative style & content spec
 ├── AGENTS.md                       # This file
 ├── CLAUDE.md                       # LLM behaviour guidelines
@@ -89,7 +91,9 @@ ECE_MAKAUT_Short-Notes/
 
 ## The authoritative spec
 
-**`Notes_Build_Guide.md` is the single source of truth** for everything LaTeX-related in this project. Before writing or editing any `.tex` file, read the relevant sections:
+- **`Notes_Build_Guide.md` is the single source of truth** for everything LaTeX-related in this project.
+
+Before writing or editing any `.tex` or build script, read the relevant sections:
 
 | Section | What it covers |
 |---|---|
@@ -107,7 +111,7 @@ ECE_MAKAUT_Short-Notes/
 | §12 Viva Q&A Format | `\Q{}` macro, automatic exambox splitting |
 | §13 TikZ Guidelines | Node styles, diagram rules, block diagram template |
 | §14 Known Issues & Fixes | Critical — read before debugging any compile error |
-| §15 Compile Script | How to use `pdf_compile.ps1` |
+| §15 Compile Scripts | How to use `pdf_compile.ps1`, `pdf_build_combined.ps1` & `pdf_secure.py` |
 | §16 Adapting for New Subjects | Steps to create a new subject folder |
 
 ---
@@ -135,6 +139,7 @@ Runs from repo root. Auto-discovers all `*_Module*_Notes.tex` files recursively.
 - Runs **2 xelatex passes** (for TOC sync)
 - Cleans `.aux .toc .out .fls .fdb_latexmk .log` on success
 - Does **not** generate `.synctex.gz` (flag removed intentionally)
+- **Automatic Post-Compile Security Hook:** Automatically runs `python pdf_secure.py --file "<compiled_pdf>"` to apply standard academic metadata and AES-256 permissions lock.
 
 ### `pdf_build_combined.ps1` — build combined PDFs
 
@@ -156,9 +161,35 @@ Runs from repo root. Auto-discovers subject folders (any subfolder under a `NN. 
 - Generates `<CODE>_Combined_Notes.tex` then renames output PDF to `<CODE>_<Subject_Name>.pdf`
 - Runs **3 xelatex passes**
 - All `Get-Content` calls use `-Encoding UTF8` — required for em-dash handling
+- **Automatic Post-Compile Security Hook:** Automatically calls `pdf_secure.py` upon successful generation.
 
 **Combined PDF naming:** `ECxxx_Subject_Name.pdf`
 Examples: `EC601_Control_System.pdf`, `EC602_Computer_Network.pdf`
+
+### `pdf_secure.py` — PDF permissions security & academic metadata engine
+
+Automates post-processing of all archive PDFs using PyMuPDF (`fitz`) and AES-256 encryption.
+
+```powershell
+# Check protection status across all PDFs in the repository
+python pdf_secure.py --check
+
+# Apply protection and metadata to a single PDF
+python pdf_secure.py --file "path\to\file.pdf"
+
+# Secure and brand all 268+ PDFs across all semesters
+python pdf_secure.py --all
+```
+
+- **Permissions Policy:**
+  - **Changing the Document:** `NOT Allowed` (tamper-proof against modifications)
+  - **Page Extraction:** `NOT Allowed` (prevents splitting/commercial re-bundling)
+  - **Content Copying:** `ALLOWED` (students can freely copy text, code, formulas)
+  - **Printing:** `ALLOWED` (full high-resolution printing)
+  - **Accessibility:** `ALLOWED` (screen-readers for visually impaired students)
+  - **Open Password:** `None` (opens instantly in all browsers, Acrobat, phone apps)
+- **Password Management:** Reads `PDF_PERMISSIONS_PASSWORD` from `.env`. Never commit `.env` (it is git-ignored; template provided in `.env.example`).
+- **Academic Metadata:** Injects standardized Title, Author (`Biraj Sarkar (CGEC)`), Subject, Keywords, Creator link, and CC BY-NC-SA 4.0 license attribution. Avoids legacy replacement characters (``).
 
 ---
 
