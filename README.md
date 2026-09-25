@@ -1,7 +1,31 @@
+<div align="center">
+
+<img src="docs/icon-512.png" alt="ECE MAKAUT Short Notes Logo" width="128" height="128" style="border-radius: 20px; box-shadow: 4px 4px 0px #16181F;" />
+
 # ECE MAKAUT Short Notes
 
-Exam-ready, module-wise PDF notes for **MAKAUT B.Tech ECE (2023–27)**  
-Biraj Sarkar · CGEC · Built with XeLaTeX
+### Complete Exam-Ready Academic Notes & Combined Archives for MAKAUT B.Tech ECE (2023–27)
+
+[![Batch](https://img.shields.io/badge/MAKAUT%20B.Tech%20ECE-2023--2027-FFF388?style=for-the-badge&logoColor=16181F&color=FFF388&labelColor=16181F)](https://github.com/Biraj2004/ECE_MAKAUT_Short-Notes)
+[![Semesters Ready](https://img.shields.io/badge/Semesters%20Ready-5%20%2F%208-C6F6D5?style=for-the-badge&logoColor=16181F&color=C6F6D5&labelColor=16181F)](#status)
+[![Combined Notes](https://img.shields.io/badge/Combined%20PDFs-39%20Subjects-D8ECFF?style=for-the-badge&logoColor=16181F&color=D8ECFF&labelColor=16181F)](#status)
+[![Modules Covered](https://img.shields.io/badge/Modules%20Covered-221%2B%20Notes-E8DDFF?style=for-the-badge&logoColor=16181F&color=E8DDFF&labelColor=16181F)](#status)
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-FED7E2?style=for-the-badge&logoColor=16181F&color=FED7E2&labelColor=16181F)](LICENSE)
+
+[![Web Showcase](https://img.shields.io/badge/Web%20Portal-Live%20on%20GitHub%20Pages-FFF388?style=for-the-badge&logoColor=16181F&color=FFF388&labelColor=16181F)](https://biraj2004.github.io/ECE_MAKAUT_Short-Notes/)
+[![Typesetting Engine](https://img.shields.io/badge/Engine-XeLaTeX-D8ECFF?style=for-the-badge&logoColor=16181F&color=D8ECFF&labelColor=16181F)](Notes_Build_Guide.md)
+[![Security Protection](https://img.shields.io/badge/PDF%20Security-AES--256%20Permissions-C6F6D5?style=for-the-badge&logoColor=16181F&color=C6F6D5&labelColor=16181F)](pdf_secure.py)
+
+<br/>
+
+**Curated, structured & compiled in XeLaTeX by [Biraj Sarkar](https://iambiraj.vercel.app)**  
+*Department of Electronics & Communication Engineering, Cooch Behar Government Engineering College (CGEC)*
+
+[🌐 Web Showcase Portal](https://biraj2004.github.io/ECE_MAKAUT_Short-Notes/) • [👨‍💻 Developer Portfolio](https://iambiraj.vercel.app) • [📚 MAKAUT PYQ Papers](https://docs.google.com/document/d/1NLcByiSlAugGMJxNbXkBvEaA9jEwVhUt-21GkwoT_ZE/edit?tab=t.0#heading=h.vpuhncm2s6km) • [📖 Style Guide](Notes_Build_Guide.md)
+
+</div>
+
+---
 
 Every topic follows: **Definition → Concept → Working → Formula → Diagram → Advantages/Disadvantages → Applications → Exam Points**
 
@@ -167,6 +191,15 @@ An interactive web showcase and PDF repository portal is hosted directly in [`do
 - **Fast Search & Filter** across all semesters, course codes, subjects, and topics in real-time.
 - **Light Mode Editorial Neo-Brutalism & Pastel Theme** crafted with zero clutter, crisp typography, and full cross-device responsiveness.
 - **PWA & SEO Ready:** Includes `site.webmanifest`, `robots.txt`, `sitemap.xml`, high-res OpenGraph social preview assets (`og-image.png`, `og-thumb.png`), and smooth scroll-to-top interaction.
+
+---
+
+## External Resources & Credits
+
+*   **Developer Portfolio ([iambiraj.vercel.app](https://iambiraj.vercel.app)):** Personal portfolio and software engineering showcase of [Biraj Sarkar](https://github.com/Biraj2004) (CGEC ECE '27) — creator, note author, and maintainer of this repository, automated LaTeX compilation pipelines, and web showcase portal.
+*   **MAKAUT PYQ Papers Archive ([Google Document](https://docs.google.com/document/d/1NLcByiSlAugGMJxNbXkBvEaA9jEwVhUt-21GkwoT_ZE/edit?tab=t.0#heading=h.vpuhncm2s6km)):** Curated archive of MAKAUT Previous Year Questions (PYQs) across semesters, provided as an open academic resource to assist students with exam preparation.
+*   **Academic Curriculum & Syllabus:** Official syllabus guidelines and course structures specified by the **Maulana Abul Kalam Azad University of Technology (MAKAUT), West Bengal** for the B.Tech in Electronics & Communication Engineering (AICTE model curriculum).
+*   **Typography & Visual Assets:** Web showcase typography powered by [Outfit](https://fonts.google.com/specimen/Outfit), [Inter](https://fonts.google.com/specimen/Inter), and [Fira Code](https://fonts.google.com/specimen/Fira+Code) via Google Fonts. Modern vector iconography powered by [Lucide Icons](https://lucide.dev/).
 
 ---
 
