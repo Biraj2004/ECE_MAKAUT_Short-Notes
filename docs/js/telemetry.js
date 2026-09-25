@@ -9,14 +9,14 @@
 const PlatformTelemetry = (function () {
   'use strict';
 
-  const STORAGE_KEY_VIEWS = 'ece_makaut_site_views_v5';
-  const STORAGE_KEY_SESSION = 'ece_makaut_session_seen_v5';
+  const STORAGE_KEY_VIEWS = 'ece_makaut_site_views_v6';
+  const STORAGE_KEY_SESSION = 'ece_makaut_session_seen_v6';
   const HEARTBEAT_KEY = 'ece_makaut_active_readers_v1';
   const HEARTBEAT_INTERVAL = 2500; // 2.5 seconds
   const HEARTBEAT_EXPIRY = 6000;   // 6 seconds threshold
 
-  // Base view count (configured to 1,421 with '+' suffix)
-  const BASE_VIEWS = 1420;
+  // Base view count (configured to 1,121 with '+' suffix)
+  const BASE_VIEWS = 1120;
 
   // Generate unique ID for this browser tab
   const tabId = 'tab_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now();
@@ -31,7 +31,7 @@ const PlatformTelemetry = (function () {
   } catch (e) {}
 
   /**
-   * Formats numbers with international comma separators (e.g. 1,421)
+   * Formats numbers with international comma separators (e.g. 1,121)
    */
   function formatNumber(num) {
     return Number(num).toLocaleString('en-US');
@@ -39,11 +39,12 @@ const PlatformTelemetry = (function () {
 
   /**
    * Retrieves or computes persistent total views
-   * Baseline is 1,421+ with organic increments on new sessions
+   * Baseline is 1,121+ with organic increments on new sessions
    */
   function getPersistentViews() {
     try {
       // Clear legacy storage keys if present
+      localStorage.removeItem('ece_makaut_site_views_v5');
       localStorage.removeItem('ece_makaut_site_views_v4');
       localStorage.removeItem('ece_makaut_site_views_v3');
       localStorage.removeItem('ece_makaut_site_views_v2');
