@@ -99,12 +99,25 @@
       `;
     });
 
+    // 10th Slot: PYQ Papers Link Button (completes the 2-row x 5-column grid)
+    html += `
+      <a href="https://docs.google.com/document/d/1NLcByiSlAugGMJxNbXkBvEaA9jEwVhUt-21GkwoT_ZE/edit?tab=t.0#heading=h.vpuhncm2s6km" target="_blank" rel="noopener noreferrer" class="tab-btn tab-btn-pyq" title="Open MAKAUT PYQ Papers (Google Doc)">
+        <span class="tab-label">PYQ Papers</span>
+        <svg class="tab-ext-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="7" y1="17" x2="17" y2="7"></line>
+          <polyline points="7 7 17 7 17 17"></polyline>
+        </svg>
+      </a>
+    `;
+
     DOM.semesterTabsGrid.innerHTML = html;
 
-    DOM.semesterTabsGrid.querySelectorAll('.tab-btn').forEach(btn => {
+    DOM.semesterTabsGrid.querySelectorAll('.tab-btn[data-sem]').forEach(btn => {
       btn.addEventListener('click', () => {
         const semId = btn.getAttribute('data-sem');
-        setActiveSemester(semId);
+        if (semId) {
+          setActiveSemester(semId);
+        }
       });
     });
   }
@@ -143,13 +156,25 @@
       `;
     });
 
+    html += `
+      <a href="https://docs.google.com/document/d/1NLcByiSlAugGMJxNbXkBvEaA9jEwVhUt-21GkwoT_ZE/edit?tab=t.0#heading=h.vpuhncm2s6km" target="_blank" rel="noopener noreferrer" class="tab-btn tab-btn-pyq" title="Open MAKAUT PYQ Papers (Google Doc)">
+        <span class="tab-label">PYQ Papers</span>
+        <svg class="tab-ext-icon" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="7" y1="17" x2="17" y2="7"></line>
+          <polyline points="7 7 17 7 17 17"></polyline>
+        </svg>
+      </a>
+    `;
+
     DOM.mobileMenuTabs.innerHTML = html;
 
-    DOM.mobileMenuTabs.querySelectorAll('.tab-btn').forEach(btn => {
+    DOM.mobileMenuTabs.querySelectorAll('.tab-btn[data-mob-sem]').forEach(btn => {
       btn.addEventListener('click', () => {
         const semId = btn.getAttribute('data-mob-sem');
-        closeMobileMenu();
-        setActiveSemester(semId);
+        if (semId) {
+          closeMobileMenu();
+          setActiveSemester(semId);
+        }
       });
     });
   }
