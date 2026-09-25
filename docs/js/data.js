@@ -41,9 +41,9 @@ const AcademicCatalog = (function () {
       status: 'ready',
       description: 'Foundational Engineering Sciences & Physics/Chemistry Laboratory Theory',
       syllabusPdf: {
-        title: 'MAKAUT 1st & 2nd Semester Syllabus',
-        path: '1st SEM/Sem 1 & 2.pdf',
-        description: 'Official MAKAUT First Year Curriculum & Module Breakdown'
+        title: 'MAKAUT 1st Semester Official Syllabus',
+        path: '1st SEM/SEM-1 ECE_MAKAUT_SYLLABUS.pdf',
+        description: 'Official MAKAUT Semester I detailed syllabus document with curriculum breakdown'
       },
       subjects: [
         {
@@ -86,9 +86,9 @@ const AcademicCatalog = (function () {
       status: 'ready',
       description: 'Second Phase Foundational Engineering Sciences (Group Exchange Stream)',
       syllabusPdf: {
-        title: 'MAKAUT 1st & 2nd Semester Syllabus',
-        path: '2nd SEM/Sem 1 & 2.pdf',
-        description: 'Official MAKAUT First Year Curriculum & Module Breakdown'
+        title: 'MAKAUT 2nd Semester Official Syllabus',
+        path: '2nd SEM/SEM-2 ECE_MAKAUT_SYLLABUS.pdf',
+        description: 'Official MAKAUT Semester II detailed syllabus document with curriculum breakdown'
       },
       subjects: [
         {
@@ -178,7 +178,7 @@ const AcademicCatalog = (function () {
       description: 'Control Systems, Networking, CMOS VLSI Design, MEMS & Operating Systems',
       syllabusPdf: {
         title: 'MAKAUT 6th Semester Official Syllabus',
-        path: '6th SEM/sem6 - syllabus.pdf',
+        path: '6th SEM/SEM-6 ECE_MAKAUT_SYLLABUS.pdf',
         description: 'Official MAKAUT Semester VI detailed syllabus document with course outcomes'
       },
       extraResources: [
@@ -345,7 +345,7 @@ const AcademicCatalog = (function () {
       description: 'Microwave Engineering, Satellite, Mobile Networks, DSP, Embedded Systems & Neural Networks',
       syllabusPdf: {
         title: 'MAKAUT 7th Semester Official Syllabus',
-        path: '7th SEM/sem7.pdf',
+        path: '7th SEM/SEM-7 ECE_MAKAUT_SYLLABUS.pdf',
         description: 'Official MAKAUT Semester VII detailed syllabus document with subject electives'
       },
       subjects: [
@@ -557,7 +557,7 @@ const AcademicCatalog = (function () {
       description: 'Antennas, Fiber Optics, Error Coding, Mixed Signal, Automation, IoT & AI',
       syllabusPdf: {
         title: 'MAKAUT 8th Semester Official Syllabus',
-        path: '8th SEM/sem8.pdf',
+        path: '8th SEM/SEM-8 ECE_MAKAUT_SYLLABUS.pdf',
         description: 'Official MAKAUT Semester VIII detailed curriculum & capstone elective paths'
       },
       subjects: [
