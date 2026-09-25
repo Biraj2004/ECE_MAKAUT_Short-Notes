@@ -18,7 +18,7 @@
   const ICONS = {
     download: `<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>`,
     book: `<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
-    check: `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>`,
+    check: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
     clock: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
     close: `<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`
   };
@@ -46,10 +46,14 @@
   };
 
   /**
-   * Toast Notice
+   * Toast Notice (Desktop only — disabled on mobile & tablet where native OS copy UI triggers)
    */
   function showToast(message) {
     if (!DOM.toast) return;
+    // Suppress on mobile and tablet where default system clipboard notice already triggers
+    if (window.innerWidth <= 1024 || (window.matchMedia && window.matchMedia('(pointer: coarse)').matches)) {
+      return;
+    }
     DOM.toast.innerHTML = `${ICONS.check} <span>${message}</span>`;
     DOM.toast.classList.add('show');
     setTimeout(() => {
@@ -406,6 +410,8 @@
     if (DOM.licenseModal) {
       DOM.licenseModal.classList.add('active');
       document.body.style.overflow = 'hidden';
+      const body = DOM.licenseModal.querySelector('.modal-body');
+      if (body) body.scrollTop = 0;
     }
   }
 
@@ -483,6 +489,49 @@
       DOM.copyCitationBtn.addEventListener('click', () => {
         const citation = `Sarkar, Biraj. (2023–2027). ECE MAKAUT Short Notes [Study Notes]. Department of Electronics and Communication Engineering, Cooch Behar Government Engineering College (CGEC). Available under CC BY-NC-SA 4.0: https://github.com/Biraj2004/ECE_MAKAUT_Short-Notes`;
         copyToClipboard(citation, 'Citation copied!');
+        const origText = DOM.copyCitationBtn.textContent;
+        DOM.copyCitationBtn.textContent = 'Copied!';
+        DOM.copyCitationBtn.classList.add('copied');
+        setTimeout(() => {
+          DOM.copyCitationBtn.textContent = origText;
+          DOM.copyCitationBtn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // ── Download Buttons (Open in new tab while staying on current tab) ─────
+    if (DOM.contentContainer) {
+      DOM.contentContainer.addEventListener('click', (e) => {
+        const downloadBtn = e.target.closest('a.btn-download-combined, a.btn-syllabus-download');
+        if (!downloadBtn) return;
+
+        const href = downloadBtn.getAttribute('href');
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        e.preventDefault();
+
+        // Open download link in a new tab without shifting focus away from current tab
+        const newTab = window.open(href, '_blank', 'noopener,noreferrer');
+        if (newTab) {
+          try {
+            newTab.blur();
+          } catch (err) {}
+        }
+        window.focus();
+        setTimeout(() => window.focus(), 50);
+        setTimeout(() => window.focus(), 150);
+
+        if (!newTab) {
+          // Fallback if popup blocker intercepted window.open
+          const tempAnchor = document.createElement('a');
+          tempAnchor.href = href;
+          tempAnchor.target = '_blank';
+          tempAnchor.rel = 'noopener noreferrer';
+          tempAnchor.download = '';
+          document.body.appendChild(tempAnchor);
+          tempAnchor.click();
+          document.body.removeChild(tempAnchor);
+        }
       });
     }
 
