@@ -122,6 +122,23 @@
     });
   }
 
+  function scrollToSemester(semId) {
+    if (!semId || semId === 'all') return;
+    setTimeout(() => {
+      const target = document.getElementById(semId);
+      if (target) {
+        const nav = document.querySelector('.site-nav');
+        const searchBar = document.querySelector('.search-sticky-bar');
+        const stickyOffset =
+          (nav ? nav.getBoundingClientRect().height : 64) +
+          (searchBar ? searchBar.getBoundingClientRect().height : 50) +
+          12;
+        const targetTop = target.getBoundingClientRect().top + window.scrollY - stickyOffset;
+        window.scrollTo({ top: targetTop, behavior: 'smooth' });
+      }
+    }, 80);
+  }
+
   function setActiveSemester(semId) {
     state.activeSemester = semId;
     if (history.pushState) {
@@ -130,6 +147,7 @@
     renderSemesterTabs();
     renderMobileMenuTabs();
     renderContentFeed();
+    scrollToSemester(semId);
   }
 
   /**
@@ -570,15 +588,7 @@
     renderSemesterTabs();
     renderMobileMenuTabs();
     renderContentFeed();
-
-    if (hash && hash !== 'all') {
-      setTimeout(() => {
-        const target = document.getElementById(hash);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    }
+    scrollToSemester(hash);
   }
 
   /**
