@@ -9,14 +9,14 @@
 const PlatformTelemetry = (function () {
   'use strict';
 
-  const STORAGE_KEY_VIEWS = 'ece_makaut_site_views_v4';
-  const STORAGE_KEY_SESSION = 'ece_makaut_session_seen_v4';
+  const STORAGE_KEY_VIEWS = 'ece_makaut_site_views_v5';
+  const STORAGE_KEY_SESSION = 'ece_makaut_session_seen_v5';
   const HEARTBEAT_KEY = 'ece_makaut_active_readers_v1';
   const HEARTBEAT_INTERVAL = 2500; // 2.5 seconds
   const HEARTBEAT_EXPIRY = 6000;   // 6 seconds threshold
 
-  // Base view count (28,420 reduced by 5,000 = 23,420 with '+' suffix)
-  const BASE_VIEWS = 23420;
+  // Base view count (configured to 1,421 with '+' suffix)
+  const BASE_VIEWS = 1420;
 
   // Generate unique ID for this browser tab
   const tabId = 'tab_' + Math.random().toString(36).substring(2, 9) + '_' + Date.now();
@@ -31,7 +31,7 @@ const PlatformTelemetry = (function () {
   } catch (e) {}
 
   /**
-   * Formats numbers with international comma separators (e.g. 23,420)
+   * Formats numbers with international comma separators (e.g. 1,421)
    */
   function formatNumber(num) {
     return Number(num).toLocaleString('en-US');
@@ -39,28 +39,37 @@ const PlatformTelemetry = (function () {
 
   /**
    * Retrieves or computes persistent total views
-   * Baseline is 23,420+ with organic increments on new sessions
+   * Baseline is 1,421+ with organic increments on new sessions
    */
   function getPersistentViews() {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY_VIEWS);
-      let views = stored ? parseInt(stored, 10) : BASE_VIEWS;
+      // Clear legacy storage keys if present
+      localStorage.removeItem('ece_makaut_site_views_v4');
+      localStorage.removeItem('ece_makaut_site_views_v3');
+      localStorage.removeItem('ece_makaut_site_views_v2');
+      localStorage.removeItem('ece_makaut_site_views_v1');
 
-      if (isNaN(views) || views < BASE_VIEWS) {
-        views = BASE_VIEWS + Math.floor(Math.random() * 45);
+      const stored = localStorage.getItem(STORAGE_KEY_VIEWS);
+      let views = stored ? parseInt(stored, 10) : (BASE_VIEWS + 1);
+
+      if (isNaN(views) || views < (BASE_VIEWS + 1) || views > 15000) {
+        views = BASE_VIEWS + 1;
+        localStorage.setItem(STORAGE_KEY_VIEWS, views.toString());
       }
 
       // Check if this browser session has already counted a view
       const sessionSeen = sessionStorage.getItem(STORAGE_KEY_SESSION);
       if (!sessionSeen) {
-        views += 1;
-        localStorage.setItem(STORAGE_KEY_VIEWS, views.toString());
         sessionStorage.setItem(STORAGE_KEY_SESSION, '1');
+        if (stored) {
+          views += 1;
+          localStorage.setItem(STORAGE_KEY_VIEWS, views.toString());
+        }
       }
 
       return views;
     } catch (e) {
-      return BASE_VIEWS;
+      return BASE_VIEWS + 1;
     }
   }
 
