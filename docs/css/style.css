@@ -18,10 +18,23 @@
    new scroll container, so position:sticky children still work correctly.
    NOTE: .site-nav is intentionally excluded — clipping a sticky element
    causes it to appear half-cut during scroll in Chromium/WebKit. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+header,
+nav:not(.site-nav),
+main,
 section,
 article,
 aside,
-.site-footer {
+footer,
+.site-footer,
+.hero-wrap,
+.tabs-section,
+.control-section {
   max-width: 100%;
   overflow-x: clip;
 }
@@ -344,9 +357,11 @@ aside,
  */
 .semester-tabs-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 0.55rem;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .tab-btn {
@@ -367,6 +382,7 @@ aside,
   text-align: center;
   transition: all 0.12s ease;
   white-space: nowrap;
+  min-width: 0;
 }
 
 .tab-btn:hover {
@@ -689,8 +705,9 @@ aside,
 /* Subject Grid (Decluttered & Clean) */
 .subject-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
   gap: 1.25rem;
+  max-width: 100%;
 }
 
 .subject-item-card {
@@ -846,17 +863,19 @@ aside,
    ───────────────────────────────────────────────────────────────────────────── */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
+  height: 100dvh;
   background-color: rgba(18, 20, 24, 0.6);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: 1000;
   display: none;
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
+  box-sizing: border-box;
 }
 
 .modal-overlay.active {
@@ -871,6 +890,7 @@ aside,
   width: 100%;
   max-width: 640px;
   max-height: 85vh;
+  max-height: 85dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1039,6 +1059,11 @@ aside,
   transform: translate(-1px, -1px);
 }
 
+.btn-copy-citation.copied {
+  background-color: var(--pastel-green);
+  border-color: var(--border-ink);
+}
+
 /* Toast */
 .toast-bar {
   position: fixed;
@@ -1057,6 +1082,17 @@ aside,
   display: none;
   align-items: center;
   gap: 0.5rem;
+}
+
+.toast-bar svg {
+  width: 16px;
+  height: 16px;
+  stroke: var(--ink-primary);
+  stroke-width: 2.5;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex-shrink: 0;
 }
 
 .toast-bar.show {
@@ -1080,9 +1116,10 @@ aside,
 
 .footer-columns {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr minmax(0, 1fr) minmax(0, 1fr);
   gap: 2rem;
   margin-bottom: 2.5rem;
+  max-width: 100%;
 }
 
 .footer-bio p {
@@ -1721,10 +1758,24 @@ aside,
    RESPONSIVE DESIGN
    ───────────────────────────────────────────────────────────────────────────── */
 
-/* Tablet wide: reduce to 3-column tabs */
+/* Tablet wide: reduce to 4-column tabs & disable yellow copy toast */
 @media (max-width: 1024px) {
   .semester-tabs-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  /* Turn off yellow copy toast on mobile & tablet (OS handles native copy notification) */
+  .toast-bar,
+  .toast-bar.show {
+    display: none !important;
+  }
+}
+
+/* Touch devices: disable toast notification as native OS handles clipboard feedback */
+@media (pointer: coarse) {
+  .toast-bar,
+  .toast-bar.show {
+    display: none !important;
   }
 }
 
@@ -1757,7 +1808,7 @@ aside,
   }
 
   .semester-tabs-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -1829,7 +1880,7 @@ aside,
   /* Stats row: 2 across on mobile */
   .hero-stats-row {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.55rem;
   }
 
@@ -1870,7 +1921,7 @@ aside,
 
   /* Semester tabs: 2 columns on mobile */
   .semester-tabs-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   /* Semester header: stack on mobile */
@@ -1894,25 +1945,40 @@ aside,
     margin-bottom: 2.5rem;
   }
 
-  /* Modal full-screen on mobile */
+  /* Graceful bottom-sheet modal on mobile (never cut off at the top) */
   .modal-overlay {
     padding: 0;
+    padding-top: max(2.5rem, calc(env(safe-area-inset-top, 0px) + 1.5rem));
     align-items: flex-end;
+    overflow: hidden;
+    box-sizing: border-box;
   }
 
   .modal-card {
     max-width: 100%;
-    border-radius: var(--border-radius) var(--border-radius) 0 0;
-    max-height: 90vh;
+    width: 100%;
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+    max-height: calc(85vh - 3rem);
+    max-height: calc(100dvh - 3.5rem - env(safe-area-inset-top, 0px));
     box-shadow: 0 -4px 0px var(--border-ink);
+    margin-top: auto;
   }
 
-  /* Toast bottom position stays but adjusts */
-  .toast-bar {
-    bottom: 1.25rem;
-    right: 1.25rem;
-    left: 1.25rem;
-    right: 1.25rem;
+  .modal-header {
+    padding: 0.85rem 1.15rem;
+  }
+
+  .modal-body {
+    padding: 1.15rem 1rem;
+    padding-bottom: max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 1rem));
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Hide copy toast on mobile (OS handles native copy toast) */
+  .toast-bar,
+  .toast-bar.show {
+    display: none !important;
   }
 
   /* Scroll to top */
@@ -1926,6 +1992,10 @@ aside,
 
 /* Small mobile */
 @media (max-width: 480px) {
+  .modal-header h3 {
+    font-size: 0.95rem;
+  }
+
   .container {
     padding: 0 1rem;
   }
@@ -2001,7 +2071,7 @@ aside,
   }
 
   .semester-tabs-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .tab-btn {
@@ -2058,6 +2128,10 @@ aside,
 
 /* Ultra-compact mobile (<= 375px viewports like 360px) */
 @media (max-width: 375px) {
+  .semester-tabs-grid {
+    grid-template-columns: 1fr;
+  }
+
   .container {
     padding: 0 0.75rem;
   }
