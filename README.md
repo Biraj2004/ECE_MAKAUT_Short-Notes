@@ -9,8 +9,9 @@
 [![Batch](https://img.shields.io/badge/MAKAUT%20B.Tech%20ECE-2023--2027-FFF388?style=for-the-badge&logoColor=16181F&color=FFF388&labelColor=16181F)](https://github.com/Biraj2004/ECE_MAKAUT_Short-Notes)
 [![Semesters Ready](https://img.shields.io/badge/Semesters%20Ready-5%20%2F%208-C6F6D5?style=for-the-badge&logoColor=16181F&color=C6F6D5&labelColor=16181F)](#status)
 [![Combined Notes](https://img.shields.io/badge/Combined%20PDFs-39%20Subjects-D8ECFF?style=for-the-badge&logoColor=16181F&color=D8ECFF&labelColor=16181F)](#status)
-[![Modules Covered](https://img.shields.io/badge/Modules%20Covered-221%2B%20Notes-E8DDFF?style=for-the-badge&logoColor=16181F&color=E8DDFF&labelColor=16181F)](#status)
-[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-FED7E2?style=for-the-badge&logoColor=16181F&color=FED7E2&labelColor=16181F)](LICENSE)
+[![Modules Covered](https://img.shields.io/badge/Modules%20Covered-222%20Notes-E8DDFF?style=for-the-badge&logoColor=16181F&color=E8DDFF&labelColor=16181F)](#status)
+[![Total Archive](https://img.shields.io/badge/Total%20Archive-268%20PDFs-FED7E2?style=for-the-badge&logoColor=16181F&color=FED7E2&labelColor=16181F)](#status)
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-FFF388?style=for-the-badge&logoColor=16181F&color=FFF388&labelColor=16181F)](LICENSE)
 
 [![Web Showcase](https://img.shields.io/badge/Web%20Portal-Live%20on%20GitHub%20Pages-FFF388?style=for-the-badge&logoColor=16181F&color=FFF388&labelColor=16181F)](https://biraj2004.github.io/ECE_MAKAUT_Short-Notes/)
 [![Typesetting Engine](https://img.shields.io/badge/Engine-XeLaTeX-D8ECFF?style=for-the-badge&logoColor=16181F&color=D8ECFF&labelColor=16181F)](Notes_Build_Guide.md)
@@ -33,14 +34,14 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 
 ## Status
 
-| Semester | Status | Subjects |
-|---|---|---|
-| 1st SEM | ✅ Complete | 2 subjects (12 modules) |
-| 2nd SEM | ✅ Complete | 2 subjects (12 modules) |
-| 3rd – 5th SEM | 🔲 Planned | — |
-| 6th SEM | ✅ Complete | 10 subjects (55 modules) |
-| 7th SEM | ✅ Complete | 13 subjects (80 modules) |
-| 8th SEM | ✅ Complete | 12 subjects (63 modules) |
+| Semester | Status | Subjects | Official Syllabus |
+|---|---|---|---|
+| 1st SEM | ✅ Complete | 2 subjects (12 modules) | [`SEM-1 ECE_MAKAUT_SYLLABUS.pdf`](1st%20SEM/SEM-1%20ECE_MAKAUT_SYLLABUS.pdf) |
+| 2nd SEM | ✅ Complete | 2 subjects (12 modules) | [`SEM-2 ECE_MAKAUT_SYLLABUS.pdf`](2nd%20SEM/SEM-2%20ECE_MAKAUT_SYLLABUS.pdf) |
+| 3rd – 5th SEM | 🔲 Planned | — | Planned |
+| 6th SEM | ✅ Complete | 10 subjects (55 modules) | [`SEM-6 ECE_MAKAUT_SYLLABUS.pdf`](6th%20SEM/SEM-6%20ECE_MAKAUT_SYLLABUS.pdf) |
+| 7th SEM | ✅ Complete | 13 subjects (80 modules) | [`SEM-7 ECE_MAKAUT_SYLLABUS.pdf`](7th%20SEM/SEM-7%20ECE_MAKAUT_SYLLABUS.pdf) |
+| 8th SEM | ✅ Complete | 12 subjects (63 modules) | [`SEM-8 ECE_MAKAUT_SYLLABUS.pdf`](8th%20SEM/SEM-8%20ECE_MAKAUT_SYLLABUS.pdf) |
 
 > Every semester folder also includes a dedicated `New Syllabus Subjects/` subfolder reserved for new curriculum (NEP 2020) syllabus modules.
 
@@ -187,9 +188,10 @@ See [`Notes_Build_Guide.md`](Notes_Build_Guide.md) for the full authoring spec.
 ## Web Portal
 
 An interactive web showcase and PDF repository portal is hosted directly in [`docs/`](docs/) (deployable via GitHub Pages). It features:
-- **Instant 1-Click PDF Downloads** for official MAKAUT syllabi and comprehensive combined exam notes directly from the repository.
-- **Fast Search & Filter** across all semesters, course codes, subjects, and topics in real-time.
-- **Light Mode Editorial Neo-Brutalism & Pastel Theme** crafted with zero clutter, crisp typography, and full cross-device responsiveness.
+- **Instant Background PDF Downloads:** 1-Click downloads open PDFs in a new tab without interrupting or navigating away from the active catalog view.
+- **Standardized Syllabus Archive:** Direct access to official MAKAUT curriculum PDFs (`SEM-* ECE_MAKAUT_SYLLABUS.pdf`) for all completed semesters.
+- **Fast Live Search & Filter:** Instant keyword filtering across all semesters, course codes, subjects, and complete syllabus topic lists in real-time.
+- **Editorial Neo-Brutalism & Pastel UI:** High-contrast aesthetic with zero clutter, zero horizontal overflow across all screen sizes (desktop, tablet, mobile), and safe-area mobile bottom-sheet modals.
 - **PWA & SEO Ready:** Includes `site.webmanifest`, `robots.txt`, `sitemap.xml`, high-res OpenGraph social preview assets (`og-image.png`, `og-thumb.png`), and smooth scroll-to-top interaction.
 
 ---
