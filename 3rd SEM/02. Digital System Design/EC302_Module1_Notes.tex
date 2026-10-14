@@ -474,23 +474,30 @@ Expanding the stage carry expressions recursively:
 
 \begin{tcolorbox}[tikzbox, title={Carry Lookahead Generator Architecture (4-bit CLA)}]
 \centering
-\begin{tikzpicture}[scale=0.95]
+\begin{tikzpicture}[scale=0.92]
   % Inputs
-  \node[left, font=\small\bfseries] at (0, 2.5) {Inputs $A_i, B_i$};
-  \node[block, fill=hdrteal, draw=myteal] (gp) at (2.5, 2.5) {Generate / Propagate\\$G_i = A_i B_i$\\$P_i = A_i \oplus B_i$};
+  \node[font=\small\bfseries, align=center] (in) at (0.6, 2.5) {Inputs\\$A_i, B_i$};
+  
+  % Block 1: Generate / Propagate
+  \node[block, fill=hdrteal, draw=myteal, text width=2.4cm] (gp) at (3.3, 2.5) {Generate / Propagate\\[2pt]$G_i = A_i B_i$\\[1pt]$P_i = A_i \oplus B_i$};
 
-  \node[block, fill=hdrpurple, draw=mypurple, minimum width=3.4cm] (clg) at (6.8, 2.5) {Lookahead Carry\\Generator Logic};
+  % Block 2: Lookahead Carry Generator
+  \node[block, fill=hdrpurple, draw=mypurple, text width=2.9cm, minimum height=1.3cm] (clg) at (7.4, 2.5) {Lookahead Carry\\Generator Logic};
 
-  \node[block, fill=hdrgreen, draw=mygreen] (sum) at (10.8, 2.5) {Sum Logic\\$S_i = P_i \oplus C_i$};
+  % Block 3: Sum Logic
+  \node[block, fill=hdrgreen, draw=mygreen, text width=2.2cm] (sum) at (11.7, 2.5) {Sum Logic\\[2pt]$S_i = P_i \oplus C_i$};
 
-  \draw[-Stealth, very thick] (0.5, 2.5) -- (gp);
+  % Connecting Arrows & Labels
+  \draw[-Stealth, very thick] (in) -- (gp);
   \draw[-Stealth, very thick] (gp) -- (clg) node[midway, above, font=\scriptsize] {$P_i, G_i$};
   \draw[-Stealth, very thick] (clg) -- (sum) node[midway, above, font=\scriptsize] {$C_1, C_2, C_3$};
-  \draw[-Stealth, very thick] (6.8, 1.2) -- (clg) node[midway, right, font=\scriptsize] {$C_0$};
-  \draw[-Stealth, very thick] (clg) -- (6.8, 3.8) node[midway, right, font=\scriptsize] {$C_4$};
-  \draw[-Stealth, very thick] (sum) -- (12.5, 2.5) node[midway, above, font=\scriptsize] {$S_0 \dots S_3$};
+  \draw[-Stealth, very thick] (7.4, 1.2) node[below, font=\scriptsize] {$C_0 \text{ (Carry In)}$} -- (clg.south);
+  \draw[-Stealth, very thick] (clg.north) -- (7.4, 3.8) node[above, font=\scriptsize] {$C_4 \text{ (Carry Out)}$};
+  \draw[-Stealth, very thick] (sum.east) -- ++(1.4, 0) node[midway, above, font=\scriptsize] {$S_0 \dots S_3$};
 \end{tikzpicture}
 \end{tcolorbox}
+
+\par\vspace{4pt}\noindent
 \textbf{Delay Comparison:} All carries $C_1, \dots, C_4$ are generated in only $2 t_{\text{gate}}$ delays, and the final sums in $4 t_{\text{gate}}$ delays, completely independent of word length $n$.
 
 \subsection{BCD Adder}
@@ -538,24 +545,31 @@ where $m_k$ is the minterm formed by the $n$ select lines $S_{n-1} \dots S_0$.
 
 \newpage
 % ===============================================================================
-\section{Quick Revision Page}
+% MANDATORY QUICK REVISION PAGE
 % ===============================================================================
+\begin{center}
+  {\large\bfseries\color{myred} Quick Revision --- Module 1}\\[3pt]
+  {\small\color{mydark} Number Systems, Boolean Algebra \& Combinational Logic $|$ EC302}
+\end{center}
+\noindent{\color{myred}\rule{\linewidth}{1.2pt}}
+\vspace{4pt}
 
 \begin{tcolorbox}[formulabox, title={\textbf{Key Formulas and Identities at a Glance}}]
-\begin{itemize}[leftmargin=*, itemsep=2.5pt]
-  \item \textbf{Signed 2's Complement Range:} $-2^{n-1} \le N \le 2^{n-1}-1$
-  \item \textbf{2's Complement Overflow Condition:} $V = C_n \oplus C_{n-1}$
-  \item \textbf{De Morgan's Laws:} $\overline{A \cdot B} = \overline{A} + \overline{B}, \quad \overline{A + B} = \overline{A} \cdot \overline{B}$
-  \item \textbf{Binary-to-Gray Conversion:} $g_{n-1} = b_{n-1}, \quad g_i = b_{i+1} \oplus b_i$
-  \item \textbf{Full Adder Sum \& Carry:} $S = A \oplus B \oplus C_{\text{in}}, \quad C_{\text{out}} = AB + (A \oplus B)C_{\text{in}}$
-  \item \textbf{CLA Generate \& Propagate:} $G_i = A_i B_i, \quad P_i = A_i \oplus B_i, \quad C_{i+1} = G_i + P_i C_i$
-  \item \textbf{BCD Adder Correction:} $C_{\text{out}} = K + S_3 S_2 + S_3 S_1$
-  \item \textbf{Multiplexer Output Equation:} $Y = \sum_{k=0}^{2^n-1} m_k D_k$
-\end{itemize}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\linewidth}{B{5.2cm} X}
+Signed 2's Complement Range & $-2^{n-1} \le N \le 2^{n-1}-1$ \\[4pt]
+2's Complement Overflow Condition & $V = C_n \oplus C_{n-1}$ \\[4pt]
+De Morgan's Laws & $\overline{A \cdot B} = \overline{A} + \overline{B}, \quad \overline{A + B} = \overline{A} \cdot \overline{B}$ \\[4pt]
+Binary-to-Gray Conversion & $g_{n-1} = b_{n-1}, \quad g_i = b_{i+1} \oplus b_i$ \\[4pt]
+Full Adder Sum \& Carry & $S = A \oplus B \oplus C_{\text{in}}, \quad C_{\text{out}} = AB + (A \oplus B)C_{\text{in}}$ \\[4pt]
+CLA Generate \& Propagate & $G_i = A_i B_i, \quad P_i = A_i \oplus B_i, \quad C_{i+1} = G_i + P_i C_i$ \\[4pt]
+BCD Adder Correction Flag & $C_{\text{out}} = K + S_3 S_2 + S_3 S_1$ \\[4pt]
+Multiplexer Output Equation & $Y = \sum_{k=0}^{2^n-1} m_k D_k$ \\[4pt]
+\end{tabularx}
 \end{tcolorbox}
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
-\begin{itemize}[leftmargin=*, itemsep=2.5pt]
+\begin{itemize}[leftmargin=*, itemsep=2pt, topsep=0pt]
   \item \textbf{Minterm:} A canonical product term of $n$ variables that evaluates to logic $1$ for exactly one input combination.
   \item \textbf{Essential Prime Implicant (EPI):} A prime implicant rectangle containing at least one minterm that is not covered by any other prime implicant.
   \item \textbf{Static-1 Hazard:} A transient output glitch to $0$ occurring when an input change should have maintained a constant $1$ output.
@@ -566,7 +580,7 @@ where $m_k$ is the minterm formed by the $n$ select lines $S_{n-1} \dots S_0$.
 \end{tcolorbox}
 
 \begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
-\begin{enumerate}[label=\textbf{Q\arabic*.}, leftmargin=*]
+\begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]
   \item \Q{Why is 2's complement universally preferred over 1's complement in digital ALUs?}
     2's complement provides a single unique representation for zero ($0000_2$), eliminates the complex end-around carry addition required in 1's complement, and simplifies hardware subtraction into simple addition.
   \item \Q{How do you detect arithmetic overflow in 2's complement addition?}
