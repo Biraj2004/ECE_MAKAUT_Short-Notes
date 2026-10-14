@@ -336,6 +336,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | Subject | Modules | Module PDFs | Combined PDF | Pages |
 |---|---|---|---|---|
 | EC301 Electronic Devices | 4 | ✅ All compiled | `EC301_Electronic_Devices.pdf` | 52 |
+| EC302 Digital System Design | 4 | ✅ All compiled | `EC302_Digital_System_Design.pdf` | 56 |
 
 **6th SEM — complete and compiled:**
 
@@ -388,6 +389,6 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | OE-EC804C Organizational Behavior | 4 | ✅ All compiled | `OE-EC804C_Organizational_Behavior.pdf` | 26 |
 
 **1st SEM & 2nd SEM:** Chemistry-I (7 modules + combined PDF) and Physics-I (5 modules + combined PDF) are complete.
-**3rd SEM:** Electronic Devices (EC301) is complete (4 modules + combined PDF).
+**3rd SEM:** Electronic Devices (EC301) (4 modules + combined PDF) and Digital System Design (EC302) (4 modules + combined PDF) are complete.
 **8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C), Internet of Things (OE-EC803A), Big Data Analysis (OE-EC803B), Cyber Security (OE-EC803C), Artificial Intelligence (OE-EC804A), Microwave Integrated Circuits (OE-EC804B), and Organizational Behavior (OE-EC804C) are complete.
 

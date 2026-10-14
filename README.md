@@ -71,6 +71,7 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 | Code | Subject | Modules |
 |---|---|---|
 | EC301 | Electronic Devices | 4 |
+| EC302 | Digital System Design | 4 |
 
 ---
 
