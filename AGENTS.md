@@ -27,7 +27,15 @@ ECE_MAKAUT_Short-Notes/
 │   ├── 01. Chemistry-I/            # BS-CH101 — 7 modules (All complete)
 │   ├── 02. Physics-I/              # BS-PH101 — 5 modules (All complete)
 │   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
-├── 3rd SEM/ … 5th SEM/             # Planned (each with New Syllabus Subjects/)
+├── 3rd SEM/
+│   ├── 01. Electronic Devices/     # EC301 — 4 modules (All complete)
+│   │   ├── EC301_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── EC301_Module4_Notes.tex / .pdf
+│   │   ├── EC301_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│   │   └── EC301_Electronic_Devices.pdf  (combined output)
+│   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
+├── 4th SEM/ … 5th SEM/             # Planned (each with New Syllabus Subjects/)
 ├── 6th SEM/
 │   ├── 01. Control System/         # EC601 — 7 modules (All complete)
 │   │   ├── EC601_Module1_Notes.tex / .pdf
@@ -321,7 +329,13 @@ Examples: `01. Control System/`, `02. Computer Network/`
 
 ---
 
-## Current state (as of May 2026)
+## Current state (as of October 2026)
+
+**3rd SEM — in progress:**
+
+| Subject | Modules | Module PDFs | Combined PDF | Pages |
+|---|---|---|---|---|
+| EC301 Electronic Devices | 4 | ✅ All compiled | `EC301_Electronic_Devices.pdf` | 52 |
 
 **6th SEM — complete and compiled:**
 
@@ -373,6 +387,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | OE-EC804B Microwave Integrated Circuits | 5 | ✅ All compiled | `OE-EC804B_Microwave_Integrated_Circuits.pdf` | 34 |
 | OE-EC804C Organizational Behavior | 4 | ✅ All compiled | `OE-EC804C_Organizational_Behavior.pdf` | 26 |
 
-**1st SEM & 2nd SEM:** Chemistry-I (7 modules + combined PDF) and Physics-I (5 modules + combined PDF) are complete. 3rd–5th SEM are planned. Every semester directory contains a `New Syllabus Subjects/` subfolder reserved for new curriculum subjects.
+**1st SEM & 2nd SEM:** Chemistry-I (7 modules + combined PDF) and Physics-I (5 modules + combined PDF) are complete.
+**3rd SEM:** Electronic Devices (EC301) is complete (4 modules + combined PDF).
 **8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C), Internet of Things (OE-EC803A), Big Data Analysis (OE-EC803B), Cyber Security (OE-EC803C), Artificial Intelligence (OE-EC804A), Microwave Integrated Circuits (OE-EC804B), and Organizational Behavior (OE-EC804C) are complete.
 
