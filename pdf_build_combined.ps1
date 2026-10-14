@@ -249,8 +249,12 @@ foreach ($folder in $subjectFolders) {
 \usepackage{setspace}
 \usepackage{multirow}
 \usepackage{tocloft}
-\newcommand{\Q}[2]{\item \textbf{#1}\par #2 \vspace{4pt}}
+\newcommand{\Q}[1]{\textbf{#1}\par\noindent\ignorespaces}
 '@
+    $hasCircuitikz = ($moduleFiles | Where-Object { (Get-Content $_.FullName -Encoding UTF8 | Select-String 'circuitikz') }).Count -gt 0
+    if (-not $hasCircuitikz) {
+        $preamble = $preamble -replace '\\usepackage\[american\]\{circuitikz\}', '% circuitikz not required for this subject'
+    }
     [void]$sb.AppendLine($preamble)
 
     # -- Colours --------------------------------------------------------------
