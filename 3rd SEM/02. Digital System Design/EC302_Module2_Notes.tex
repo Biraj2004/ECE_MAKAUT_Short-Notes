@@ -19,6 +19,7 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{amsmath}
+\allowdisplaybreaks
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, patterns}
 \usepackage{tcolorbox}
@@ -241,33 +242,41 @@ The Master-Slave JK flip-flop consists of two cascaded latches clocked on comple
 \begin{tcolorbox}[tikzbox, title={Master-Slave JK Flip-Flop Functional Architecture}]
 \centering
 \begin{tikzpicture}[scale=0.92]
+  % Outer Dashed Enclosure Box
+  \draw[thick, dashed, color=myteal!70!mydark, rounded corners=4pt] (-1.3, -2.1) rectangle (6.7, 1.7);
+
   % Master Box
-  \node[ffblock, draw=myteal, fill=hdrteal] (master) at (0, 0) {Master\\JK Latch};
+  \node[ffblock, draw=myteal, fill=hdrteal, minimum width=2.2cm, minimum height=2.2cm] (master) at (0, 0) {Master\\JK Latch};
   % Inverter
-  \node[draw=mydark, circle, inner sep=2pt, font=\scriptsize] (inv) at (2.6, -1.5) {$\text{NOT}$};
+  \node[draw=mydark, fill=white, circle, inner sep=2.5pt, font=\scriptsize\bfseries] (inv) at (2.75, -1.6) {$\text{NOT}$};
   % Slave Box
-  \node[ffblock, draw=mypurple, fill=hdrpurple] (slave) at (5.2, 0) {Slave\\SR Latch};
+  \node[ffblock, draw=mypurple, fill=hdrpurple, minimum width=2.2cm, minimum height=2.2cm] (slave) at (5.5, 0) {Slave\\SR Latch};
 
-  % Inputs
-  \draw[flowarrow] (-2.2, 0.6) -- (-1.0, 0.6) node[pos=0.1, above, font=\small] {$J$};
-  \draw[flowarrow] (-2.2, -0.6) -- (-1.0, -0.6) node[pos=0.1, above, font=\small] {$K$};
+  % Inputs (J, CLK, K) with dedicated vertical levels
+  \draw[flowarrow] (-2.6, 0.7) node[left, font=\small\bfseries] {$J$} -- (-1.1, 0.7);
+  \draw[flowarrow] (-2.6, 0.0) node[left, font=\small\bfseries] {$\text{CLK}$} -- (-1.1, 0.0);
+  \draw[flowarrow] (-2.6, -0.7) node[left, font=\small\bfseries] {$K$} -- (-1.1, -0.7);
 
-  % Clock distribution
-  \draw[flowarrow] (-1.8, -1.5) -- (-1.8, -0.2) -- (-1.0, -0.2) node[pos=0.1, left, font=\small] {$\text{CLK}$};
-  \draw[thick] (-1.8, -1.5) -- (inv);
-  \draw[flowarrow] (inv) -- (4.2, -1.5) -- (4.2, -0.2);
+  % Clock distribution to Slave via NOT gate (tap at x = -1.5)
+  \fill (-1.5, 0.0) circle (1.5pt);
+  \draw[thick] (-1.5, 0.0) -- (-1.5, -1.6) -- (inv);
+  \draw[thick] (inv) -- (4.4, -1.6) -- (4.4, 0.0);
+  \draw[flowarrow] (4.4, 0.0) -- (slave.west);
 
-  % Interconnect
-  \draw[flowarrow] (1.0, 0.6) -- (4.2, 0.6) node[midway, above, font=\small] {$Q_M$};
-  \draw[flowarrow] (1.0, -0.6) -- (4.2, -0.6) node[midway, above, font=\small] {$\overline{Q}_M$};
+  % Interconnect (QM, QM_bar)
+  \draw[flowarrow] (1.1, 0.7) -- (4.4, 0.7) node[midway, above, font=\small\bfseries] {$Q_M$};
+  \draw[flowarrow] (1.1, -0.7) -- (4.4, -0.7) node[midway, above, font=\small\bfseries] {$\overline{Q}_M$};
 
   % Outputs
-  \draw[flowarrow] (6.2, 0.6) -- (7.8, 0.6) node[pos=0.9, above, font=\small] {$Q$};
-  \draw[flowarrow] (6.2, -0.6) -- (7.8, -0.6) node[pos=0.9, above, font=\small] {$\overline{Q}$};
+  \draw[flowarrow] (6.6, 0.7) -- (7.8, 0.7) node[right, font=\small\bfseries] {$Q$};
+  \draw[flowarrow] (6.6, -0.7) -- (7.8, -0.7) node[right, font=\small\bfseries] {$\overline{Q}$};
 
-  % Feedback paths
-  \draw[thick, dashed, color=myred] (7.2, -0.6) -- (7.2, -2.2) -- (-1.5, -2.2) -- (-1.5, 0.6);
-  \draw[thick, dashed, color=myteal] (7.0, 0.6) -- (7.0, 1.8) -- (-1.3, 1.8) -- (-1.3, -0.6);
+  % Feedback paths (Q -> K input at y = -0.9, Q_bar -> J input at y = 0.9)
+  % Non-overlapping vertical paths: red at x = -2.1, teal at x = -1.8, clock at x = -1.5
+  \fill (7.1, -0.7) circle (1.5pt);
+  \draw[thick, dashed, color=myred] (7.1, -0.7) -- (7.1, -2.4) -- (-2.1, -2.4) -- (-2.1, 0.9) -- (-1.1, 0.9);
+  \fill (6.9, 0.7) circle (1.5pt);
+  \draw[thick, dashed, color=myteal] (6.9, 0.7) -- (6.9, 1.9) -- (-1.8, 1.9) -- (-1.8, -0.9) -- (-1.1, -0.9);
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -384,45 +393,53 @@ Any synchronous sequential circuit can be modeled formally as a Finite State Mac
 
 \begin{tcolorbox}[tikzbox, title={Block Diagrams: Moore Machine vs. Mealy Machine}]
 \centering
-\begin{tikzpicture}[scale=0.92]
+\begin{tikzpicture}[scale=0.86]
   % Moore Machine
-  \begin{scope}[yshift=3.2cm]
-    \node[combblock] (nsm) at (0,0) {Next State\\Logic};
-    \node[ffblock, minimum width=1.8cm, minimum height=1.6cm] (regm) at (3.2,0) {State\\Registers};
-    \node[combblock] (outm) at (6.5,0) {Output\\Logic};
+  \begin{scope}[yshift=5.1cm]
+    \node[above, font=\small\bfseries\color{myteal}] at (4.0, 1.25) {Moore Machine: $Z = \lambda(S)$};
 
-    \draw[flowarrow] (-2.2, 0.4) -- (nsm.150) node[pos=0.1, above, font=\scriptsize] {Input $X$};
+    \node[combblock, minimum width=2.3cm, minimum height=1.3cm] (nsm) at (0.6, 0) {Next State\\Logic};
+    \node[ffblock, minimum width=1.8cm, minimum height=1.4cm] (regm) at (4.0, 0) {State\\Registers};
+    \node[combblock, minimum width=2.3cm, minimum height=1.3cm] (outm) at (7.4, 0) {Output\\Logic};
+
+    % Inputs & Interconnect
+    \draw[flowarrow] (-1.6, 0) node[left, font=\small\bfseries] {Input $X$} -- (nsm.west);
     \draw[flowarrow] (nsm) -- (regm) node[midway, above, font=\scriptsize] {$S_{\text{next}}$};
     \draw[flowarrow] (regm) -- (outm) node[midway, above, font=\scriptsize] {$S$};
-    \draw[flowarrow] (outm) -- (8.5, 0) node[midway, above, font=\scriptsize] {Output $Z$};
+    \draw[flowarrow] (outm.east) -- (9.4, 0) node[right, font=\small\bfseries] {Output $Z$};
 
-    % Feedback
-    \draw[thick] (4.5, 0) -- (4.5, -1.0) -- (-1.2, -1.0) -- (-1.2, -0.4);
-    \draw[flowarrow] (-1.2, -0.4) -- (nsm.210);
-
-    \node[above, font=\small\bfseries\color{myteal}] at (3.2, 1.2) {Moore Machine: $Z = \lambda(S)$};
+    % Feedback Loop
+    \fill (5.6, 0) circle (1.5pt);
+    \draw[thick] (5.6, 0) -- (5.6, -1.2) -- (-0.3, -1.2) -- (-0.3, -0.65);
+    \draw[flowarrow] (-0.3, -0.65) -- (nsm.210);
+    \node[below, font=\scriptsize] at (2.6, -1.2) {Present State Feedback ($S$)};
   \end{scope}
 
   % Mealy Machine
-  \begin{scope}[yshift=0cm]
-    \node[combblock] (nsmy) at (0,0) {Next State\\Logic};
-    \node[ffblock, minimum width=1.8cm, minimum height=1.6cm] (regmy) at (3.2,0) {State\\Registers};
-    \node[combblock] (outmy) at (6.5,0) {Output\\Logic};
+  \begin{scope}[yshift=0.0cm]
+    \node[above, font=\small\bfseries\color{mypurple}] at (4.0, 2.2) {Mealy Machine: $Z = \lambda(S, X)$};
 
-    \draw[flowarrow] (-2.2, 0.4) -- (nsmy.150) node[pos=0.1, above, font=\scriptsize] {Input $X$};
+    \node[combblock, minimum width=2.3cm, minimum height=1.3cm] (nsmy) at (0.6, 0) {Next State\\Logic};
+    \node[ffblock, minimum width=1.8cm, minimum height=1.4cm] (regmy) at (4.0, 0) {State\\Registers};
+    \node[combblock, minimum width=2.3cm, minimum height=1.3cm] (outmy) at (7.4, 0) {Output\\Logic};
+
+    % Inputs & Interconnect
+    \draw[flowarrow] (-1.6, 0) node[left, font=\small\bfseries] {Input $X$} -- (nsmy.west);
     \draw[flowarrow] (nsmy) -- (regmy) node[midway, above, font=\scriptsize] {$S_{\text{next}}$};
     \draw[flowarrow] (regmy) -- (outmy) node[midway, above, font=\scriptsize] {$S$};
-    \draw[flowarrow] (outmy) -- (8.5, 0) node[midway, above, font=\scriptsize] {Output $Z$};
+    \draw[flowarrow] (outmy.east) -- (9.4, 0) node[right, font=\small\bfseries] {Output $Z$};
 
-    % Input direct to output logic
-    \draw[thick] (-2.0, 0.4) -- (-2.0, 1.0) -- (6.5, 1.0);
-    \draw[flowarrow] (6.5, 1.0) -- (outmy.90);
+    % Direct Input Feed to Output Logic (Mealy distinctive feature)
+    \fill (-0.8, 0) circle (1.5pt);
+    \draw[thick] (-0.8, 0) -- (-0.8, 1.3) -- (7.4, 1.3);
+    \draw[flowarrow] (7.4, 1.3) -- (outmy.north);
+    \node[above, font=\scriptsize] at (3.2, 1.35) {Direct Input Feed ($X$)};
 
-    % Feedback
-    \draw[thick] (4.5, 0) -- (4.5, -1.0) -- (-1.2, -1.0) -- (-1.2, -0.4);
-    \draw[flowarrow] (-1.2, -0.4) -- (nsmy.210);
-
-    \node[above, font=\small\bfseries\color{mypurple}] at (3.2, 1.3) {Mealy Machine: $Z = \lambda(S, X)$};
+    % Feedback Loop
+    \fill (5.6, 0) circle (1.5pt);
+    \draw[thick] (5.6, 0) -- (5.6, -1.2) -- (-0.3, -1.2) -- (-0.3, -0.65);
+    \draw[flowarrow] (-0.3, -0.65) -- (nsmy.210);
+    \node[below, font=\scriptsize] at (2.6, -1.2) {Present State Feedback ($S$)};
   \end{scope}
 \end{tikzpicture}
 \end{tcolorbox}
