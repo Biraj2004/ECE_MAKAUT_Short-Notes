@@ -269,18 +269,6 @@ Complement Law & $A \cdot A' = 0$ & $A + A' = 1$ \\
 \hline
 Involution (Double Negation) & \multicolumn{2}{c|}{$(A')' = A$} \\
 \hline
-\end{tabularx}
-\endgroup
-
-\par\vspace{6pt}\noindent
-\begingroup
-\setlength{\tabcolsep}{4pt}
-\setlength{\extrarowheight}{2.5pt}
-\renewcommand{\arraystretch}{1.35}
-\begin{tabularx}{\linewidth}{|B{3.4cm}|Y|Y|}
-\hline
-\textbf{Law / Property (contd.)} & \textbf{AND Form} & \textbf{OR Form} \\
-\hline
 Commutative Law & $A \cdot B = B \cdot A$ & $A + B = B + A$ \\
 \hline
 Associative Law & $A \cdot (B \cdot C) = (A \cdot B) \cdot C$ & $A + (B + C) = (A + B) + C$ \\
@@ -414,21 +402,30 @@ Digital systems employ specialized binary codes tailored for arithmetic, display
 
 \subsection{Standard Binary Codes}
 \begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{BCD (Binary Coded Decimal / 8421):} Each decimal digit ($0\text{--}9$) is encoded as a 4-bit binary group ($0000$ to $1001$). The six combinations $1010_2$ to $1111_2$ are invalid.
-  \item \textbf{Excess-3 Code:} Unweighted, self-complementing code formed by adding $0011_2$ ($+3$) to the 8421 BCD code. The 1's complement of an Excess-3 number represents the 9's complement of its decimal equivalent.
-  \item \textbf{Gray Code (Reflected Binary Unit-Distance Code):} Successive code words differ in only a single bit position ($\Delta = 1$), eliminating spurious switching errors in optical shaft encoders.
+  \item \textbf{BCD (Binary Coded Decimal / 8421):} Weighted code where each decimal digit ($0\text{--}9$) is encoded as a 4-bit binary group ($0000_2$ to $1001_2$). The six bit combinations $1010_2$ to $1111_2$ ($10\text{--}15$) are invalid states.
+  \item \textbf{Excess-3 Code:} Unweighted, self-complementing code formed by adding $0011_2$ ($+3$) to the 8421 BCD code. The 1's complement of an Excess-3 number directly represents the 9's complement of its decimal equivalent, simplifying decimal subtraction.
+  \item \textbf{Gray Code (Reflected Binary Unit-Distance Code):} Successive code words differ in only a single bit position ($\Delta = 1$), eliminating spurious intermediate switching transitions in optical shaft encoders and K-maps.
+  \item \textbf{Alphanumeric (ASCII) and Parity Codes:} 7-bit ASCII encodes 128 alphanumeric characters and control symbols. A parity bit (Even or Odd) is appended to data words to detect single-bit errors in transmission.
 \end{itemize}
 
-\subsection{Binary to Gray and Gray to Binary Code Conversion}
-\begin{tcolorbox}[formulabox, title={\textbf{Code Conversion Logic}}]
-Binary to Gray conversion ($B = b_{n-1} \dots b_0 \to G = g_{n-1} \dots g_0$):
+\subsection{Code Converters (Gray, Excess-3, and 7-Segment)}
+\begin{tcolorbox}[formulabox, title={\textbf{Code Conversion Logic and Formulas}}]
+\textbf{1. Binary to Gray Conversion ($B \to G$):}
 \begin{equation}
   g_{n-1} = b_{n-1}, \qquad g_i = b_{i+1} \oplus b_i \quad (\text{for } i = 0, 1, \dots, n-2)
 \end{equation}
-Gray to Binary conversion ($G = g_{n-1} \dots g_0 \to B = b_{n-1} \dots b_0$):
+
+\textbf{2. Gray to Binary Conversion ($G \to B$):}
 \begin{equation}
   b_{n-1} = g_{n-1}, \qquad b_i = b_{i+1} \oplus g_i \quad (\text{for } i = 0, 1, \dots, n-2)
 \end{equation}
+
+\textbf{3. BCD to Excess-3 Converter:} Formed by adding $0011_2$ ($+3$) or minimal combinational gates:
+\begin{equation}
+  E_3 = B_3 + B_2(B_1 + B_0), \quad E_2 = B_2 \oplus (B_1 + B_0), \quad E_1 = \overline{B_1 \oplus B_0}, \quad E_0 = \overline{B_0}
+\end{equation}
+
+\textbf{4. BCD to 7-Segment Decoder (IC 7447 / 7448):} Decodes 4-bit BCD to drive 7 LED segments ($a\text{--}g$) in Common Anode (active-low drive) or Common Cathode (active-high drive) displays.
 \end{tcolorbox}
 
 % ===============================================================================
@@ -529,7 +526,12 @@ A multiplexer routes one of $2^n$ data input channels to a single output line un
 \end{equation}
 where $m_k$ is the minterm formed by the $n$ select lines $S_{n-1} \dots S_0$.
 \begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{Universal Logic Implementation:} Any Boolean function of $n$ variables can be implemented directly using a $2^{n-1}$-to-1 MUX by connecting $(n-1)$ variables to select lines and using the remaining variable ($0, 1, X, X'$) on the data inputs.
+  \item \textbf{Shannon's Expansion Theorem:} Any Boolean function $f(x_1, x_2, \dots, x_n)$ can be expanded with respect to any variable $x_1$ as:
+  \begin{equation}
+    f(x_1, x_2, \dots, x_n) = x_1 \cdot f(1, x_2, \dots, x_n) + x_1' \cdot f(0, x_2, \dots, x_n)
+  \end{equation}
+  This theorem establishes the formal mathematical basis for implementing arbitrary combinational logic with multiplexers.
+  \item \textbf{Universal Logic Implementation:} Any Boolean function of $n$ variables can be implemented directly using a $2^{n-1}$-to-1 MUX by connecting $(n-1)$ variables to the selection inputs and mapping the remaining variable in four possible forms ($0$, $1$, $X$, or $X'$) to the data inputs.
 \end{itemize}
 
 \subsection{Encoders and Decoders}
