@@ -232,6 +232,7 @@ foreach ($folder in $subjectFolders) {
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{amsmath}
+\allowdisplaybreaks
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns, backgrounds}
 \usepackage[american]{circuitikz}
