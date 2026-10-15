@@ -423,6 +423,7 @@ where $M_x, M_y$ are finite positive real numbers.
 \end{itemize}
 \end{tcolorbox}
 
+\newpage
 \subsection{Invertibility and Physical Realizability}
 \begin{itemize}[leftmargin=*, itemsep=3pt]
   \item \textbf{Invertibility:} A system $\mathcal{T}$ is invertible if distinct inputs produce distinct outputs (one-to-one mapping). An inverse system $\mathcal{T}^{-1}$ exists such that cascading $\mathcal{T}$ and $\mathcal{T}^{-1}$ yields the identity system:
@@ -430,8 +431,38 @@ where $M_x, M_y$ are finite positive real numbers.
     w(t) = \mathcal{T}^{-1}\{\mathcal{T}\{x(t)\}\} = x(t)
   \end{equation}
   Non-invertible systems: $y(t) = x^2(t)$ (loss of sign information), $y(t) = 0$ (destroys all input information).
-  \item \textbf{Physical Realizability:} A system is physically realizable if it can be constructed using real physical hardware components (RLC networks, operational amplifiers, DSP microchips). Necessary conditions: Causal, stable or stabilizable, and requires finite energy resources.
+  \item \textbf{Physical Realizability:} A system is physically realizable if it can be constructed using real physical hardware components (RLC networks, operational amplifiers, DSP microchips). Necessary criteria:
+  \begin{enumerate}[label=(\alph*), itemsep=2pt]
+    \item \textbf{Causality:} The impulse response must vanish for negative time: $h(t) = 0$ for $t < 0$.
+    \item \textbf{Stability:} The impulse response must be absolutely integrable: $\int_{-\infty}^{\infty} |h(t)| dt < \infty$.
+    \item \textbf{Paley-Wiener Criterion (Frequency-Domain Realizability):} For a causal, finite-energy filter ($\int_{-\infty}^{\infty} |h(t)|^2 dt < \infty$), the magnitude response $|H(j\omega)|$ must satisfy:
+    \begin{equation}
+      \int_{-\infty}^{\infty} \frac{|\ln |H(j\omega)||}{1 + \omega^2} d\omega < \infty
+    \end{equation}
+    \textit{Physical Implication:} $|H(j\omega)|$ cannot drop to zero identically over any finite frequency band (since $\ln(0) = -\infty$, causing the integral to diverge). Hence, the \textbf{ideal brick-wall filter is physically unrealizable} in real-time hardware.
+  \end{enumerate}
 \end{itemize}
+
+\begin{tcolorbox}[examplebox, title={\textbf{Diagnostic Example: Verification of System Properties}}]
+Determine whether the following continuous-time and discrete-time systems are Linear, Time-Invariant, Causal, and BIBO Stable:
+\begin{enumerate}[label=(\roman*), leftmargin=*, itemsep=3pt]
+  \item \textbf{System 1:} $y(t) = t \cdot x(t)$
+  \begin{itemize}[itemsep=1pt]
+    \item \textit{Linearity:} $\mathcal{T}\{a x_1 + b x_2\} = t [a x_1 + b x_2] = a y_1 + b y_2 \implies$ \textbf{Linear}. \quad \textit{Time-Invariance:} $\mathcal{T}\{x(t - t_0)\} = t x(t - t_0) \neq (t - t_0)x(t - t_0) \implies$ \textbf{Time-Variant}.
+    \item \textit{Causality:} Depends solely on present $x(t) \implies$ \textbf{Causal (Static)}. \quad \textit{Stability:} For $x(t) = 1$, $y(t) = t \to \infty$ as $t \to \infty \implies$ \textbf{Unstable}.
+  \end{itemize}
+  \item \textbf{System 2:} $y(t) = x(2t)$
+  \begin{itemize}[itemsep=1pt]
+    \item \textit{Linearity:} $\mathcal{T}\{a x_1 + b x_2\} = a x_1(2t) + b x_2(2t) = a y_1 + b y_2 \implies$ \textbf{Linear}. \quad \textit{Time-Invariance:} $\mathcal{T}\{x(t - t_0)\} = x(2t - t_0) \neq x(2(t - t_0)) \implies$ \textbf{Time-Variant}.
+    \item \textit{Causality:} At $t = 1$, $y(1) = x(2)$ requires future value $\implies$ \textbf{Non-Causal}. \quad \textit{Stability:} $|x(t)| \le M_x \implies |y(t)| \le M_x \implies$ \textbf{BIBO Stable}.
+  \end{itemize}
+  \item \textbf{System 3:} $y[n] = x^2[n]$
+  \begin{itemize}[itemsep=1pt]
+    \item \textit{Linearity:} $\mathcal{T}\{a x_1[n]\} = a^2 x_1^2[n] \neq a y_1[n] \implies$ \textbf{Non-Linear}. \quad \textit{Time-Invariance:} $\mathcal{T}\{x[n - k]\} = x^2[n - k] = y[n - k] \implies$ \textbf{Time-Invariant}.
+    \item \textit{Causality:} Depends solely on current sample $n \implies$ \textbf{Causal}. \quad \textit{Stability:} $|x[n]| \le M_x \implies |y[n]| \le M_x^2 < \infty \implies$ \textbf{BIBO Stable}.
+  \end{itemize}
+\end{enumerate}
+\end{tcolorbox}
 
 % ===============================================================================
 \newpage
