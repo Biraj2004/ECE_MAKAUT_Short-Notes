@@ -240,15 +240,32 @@
   \item \textbf{Speech and Acoustic Processing:} Continuous-time acoustic pressure variations captured by microphones, filtered through anti-aliasing networks, and converted into discrete speech feature vectors for automated speech recognition.
 \end{itemize}
 
-\begin{tcolorbox}[tikzbox, title={General Input-Output System Architecture}]
-\centering
-\begin{tikzpicture}[scale=0.95]
-  \node[sysblock] (sys) at (0, 0) {System $\mathcal{T}$\\$y(t) = \mathcal{T}\{x(t)\}$};
-  \draw[sigarrow] (-3.2, 0) -- (sys.west) node[midway, above, font=\small\bfseries] {Input $x(t)$};
-  \draw[sigarrow] (sys.east) -- (3.2, 0) node[midway, above, font=\small\bfseries] {Output $y(t)$};
-  \node[below=4pt, font=\scriptsize\color{mydark}] at (-2.0, 0) {Excitation / Stimulus};
-  \node[below=4pt, font=\scriptsize\color{mydark}] at (2.0, 0) {Response / Effect};
+\begin{tcolorbox}[tikzbox, title={\textbf{General Input-Output System Architecture}}]
+\begin{center}
+\begin{tikzpicture}[>=Latex, font=\small]
+  % Input Node
+  \node[align=center] (in) at (-4.2, 0) {
+    \textbf{Input} $x(t)$\\[3pt]
+    {\scriptsize\color{myteal}\textbf{(Excitation / Stimulus)}}
+  };
+
+  % Central System Block
+  \node[sysblock, minimum width=3.4cm, minimum height=1.35cm, line width=0.9pt, align=center] (sys) at (0, 0) {
+    \textbf{System} $\boldsymbol{\mathcal{T}}$\\[3pt]
+    $y(t) = \mathcal{T}\{x(t)\}$
+  };
+
+  % Output Node
+  \node[align=center] (out) at (4.2, 0) {
+    \textbf{Output} $y(t)$\\[3pt]
+    {\scriptsize\color{myred}\textbf{(Response / Effect)}}
+  };
+
+  % Connecting Arrows with ample clearance
+  \draw[->, very thick, color=mydark, -{Latex[length=3mm]}] (in.east) -- (sys.west);
+  \draw[->, very thick, color=mydark, -{Latex[length=3mm]}] (sys.east) -- (out.west);
 \end{tikzpicture}
+\end{center}
 \end{tcolorbox}
 
 % ===============================================================================
@@ -744,35 +761,38 @@ Evaluating convolution graphically consists of four rigorous sequential steps:
 \begin{center}
 \begin{tikzpicture}[>=Latex, scale=0.92]
   % Step 1: Input x(tau)
-  \draw[->, thick] (-0.5,0) -- (4,0) node[right] {\footnotesize $\tau$};
-  \draw[->, thick] (0,-0.2) -- (0,1.8) node[above] {\footnotesize $x(\tau)$};
+  \draw[->, thick] (-0.5,0) -- (3.8,0) node[right] {\footnotesize $\tau$};
+  \draw[->, thick] (0,-0.2) -- (0,1.7) node[above] {\footnotesize $x(\tau)$};
   \draw[thick, fill=hdrteal, fill opacity=0.5] (0,0) -- (0,1.2) -- (2,1.2) -- (2,0) -- cycle;
-  \node at (1,0.6) {\scriptsize Rectangular Pulse};
+  \node[font=\scriptsize\bfseries, color=myteal] at (1,0.6) {Input $x(\tau)$};
   \node[below] at (0,0) {\scriptsize $0$};
   \node[below] at (2,0) {\scriptsize $T_1$};
   \node[left] at (0,1.2) {\scriptsize $A$};
+  \node[below=6pt, font=\footnotesize\bfseries, color=mydark] at (1.5,-0.2) {(a) Input Signal};
 
   % Step 2: Folded and Shifted h(t - tau)
-  \begin{scope}[xshift=6cm]
-    \draw[->, thick] (-1,0) -- (4,0) node[right] {\footnotesize $\tau$};
-    \draw[->, thick] (0,-0.2) -- (0,1.8) node[above] {\footnotesize $h(t-\tau)$};
+  \begin{scope}[xshift=6.4cm]
+    \draw[->, thick] (-1,0) -- (3.8,0) node[right] {\footnotesize $\tau$};
+    \draw[->, thick] (0,-0.2) -- (0,1.7) node[above] {\footnotesize $h(t-\tau)$};
     \draw[thick, fill=hdramber, fill opacity=0.5] (0.5,0) -- (0.5,1.2) -- (2.5,1.2) -- (2.5,0) -- cycle;
-    \node at (1.5,0.6) {\scriptsize Shifted $t$};
+    \node[font=\scriptsize\bfseries, color=myamber] at (1.5,0.6) {Shifted by $t$};
     \node[below] at (0.5,0) {\scriptsize $t - T_2$};
     \node[below] at (2.5,0) {\scriptsize $t$};
-    \draw[->, myred, thick] (1.5,1.4) -- (2.3,1.4) node[right, myred] {\scriptsize sweep $t$};
+    \draw[->, myred, thick] (1.3,1.4) -- (2.3,1.4) node[right, myred, font=\scriptsize\bfseries] {sweep $t$};
+    \node[below=6pt, font=\footnotesize\bfseries, color=mydark] at (1.5,-0.2) {(b) Folded \& Shifted Kernel};
   \end{scope}
 
   % Step 3: Overlap & Output
-  \begin{scope}[yshift=-2.8cm, xshift=2.5cm]
-    \draw[->, thick] (-1,0) -- (6,0) node[right] {\footnotesize $t$};
-    \draw[->, thick] (0,-0.2) -- (0,1.8) node[above] {\footnotesize $y(t) = x(t)*h(t)$};
+  \begin{scope}[yshift=-3.8cm, xshift=2.6cm]
+    \draw[->, thick] (-0.8,0) -- (5.6,0) node[right] {\footnotesize $t$};
+    \draw[->, thick] (0,-0.2) -- (0,1.7) node[above] {\footnotesize $y(t)$};
     \draw[very thick, myred] (0,0) -- (1.5,1.3) -- (3.0,1.3) -- (4.5,0);
     \node[below] at (0,0) {\scriptsize $0$};
     \node[below] at (1.5,0) {\scriptsize $T_1$};
     \node[below] at (3.0,0) {\scriptsize $T_2$};
     \node[below] at (4.5,0) {\scriptsize $T_1+T_2$};
-    \node[above, myred] at (2.25,1.3) {\scriptsize Trapezoidal Output Response};
+    \node[above=2pt, myred, font=\scriptsize\bfseries] at (2.25,1.3) {Trapezoidal Output Waveform};
+    \node[below=6pt, font=\footnotesize\bfseries, color=mydark] at (2.25,-0.2) {(c) Resulting Convolution $y(t) = x(t)*h(t)$};
   \end{scope}
 \end{tikzpicture}
 \end{center}
@@ -821,32 +841,37 @@ Duration Property & If lengths are $L_1$ and $L_2$, duration of $y(t)$ is $L_1 +
 
 \begin{tcolorbox}[tikzbox, title={\textbf{TikZ Block Diagrams: Cascade and Parallel LSI Interconnections}}]
 \begin{center}
-\begin{tikzpicture}[>=Latex, node distance=1.8cm, font=\small]
-  % Cascade block diagram
-  \node (in1) at (0, 1.8) {$x(t)$};
-  \node[sysblock, right of=in1, node distance=2.2cm] (sys1) {$h_1(t)$};
-  \node[sysblock, right of=sys1, node distance=2.8cm] (sys2) {$h_2(t)$};
-  \node[right of=sys2, node distance=2.2cm] (out1) {$y(t)$};
-  \draw[arrowline] (in1) -- (sys1);
-  \draw[arrowline] (sys1) -- node[above] {\scriptsize $w(t)$} (sys2);
-  \draw[arrowline] (sys2) -- (out1);
-  \node[above of=sys1, node distance=0.8cm, color=myteal] {\footnotesize \textbf{Cascade Configuration:} $h_{eq}(t) = h_1(t) * h_2(t)$};
+\begin{tikzpicture}[>=Latex, font=\small, scale=0.96]
+  % ─── Cascade Configuration ───
+  \node[font=\footnotesize\bfseries, color=myteal] at (3.6, 3.0) {Cascade Configuration: \quad $h_{eq}(t) = h_1(t) * h_2(t)$};
+  \node (in1) at (-0.2, 2.0) {$x(t)$};
+  \node[sysblock, minimum width=2.2cm, minimum height=0.95cm] (sys1) at (2.0, 2.0) {$h_1(t)$};
+  \node[sysblock, minimum width=2.2cm, minimum height=0.95cm] (sys2) at (5.2, 2.0) {$h_2(t)$};
+  \node (out1) at (7.4, 2.0) {$y(t)$};
 
-  % Parallel block diagram
-  \node (in2) at (0, -0.8) {$x(t)$};
-  \coordinate[right of=in2, node distance=1.0cm] (branch);
-  \node[sysblock, above right=0.3cm and 0.8cm of branch] (p1) {$h_1(t)$};
-  \node[sysblock, below right=0.3cm and 0.8cm of branch] (p2) {$h_2(t)$};
-  \node[circnode, right of=branch, node distance=4.6cm] (sum) {$+$};
-  \node[right of=sum, node distance=1.6cm] (out2) {$y(t)$};
+  \draw[arrowline] (in1) -- (sys1);
+  \draw[arrowline] (sys1) -- node[above=2pt, font=\scriptsize, color=myteal] {$w(t)$} (sys2);
+  \draw[arrowline] (sys2) -- (out1);
+
+  % Separator Rule
+  \draw[mgframe, dashed, thick] (-0.5, 0.9) -- (7.7, 0.9);
+
+  % ─── Parallel Configuration ───
+  \node (in2) at (-0.2, -0.6) {$x(t)$};
+  \coordinate (branch) at (1.0, -0.6);
+  \node[sysblock, minimum width=2.2cm, minimum height=0.95cm] (p1) at (3.6, 0.2) {$h_1(t)$};
+  \node[sysblock, minimum width=2.2cm, minimum height=0.95cm] (p2) at (3.6, -1.4) {$h_2(t)$};
+  \node[circnode, inner sep=2pt] (sum) at (6.2, -0.6) {$+$};
+  \node (out2) at (7.6, -0.6) {$y(t)$};
 
   \draw[arrowline] (in2) -- (branch);
-  \draw[arrowline] (branch) |- (p1);
-  \draw[arrowline] (branch) |- (p2);
-  \draw[arrowline] (p1) -| (sum);
-  \draw[arrowline] (p2) -| (sum);
+  \fill[mydark] (branch) circle (1.5pt);
+  \draw[arrowline] (branch) |- (p1.west);
+  \draw[arrowline] (branch) |- (p2.west);
+  \draw[arrowline] (p1.east) -| (sum.north);
+  \draw[arrowline] (p2.east) -| (sum.south);
   \draw[arrowline] (sum) -- (out2);
-  \node[below of=p2, node distance=0.9cm, color=myred] {\footnotesize \textbf{Parallel Configuration:} $h_{eq}(t) = h_1(t) + h_2(t)$};
+  \node[font=\footnotesize\bfseries, color=myred] at (3.6, -2.4) {Parallel Configuration: \quad $h_{eq}(t) = h_1(t) + h_2(t)$};
 \end{tikzpicture}
 \end{center}
 \end{tcolorbox}
@@ -962,33 +987,45 @@ LCCDEs can be physically synthesized using three elementary operational building
 
 \begin{tcolorbox}[tikzbox, title={\textbf{TikZ Schematic: Direct Form II (Canonic) Realization of 2nd-Order LCCDE}}]
 \begin{center}
-\begin{tikzpicture}[>=Latex, node distance=2cm, font=\small]
+\begin{tikzpicture}[>=Latex, font=\small, scale=0.96]
   % Input and first summer
-  \node (x) at (0,0) {$x(t)$};
-  \node[circnode, right of=x, node distance=1.6cm] (s1) {$+$};
+  \node (x) at (-0.6, 0) {$x(t)$};
+  \node[circnode, inner sep=2.5pt] (s1) at (1.2, 0) {$+$};
   \draw[arrowline] (x) -- (s1);
 
   % Central integrator chain
-  \node[sysblock, right of=s1, node distance=2.2cm, minimum width=1.5cm] (int1) {$\int dt$};
-  \node[sysblock, right of=int1, node distance=2.4cm, minimum width=1.5cm] (int2) {$\int dt$};
-  \draw[arrowline] (s1) -- node[above] {\scriptsize $w(t)$} (int1);
-  \draw[arrowline] (int1) -- node[above] {\scriptsize $\dot{w}(t)$} (int2);
+  \node[sysblock, minimum width=1.5cm, minimum height=0.95cm] (int1) at (3.6, 0) {$\int dt$};
+  \node[sysblock, minimum width=1.5cm, minimum height=0.95cm] (int2) at (6.4, 0) {$\int dt$};
+  \draw[arrowline] (s1) -- (int1);
+  \node[above=2pt, font=\scriptsize, color=mydark] at (2.7, 0) {$\ddot{w}(t)$};
+  \draw[arrowline] (int1) -- (int2);
+  \node[above=2pt, font=\scriptsize, color=mydark] at (4.4, 0) {$\dot{w}(t)$};
 
   % Second summer and output
-  \node[circnode, right of=int2, node distance=2.2cm] (s2) {$+$};
-  \node[right of=s2, node distance=1.6cm] (y) {$y(t)$};
+  \node[circnode, inner sep=2.5pt] (s2) at (8.8, 0) {$+$};
+  \node (y) at (10.1, 0) {$y(t)$};
   \draw[arrowline] (s2) -- (y);
+  \draw[arrowline] (int2) -- node[above=2pt, font=\scriptsize] {$b_2$} (s2);
 
-  % Direct feedthrough
-  \draw[arrowline] ($(s1)!0.5!(int1)$) -- ++(0,1.2) -| node[pos=0.25, above] {\scriptsize $b_0$} (s2);
+  % Branch point 1: w''(t)
+  \coordinate (br0) at (2.0, 0);
+  \fill[mydark] (br0) circle (1.5pt);
+  % Direct feedthrough b0 (high top arch to s2.north)
+  \draw[arrowline] (br0) -- ++(0, 1.4) -| node[pos=0.25, above, font=\scriptsize] {$b_0$} (s2.north);
 
-  % Forward paths (zeros)
-  \draw[arrowline] ($(int1)!0.5!(int2)$) -- ++(0,0.6) -| node[pos=0.25, above] {\scriptsize $b_1$} (s2);
-  \draw[arrowline] (int2) -- node[above] {\scriptsize $b_2$} (s2);
+  % Branch point 2: w'(t)
+  \coordinate (br1) at (5.0, 0);
+  \fill[mydark] (br1) circle (1.5pt);
+  % Forward path b1 (medium top arch to s2.north west)
+  \draw[arrowline] (br1) -- ++(0, 0.7) -| node[pos=0.25, above, font=\scriptsize] {$b_1$} (s2.north west);
+  % Feedback path -a1 (medium bottom arch to s1.south east)
+  \draw[arrowline] (br1) -- ++(0, -0.7) -| node[pos=0.25, below, font=\scriptsize] {$-a_1$} (s1.south east);
 
-  % Feedback paths (poles)
-  \draw[arrowline] ($(int1)!0.5!(int2)$) -- ++(0,-0.8) -| node[pos=0.25, below] {\scriptsize $-a_1$} (s1);
-  \draw[arrowline] (int2) -- ++(0,-1.4) -| node[pos=0.25, below] {\scriptsize $-a_2$} (s1);
+  % Branch point 3: w(t)
+  \coordinate (br2) at (7.6, 0);
+  \fill[mydark] (br2) circle (1.5pt);
+  % Feedback path -a2 (low bottom arch to s1.south)
+  \draw[arrowline] (br2) -- ++(0, -1.4) -| node[pos=0.25, below, font=\scriptsize] {$-a_2$} (s1.south);
 \end{tikzpicture}
 \end{center}
 \end{tcolorbox}
@@ -1488,22 +1525,28 @@ The continuous-time Exponential Fourier Series is simply a special case where th
 
 \begin{tcolorbox}[tikzbox, title={\textbf{TikZ Illustration: Signal Projection onto Orthogonal Basis Axes}}]
 \begin{center}
-\begin{tikzpicture}[>=Latex, scale=1.1, font=\small]
-  % Axes
-  \draw[->, thick] (0,0) -- (4.5,0) node[right] {$\phi_1(t)$};
-  \draw[->, thick] (0,0) -- (0,3.5) node[above] {$\phi_2(t)$};
-  \draw[->, thick] (0,0) -- (-2,-1.5) node[below left] {$\phi_3(t)$};
+\begin{tikzpicture}[>=Latex, scale=1.05, font=\small]
+  % Orthogonal Axes
+  \draw[->, thick, color=mydark] (0,0) -- (4.6,0) node[right, font=\small\bfseries] {$\phi_1(t)$};
+  \draw[->, thick, color=mydark] (0,0) -- (0,3.6) node[above, font=\small\bfseries] {$\phi_2(t)$};
+  \draw[->, thick, color=mydark] (0,0) -- (-2.0,-1.4) node[below left, font=\small\bfseries] {$\phi_3(t)$};
 
   % Signal vector x(t)
-  \draw[very thick, myred, ->] (0,0) -- (3.2, 2.4) node[above right] {$x(t)$};
+  \draw[very thick, myred, -{Latex[length=3mm]}] (0,0) -- (3.2, 2.4) node[above right, font=\small\bfseries, color=myred] {$x(t)$};
+  \fill[myred] (3.2, 2.4) circle (2pt);
 
-  % Projections
-  \draw[dashed, myteal, thick] (3.2, 2.4) -- (3.2, 0) node[below, color=myteal] {$c_1 = \langle x, \phi_1 \rangle$};
-  \draw[dashed, myteal, thick] (3.2, 2.4) -- (0, 2.4) node[left, color=myteal] {$c_2 = \langle x, \phi_2 \rangle$};
+  % Orthogonal Projections
+  \draw[dashed, myteal, thick] (3.2, 2.4) -- (3.2, 0) node[below=3pt, color=myteal, font=\footnotesize\bfseries] {$c_1 = \langle x, \phi_1 \rangle$};
+  \draw[dashed, myteal, thick] (3.2, 2.4) -- (0, 2.4) node[left=3pt, color=myteal, font=\footnotesize\bfseries] {$c_2 = \langle x, \phi_2 \rangle$};
 
-  % Error vector
-  \node[circle, fill=myred, inner sep=1.5pt] at (3.2, 2.4) {};
-  \node[color=mydark] at (1.8, 1.4) {$\|x\|^2 = c_1^2 + c_2^2 + c_3^2$};
+  % Right angle indicator
+  \draw[myteal] (3.2, 0.25) -- (2.95, 0.25) -- (2.95, 0);
+  \draw[myteal] (0.25, 2.4) -- (0.25, 2.15) -- (0, 2.15);
+
+  % Energy Formulation Box (Parseval's relation)
+  \node[draw=myred, fill=hdrred, rounded corners=3pt, inner sep=5pt, font=\footnotesize\bfseries, text=mydark, anchor=west] at (0.4, -1.25) {
+    Parseval's Relation: $\|x\|^2 = \sum_{k} |c_k|^2 = c_1^2 + c_2^2 + c_3^2$
+  };
 \end{tikzpicture}
 \end{center}
 \end{tcolorbox}
@@ -1699,31 +1742,39 @@ The DTFT is simply the Z-transform evaluated on the \textbf{unit circle} ($|z| =
 \begin{tcolorbox}[tikzbox, title={\textbf{TikZ Schematic: Mapping Between \texorpdfstring{$s$}{s}-Plane and \texorpdfstring{$z$}{z}-Plane (\texorpdfstring{$z = e^{s T_s}$}{z = e^sTs})}}]
 \begin{center}
 \begin{tikzpicture}[>=Latex, scale=0.95, font=\small]
-  % s-plane
+  % ─── s-Plane (Continuous-Time) ───
   \begin{scope}[xshift=0cm]
-    \fill[hdrteal, opacity=0.5] (-2.2,-2.2) rectangle (0,2.2);
-    \draw[->, thick] (-2.4,0) -- (2.4,0) node[right] {$\sigma = \text{Re}(s)$};
-    \draw[->, thick] (0,-2.4) -- (0,2.4) node[above] {$j\omega = \text{Im}(s)$};
-    \draw[very thick, myred] (0,-2.2) -- (0,2.2);
-    \node[color=myteal] at (-1.1,1.2) {\textbf{Left-Half Plane}};
-    \node[color=mydark] at (1.1,1.2) {\textbf{Right-Half Plane}};
-    \node[myred, rotate=90] at (0.25,1.2) {\scriptsize $j\omega$-axis (CTFT)};
-    \node[below] at (0,-2.5) {\textbf{$s$-Plane} (Continuous-Time)};
+    \fill[hdrteal, opacity=0.55] (-2.0,-2.0) rectangle (0,2.0);
+    \fill[hdrred, opacity=0.35] (0,-2.0) rectangle (2.0,2.0);
+    \draw[->, thick, color=mydark] (-2.2,0) -- (2.2,0) node[above left=1pt, font=\footnotesize\bfseries] {$\sigma$};
+    \draw[->, thick, color=mydark] (0,-2.2) -- (0,2.3) node[above, font=\footnotesize\bfseries] {$j\omega$};
+    \draw[very thick, myred] (0,-2.0) -- (0,2.0);
+    \node[color=mygreen, font=\footnotesize\bfseries] at (-1.0,1.3) {Stable OLHP};
+    \node[color=mygreen, font=\scriptsize] at (-1.0,0.9) {($\sigma < 0$)};
+    \node[color=myred, font=\footnotesize\bfseries] at (1.0,1.3) {Unstable};
+    \node[color=myred, font=\scriptsize] at (1.0,0.9) {($\sigma > 0$)};
+    \node[draw=myred, fill=white, rounded corners=2pt, inner sep=2pt, font=\tiny\bfseries, text=myred] at (0,-1.2) {CTFT: $s = j\omega$};
+    \node[below=4pt, font=\small\bfseries, color=mydark] at (0,-2.2) {Continuous $s$-Plane};
   \end{scope}
 
-  % Mapping arrow
-  \draw[->, very thick, myamber] (2.8, 0) -- node[above] {$z = e^{s T_s}$} (4.2, 0);
+  % ─── Conformal Mapping Transition Arrow ───
+  \draw[->, very thick, myamber, -{Latex[length=3mm]}] (2.6, 0) -- (4.6, 0)
+    node[midway, above=4pt, font=\small\bfseries, color=mydark] {$z = e^{s T_s}$}
+    node[midway, below=4pt, font=\scriptsize\bfseries, color=myamber] {Conformal Mapping};
 
-  % z-plane
-  \begin{scope}[xshift=7cm]
-    \fill[hdrteal, opacity=0.5] (0,0) circle (1.5cm);
-    \draw[->, thick] (-2.4,0) -- (2.4,0) node[right] {$\text{Re}(z)$};
-    \draw[->, thick] (0,-2.4) -- (0,2.4) node[above] {$\text{Im}(z)$};
-    \draw[very thick, myred] (0,0) circle (1.5cm);
-    \node[color=myteal] at (0,0.5) {\scriptsize Inside Circle};
-    \node[color=mydark] at (1.4,1.6) {\scriptsize Outside Circle};
-    \node[myred] at (1.85,-0.3) {\scriptsize Unit Circle (DTFT)};
-    \node[below] at (0,-2.5) {\textbf{$z$-Plane} (Discrete-Time)};
+  % ─── z-Plane (Discrete-Time) ───
+  \begin{scope}[xshift=7.2cm]
+    \fill[hdrred, opacity=0.35] (-2.0,-2.0) rectangle (2.0,2.0);
+    \fill[hdrteal, opacity=0.85] (0,0) circle (1.4cm);
+    \draw[->, thick, color=mydark] (-2.2,0) -- (2.2,0) node[above right=1pt, font=\footnotesize\bfseries] {$\text{Re}(z)$};
+    \draw[->, thick, color=mydark] (0,-2.2) -- (0,2.3) node[above, font=\footnotesize\bfseries] {$\text{Im}(z)$};
+    \draw[very thick, myred] (0,0) circle (1.4cm);
+    \node[fill=hdrteal, rounded corners=2pt, inner sep=2pt, text=mygreen, font=\footnotesize\bfseries] at (0, 0.75) {Stable Region};
+    \node[fill=hdrteal, inner sep=1pt, text=mygreen, font=\scriptsize] at (0, 0.40) {($|z| < 1$)};
+    \node[color=myred, font=\footnotesize\bfseries] at (1.2, -1.2) {Unstable};
+    \node[color=myred, font=\scriptsize] at (1.2, -1.5) {($|z| > 1$)};
+    \draw[->, myred, thick] (0.99, 0.99) -- (1.55, 1.55) node[right, font=\scriptsize\bfseries, color=myred] {Unit Circle $|z|=1$ (DTFT)};
+    \node[below=4pt, font=\small\bfseries, color=mydark] at (0,-2.2) {Discrete $z$-Plane};
   \end{scope}
 \end{tikzpicture}
 \end{center}
@@ -2135,35 +2186,43 @@ Sampling in the time domain causes the original continuous spectrum $X(j\omega)$
 
 \begin{tcolorbox}[tikzbox, title={\textbf{TikZ Illustration: Spectra of Continuous, Impulse Train, and Sampled Signals}}]
 \begin{center}
-\begin{tikzpicture}[>=Latex, scale=0.88, font=\small]
-  % 1. Continuous Spectrum X(jw)
-  \begin{scope}[yshift=3.2cm]
-    \draw[->, thick] (-4,0) -- (4,0) node[right] {$\omega$};
-    \draw[->, thick] (0,0) -- (0,1.8) node[above] {$X(j\omega)$};
-    \draw[very thick, myred] (-1.5,0) -- (0,1.4) -- (1.5,0);
-    \node[below] at (-1.5,0) {\scriptsize $-\omega_m$};
-    \node[below] at (1.5,0) {\scriptsize $\omega_m$};
-    \node[left] at (0,1.4) {\scriptsize $A$};
-    \node[right, myteal] at (2,1) {\footnotesize Original Bandlimited Baseband};
+\begin{tikzpicture}[>=Latex, scale=0.90, font=\small]
+  % ─── 1. Continuous Spectrum X(jw) ───
+  \begin{scope}[yshift=4.2cm]
+    \node[draw=myteal, fill=hdrteal, rounded corners=2pt, inner sep=3pt, font=\scriptsize\bfseries, text=myteal] at (0, 2.2) {Continuous-Time Baseband Spectrum $X(j\omega)$};
+    \draw[->, thick, color=mydark] (-5.6,0) -- (5.6,0) node[right, font=\footnotesize] {$\omega$};
+    \draw[->, thick, color=mydark] (0,0) -- (0,1.5) node[left=2pt, font=\footnotesize] {$X(j\omega)$};
+    \draw[very thick, myred, fill=hdrred, fill opacity=0.35] (-1.2,0) -- (0,1.3) -- (1.2,0) -- cycle;
+    \node[below, font=\scriptsize] at (-1.2,0) {$-\omega_m$};
+    \node[below, font=\scriptsize] at (1.2,0) {$\omega_m$};
+    \node[right=2pt, font=\scriptsize] at (0,1.3) {$A$};
   \end{scope}
 
-  % 2. Sampled Spectrum (Over-sampled: ws > 2 wm)
+  % ─── 2. Sampled Spectrum (Over-sampled: ws > 2 wm) ───
   \begin{scope}[yshift=0cm]
-    \draw[->, thick] (-5.5,0) -- (5.5,0) node[right] {$\omega$};
-    \draw[->, thick] (0,0) -- (0,1.8) node[above] {$X_p(j\omega)$};
+    \node[draw=myred, fill=hdrred, rounded corners=2pt, inner sep=3pt, font=\scriptsize\bfseries, text=myred] at (0, 2.2) {Sampled Spectrum Replicas $X_p(j\omega) = \frac{1}{T_s}\sum_{k=-\infty}^{\infty} X(j(\omega - k\omega_s))$ \quad ($\omega_s > 2\omega_m$)};
+    \draw[->, thick, color=mydark] (-5.8,0) -- (5.8,0) node[right, font=\footnotesize] {$\omega$};
+    \draw[->, thick, color=mydark] (0,0) -- (0,1.5) node[left=2pt, font=\footnotesize] {$X_p(j\omega)$};
+
     % Baseband k=0
-    \draw[thick, fill=hdrteal, fill opacity=0.4] (-1.2,0) -- (0,1.2) -- (1.2,0) -- cycle;
-    \node[below] at (0,0) {\scriptsize $0$};
-    % Replica k=1
-    \draw[thick, fill=hdramber, fill opacity=0.4] (2.4,0) -- (3.6,1.2) -- (4.8,0) -- cycle;
-    \node[below] at (3.6,0) {\scriptsize $\omega_s$};
-    % Replica k=-1
-    \draw[thick, fill=hdramber, fill opacity=0.4] (-4.8,0) -- (-3.6,1.2) -- (-2.4,0) -- cycle;
-    \node[below] at (-3.6,0) {\scriptsize $-\omega_s$};
+    \draw[thick, fill=hdrteal, fill opacity=0.45] (-1.0,0) -- (0,1.2) -- (1.0,0) -- cycle;
+    \node[below, font=\scriptsize] at (0,0) {$0$};
+    \node[below, font=\scriptsize] at (-1.0,0) {$-\omega_m$};
+    \node[below, font=\scriptsize] at (1.0,0) {$\omega_m$};
+    \node[right=2pt, font=\scriptsize] at (0,1.2) {$\frac{A}{T_s}$};
+
+    % Replica k=1 (center ws = 4.0)
+    \draw[thick, fill=hdramber, fill opacity=0.45] (3.0,0) -- (4.0,1.2) -- (5.0,0) -- cycle;
+    \node[below, font=\scriptsize] at (4.0,0) {$\omega_s$};
+    \node[below, font=\scriptsize] at (3.0,0) {$\omega_s-\omega_m$};
+
+    % Replica k=-1 (center -ws = -4.0)
+    \draw[thick, fill=hdramber, fill opacity=0.45] (-5.0,0) -- (-4.0,1.2) -- (-3.0,0) -- cycle;
+    \node[below, font=\scriptsize] at (-4.0,0) {$-\omega_s$};
+
     % Guard bands
-    \draw[<->, mygreen, thick] (1.2,0.4) -- (2.4,0.4) node[midway, above] {\scriptsize Guard Band};
-    \node[left] at (0,1.2) {\scriptsize $\frac{A}{T_s}$};
-    \node[right, myred] at (2.5,1.5) {\footnotesize Periodic Spectral Replicas ($\omega_s > 2\omega_m$)};
+    \draw[<->, mygreen, thick] (1.0,0.5) -- (3.0,0.5) node[midway, above=1pt, font=\scriptsize\bfseries, color=mygreen] {Guard Band};
+    \draw[<->, mygreen, thick] (-3.0,0.5) -- (-1.0,0.5) node[midway, above=1pt, font=\scriptsize\bfseries, color=mygreen] {Guard Band};
   \end{scope}
 \end{tikzpicture}
 \end{center}
