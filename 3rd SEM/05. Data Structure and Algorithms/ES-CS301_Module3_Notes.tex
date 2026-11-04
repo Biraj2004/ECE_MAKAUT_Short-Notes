@@ -321,6 +321,24 @@ In a \textbf{Circular Singly Linked List}, the last node's link points back to t
   \item \textbf{Applications:} Continuous cycling processes, round-robin CPU scheduling, multiplayer turn games.
 \end{itemize}
 
+\subsection{Polynomial Representation and Addition using Linked Lists}
+A single-variable polynomial $P(x) = a_n x^{e_n} + a_{n-1} x^{e_{n-1}} + \dots + a_0 x^{e_0}$ is represented as a linked list where each node contains: \texttt{coeff} (coefficient), \texttt{exp} (exponent), and \texttt{next} pointer, maintained in strictly decreasing order of exponents.
+
+\begin{tcolorbox}[defbox, title={\textbf{Algorithm: Polynomial Addition using Singly Linked Lists}}]
+\textbf{Algorithm AddPolynomials($P_1, P_2$):}
+\begin{enumerate}[leftmargin=*, nosep]
+  \item Initialize pointers $p = P_1, \; q = P_2$, and an empty resultant list $P_3$.
+  \item While $p \ne \text{NULL}$ and $q \ne \text{NULL}$:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Case 1 ($p\to\text{exp} == q\to\text{exp}$):} Compute $\text{sum} = p\to\text{coeff} + q\to\text{coeff}$. If $\text{sum} \ne 0$, insert term $(\text{sum}, p\to\text{exp})$ into $P_3$. Advance $p = p\to\text{next}, \; q = q\to\text{next}$.
+    \item \textbf{Case 2 ($p\to\text{exp} > q\to\text{exp}$):} Insert term $(p\to\text{coeff}, p\to\text{exp})$ into $P_3$. Advance $p = p\to\text{next}$.
+    \item \textbf{Case 3 ($p\to\text{exp} < q\to\text{exp}$):} Insert term $(q\to\text{coeff}, q\to\text{exp})$ into $P_3$. Advance $q = q\to\text{next}$.
+  \end{itemize}
+  \item Copy any remaining terms from $p$ or $q$ to the tail of $P_3$. Return $P_3$.
+\end{enumerate}
+Time Complexity: $\mathbf{\mathcal{O}(m + n)}$ where $m, n$ are the number of non-zero terms in $P_1, P_2$.
+\end{tcolorbox}
+
 % ───────────────────────────────────────────────────────────────────────────────
 \section{Tree Terminologies and Binary Tree Foundations}
 % ───────────────────────────────────────────────────────────────────────────────
@@ -409,17 +427,44 @@ A \textbf{Binary Search Tree (BST)} is a binary tree in which every node $x$ sat
 Duplicate keys are either disallowed or handled uniformly in right subtrees.
 \end{tcolorbox}
 
-\subsection{BST Operations and Deletion Cases}
-\begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{Search ($O(h)$):} Compare key with current node: if equal, return success; if less, recurse left; if greater, recurse right.
-  \item \textbf{Insertion ($O(h)$):} Search for insertion locus until reaching a null link, then attach new node.
-  \item \textbf{Deletion ($O(h)$) --- Three Cases:}
-  \begin{enumerate}[leftmargin=*, nosep]
-    \item \textbf{Case 1: Node is a Leaf:} Discard node directly and set parent's pointer to \texttt{NULL}.
-    \item \textbf{Case 2: Node has One Child:} Bypass the node by linking the parent directly to the single child.
-    \item \textbf{Case 3: Node has Two Children:} Replace the node's value with its \textbf{Inorder Predecessor} (maximum key in left subtree) or \textbf{Inorder Successor} (minimum key in right subtree), then recursively delete that predecessor/successor node (which is guaranteed to have at most one child).
-  \end{enumerate}
-\end{itemize}
+\subsection{BST Operations and Recursive Algorithms}
+\begin{tcolorbox}[formulabox, title={\textbf{Core Binary Search Tree Algorithms}}]
+\textbf{1. Algorithm BST\_Search($root, K$):}
+\begin{verbatim}
+if (root == NULL || root->data == K) return root;
+if (K < root->data) return BST_Search(root->left, K);
+return BST_Search(root->right, K);
+\end{verbatim}
+
+\textbf{2. Algorithm BST\_Insert($root, K$):}
+\begin{verbatim}
+if (root == NULL) return createNode(K);
+if (K < root->data) root->left = BST_Insert(root->left, K);
+else if (K > root->data) root->right = BST_Insert(root->right, K);
+return root;
+\end{verbatim}
+
+\textbf{3. Algorithm BST\_Delete($root, K$):}
+\begin{verbatim}
+if (root == NULL) return root;
+if (K < root->data) root->left = BST_Delete(root->left, K);
+else if (K > root->data) root->right = BST_Delete(root->right, K);
+else {
+    // Case 1: Leaf node or Case 2: One child
+    if (root->left == NULL) {
+        temp = root->right; free(root); return temp;
+    } else if (root->right == NULL) {
+        temp = root->left; free(root); return temp;
+    }
+    // Case 3: Two children
+    temp = findMin(root->right); // Inorder Successor
+    root->data = temp->data;
+    root->right = BST_Delete(root->right, temp->data);
+}
+return root;
+\end{verbatim}
+Complexity: Average $\mathbf{\mathcal{O}(\log_2 n)}$, Worst (skewed tree) $\mathbf{\mathcal{O}(n)}$.
+\end{tcolorbox}
 
 % ───────────────────────────────────────────────────────────────────────────────
 \section{AVL Tree (Self-Balancing Binary Search Tree)}
@@ -441,6 +486,17 @@ If an insertion or deletion causes $|BF(v)| \ge 2$, the tree is rebalanced local
   \item \textbf{RL Rotation (Double Rotation):} Insertion in the left subtree of the right child ($BF = -2$, child $BF = +1$). First Right-rotate right child, then Left-rotate parent.
 \end{enumerate}
 
+\begin{tcolorbox}[examplebox, title={\textbf{Step-by-Step AVL Construction Walkthrough}}]
+Construct an AVL tree by inserting keys: $10, 20, 30, 40, 50, 25$.
+\begin{itemize}[leftmargin=*, nosep]
+  \item Insert $10, 20$: Tree balanced.
+  \item Insert $30$: Path $10 \to 20 \to 30$ causes $BF(10) = -2$ (RR violation). Perform \textbf{RR (Left Rotation)} on $10$: $20$ becomes root, with children $10$ (left) and $30$ (right).
+  \item Insert $40$: Attached as right child of $30$. Balanced ($BF(20)=-1$).
+  \item Insert $50$: Path $30 \to 40 \to 50$ causes $BF(30) = -2$ (RR violation). Perform \textbf{RR (Left Rotation)} on $30$: $40$ takes $30$'s position, children $30, 50$.
+  \item Insert $25$: Attached as left child of $30$. Root $20$ now has $BF(20) = -2$, child $40$ has $BF(40) = +1$ (RL violation). Perform \textbf{RL Double Rotation}: Right-rotate $40$ then Left-rotate $20$. New root is $30$, left subtree rooted at $20$ (children $10, 25$), right subtree rooted at $40$ (child $50$). Tree is perfectly balanced!
+\end{itemize}
+\end{tcolorbox}
+
 \begin{tcolorbox}[formulabox, title={\textbf{Height Bound and Complexity of AVL Trees}}]
 The minimum number of nodes $N(h)$ in an AVL tree of height $h$ satisfies the Fibonacci recurrence:
 \begin{equation}
@@ -451,6 +507,38 @@ Solving this relation yields an asymptotic upper bound on height:
   h < 1.44 \log_2(n + 2) \implies \mathbf{h = \mathcal{O}(\log_2 n)}
 \end{equation}
 Consequently, Search, Insert, and Delete operations in an AVL tree are \textbf{guaranteed strictly $\mathbf{\mathcal{O}(\log n)}$} in both average and worst cases!
+\end{tcolorbox}
+
+% ───────────────────────────────────────────────────────────────────────────────
+\section{Applications of Binary Trees: Expression Trees and Huffman Coding}
+% ───────────────────────────────────────────────────────────────────────────────
+
+\subsection{Expression Trees}
+An \textbf{Expression Tree} is a binary tree representing an arithmetic or logical formula:
+\begin{itemize}[leftmargin=*, nosep]
+  \item \textbf{Leaves:} Distinct operands (variables or numerical constants).
+  \item \textbf{Internal Nodes:} Binary operators ($+, -, *, /, \wedge$).
+  \item \textbf{Traversals:} Inorder traversal with parentheses yields the equivalent \textbf{Infix} formula; Preorder traversal yields \textbf{Prefix}; Postorder traversal yields \textbf{Postfix}.
+  \item \textbf{Construction Algorithm from Postfix:} Scan postfix expression token by token using a stack of tree node pointers. For an operand, create a leaf node and push pointer. For operator $\odot$, create an operator node, pop two nodes as right and left children, and push the newly formed subtree.
+\end{itemize}
+
+\subsection{Huffman Coding (Greedy Data Compression)}
+\begin{tcolorbox}[defbox, title={\textbf{Huffman Algorithm for Optimal Prefix Codes}}]
+Given an alphabet of $n$ symbols with given occurrence frequencies:
+\begin{enumerate}[leftmargin=*, nosep]
+  \item Create a Min-Priority Queue containing $n$ leaf nodes, each initialized with a symbol and its frequency.
+  \item While the priority queue contains more than one node:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item $left = \text{Extract-Min}()$
+    \item $right = \text{Extract-Min}()$
+    \item Allocate a new internal node $Z$ with $\text{freq}(Z) = \text{freq}(left) + \text{freq}(right)$.
+    \item Set $Z\to\text{left} = left$ and $Z\to\text{right} = right$.
+    \item $\text{Insert}(Z)$ back into the Min-Priority Queue.
+  \end{itemize}
+  \item The remaining single node is the root of the \textbf{Huffman Tree}.
+  \item Assign binary bit \texttt{'0'} to each left branch and \texttt{'1'} to each right branch. Paths from root to leaves produce unambiguous \textbf{Prefix Codes} (no code is a prefix of another).
+\end{enumerate}
+Time Complexity: $\mathbf{\mathcal{O}(n \log_2 n)}$ using a binary min-heap.
 \end{tcolorbox}
 
 % ───────────────────────────────────────────────────────────────────────────────
@@ -467,6 +555,33 @@ Designed for secondary storage (disk systems) to minimize slow disk I/O operatio
   \item All leaf nodes reside at the exact same depth/level.
   \item A non-leaf node with $k$ children contains $k - 1$ keys acting as separation boundaries.
 \end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={\textbf{B-Tree Algorithmic Operations: Insertion and Deletion}}]
+\textbf{1. B-Tree Insertion Algorithm:}
+\begin{itemize}[leftmargin=*, nosep]
+  \item Search to find the appropriate leaf node for key $K$.
+  \item If leaf contains $< m - 1$ keys, insert $K$ into sorted position.
+  \item \textbf{Node Splitting (Overflow):} If leaf already contains $m - 1$ keys, inserting $K$ causes overflow ($m$ keys). Split node around the \textbf{median key} at position $\lceil m/2 \rceil$:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item Keys left of median form a new left leaf.
+    \item Keys right of median form a new right leaf.
+    \item Median key is \textbf{promoted} to the parent node.
+    \item If parent overflows, propagate splitting upward recursively (if root splits, tree height increases by 1).
+  \end{itemize}
+\end{itemize}
+
+\par\vspace{2pt}\noindent
+\textbf{2. B-Tree Deletion Algorithm:}
+\begin{itemize}[leftmargin=*, nosep]
+  \item If key is in an internal node, replace it with its inorder predecessor or successor, reducing problem to deletion from a leaf.
+  \item If leaf has $\ge \lceil m/2 \rceil$ keys, delete directly.
+  \item \textbf{Underflow Handling ($< \lceil m/2 \rceil - 1$ keys):}
+  \begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Borrowing (Rotation):} If immediate sibling has $> \lceil m/2 \rceil - 1$ keys, borrow a key via rotation through parent.
+    \item \textbf{Merging:} If both siblings have minimum keys, merge the node with a sibling and the intervening parent separator key (may cause underflow in parent).
+  \end{itemize}
+\end{itemize}
 \end{tcolorbox}
 
 \subsection{B+ Tree and Comparison with B-Tree}

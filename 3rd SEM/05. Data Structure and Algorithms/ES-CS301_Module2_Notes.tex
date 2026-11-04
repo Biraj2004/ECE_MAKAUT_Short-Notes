@@ -380,12 +380,71 @@ Evaluate: $P = 6 \; 2 \; 3 \; + \; * \; 12 \; 4 \; / \; -$
 \end{itemize}
 \end{tcolorbox}
 
-\subsection{Other Primary Stack Applications}
-\begin{enumerate}[leftmargin=*, itemsep=4pt]
-  \item \textbf{Balanced Delimiter Checking:} Validates nesting of parentheses \texttt{()}, brackets \texttt{[]}, and braces \texttt{\{\}}. Pushes opening delimiters; upon encountering a closing delimiter, pops TOS and asserts a matching pair.
-  \item \textbf{Recursion Management via Call Stack:} Each active function invocation instantiates an \textbf{Activation Record (Stack Frame)} containing formal arguments, local variables, dynamic link (old base pointer), and the return address. Upon return, the frame is popped.
-  \item \textbf{Backtracking Algorithms:} Searching through combinatorial decision spaces (e.g., N-Queens, Maze navigation, Depth-First Search in graphs).
+\subsection{Infix to Prefix Conversion and Prefix Evaluation}
+\begin{tcolorbox}[defbox, title={\textbf{Infix to Prefix Conversion Algorithm (Reversal Method)}}]
+To convert an infix expression $I$ to prefix notation $Pre$:
+\begin{enumerate}[leftmargin=*, nosep]
+  \item Reverse the infix string $I$.
+  \item In the reversed string, replace every \texttt{'('} with \texttt{')'} and every \texttt{')'} with \texttt{'('}.
+  \item Compute the postfix expression of this transformed string using the Shunting-Yard algorithm (with operator precedence rules: if precedence of scanned operator equals TOS, operators with right-associativity pop TOS, left-associative operators are pushed).
+  \item Reverse the resulting postfix string. The final string is the valid \textbf{Prefix expression}.
 \end{enumerate}
+Time Complexity: $\mathbf{\mathcal{O}(n)}$ \quad Auxiliary Space: $\mathbf{\mathcal{O}(n)}$
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={\textbf{Example: Infix to Prefix Conversion}}]
+Convert: $I = (A + B) * C - (D - E) * (F + G)$
+\begin{enumerate}[leftmargin=*, nosep]
+  \item Reverse $I$: $(G + F) * (E - D) - C * (B + A)$
+  \item Swap brackets: $(G + F) * (E - D) - C * (B + A)$
+  \item Postfix of transformed string: $G F + E D - * C B A + * -$
+  \item Reverse result: $\mathbf{- * + A B C * - D E + F G}$ (or $- * + A B C * - D E + F G$)
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Prefix Expression Evaluation Algorithm}}]
+Scan the prefix expression $Pre$ from \textbf{Right to Left}:
+\begin{enumerate}[leftmargin=*, nosep]
+  \item If current symbol is an operand, push its value onto operand stack $S$.
+  \item If symbol is an operator $\odot$:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item $\text{op}_1 = \text{Pop}(S)$ \quad \textit{(First operand popped first!)}
+    \item $\text{op}_2 = \text{Pop}(S)$ \quad \textit{(Second operand popped second!)}
+    \item Compute $\text{result} = \text{op}_1 \odot \text{op}_2$.
+    \item $\text{Push}(S, \text{result})$.
+  \end{itemize}
+  \item When scan completes, $\text{Pop}(S)$ contains the final evaluated scalar value.
+\end{enumerate}
+\end{tcolorbox}
+
+\subsection{Balanced Delimiter Checking and Call Stack Simulation}
+\begin{tcolorbox}[defbox, title={\textbf{Algorithm: Delimiter Matching (Parentheses Balancing)}}]
+\textbf{Algorithm CheckBalanced($expr$):}
+\begin{enumerate}[leftmargin=*, nosep]
+  \item Initialize an empty character stack $S$.
+  \item For each character $ch$ in string $expr$:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item If $ch \in \{ \texttt{'('}, \texttt{'['}, \texttt{'\{'} \}$, execute $\text{Push}(S, ch)$.
+    \item If $ch \in \{ \texttt{')'}, \texttt{']'}, \texttt{'\}'} \}$:
+    \begin{itemize}[leftmargin=*, nosep]
+      \item If $\text{IsEmpty}(S)$, return \textbf{False} (Underflow: unmatched closing bracket).
+      \item $topChar = \text{Pop}(S)$.
+      \item If $(topChar, ch)$ is not a matching pair \texttt{()}, \texttt{[]}, or \texttt{\{\}}, return \textbf{False}.
+    \end{itemize}
+  \end{itemize}
+  \item Return $\text{IsEmpty}(S)$ (True if all opened brackets were closed; False otherwise).
+\end{enumerate}
+Time Complexity: $\mathbf{\mathcal{O}(n)}$ \quad Space Complexity: $\mathbf{\mathcal{O}(n)}$
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={\textbf{Function Call Stack and Recursion Architecture}}]
+When a recursive function (such as $n!$ or Fibonacci) executes, the operating system instantiates an \textbf{Activation Record (Stack Frame)} on the thread's call stack for each recursive call:
+\begin{itemize}[leftmargin=*, nosep]
+  \item Contents of a Frame: Return Address, Function Parameters, Local Variables, Saved Base Pointer (\texttt{EBP/RBP}).
+  \item Growth: As calls nest deeper, frames stack vertically. Winding phase consumes $\mathcal{O}(n)$ stack space.
+  \item Unwinding: Upon reaching base case, frames pop in LIFO sequence, returning values to caller.
+\end{itemize}
+\end{tcolorbox}
 
 % ───────────────────────────────────────────────────────────────────────────────
 \section{Abstract Data Type Queue and Linear Queue}
@@ -636,3 +695,4 @@ DEQUE & Double-ended;\\[1pt]Front \& Rear access & Full: depends on circular or 
 \end{tcolorbox}
 
 \end{document}
+

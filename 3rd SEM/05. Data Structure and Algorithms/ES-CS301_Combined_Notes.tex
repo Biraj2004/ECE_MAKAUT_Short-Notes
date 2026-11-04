@@ -905,12 +905,71 @@ Evaluate: $P = 6 \; 2 \; 3 \; + \; * \; 12 \; 4 \; / \; -$
 \end{itemize}
 \end{tcolorbox}
 
-\subsection{Other Primary Stack Applications}
-\begin{enumerate}[leftmargin=*, itemsep=4pt]
-  \item \textbf{Balanced Delimiter Checking:} Validates nesting of parentheses \texttt{()}, brackets \texttt{[]}, and braces \texttt{\{\}}. Pushes opening delimiters; upon encountering a closing delimiter, pops TOS and asserts a matching pair.
-  \item \textbf{Recursion Management via Call Stack:} Each active function invocation instantiates an \textbf{Activation Record (Stack Frame)} containing formal arguments, local variables, dynamic link (old base pointer), and the return address. Upon return, the frame is popped.
-  \item \textbf{Backtracking Algorithms:} Searching through combinatorial decision spaces (e.g., N-Queens, Maze navigation, Depth-First Search in graphs).
+\subsection{Infix to Prefix Conversion and Prefix Evaluation}
+\begin{tcolorbox}[defbox, title={\textbf{Infix to Prefix Conversion Algorithm (Reversal Method)}}]
+To convert an infix expression $I$ to prefix notation $Pre$:
+\begin{enumerate}[leftmargin=*, nosep]
+  \item Reverse the infix string $I$.
+  \item In the reversed string, replace every \texttt{'('} with \texttt{')'} and every \texttt{')'} with \texttt{'('}.
+  \item Compute the postfix expression of this transformed string using the Shunting-Yard algorithm (with operator precedence rules: if precedence of scanned operator equals TOS, operators with right-associativity pop TOS, left-associative operators are pushed).
+  \item Reverse the resulting postfix string. The final string is the valid \textbf{Prefix expression}.
 \end{enumerate}
+Time Complexity: $\mathbf{\mathcal{O}(n)}$ \quad Auxiliary Space: $\mathbf{\mathcal{O}(n)}$
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={\textbf{Example: Infix to Prefix Conversion}}]
+Convert: $I = (A + B) * C - (D - E) * (F + G)$
+\begin{enumerate}[leftmargin=*, nosep]
+  \item Reverse $I$: $(G + F) * (E - D) - C * (B + A)$
+  \item Swap brackets: $(G + F) * (E - D) - C * (B + A)$
+  \item Postfix of transformed string: $G F + E D - * C B A + * -$
+  \item Reverse result: $\mathbf{- * + A B C * - D E + F G}$ (or $- * + A B C * - D E + F G$)
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Prefix Expression Evaluation Algorithm}}]
+Scan the prefix expression $Pre$ from \textbf{Right to Left}:
+\begin{enumerate}[leftmargin=*, nosep]
+  \item If current symbol is an operand, push its value onto operand stack $S$.
+  \item If symbol is an operator $\odot$:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item $\text{op}_1 = \text{Pop}(S)$ \quad \textit{(First operand popped first!)}
+    \item $\text{op}_2 = \text{Pop}(S)$ \quad \textit{(Second operand popped second!)}
+    \item Compute $\text{result} = \text{op}_1 \odot \text{op}_2$.
+    \item $\text{Push}(S, \text{result})$.
+  \end{itemize}
+  \item When scan completes, $\text{Pop}(S)$ contains the final evaluated scalar value.
+\end{enumerate}
+\end{tcolorbox}
+
+\subsection{Balanced Delimiter Checking and Call Stack Simulation}
+\begin{tcolorbox}[defbox, title={\textbf{Algorithm: Delimiter Matching (Parentheses Balancing)}}]
+\textbf{Algorithm CheckBalanced($expr$):}
+\begin{enumerate}[leftmargin=*, nosep]
+  \item Initialize an empty character stack $S$.
+  \item For each character $ch$ in string $expr$:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item If $ch \in \{ \texttt{'('}, \texttt{'['}, \texttt{'\{'} \}$, execute $\text{Push}(S, ch)$.
+    \item If $ch \in \{ \texttt{')'}, \texttt{']'}, \texttt{'\}'} \}$:
+    \begin{itemize}[leftmargin=*, nosep]
+      \item If $\text{IsEmpty}(S)$, return \textbf{False} (Underflow: unmatched closing bracket).
+      \item $topChar = \text{Pop}(S)$.
+      \item If $(topChar, ch)$ is not a matching pair \texttt{()}, \texttt{[]}, or \texttt{\{\}}, return \textbf{False}.
+    \end{itemize}
+  \end{itemize}
+  \item Return $\text{IsEmpty}(S)$ (True if all opened brackets were closed; False otherwise).
+\end{enumerate}
+Time Complexity: $\mathbf{\mathcal{O}(n)}$ \quad Space Complexity: $\mathbf{\mathcal{O}(n)}$
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={\textbf{Function Call Stack and Recursion Architecture}}]
+When a recursive function (such as $n!$ or Fibonacci) executes, the operating system instantiates an \textbf{Activation Record (Stack Frame)} on the thread's call stack for each recursive call:
+\begin{itemize}[leftmargin=*, nosep]
+  \item Contents of a Frame: Return Address, Function Parameters, Local Variables, Saved Base Pointer (\texttt{EBP/RBP}).
+  \item Growth: As calls nest deeper, frames stack vertically. Winding phase consumes $\mathcal{O}(n)$ stack space.
+  \item Unwinding: Upon reaching base case, frames pop in LIFO sequence, returning values to caller.
+\end{itemize}
+\end{tcolorbox}
 
 % ───────────────────────────────────────────────────────────────────────────────
 \section{Abstract Data Type Queue and Linear Queue}
@@ -1305,6 +1364,24 @@ In a \textbf{Circular Singly Linked List}, the last node's link points back to t
   \item \textbf{Applications:} Continuous cycling processes, round-robin CPU scheduling, multiplayer turn games.
 \end{itemize}
 
+\subsection{Polynomial Representation and Addition using Linked Lists}
+A single-variable polynomial $P(x) = a_n x^{e_n} + a_{n-1} x^{e_{n-1}} + \dots + a_0 x^{e_0}$ is represented as a linked list where each node contains: \texttt{coeff} (coefficient), \texttt{exp} (exponent), and \texttt{next} pointer, maintained in strictly decreasing order of exponents.
+
+\begin{tcolorbox}[defbox, title={\textbf{Algorithm: Polynomial Addition using Singly Linked Lists}}]
+\textbf{Algorithm AddPolynomials($P_1, P_2$):}
+\begin{enumerate}[leftmargin=*, nosep]
+  \item Initialize pointers $p = P_1, \; q = P_2$, and an empty resultant list $P_3$.
+  \item While $p \ne \text{NULL}$ and $q \ne \text{NULL}$:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Case 1 ($p\to\text{exp} == q\to\text{exp}$):} Compute $\text{sum} = p\to\text{coeff} + q\to\text{coeff}$. If $\text{sum} \ne 0$, insert term $(\text{sum}, p\to\text{exp})$ into $P_3$. Advance $p = p\to\text{next}, \; q = q\to\text{next}$.
+    \item \textbf{Case 2 ($p\to\text{exp} > q\to\text{exp}$):} Insert term $(p\to\text{coeff}, p\to\text{exp})$ into $P_3$. Advance $p = p\to\text{next}$.
+    \item \textbf{Case 3 ($p\to\text{exp} < q\to\text{exp}$):} Insert term $(q\to\text{coeff}, q\to\text{exp})$ into $P_3$. Advance $q = q\to\text{next}$.
+  \end{itemize}
+  \item Copy any remaining terms from $p$ or $q$ to the tail of $P_3$. Return $P_3$.
+\end{enumerate}
+Time Complexity: $\mathbf{\mathcal{O}(m + n)}$ where $m, n$ are the number of non-zero terms in $P_1, P_2$.
+\end{tcolorbox}
+
 % ───────────────────────────────────────────────────────────────────────────────
 \section{Tree Terminologies and Binary Tree Foundations}
 % ───────────────────────────────────────────────────────────────────────────────
@@ -1393,17 +1470,44 @@ A \textbf{Binary Search Tree (BST)} is a binary tree in which every node $x$ sat
 Duplicate keys are either disallowed or handled uniformly in right subtrees.
 \end{tcolorbox}
 
-\subsection{BST Operations and Deletion Cases}
-\begin{itemize}[leftmargin=*, itemsep=3pt]
-  \item \textbf{Search ($O(h)$):} Compare key with current node: if equal, return success; if less, recurse left; if greater, recurse right.
-  \item \textbf{Insertion ($O(h)$):} Search for insertion locus until reaching a null link, then attach new node.
-  \item \textbf{Deletion ($O(h)$) --- Three Cases:}
-  \begin{enumerate}[leftmargin=*, nosep]
-    \item \textbf{Case 1: Node is a Leaf:} Discard node directly and set parent's pointer to \texttt{NULL}.
-    \item \textbf{Case 2: Node has One Child:} Bypass the node by linking the parent directly to the single child.
-    \item \textbf{Case 3: Node has Two Children:} Replace the node's value with its \textbf{Inorder Predecessor} (maximum key in left subtree) or \textbf{Inorder Successor} (minimum key in right subtree), then recursively delete that predecessor/successor node (which is guaranteed to have at most one child).
-  \end{enumerate}
-\end{itemize}
+\subsection{BST Operations and Recursive Algorithms}
+\begin{tcolorbox}[formulabox, title={\textbf{Core Binary Search Tree Algorithms}}]
+\textbf{1. Algorithm BST\_Search($root, K$):}
+\begin{verbatim}
+if (root == NULL || root->data == K) return root;
+if (K < root->data) return BST_Search(root->left, K);
+return BST_Search(root->right, K);
+\end{verbatim}
+
+\textbf{2. Algorithm BST\_Insert($root, K$):}
+\begin{verbatim}
+if (root == NULL) return createNode(K);
+if (K < root->data) root->left = BST_Insert(root->left, K);
+else if (K > root->data) root->right = BST_Insert(root->right, K);
+return root;
+\end{verbatim}
+
+\textbf{3. Algorithm BST\_Delete($root, K$):}
+\begin{verbatim}
+if (root == NULL) return root;
+if (K < root->data) root->left = BST_Delete(root->left, K);
+else if (K > root->data) root->right = BST_Delete(root->right, K);
+else {
+    // Case 1: Leaf node or Case 2: One child
+    if (root->left == NULL) {
+        temp = root->right; free(root); return temp;
+    } else if (root->right == NULL) {
+        temp = root->left; free(root); return temp;
+    }
+    // Case 3: Two children
+    temp = findMin(root->right); // Inorder Successor
+    root->data = temp->data;
+    root->right = BST_Delete(root->right, temp->data);
+}
+return root;
+\end{verbatim}
+Complexity: Average $\mathbf{\mathcal{O}(\log_2 n)}$, Worst (skewed tree) $\mathbf{\mathcal{O}(n)}$.
+\end{tcolorbox}
 
 % ───────────────────────────────────────────────────────────────────────────────
 \section{AVL Tree (Self-Balancing Binary Search Tree)}
@@ -1425,6 +1529,17 @@ If an insertion or deletion causes $|BF(v)| \ge 2$, the tree is rebalanced local
   \item \textbf{RL Rotation (Double Rotation):} Insertion in the left subtree of the right child ($BF = -2$, child $BF = +1$). First Right-rotate right child, then Left-rotate parent.
 \end{enumerate}
 
+\begin{tcolorbox}[examplebox, title={\textbf{Step-by-Step AVL Construction Walkthrough}}]
+Construct an AVL tree by inserting keys: $10, 20, 30, 40, 50, 25$.
+\begin{itemize}[leftmargin=*, nosep]
+  \item Insert $10, 20$: Tree balanced.
+  \item Insert $30$: Path $10 \to 20 \to 30$ causes $BF(10) = -2$ (RR violation). Perform \textbf{RR (Left Rotation)} on $10$: $20$ becomes root, with children $10$ (left) and $30$ (right).
+  \item Insert $40$: Attached as right child of $30$. Balanced ($BF(20)=-1$).
+  \item Insert $50$: Path $30 \to 40 \to 50$ causes $BF(30) = -2$ (RR violation). Perform \textbf{RR (Left Rotation)} on $30$: $40$ takes $30$'s position, children $30, 50$.
+  \item Insert $25$: Attached as left child of $30$. Root $20$ now has $BF(20) = -2$, child $40$ has $BF(40) = +1$ (RL violation). Perform \textbf{RL Double Rotation}: Right-rotate $40$ then Left-rotate $20$. New root is $30$, left subtree rooted at $20$ (children $10, 25$), right subtree rooted at $40$ (child $50$). Tree is perfectly balanced!
+\end{itemize}
+\end{tcolorbox}
+
 \begin{tcolorbox}[formulabox, title={\textbf{Height Bound and Complexity of AVL Trees}}]
 The minimum number of nodes $N(h)$ in an AVL tree of height $h$ satisfies the Fibonacci recurrence:
 \begin{equation}
@@ -1435,6 +1550,38 @@ Solving this relation yields an asymptotic upper bound on height:
   h < 1.44 \log_2(n + 2) \implies \mathbf{h = \mathcal{O}(\log_2 n)}
 \end{equation}
 Consequently, Search, Insert, and Delete operations in an AVL tree are \textbf{guaranteed strictly $\mathbf{\mathcal{O}(\log n)}$} in both average and worst cases!
+\end{tcolorbox}
+
+% ───────────────────────────────────────────────────────────────────────────────
+\section{Applications of Binary Trees: Expression Trees and Huffman Coding}
+% ───────────────────────────────────────────────────────────────────────────────
+
+\subsection{Expression Trees}
+An \textbf{Expression Tree} is a binary tree representing an arithmetic or logical formula:
+\begin{itemize}[leftmargin=*, nosep]
+  \item \textbf{Leaves:} Distinct operands (variables or numerical constants).
+  \item \textbf{Internal Nodes:} Binary operators ($+, -, *, /, \wedge$).
+  \item \textbf{Traversals:} Inorder traversal with parentheses yields the equivalent \textbf{Infix} formula; Preorder traversal yields \textbf{Prefix}; Postorder traversal yields \textbf{Postfix}.
+  \item \textbf{Construction Algorithm from Postfix:} Scan postfix expression token by token using a stack of tree node pointers. For an operand, create a leaf node and push pointer. For operator $\odot$, create an operator node, pop two nodes as right and left children, and push the newly formed subtree.
+\end{itemize}
+
+\subsection{Huffman Coding (Greedy Data Compression)}
+\begin{tcolorbox}[defbox, title={\textbf{Huffman Algorithm for Optimal Prefix Codes}}]
+Given an alphabet of $n$ symbols with given occurrence frequencies:
+\begin{enumerate}[leftmargin=*, nosep]
+  \item Create a Min-Priority Queue containing $n$ leaf nodes, each initialized with a symbol and its frequency.
+  \item While the priority queue contains more than one node:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item $left = \text{Extract-Min}()$
+    \item $right = \text{Extract-Min}()$
+    \item Allocate a new internal node $Z$ with $\text{freq}(Z) = \text{freq}(left) + \text{freq}(right)$.
+    \item Set $Z\to\text{left} = left$ and $Z\to\text{right} = right$.
+    \item $\text{Insert}(Z)$ back into the Min-Priority Queue.
+  \end{itemize}
+  \item The remaining single node is the root of the \textbf{Huffman Tree}.
+  \item Assign binary bit \texttt{'0'} to each left branch and \texttt{'1'} to each right branch. Paths from root to leaves produce unambiguous \textbf{Prefix Codes} (no code is a prefix of another).
+\end{enumerate}
+Time Complexity: $\mathbf{\mathcal{O}(n \log_2 n)}$ using a binary min-heap.
 \end{tcolorbox}
 
 % ───────────────────────────────────────────────────────────────────────────────
@@ -1451,6 +1598,33 @@ Designed for secondary storage (disk systems) to minimize slow disk I/O operatio
   \item All leaf nodes reside at the exact same depth/level.
   \item A non-leaf node with $k$ children contains $k - 1$ keys acting as separation boundaries.
 \end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={\textbf{B-Tree Algorithmic Operations: Insertion and Deletion}}]
+\textbf{1. B-Tree Insertion Algorithm:}
+\begin{itemize}[leftmargin=*, nosep]
+  \item Search to find the appropriate leaf node for key $K$.
+  \item If leaf contains $< m - 1$ keys, insert $K$ into sorted position.
+  \item \textbf{Node Splitting (Overflow):} If leaf already contains $m - 1$ keys, inserting $K$ causes overflow ($m$ keys). Split node around the \textbf{median key} at position $\lceil m/2 \rceil$:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item Keys left of median form a new left leaf.
+    \item Keys right of median form a new right leaf.
+    \item Median key is \textbf{promoted} to the parent node.
+    \item If parent overflows, propagate splitting upward recursively (if root splits, tree height increases by 1).
+  \end{itemize}
+\end{itemize}
+
+\par\vspace{2pt}\noindent
+\textbf{2. B-Tree Deletion Algorithm:}
+\begin{itemize}[leftmargin=*, nosep]
+  \item If key is in an internal node, replace it with its inorder predecessor or successor, reducing problem to deletion from a leaf.
+  \item If leaf has $\ge \lceil m/2 \rceil$ keys, delete directly.
+  \item \textbf{Underflow Handling ($< \lceil m/2 \rceil - 1$ keys):}
+  \begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Borrowing (Rotation):} If immediate sibling has $> \lceil m/2 \rceil - 1$ keys, borrow a key via rotation through parent.
+    \item \textbf{Merging:} If both siblings have minimum keys, merge the node with a sibling and the intervening parent separator key (may cause underflow in parent).
+  \end{itemize}
+\end{itemize}
 \end{tcolorbox}
 
 \subsection{B+ Tree and Comparison with B-Tree}
@@ -1647,6 +1821,16 @@ Quick Sort operates on the \textbf{Divide-and-Conquer} paradigm:
   \item \textbf{Partition:} Select a pivot element $P$. Rearrange array such that all elements $\le P$ precede $P$, and all elements $\ge P$ succeed $P$. The pivot $P$ settles into its final sorted position $q$.
   \item \textbf{Recurse:} Recursively apply Quick Sort to subarrays $A[\text{low} \dots q-1]$ and $A[q+1 \dots \text{high}]$.
 \end{enumerate}
+\par\vspace{2pt}\noindent
+\textbf{Lomuto Partition Algorithm ($A, \text{low}, \text{high}$):}
+\begin{verbatim}
+pivot = A[high]; i = low - 1;
+for j = low to high - 1 do:
+    if (A[j] <= pivot) then:
+        i = i + 1; swap(A[i], A[j]);
+swap(A[i + 1], A[high]);
+return (i + 1);
+\end{verbatim}
 \end{tcolorbox}
 
 \begin{tcolorbox}[formulabox, title={\textbf{Quick Sort Recurrence Relations and Asymptotic Analysis}}]
@@ -1678,6 +1862,19 @@ By the Master Theorem (Case 2: $a = 2, b = 2, f(n) = \Theta(n) = \Theta(n^{\log_
   \mathbf{T(n) = \Theta(n \log_2 n) \quad \text{in Best, Average, and Worst Cases!}}
 \end{equation}
 \par\vspace{2pt}\noindent
+\textbf{Two-Way Merge Algorithm ($A, \text{low}, \text{mid}, \text{high}$):}
+\begin{verbatim}
+i = low; j = mid + 1; k = low;
+while (i <= mid && j <= high) {
+    if (A[i] <= A[j]) { B[k] = A[i]; i++; }
+    else { B[k] = A[j]; j++; }
+    k++;
+}
+while (i <= mid) { B[k] = A[i]; i++; k++; }
+while (j <= high) { B[k] = A[j]; j++; k++; }
+for (p = low; p <= high; p++) A[p] = B[p];
+\end{verbatim}
+\par\vspace{2pt}\noindent
 \textbf{Key Trade-offs:}
 \begin{itemize}[leftmargin=*, nosep]
   \item \textbf{Guaranteed Performance:} Never degrades to $\mathcal{O}(n^2)$.
@@ -1694,22 +1891,30 @@ A \textbf{Binary Heap} is a Complete Binary Tree mapped sequentially into an arr
 \end{itemize}
 
 \begin{tcolorbox}[defbox, title={\textbf{Heap Sort Procedures and Linear Build-Heap Proof}}]
+\textbf{1. Max-Heapify($A, i, n$) ($\mathcal{O}(\log n)$):}
+\begin{verbatim}
+largest = i; left = 2*i + 1; right = 2*i + 2;
+if (left < n && A[left] > A[largest]) largest = left;
+if (right < n && A[right] > A[largest]) largest = right;
+if (largest != i) {
+    swap(A[i], A[largest]);
+    Max-Heapify(A, largest, n);
+}
+\end{verbatim}
+\par\vspace{2pt}\noindent
+\textbf{2. Build-Max-Heap ($O(n)$):} Calls \texttt{Max-Heapify} on all internal nodes from $\lfloor n/2 \rfloor - 1$ down to $0$:
+\begin{equation}
+  \sum_{h=0}^{\lfloor \log_2 n \rfloor} \left\lceil \frac{n}{2^{h+1}} \right\rceil \mathcal{O}(h) = \mathcal{O}\left( n \sum_{h=0}^\infty \frac{h}{2^h} \right) = \mathcal{O}(n \cdot 2) = \mathbf{\mathcal{O}(n)}
+\end{equation}
+\textbf{3. Heap Sort Algorithm ($\mathcal{O}(n \log n)$):}
 \begin{enumerate}[leftmargin=*, nosep]
-  \item \textbf{Max-Heapify ($O(\log n)$):} Fixes violation at root of a subtree assuming left and right children are valid heaps.
-  \item \textbf{Build-Max-Heap ($O(n)$):} Calls \texttt{Max-Heapify} on all internal nodes from $\lfloor n/2 \rfloor - 1$ down to $0$:
-  \begin{equation}
-    \sum_{h=0}^{\lfloor \log_2 n \rfloor} \left\lceil \frac{n}{2^{h+1}} \right\rceil \mathcal{O}(h) = \mathcal{O}\left( n \sum_{h=0}^\infty \frac{h}{2^h} \right) = \mathcal{O}(n \cdot 2) = \mathbf{\mathcal{O}(n)}
-  \end{equation}
-  \item \textbf{Heap Sort Algorithm ($\mathcal{O}(n \log n)$):}
-  \begin{enumerate}[leftmargin=*, nosep]
-    \item Build a Max-Heap from input array: $\mathcal{O}(n)$.
-    \item For $i = n - 1$ down to $1$:
-    \begin{itemize}[leftmargin=*, nosep]
-      \item Swap root $A[0]$ (current maximum) with $A[i]$.
-      \item Reduce heap size by 1.
-      \item Call \texttt{Max-Heapify}($A, 0$) on reduced heap: $\mathcal{O}(\log n)$.
-    \end{itemize}
-  \end{enumerate}
+  \item Build a Max-Heap from input array: $\mathcal{O}(n)$.
+  \item For $i = n - 1$ down to $1$:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item Swap root $A[0]$ (current maximum) with $A[i]$.
+    \item Reduce heap size by 1.
+    \item Call \texttt{Max-Heapify}($A, 0, i$): $\mathcal{O}(\log n)$.
+  \end{itemize}
 \end{enumerate}
 \par\vspace{2pt}\noindent
 \textbf{Complexity:} Best, Average, Worst time strictly $\mathbf{\mathcal{O}(n \log n)}$. In-place ($\mathbf{\mathcal{O}(1)}$ space). \textbf{Unstable}.
@@ -1783,6 +1988,19 @@ A \textbf{Collision} occurs when two distinct keys hash to the same slot: $h(K_1
   \end{itemize}
 \end{enumerate}
 
+\begin{tcolorbox}[examplebox, title={\textbf{Exam Numerical: Collision Resolution Walkthrough}}]
+\textbf{Problem:} Insert keys $K = \{23, 43, 13, 27\}$ into a hash table of size $m = 7$ using $h'(K) = K \bmod 7$.
+\par\vspace{2pt}\noindent
+\textbf{1. Under Linear Probing ($h(K, i) = (h'(K) + i) \bmod 7$):}
+\begin{itemize}[leftmargin=*, nosep]
+  \item $K = 23$: $h'(23) = 23 \bmod 7 = 2$. Slot 2 is empty $\implies T[2] = 23$.
+  \item $K = 43$: $h'(43) = 43 \bmod 7 = 1$. Slot 1 is empty $\implies T[1] = 43$.
+  \item $K = 13$: $h'(13) = 13 \bmod 7 = 6$. Slot 6 is empty $\implies T[6] = 13$.
+  \item $K = 27$: $h'(27) = 27 \bmod 7 = 6$. \textbf{Collision at 6!} Probe $i=1$: $(6 + 1) \bmod 7 = 0$. Slot 0 is empty $\implies T[0] = 27$.
+\end{itemize}
+\textbf{Final Table:} $T[0]=27, \; T[1]=43, \; T[2]=23, \; T[6]=13$.
+\end{tcolorbox}
+
 % ───────────────────────────────────────────────────────────────────────────────
 \section{Graph Theory, Representations and Traversals}
 % ───────────────────────────────────────────────────────────────────────────────
@@ -1821,22 +2039,32 @@ A \textbf{Graph} $G = (V, E)$ consists of a non-empty finite set of vertices $V$
 \endgroup
 
 \subsection{Graph Search and Traversal Algorithms}
-\begin{tcolorbox}[formulabox, title={\textbf{Breadth-First Search (BFS) and Depth-First Search (DFS)}}]
-\textbf{1. Breadth-First Search (BFS):}
-\begin{itemize}[leftmargin=*, nosep]
-  \item Explores vertices in concentric layers outward from source $s$ using a \textbf{FIFO Queue}.
-  \item Time Complexity: $\mathbf{\mathcal{O}(V + E)}$ with Adjacency List; $\mathcal{O}(V^2)$ with Adjacency Matrix. Space: $\mathcal{O}(V)$.
-  \item Applications: Single-source shortest path in unweighted graphs, bipartite testing.
-\end{itemize}
-
+\begin{tcolorbox}[formulabox, title={\textbf{Breadth-First Search (BFS) and Depth-First Search (DFS) Algorithms}}]
+\textbf{1. Algorithm BFS($G, s$):}
+\begin{verbatim}
+initialize boolean visited[V] = false, Queue Q;
+visited[s] = true; Enqueue(Q, s);
+while (!IsEmpty(Q)) {
+    u = Dequeue(Q); print(u);
+    for each vertex v adjacent to u:
+        if (!visited[v]) {
+            visited[v] = true; Enqueue(Q, v);
+        }
+}
+\end{verbatim}
+Time: $\mathbf{\mathcal{O}(V + E)}$ (Adjacency List), $\mathcal{O}(V^2)$ (Matrix) \quad Space: $\mathcal{O}(V)$
 \par\vspace{3pt}\noindent
-\textbf{2. Depth-First Search (DFS):}
-\begin{itemize}[leftmargin=*, nosep]
-  \item Explores deeply along each branch until a dead-end before backtracking, using a \textbf{LIFO Stack} or system recursion.
-  \item Classifies edges into: \textbf{Tree edges}, \textbf{Back edges} (detects directed cycles!), \textbf{Forward edges}, and \textbf{Cross edges}.
-  \item Time Complexity: $\mathbf{\mathcal{O}(V + E)}$. Space: $\mathcal{O}(V)$ recursion call stack.
-  \item Applications: Topological Sorting of DAGs, Cycle detection, Connected components, Biconnected components.
-\end{itemize}
+\textbf{2. Algorithm DFS($G, u$):}
+\begin{verbatim}
+visited[u] = true; print(u);
+for each vertex v adjacent to u:
+    if (!visited[v]) {
+        DFS(G, v); // Recursive tree exploration
+    }
+\end{verbatim}
+Time: $\mathbf{\mathcal{O}(V + E)}$ \quad Space: $\mathcal{O}(V)$ (System recursion stack)
+\par\vspace{2pt}\noindent
+\textbf{Edge Classification in DFS:} Tree edges (forming DFS forest), Back edges (to ancestor $\implies$ cycle detected!), Forward edges (to descendant), Cross edges (between distinct subtrees).
 \end{tcolorbox}
 
 \newpage

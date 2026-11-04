@@ -259,6 +259,16 @@ Quick Sort operates on the \textbf{Divide-and-Conquer} paradigm:
   \item \textbf{Partition:} Select a pivot element $P$. Rearrange array such that all elements $\le P$ precede $P$, and all elements $\ge P$ succeed $P$. The pivot $P$ settles into its final sorted position $q$.
   \item \textbf{Recurse:} Recursively apply Quick Sort to subarrays $A[\text{low} \dots q-1]$ and $A[q+1 \dots \text{high}]$.
 \end{enumerate}
+\par\vspace{2pt}\noindent
+\textbf{Lomuto Partition Algorithm ($A, \text{low}, \text{high}$):}
+\begin{verbatim}
+pivot = A[high]; i = low - 1;
+for j = low to high - 1 do:
+    if (A[j] <= pivot) then:
+        i = i + 1; swap(A[i], A[j]);
+swap(A[i + 1], A[high]);
+return (i + 1);
+\end{verbatim}
 \end{tcolorbox}
 
 \begin{tcolorbox}[formulabox, title={\textbf{Quick Sort Recurrence Relations and Asymptotic Analysis}}]
@@ -290,6 +300,19 @@ By the Master Theorem (Case 2: $a = 2, b = 2, f(n) = \Theta(n) = \Theta(n^{\log_
   \mathbf{T(n) = \Theta(n \log_2 n) \quad \text{in Best, Average, and Worst Cases!}}
 \end{equation}
 \par\vspace{2pt}\noindent
+\textbf{Two-Way Merge Algorithm ($A, \text{low}, \text{mid}, \text{high}$):}
+\begin{verbatim}
+i = low; j = mid + 1; k = low;
+while (i <= mid && j <= high) {
+    if (A[i] <= A[j]) { B[k] = A[i]; i++; }
+    else { B[k] = A[j]; j++; }
+    k++;
+}
+while (i <= mid) { B[k] = A[i]; i++; k++; }
+while (j <= high) { B[k] = A[j]; j++; k++; }
+for (p = low; p <= high; p++) A[p] = B[p];
+\end{verbatim}
+\par\vspace{2pt}\noindent
 \textbf{Key Trade-offs:}
 \begin{itemize}[leftmargin=*, nosep]
   \item \textbf{Guaranteed Performance:} Never degrades to $\mathcal{O}(n^2)$.
@@ -306,22 +329,30 @@ A \textbf{Binary Heap} is a Complete Binary Tree mapped sequentially into an arr
 \end{itemize}
 
 \begin{tcolorbox}[defbox, title={\textbf{Heap Sort Procedures and Linear Build-Heap Proof}}]
+\textbf{1. Max-Heapify($A, i, n$) ($\mathcal{O}(\log n)$):}
+\begin{verbatim}
+largest = i; left = 2*i + 1; right = 2*i + 2;
+if (left < n && A[left] > A[largest]) largest = left;
+if (right < n && A[right] > A[largest]) largest = right;
+if (largest != i) {
+    swap(A[i], A[largest]);
+    Max-Heapify(A, largest, n);
+}
+\end{verbatim}
+\par\vspace{2pt}\noindent
+\textbf{2. Build-Max-Heap ($O(n)$):} Calls \texttt{Max-Heapify} on all internal nodes from $\lfloor n/2 \rfloor - 1$ down to $0$:
+\begin{equation}
+  \sum_{h=0}^{\lfloor \log_2 n \rfloor} \left\lceil \frac{n}{2^{h+1}} \right\rceil \mathcal{O}(h) = \mathcal{O}\left( n \sum_{h=0}^\infty \frac{h}{2^h} \right) = \mathcal{O}(n \cdot 2) = \mathbf{\mathcal{O}(n)}
+\end{equation}
+\textbf{3. Heap Sort Algorithm ($\mathcal{O}(n \log n)$):}
 \begin{enumerate}[leftmargin=*, nosep]
-  \item \textbf{Max-Heapify ($O(\log n)$):} Fixes violation at root of a subtree assuming left and right children are valid heaps.
-  \item \textbf{Build-Max-Heap ($O(n)$):} Calls \texttt{Max-Heapify} on all internal nodes from $\lfloor n/2 \rfloor - 1$ down to $0$:
-  \begin{equation}
-    \sum_{h=0}^{\lfloor \log_2 n \rfloor} \left\lceil \frac{n}{2^{h+1}} \right\rceil \mathcal{O}(h) = \mathcal{O}\left( n \sum_{h=0}^\infty \frac{h}{2^h} \right) = \mathcal{O}(n \cdot 2) = \mathbf{\mathcal{O}(n)}
-  \end{equation}
-  \item \textbf{Heap Sort Algorithm ($\mathcal{O}(n \log n)$):}
-  \begin{enumerate}[leftmargin=*, nosep]
-    \item Build a Max-Heap from input array: $\mathcal{O}(n)$.
-    \item For $i = n - 1$ down to $1$:
-    \begin{itemize}[leftmargin=*, nosep]
-      \item Swap root $A[0]$ (current maximum) with $A[i]$.
-      \item Reduce heap size by 1.
-      \item Call \texttt{Max-Heapify}($A, 0$) on reduced heap: $\mathcal{O}(\log n)$.
-    \end{itemize}
-  \end{enumerate}
+  \item Build a Max-Heap from input array: $\mathcal{O}(n)$.
+  \item For $i = n - 1$ down to $1$:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item Swap root $A[0]$ (current maximum) with $A[i]$.
+    \item Reduce heap size by 1.
+    \item Call \texttt{Max-Heapify}($A, 0, i$): $\mathcal{O}(\log n)$.
+  \end{itemize}
 \end{enumerate}
 \par\vspace{2pt}\noindent
 \textbf{Complexity:} Best, Average, Worst time strictly $\mathbf{\mathcal{O}(n \log n)}$. In-place ($\mathbf{\mathcal{O}(1)}$ space). \textbf{Unstable}.
@@ -395,6 +426,19 @@ A \textbf{Collision} occurs when two distinct keys hash to the same slot: $h(K_1
   \end{itemize}
 \end{enumerate}
 
+\begin{tcolorbox}[examplebox, title={\textbf{Exam Numerical: Collision Resolution Walkthrough}}]
+\textbf{Problem:} Insert keys $K = \{23, 43, 13, 27\}$ into a hash table of size $m = 7$ using $h'(K) = K \bmod 7$.
+\par\vspace{2pt}\noindent
+\textbf{1. Under Linear Probing ($h(K, i) = (h'(K) + i) \bmod 7$):}
+\begin{itemize}[leftmargin=*, nosep]
+  \item $K = 23$: $h'(23) = 23 \bmod 7 = 2$. Slot 2 is empty $\implies T[2] = 23$.
+  \item $K = 43$: $h'(43) = 43 \bmod 7 = 1$. Slot 1 is empty $\implies T[1] = 43$.
+  \item $K = 13$: $h'(13) = 13 \bmod 7 = 6$. Slot 6 is empty $\implies T[6] = 13$.
+  \item $K = 27$: $h'(27) = 27 \bmod 7 = 6$. \textbf{Collision at 6!} Probe $i=1$: $(6 + 1) \bmod 7 = 0$. Slot 0 is empty $\implies T[0] = 27$.
+\end{itemize}
+\textbf{Final Table:} $T[0]=27, \; T[1]=43, \; T[2]=23, \; T[6]=13$.
+\end{tcolorbox}
+
 % ───────────────────────────────────────────────────────────────────────────────
 \section{Graph Theory, Representations and Traversals}
 % ───────────────────────────────────────────────────────────────────────────────
@@ -433,22 +477,32 @@ A \textbf{Graph} $G = (V, E)$ consists of a non-empty finite set of vertices $V$
 \endgroup
 
 \subsection{Graph Search and Traversal Algorithms}
-\begin{tcolorbox}[formulabox, title={\textbf{Breadth-First Search (BFS) and Depth-First Search (DFS)}}]
-\textbf{1. Breadth-First Search (BFS):}
-\begin{itemize}[leftmargin=*, nosep]
-  \item Explores vertices in concentric layers outward from source $s$ using a \textbf{FIFO Queue}.
-  \item Time Complexity: $\mathbf{\mathcal{O}(V + E)}$ with Adjacency List; $\mathcal{O}(V^2)$ with Adjacency Matrix. Space: $\mathcal{O}(V)$.
-  \item Applications: Single-source shortest path in unweighted graphs, bipartite testing.
-\end{itemize}
-
+\begin{tcolorbox}[formulabox, title={\textbf{Breadth-First Search (BFS) and Depth-First Search (DFS) Algorithms}}]
+\textbf{1. Algorithm BFS($G, s$):}
+\begin{verbatim}
+initialize boolean visited[V] = false, Queue Q;
+visited[s] = true; Enqueue(Q, s);
+while (!IsEmpty(Q)) {
+    u = Dequeue(Q); print(u);
+    for each vertex v adjacent to u:
+        if (!visited[v]) {
+            visited[v] = true; Enqueue(Q, v);
+        }
+}
+\end{verbatim}
+Time: $\mathbf{\mathcal{O}(V + E)}$ (Adjacency List), $\mathcal{O}(V^2)$ (Matrix) \quad Space: $\mathcal{O}(V)$
 \par\vspace{3pt}\noindent
-\textbf{2. Depth-First Search (DFS):}
-\begin{itemize}[leftmargin=*, nosep]
-  \item Explores deeply along each branch until a dead-end before backtracking, using a \textbf{LIFO Stack} or system recursion.
-  \item Classifies edges into: \textbf{Tree edges}, \textbf{Back edges} (detects directed cycles!), \textbf{Forward edges}, and \textbf{Cross edges}.
-  \item Time Complexity: $\mathbf{\mathcal{O}(V + E)}$. Space: $\mathcal{O}(V)$ recursion call stack.
-  \item Applications: Topological Sorting of DAGs, Cycle detection, Connected components, Biconnected components.
-\end{itemize}
+\textbf{2. Algorithm DFS($G, u$):}
+\begin{verbatim}
+visited[u] = true; print(u);
+for each vertex v adjacent to u:
+    if (!visited[v]) {
+        DFS(G, v); // Recursive tree exploration
+    }
+\end{verbatim}
+Time: $\mathbf{\mathcal{O}(V + E)}$ \quad Space: $\mathcal{O}(V)$ (System recursion stack)
+\par\vspace{2pt}\noindent
+\textbf{Edge Classification in DFS:} Tree edges (forming DFS forest), Back edges (to ancestor $\implies$ cycle detected!), Forward edges (to descendant), Cross edges (between distinct subtrees).
 \end{tcolorbox}
 
 \newpage
