@@ -34,6 +34,14 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── EC301_Module4_Notes.tex / .pdf
 │   │   ├── EC301_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │   │   └── EC301_Electronic_Devices.pdf  (combined output)
+│   ├── 02. Digital System Design/  # EC302 — 4 modules (All complete)
+│   ├── 03. Signals and System/     # EC303 — 5 modules (All complete)
+│   ├── 04. Network Theory/         # EC304 — 4 modules (All complete)
+│   │   ├── EC304_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── EC304_Module4_Notes.tex / .pdf
+│   │   ├── EC304_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│   │   └── EC304_Network_Theory.pdf   (combined output)
 │   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
 ├── 4th SEM/ … 5th SEM/             # Planned (each with New Syllabus Subjects/)
 ├── 6th SEM/
@@ -338,6 +346,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | EC301 Electronic Devices | 4 | ✅ All compiled | `EC301_Electronic_Devices.pdf` | 52 |
 | EC302 Digital System Design | 4 | ✅ All compiled | `EC302_Digital_System_Design.pdf` | 56 |
 | EC303 Signals and System | 5 | ✅ All compiled | `EC303_Signals_and_System.pdf` | 57 |
+| EC304 Network Theory | 4 | ✅ All compiled | `EC304_Network_Theory.pdf` | 51 |
 
 **6th SEM — complete and compiled:**
 
@@ -390,6 +399,6 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | OE-EC804C Organizational Behavior | 4 | ✅ All compiled | `OE-EC804C_Organizational_Behavior.pdf` | 26 |
 
 **1st SEM & 2nd SEM:** Chemistry-I (7 modules + combined PDF) and Physics-I (5 modules + combined PDF) are complete.
-**3rd SEM:** Electronic Devices (EC301) (4 modules + combined PDF), Digital System Design (EC302) (4 modules + combined PDF), and Signals and System (EC303) (5 modules + combined PDF) are complete.
+**3rd SEM:** Electronic Devices (EC301) (4 modules + combined PDF), Digital System Design (EC302) (4 modules + combined PDF), Signals and System (EC303) (5 modules + combined PDF), and Network Theory (EC304) (4 modules + combined PDF) are complete.
 **8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C), Internet of Things (OE-EC803A), Big Data Analysis (OE-EC803B), Cyber Security (OE-EC803C), Artificial Intelligence (OE-EC804A), Microwave Integrated Circuits (OE-EC804B), and Organizational Behavior (OE-EC804C) are complete.
 
