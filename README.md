@@ -74,6 +74,7 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 | EC302 | Digital System Design | 4 |
 | EC303 | Signals and System | 5 |
 | EC304 | Network Theory | 4 |
+| ES-CS301 | Data Structure & Algorithms | 4 |
 
 ---
 

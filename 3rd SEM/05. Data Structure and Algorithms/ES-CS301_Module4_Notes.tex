@@ -1,0 +1,558 @@
+\documentclass[12pt,a4paper]{article}
+
+% ─── Page Layout ───────────────────────────────────────────────────────────────
+\usepackage[a4paper, margin=0.8in, headheight=14pt]{geometry}
+
+% ─── Fonts (XeLaTeX) ───────────────────────────────────────────────────────────
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{TeX Gyre Pagella}
+\setmonofont[Scale=0.88]{TeX Gyre Cursor}
+\setmathfont{Latin Modern Math}
+
+% ─── Packages ──────────────────────────────────────────────────────────────────
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, patterns}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{microtype}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\sloppy
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{tocloft}
+
+% ─── Q&A helper ────────────────────────────────────────────────────────────────
+\newcommand{\Q}[1]{\textbf{#1}\par\noindent\ignorespaces}
+
+% ─── Colour Palette ────────────────────────────────────────────────────────────
+\definecolor{myred}{RGB}{196,30,58}
+\definecolor{mydark}{RGB}{30,30,50}
+\definecolor{mygreen}{RGB}{14,120,80}
+\definecolor{myteal}{RGB}{0,130,140}
+\definecolor{myamber}{RGB}{180,100,0}
+\definecolor{mypurple}{RGB}{100,30,160}
+\definecolor{mygray}{RGB}{246,247,249}
+\definecolor{mgframe}{RGB}{180,185,200}
+\definecolor{watermark}{RGB}{145,150,170}
+\definecolor{hdrred}{RGB}{250,232,235}
+\definecolor{hdrgreen}{RGB}{220,244,233}
+\definecolor{hdrteal}{RGB}{220,242,244}
+\definecolor{hdramber}{RGB}{253,242,215}
+\definecolor{hdrpurple}{RGB}{238,228,255}
+\definecolor{hdrgray}{RGB}{238,240,245}
+\definecolor{rowalt}{RGB}{250,251,253}
+
+% ─── Section Formatting ────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{myred}}{\thesection.}{0.5em}{}
+  [\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{myteal}}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{18pt}{7pt}
+\titlespacing*{\subsection}{0pt}{11pt}{4pt}
+
+% ─── Paragraph ─────────────────────────────────────────────────────────────────
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+% ─── TOC Styling ───────────────────────────────────────────────────────────────
+\renewcommand{\cfttoctitlefont}{\large\bfseries\color{myred}}
+\renewcommand{\cftaftertoctitle}{\par\noindent{\color{myred}\rule{\linewidth}{0.8pt}}}
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{6pt}
+\renewcommand{\cftsecfont}{\normalsize\bfseries\color{mydark}}
+\renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{mydark}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftbeforesecskip}{7pt}
+\renewcommand{\cftsubsecfont}{\small\color{mydark}}
+\renewcommand{\cftsubsecpagefont}{\small\color{mydark}}
+\setlength{\cftbeforesubsecskip}{3pt}
+\setlength{\cftsubsecindent}{1.4em}
+
+% ─── Table helpers ─────────────────────────────────────────────────────────────
+\renewcommand{\arraystretch}{1.45}
+\setlength{\tabcolsep}{6pt}
+\arrayrulecolor{mydark}
+\newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}m{#1}}
+\newcolumntype{Y}{>{\small\raggedright\arraybackslash}X}
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
+
+% ─── Header / Footer ───────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{myred}\textbf{ES-CS301}\;\color{mydark}--- Data Structure \& Algorithms}
+\fancyhead[R]{\small\color{myteal}\textbf{Module 4 Notes}}
+\fancyfoot[C]{\small\color{mydark}\thepage}
+\fancyfoot[R]{\small\color{watermark}\textit{\copyright\ Biraj}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+% ─── Hyperref ──────────────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks=true, linkcolor=myteal, urlcolor=myteal,
+  pdfauthor={Biraj Sarkar (CGEC)},
+  pdftitle={ES-CS301 --- Module 4 Notes: Sorting, Hashing and Graph Theory}
+}
+
+% ─── tcolorbox styles ──────────────────────────────────────────────────────────
+\tcbset{
+  tikzbox/.style={
+    colback=mygray, colframe=mgframe, boxrule=0.6pt, arc=4pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    colbacktitle=mgframe, coltitle=mydark,
+    fonttitle=\small\bfseries
+  },
+  defbox/.style={
+    colback=hdrgreen, colframe=mygreen, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=mygreen, coltitle=white,
+    fonttitle=\small\bfseries
+  },
+  formulabox/.style={
+    colback=hdrteal, colframe=myteal, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=7pt, bottom=7pt,
+    colbacktitle=myteal, coltitle=white,
+    fonttitle=\small\bfseries
+  },
+  examplebox/.style={
+    colback=hdramber, colframe=myamber, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=myamber, coltitle=white,
+    fonttitle=\small\bfseries
+  },
+  masonbox/.style={
+    colback=hdrpurple, colframe=mypurple, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=mypurple, coltitle=white,
+    fonttitle=\small\bfseries
+  },
+  exambox/.style={
+    colback=hdrpurple, colframe=mypurple, boxrule=1pt, arc=5pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    colbacktitle=mypurple, coltitle=white,
+    fonttitle=\bfseries,
+    breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}
+  }
+}
+
+\tcbset{breakable}
+\tcbset{after={\color{black}}}
+
+% ─── TikZ styles ───────────────────────────────────────────────────────────────
+\tikzset{
+  vnode/.style={circle, draw=myteal, fill=hdrteal, font=\small\bfseries, inner sep=2pt, minimum size=0.75cm},
+  arrow/.style={-Stealth, thick, color=mydark},
+  redarrow/.style={-Stealth, thick, color=myred},
+  line/.style={thick, color=mydark}
+}
+
+\begin{document}
+
+% ─── Title Page ───────────────────────────────────────────────────────────────
+\begin{center}
+  {\LARGE\bfseries\color{myred} ES-CS301 --- Data Structure \& Algorithms}\\[5pt]
+  {\normalsize\color{mydark} Semester III \quad$\bullet$\quad 3L:0T:4P \quad$\bullet$\quad 3 Credits}\\[3pt]
+  {\normalsize\color{myteal}\textbf{Module 4 Exam Notes: Sorting Algorithms, Hashing Techniques and Graph Theory}}\\[3pt]
+  {\small\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27) \;$|$\; \textit{Biraj Sarkar}}
+\end{center}
+\vspace{2pt}
+\noindent{\color{myred}\rule{\linewidth}{1.5pt}}
+\vspace{2pt}
+
+\hypersetup{linkcolor=mydark}
+\tableofcontents
+\hypersetup{linkcolor=myteal}
+\newpage
+
+% ───────────────────────────────────────────────────────────────────────────────
+\section{Classification and Criteria of Sorting Algorithms}
+% ───────────────────────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[defbox, title={\textbf{Definition: Sorting Problem and Taxonomic Criteria}}]
+Given a sequence of $n$ records $R_1, R_2, \dots, R_n$ with keys $K_1, K_2, \dots, K_n$, \textbf{sorting} is the algorithmic permutation of these records into an ordered sequence $R_{\pi(1)}, R_{\pi(2)}, \dots, R_{\pi(n)}$ such that:
+\begin{equation}
+  K_{\pi(1)} \le K_{\pi(2)} \le \dots \le K_{\pi(n)}
+\end{equation}
+\textbf{Core Taxonomic Criteria:}
+\begin{enumerate}[leftmargin=*, nosep]
+  \item \textbf{Internal vs External Sorting:} Internal sorting holds the entire dataset concurrently in main RAM. External sorting processes massive datasets residing on secondary storage (hard drives, tapes) using phased multi-way merge passes.
+  \item \textbf{Space Efficiency (In-Place vs Out-of-Place):} An in-place algorithm requires strictly $\mathcal{O}(1)$ auxiliary space beyond the input buffer (e.g., Insertion Sort, Heap Sort). Out-of-place algorithms require $\mathcal{O}(n)$ auxiliary storage (e.g., Merge Sort).
+  \item \textbf{Stability:} A sorting algorithm is \textbf{stable} if records with identical keys preserve their relative initial input ordering:
+  \begin{equation}
+    K_i = K_j \text{ with } i < j \implies \pi(i) < \pi(j)
+  \end{equation}
+  \item \textbf{Adaptivity:} An algorithm is adaptive if its runtime decreases when the input array is already partially or completely sorted (e.g., Bubble Sort with swap flag, Insertion Sort).
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Theoretical Lower Bound for Comparison-Based Sorting}}]
+Any deterministic comparison-based sorting algorithm can be modeled as a binary decision tree where each internal node represents a comparison $A[i] \le A[j]$ and each leaf represents one of the $n!$ possible permutations of the input.
+\par\vspace{3pt}
+For a binary tree of height $h$ with at least $n!$ leaves:
+\begin{equation}
+  2^h \ge n! \implies h \ge \log_2(n!)
+\end{equation}
+Applying Stirling's approximation ($\ln(n!) \approx n \ln n - n$):
+\begin{equation}
+  h \ge \sum_{k=1}^n \log_2 k \ge \sum_{k=n/2}^n \log_2\left(\frac{n}{2}\right) = \frac{n}{2} \log_2\left(\frac{n}{2}\right) = \mathbf{\Omega(n \log_2 n)}
+\end{equation}
+Thus, no comparison-based sorting algorithm can achieve a worst-case time complexity faster than $\mathbf{\Omega(n \log n)}$.
+\end{tcolorbox}
+
+% ───────────────────────────────────────────────────────────────────────────────
+\section{Elementary Sorting Algorithms}
+% ───────────────────────────────────────────────────────────────────────────────
+
+\subsection{Selection Sort}
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Working Principle:} In each pass $i \in [0, n-2]$, find the minimum element in unsorted subarray $A[i \dots n-1]$ and swap it with $A[i]$.
+  \item \textbf{Comparisons:} Total comparisons are fixed for all input distributions:
+  \begin{equation}
+    C(n) = \sum_{i=0}^{n-2} (n - 1 - i) = (n - 1) + (n - 2) + \dots + 1 = \frac{n(n - 1)}{2} = \mathbf{\Theta(n^2)}
+  \end{equation}
+  \item \textbf{Swaps:} At most $n - 1$ swaps ($\mathcal{O}(n)$ writes) --- ideal when write operations are physically expensive (e.g., EEPROM/Flash memory).
+  \item \textbf{Properties:} In-place ($\mathcal{O}(1)$ space), \textbf{Unstable} (e.g., sorting $[4_a, 4_b, 2]$ swaps $4_a$ with $2$, placing $4_a$ after $4_b$).
+\end{itemize}
+
+\subsection{Bubble Sort}
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Working Principle:} Iteratively scan the array, comparing adjacent pairs $(A[j], A[j+1])$ and swapping them if out of order, bubbling the largest item to the end in each pass.
+  \item \textbf{Optimization:} Maintain a boolean flag \texttt{swapped}. If no swaps occur in a full pass, the array is already sorted and the algorithm terminates immediately.
+  \item \textbf{Complexity:} Best-case: $\mathbf{\mathcal{O}(n)}$ (with flag on sorted input). Average and Worst-case: $\mathbf{\mathcal{O}(n^2)}$ comparisons and swaps.
+  \item \textbf{Properties:} In-place ($\mathcal{O}(1)$ space), \textbf{Stable}, Adaptive.
+\end{itemize}
+
+\subsection{Insertion Sort}
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Working Principle:} Simulates how cards are sorted in hand: incrementally pick $A[i]$ and insert it into its correct relative position within the sorted subarray $A[0 \dots i-1]$ by shifting larger elements one position to the right.
+  \item \textbf{Complexity Analysis:}
+  \begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Best-Case (Sorted Input):} Only 1 comparison per element, 0 shifts $\implies \mathbf{\mathcal{O}(n)}$ time.
+    \item \textbf{Worst-Case (Reverse-Sorted Input):} Max shifts: $\sum_{i=1}^{n-1} i = \frac{n(n-1)}{2} \implies \mathbf{\mathcal{O}(n^2)}$ time.
+    \item \textbf{Average-Case:} $\frac{n(n-1)}{4} \text{ shifts} \implies \mathbf{\mathcal{O}(n^2)}$ time.
+  \end{itemize}
+  \item \textbf{Properties:} In-place ($\mathcal{O}(1)$ space), \textbf{Stable}, Online (can sort incoming streaming data), highly optimal for small arrays ($n \le 16$).
+\end{itemize}
+
+% ───────────────────────────────────────────────────────────────────────────────
+\section{Advanced Divide-and-Conquer \& Tree-Based Sorting}
+% ───────────────────────────────────────────────────────────────────────────────
+
+\subsection{Quick Sort (Partition-Exchange Sort)}
+\begin{tcolorbox}[defbox, title={\textbf{Quick Sort Principle and Partitioning Strategy}}]
+Quick Sort operates on the \textbf{Divide-and-Conquer} paradigm:
+\begin{enumerate}[leftmargin=*, nosep]
+  \item \textbf{Partition:} Select a pivot element $P$. Rearrange array such that all elements $\le P$ precede $P$, and all elements $\ge P$ succeed $P$. The pivot $P$ settles into its final sorted position $q$.
+  \item \textbf{Recurse:} Recursively apply Quick Sort to subarrays $A[\text{low} \dots q-1]$ and $A[q+1 \dots \text{high}]$.
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Quick Sort Recurrence Relations and Asymptotic Analysis}}]
+\textbf{1. Best-Case Analysis (Balanced Partition):}
+Pivot consistently bisects the array into two equal halves of size $n/2$:
+\begin{equation}
+  T(n) = 2 T\left(\frac{n}{2}\right) + \Theta(n) \implies \mathbf{T(n) = \Theta(n \log_2 n)}
+\end{equation}
+
+\textbf{2. Worst-Case Analysis (Extremely Unbalanced Partition):}
+Occurs when the array is already sorted or reverse-sorted and the first or last element is chosen as pivot, yielding subproblems of size $0$ and $n-1$:
+\begin{equation}
+  T(n) = T(n - 1) + T(0) + \Theta(n) = T(n - 1) + c n = c \sum_{i=1}^n i \implies \mathbf{T(n) = \Theta(n^2)}
+\end{equation}
+
+\textbf{3. Average-Case Analysis:} Assuming all permutations equally probable: $\mathbf{\mathcal{O}(n \log n)}$.
+\par\vspace{3pt}\noindent
+\textbf{Auxiliary Space:} $\mathcal{O}(\log n)$ stack frames for balanced recursion; degrades to $\mathcal{O}(n)$ in worst case. Quick Sort is \textbf{Unstable}.
+\end{tcolorbox}
+
+\subsection{Merge Sort}
+\begin{tcolorbox}[formulabox, title={\textbf{Merge Sort Algorithm and Guaranteed Bounds}}]
+Merge Sort recursively divides the array into two equal halves until single-element subarrays are reached, then merges them in sorted order using an auxiliary buffer:
+\begin{equation}
+  T(n) = 2 T\left(\frac{n}{2}\right) + \Theta(n) \quad \forall n > 1, \quad T(1) = 0
+\end{equation}
+By the Master Theorem (Case 2: $a = 2, b = 2, f(n) = \Theta(n) = \Theta(n^{\log_2 2})$):
+\begin{equation}
+  \mathbf{T(n) = \Theta(n \log_2 n) \quad \text{in Best, Average, and Worst Cases!}}
+\end{equation}
+\par\vspace{2pt}\noindent
+\textbf{Key Trade-offs:}
+\begin{itemize}[leftmargin=*, nosep]
+  \item \textbf{Guaranteed Performance:} Never degrades to $\mathcal{O}(n^2)$.
+  \item \textbf{Space Overhead:} Requires $\mathbf{\mathcal{O}(n)}$ auxiliary memory array.
+  \item \textbf{Stability:} \textbf{Stable} (ideal for complex multi-attribute sorting).
+  \item \textbf{Linked Lists:} Does not require random access; sorts linked lists in $\mathcal{O}(n \log n)$ time with $\mathcal{O}(1)$ extra space.
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Heap Sort}
+A \textbf{Binary Heap} is a Complete Binary Tree mapped sequentially into an array $A[0 \dots n-1]$ satisfying the Max-Heap property: $A[\text{parent}] \ge A[\text{child}]$.
+\begin{itemize}[leftmargin=*, nosep]
+  \item Array Index Mapping: $\text{Parent}(i) = \lfloor (i - 1)/2 \rfloor, \; \text{Left}(i) = 2i + 1, \; \text{Right}(i) = 2i + 2$.
+\end{itemize}
+
+\begin{tcolorbox}[defbox, title={\textbf{Heap Sort Procedures and Linear Build-Heap Proof}}]
+\begin{enumerate}[leftmargin=*, nosep]
+  \item \textbf{Max-Heapify ($O(\log n)$):} Fixes violation at root of a subtree assuming left and right children are valid heaps.
+  \item \textbf{Build-Max-Heap ($O(n)$):} Calls \texttt{Max-Heapify} on all internal nodes from $\lfloor n/2 \rfloor - 1$ down to $0$:
+  \begin{equation}
+    \sum_{h=0}^{\lfloor \log_2 n \rfloor} \left\lceil \frac{n}{2^{h+1}} \right\rceil \mathcal{O}(h) = \mathcal{O}\left( n \sum_{h=0}^\infty \frac{h}{2^h} \right) = \mathcal{O}(n \cdot 2) = \mathbf{\mathcal{O}(n)}
+  \end{equation}
+  \item \textbf{Heap Sort Algorithm ($\mathcal{O}(n \log n)$):}
+  \begin{enumerate}[leftmargin=*, nosep]
+    \item Build a Max-Heap from input array: $\mathcal{O}(n)$.
+    \item For $i = n - 1$ down to $1$:
+    \begin{itemize}[leftmargin=*, nosep]
+      \item Swap root $A[0]$ (current maximum) with $A[i]$.
+      \item Reduce heap size by 1.
+      \item Call \texttt{Max-Heapify}($A, 0$) on reduced heap: $\mathcal{O}(\log n)$.
+    \end{itemize}
+  \end{enumerate}
+\end{enumerate}
+\par\vspace{2pt}\noindent
+\textbf{Complexity:} Best, Average, Worst time strictly $\mathbf{\mathcal{O}(n \log n)}$. In-place ($\mathbf{\mathcal{O}(1)}$ space). \textbf{Unstable}.
+\end{tcolorbox}
+
+\subsection{Comprehensive Sorting Comparison Matrix}
+\par\vspace{6pt}\noindent
+\begingroup
+\setlength{\tabcolsep}{3.5pt}
+\setlength{\extrarowheight}{2.5pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|B{2.2cm}|B{1.8cm}|B{1.8cm}|B{1.8cm}|B{1.3cm}|B{1.3cm}|Y|}
+\hline
+\textbf{Algorithm} & \textbf{Best} & \textbf{Average} & \textbf{Worst} & \textbf{Space} & \textbf{Stable?} & \textbf{Primary Use Case} \\
+\hline
+Selection Sort & $\mathcal{O}(n^2)$ & $\mathcal{O}(n^2)$ & $\mathcal{O}(n^2)$ & $\mathcal{O}(1)$ & No & Minimal write operations. \\
+\hline
+Bubble Sort & $\mathcal{O}(n)$ & $\mathcal{O}(n^2)$ & $\mathcal{O}(n^2)$ & $\mathcal{O}(1)$ & Yes & Educational; nearly sorted data. \\
+\hline
+Insertion Sort & $\mathcal{O}(n)$ & $\mathcal{O}(n^2)$ & $\mathcal{O}(n^2)$ & $\mathcal{O}(1)$ & Yes & Small lists ($n \le 16$); streaming. \\
+\hline
+Quick Sort & $\mathcal{O}(n \log n)$ & $\mathcal{O}(n \log n)$ & $\mathcal{O}(n^2)$ & $\mathcal{O}(\log n)$ & No & Fastest general in-memory sort. \\
+\hline
+Merge Sort & $\mathcal{O}(n \log n)$ & $\mathcal{O}(n \log n)$ & $\mathcal{O}(n \log n)$ & $\mathcal{O}(n)$ & Yes & Linked lists; external sorting. \\
+\hline
+Heap Sort & $\mathcal{O}(n \log n)$ & $\mathcal{O}(n \log n)$ & $\mathcal{O}(n \log n)$ & $\mathcal{O}(1)$ & No & Guaranteed $\mathcal{O}(n \log n)$ in-place. \\
+\hline
+\end{tabularx}
+\endgroup
+
+% ───────────────────────────────────────────────────────────────────────────────
+\section{Hashing Techniques and Collision Resolution}
+% ───────────────────────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[defbox, title={\textbf{Definition: Hashing, Hash Table and Load Factor}}]
+\textbf{Hashing} is a transformation technique that maps large variable keys $K$ from a universe $U$ into fixed integer slot indices in a \textbf{Hash Table} $T[0 \dots m-1]$ via a mathematical \textbf{Hash Function} $h(K)$:
+\begin{equation}
+  h : U \longrightarrow \{0, 1, \dots, m - 1\}
+\end{equation}
+The \textbf{Load Factor ($\alpha$)} is the ratio of stored keys $n$ to table capacity $m$:
+\begin{equation}
+  \alpha = \frac{n}{m}
+\end{equation}
+A \textbf{Collision} occurs when two distinct keys hash to the same slot: $h(K_1) = h(K_2)$ for $K_1 \ne K_2$.
+\end{tcolorbox}
+
+\subsection{Standard Hash Functions}
+\begin{enumerate}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Division Method:} $h(K) = K \bmod m$. The table size $m$ should be a prime number not close to a power of 2 or 10 to minimize clustering.
+  \item \textbf{Mid-Square Method:} Square the key $K^2$, and extract $r$ middle digits/bits as the index. Table size $m = 2^r$.
+  \item \textbf{Folding Method:} Partition $K$ into parts matching index digit length, then sum parts:
+  \begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Fold-Shift:} Add components directly: $h(K) = (p_1 + p_2 + \dots) \bmod m$.
+    \item \textbf{Fold-Boundary:} Reverse the digits of the outer parts before adding.
+  \end{itemize}
+  \item \textbf{Multiplication Method:} $h(K) = \lfloor m (K A \bmod 1) \rfloor$, where $0 < A < 1$ (Knuth recommends $A \approx \frac{\sqrt{5}-1}{2} \approx 0.618033$).
+\end{enumerate}
+
+\subsection{Collision Resolution Techniques}
+\begin{enumerate}[leftmargin=*, itemsep=4pt]
+  \item \textbf{Separate Chaining (Open Hashing):} Each table slot is a header pointer to a linked list of records hashing to that slot.
+  \begin{itemize}[leftmargin=*, nosep]
+    \item Can accommodate $\alpha > 1$ (table never gets "full").
+    \item Average search time: $\mathcal{O}(1 + \alpha)$.
+  \end{itemize}
+  \item \textbf{Open Addressing (Closed Hashing):} All records reside directly in the table array ($m \ge n \implies \alpha \le 1$). If collision occurs, search alternate slots via a systematic probe sequence $h(K, i)$:
+  \begin{itemize}[leftmargin=*, itemsep=2pt]
+    \item \textbf{Linear Probing:} $h(K, i) = (h'(K) + i) \bmod m$. Suffers from \textbf{Primary Clustering} (adjacent occupied slots merge into long chains, degrading search to $\mathcal{O}(n)$).
+    \item \textbf{Quadratic Probing:} $h(K, i) = (h'(K) + c_1 i + c_2 i^2) \bmod m$. Eliminates primary clustering but suffers from \textbf{Secondary Clustering} (keys hashing to same initial slot trace identical probe paths).
+    \item \textbf{Double Hashing:} $h(K, i) = (h_1(K) + i \cdot h_2(K)) \bmod m$. Probe offset depends on the key itself ($h_2(K)$). Completely eliminates both primary and secondary clustering! Condition: $\gcd(h_2(K), m) = 1$.
+  \end{itemize}
+\end{enumerate}
+
+% ───────────────────────────────────────────────────────────────────────────────
+\section{Graph Theory, Representations and Traversals}
+% ───────────────────────────────────────────────────────────────────────────────
+
+\begin{tcolorbox}[defbox, title={\textbf{Definition: Graph Data Structure and Core Terminologies}}]
+A \textbf{Graph} $G = (V, E)$ consists of a non-empty finite set of vertices $V$ and a set of edges $E$ connecting pairs of vertices.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Handshaking Lemma:} In any undirected graph:
+  \begin{equation}
+    \sum_{v \in V} \deg(v) = 2 |E|
+  \end{equation}
+  \textit{Corollary:} In any graph, the number of vertices with odd degree is always even.
+  \item \textbf{Complete Graph $K_n$:} Every pair of distinct vertices is connected by a unique edge: $|E| = \frac{n(n-1)}{2}$.
+  \item \textbf{Connected Component:} A maximal connected subgraph of an undirected graph.
+  \item \textbf{Strongly Connected Digraph:} A directed graph where there exists a directed path between every ordered pair of vertices $(u, v)$.
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Graph Storage Representations}
+\par\vspace{4pt}\noindent
+\begingroup
+\setlength{\tabcolsep}{4.5pt}
+\setlength{\extrarowheight}{3pt}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\linewidth}{|B{3.2cm}|B{2.8cm}|B{3.0cm}|Y|}
+\hline
+\textbf{Representation} & \textbf{Space Complexity} & \textbf{Edge Lookup $(u, v)$} & \textbf{Optimal Suitability} \\
+\hline
+\textbf{Adjacency Matrix} & $\mathcal{O}(V^2)$ & $\mathcal{O}(1)$ & Dense graphs ($|E| \approx |V|^2$); fast edge tests. \\
+\hline
+\textbf{Adjacency List} & $\mathcal{O}(V + E)$ & $\mathcal{O}(\deg(u))$ & Sparse graphs ($|E| \ll |V|^2$); DFS/BFS algorithms. \\
+\hline
+\textbf{Incidence Matrix} & $\mathcal{O}(V \cdot E)$ & $\mathcal{O}(E)$ & Theoretical network flows; hypergraphs. \\
+\hline
+\end{tabularx}
+\endgroup
+
+\subsection{Graph Search and Traversal Algorithms}
+\begin{tcolorbox}[formulabox, title={\textbf{Breadth-First Search (BFS) and Depth-First Search (DFS)}}]
+\textbf{1. Breadth-First Search (BFS):}
+\begin{itemize}[leftmargin=*, nosep]
+  \item Explores vertices in concentric layers outward from source $s$ using a \textbf{FIFO Queue}.
+  \item Time Complexity: $\mathbf{\mathcal{O}(V + E)}$ with Adjacency List; $\mathcal{O}(V^2)$ with Adjacency Matrix. Space: $\mathcal{O}(V)$.
+  \item Applications: Single-source shortest path in unweighted graphs, bipartite testing.
+\end{itemize}
+
+\par\vspace{3pt}\noindent
+\textbf{2. Depth-First Search (DFS):}
+\begin{itemize}[leftmargin=*, nosep]
+  \item Explores deeply along each branch until a dead-end before backtracking, using a \textbf{LIFO Stack} or system recursion.
+  \item Classifies edges into: \textbf{Tree edges}, \textbf{Back edges} (detects directed cycles!), \textbf{Forward edges}, and \textbf{Cross edges}.
+  \item Time Complexity: $\mathbf{\mathcal{O}(V + E)}$. Space: $\mathcal{O}(V)$ recursion call stack.
+  \item Applications: Topological Sorting of DAGs, Cycle detection, Connected components, Biconnected components.
+\end{itemize}
+\end{tcolorbox}
+
+\newpage
+% ===============================================================================
+% MANDATORY QUICK REVISION PAGE
+% ===============================================================================
+\begin{center}
+  {\large\bfseries\color{myred} Quick Revision --- Module 4}\\[3pt]
+  {\small\color{mydark} Sorting, Hashing and Graph Theory $|$ ES-CS301}
+\end{center}
+\noindent{\color{myred}\rule{\linewidth}{1.2pt}}
+\vspace{4pt}
+
+\begin{tcolorbox}[formulabox, title={\textbf{Key Formulas, Recurrences and Complexities at a Glance}}]
+\renewcommand{\arraystretch}{1.35}
+\begin{tabularx}{\linewidth}{B{5.0cm} X}
+Comparison Sort Lower Bound & $\Omega(n \log_2 n) \quad \text{via Decision Tree Height } h \ge \log_2(n!)$ \\[3pt]
+Merge Sort Recurrence & $T(n) = 2T(n/2) + \Theta(n) \implies \Theta(n \log_2 n) \quad \text{(Guaranteed)}$ \\[3pt]
+Quick Sort Recurrence (Avg) & $T(n) = 2T(n/2) + \Theta(n) \implies \Theta(n \log_2 n)$ \\[3pt]
+Quick Sort Recurrence (Worst) & $T(n) = T(n-1) + \Theta(n) \implies \Theta(n^2)$ \\[3pt]
+Linear Build-Heap Bound & $\sum_{h=0}^{\log n} \frac{n}{2^{h+1}} \mathcal{O}(h) = \mathcal{O}(n) \quad \text{(Linear Time)}$ \\[3pt]
+Hash Table Load Factor & $\alpha = n / m$ \\[3pt]
+Linear Probing Probe Offset & $h(K, i) = (h'(K) + i) \bmod m$ \\[3pt]
+Double Hashing Probe Offset & $h(K, i) = (h_1(K) + i \cdot h_2(K)) \bmod m$ \\[3pt]
+Graph Handshaking Lemma & $\sum_{v \in V} \deg(v) = 2 |E|$ \\[3pt]
+Complete Graph $K_n$ Edges & $|E| = \frac{n(n-1)}{2}$ \\[3pt]
+BFS / DFS Time Complexity & $\mathcal{O}(V + E) \quad \text{(with Adjacency List)}$ \\[3pt]
+\end{tabularx}
+\end{tcolorbox}
+
+\begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
+\begin{itemize}[leftmargin=*, itemsep=2pt, topsep=0pt]
+  \item \textbf{Stable Sort:} A sorting algorithm that preserves the relative order of duplicate elements.
+  \item \textbf{In-Place Sort:} A sorting algorithm requiring strictly $\mathcal{O}(1)$ auxiliary space beyond the input buffer.
+  \item \textbf{Max-Heap:} A complete binary tree where the key of every parent node is greater than or equal to its children.
+  \item \textbf{Hashing:} A technique that transforms a key into an integer array index via a hash function.
+  \item \textbf{Collision:} An event where two distinct keys evaluate to the identical hash table slot index.
+  \item \textbf{Primary Clustering:} The tendency in linear probing for occupied slots to form long continuous blocks.
+  \item \textbf{Double Hashing:} An open addressing technique where the probe step size is calculated by a second hash function.
+  \item \textbf{Adjacency Matrix:} A $V \times V$ matrix indicating edge connectivity between vertex pairs.
+  \item \textbf{Adjacency List:} An array of linked lists where each entry lists the direct neighbors of a vertex.
+  \item \textbf{Breadth-First Search (BFS):} Concentric layer-by-layer graph traversal implemented via a FIFO queue.
+  \item \textbf{Depth-First Search (DFS):} Branch-deep graph traversal implemented via a stack or recursion.
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[exambox, title={\textbf{Frequently Asked / Viva Questions}}]
+\begin{enumerate}[topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=5pt]
+  \item \Q{Why can comparison-based sorting algorithms not execute faster than $\mathcal{O}(n \log n)$ in the worst case?}
+  Every comparison sort can be modeled as a decision tree with $n!$ leaves corresponding to all permutations. A binary tree of height $h$ has at most $2^h$ leaves. Therefore, $2^h \ge n! \implies h \ge \log_2(n!) \approx n \log_2 n - n \log_2 e = \Omega(n \log n)$. The height represents the worst-case number of comparisons.
+
+  \item \Q{Under what conditions does Quick Sort degrade to its worst-case $\mathcal{O}(n^2)$ time?}
+  When the partition is maximally unbalanced (e.g., one subproblem of size $n-1$ and one of size $0$). This occurs when the array is already sorted or reverse-sorted and the first or last element is consistently selected as the pivot.
+
+  \item \Q{Why is Heap construction (\texttt{Build-Max-Heap}) $\mathcal{O}(n)$ rather than $\mathcal{O}(n \log n)$?}
+  Although \texttt{Max-Heapify} takes $\mathcal{O}(h)$ time, most nodes in a binary tree reside near the leaves with very small heights $h$. Summing the cost across all heights $\sum_{h=0}^{\lfloor \log n \rfloor} \frac{n}{2^{h+1}} h = \frac{n}{2} \sum \frac{h}{2^h} = \frac{n}{2} \cdot 2 = \mathcal{O}(n)$.
+
+  \item \Q{Compare Separate Chaining and Open Addressing for collision resolution.}
+  Separate Chaining uses external linked lists for colliding elements; it never suffers from table overflow and handles load factor $\alpha > 1$. Open Addressing stores all elements directly within the array table ($\alpha \le 1$); it eliminates pointer memory overhead but requires collision probing and can suffer from clustering.
+
+  \item \Q{What is the difference between Primary Clustering and Secondary Clustering?}
+  Primary clustering occurs in linear probing when different keys hashing to adjacent slots merge into a single long contiguous chain. Secondary clustering occurs in quadratic probing when two distinct keys having the same initial hash index trace the exact same probe sequence.
+
+  \item \Q{State the Handshaking Lemma and explain its primary corollary.}
+  The Handshaking Lemma states that in any undirected graph, $\sum_{v \in V} \deg(v) = 2|E|$, because each edge contributes 1 degree to two incident vertices. The corollary is that the number of vertices with odd degree in any graph must be strictly even.
+
+  \item \Q{Compare Adjacency Matrix and Adjacency List representations of a graph.}
+  Adjacency Matrix uses $\mathcal{O}(V^2)$ space and checks edge existence in $\mathcal{O}(1)$ time; it is optimal for dense graphs ($|E| \approx |V|^2$). Adjacency List uses $\mathcal{O}(V + E)$ space and finds neighbors in $\mathcal{O}(\deg(v))$ time; it is optimal for sparse graphs ($|E| \ll |V|^2$).
+
+  \item \Q{How does DFS detect cycles in a directed graph?}
+  During DFS traversal, vertices are colored White (unvisited), Gray (in active recursion stack), and Black (completely processed). If an edge $(u, v)$ encounters a Gray vertex $v$, that edge is a \textbf{Back Edge}, which definitively indicates the presence of a directed cycle.
+
+  \item \Q{Why is Merge Sort preferred over Quick Sort for sorting linked lists?}
+  In linked lists, random access is not available, which makes Quick Sort partitioning slow. Merge Sort divides a linked list in $\mathcal{O}(n)$ using the slow-fast pointer technique, and merges two sorted lists in $\mathcal{O}(n)$ time and strictly $\mathcal{O}(1)$ auxiliary space without requiring contiguous arrays.
+
+  \item \Q{What is Topological Sorting, and what type of graph is required?}
+  Topological sorting is a linear ordering of vertices such that for every directed edge $(u, v)$, vertex $u$ appears before $v$. It is strictly defined only on a \textbf{Directed Acyclic Graph (DAG)}.
+\end{enumerate}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={\textbf{Summary Matrix: Comprehensive Comparison of Sorting, Hashing and Graphs}}]
+\par\vspace{3pt}\noindent
+\begingroup
+\setlength{\tabcolsep}{4.0pt}
+\setlength{\extrarowheight}{2.5pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{|B{2.8cm}|B{3.2cm}|B{3.0cm}|Y|}
+\hline
+\textbf{Technique / Topic} & \textbf{Core Mechanism} & \textbf{Time / Space Complexity} & \textbf{Key Practical Application} \\
+\hline
+Quick Sort & Divide-and-Conquer;\\[1pt]Pivot partitioning & Avg: $\mathcal{O}(n \log n)$, Worst: $\mathcal{O}(n^2)$\\[1pt]Space: $\mathcal{O}(\log n)$ & Fastest general in-memory primitive data sorting. \\
+\hline
+Merge Sort & Divide-and-Conquer;\\[1pt]Two-finger merge & Best/Avg/Worst: $\mathcal{O}(n \log n)$\\[1pt]Space: $\mathcal{O}(n)$ & External storage sorting, linked list sorting. \\
+\hline
+Heap Sort & Binary Max-Heap;\\[1pt]Root-leaf exchange & Guaranteed $\mathcal{O}(n \log n)$\\[1pt]Space: $\mathcal{O}(1)$ in-place & Systems where $\mathcal{O}(n \log n)$ guarantee and low space are critical. \\
+\hline
+Double Hashing & Two hash functions;\\[1pt]$h_1(K) + i \cdot h_2(K)$ & Search: $\mathcal{O}(1)$ avg\\[1pt]Space: $\mathcal{O}(m)$ & Hash tables requiring zero primary/secondary clustering. \\
+\hline
+BFS & Level-order expansion;\\[1pt]FIFO Queue & $\mathcal{O}(V + E)$\\[1pt]Space: $\mathcal{O}(V)$ & Shortest paths in unweighted graphs, web crawlers. \\
+\hline
+DFS & Deep path exploration;\\[1pt]LIFO Stack / Recursion & $\mathcal{O}(V + E)$\\[1pt]Space: $\mathcal{O}(V)$ & Cycle detection, topological sorting, connected components. \\
+\hline
+\end{tabularx}
+\endgroup
+\end{tcolorbox}
+
+\end{document}
