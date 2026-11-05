@@ -353,7 +353,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | EC302 Digital System Design | 4 | ✅ All compiled | `EC302_Digital_System_Design.pdf` | 56 |
 | EC303 Signals and System | 5 | ✅ All compiled | `EC303_Signals_and_System.pdf` | 57 |
 | EC304 Network Theory | 4 | ✅ All compiled | `EC304_Network_Theory.pdf` | 52 |
-| ES-CS301 Data Structure and Algorithms | 4 | ✅ All compiled | `ES-CS301_Data_Structure_and_Algorithms.pdf` | 54 |
+| ES-CS301 Data Structure and Algorithms | 4 | ✅ All compiled | `ES-CS301_Data_Structure_and_Algorithms.pdf` | 51 |
 
 **6th SEM — complete and compiled:**
 
