@@ -48,6 +48,12 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── ES-CS301_Module4_Notes.tex / .pdf
 │   │   ├── ES-CS301_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │   │   └── ES-CS301_Data_Structure_and_Algorithms.pdf (combined output)
+│   ├── 06. Probability and Statistics/     # BS-M301 — 6 modules (All complete)
+│   │   ├── BS-M301_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── BS-M301_Module6_Notes.tex / .pdf
+│   │   ├── BS-M301_Combined_Notes.tex   (auto-generated — do not hand-edit)
+│   │   └── BS-M301_Probability_and_Statistics.pdf (combined output)
 │   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
 ├── 4th SEM/ … 5th SEM/             # Planned (each with New Syllabus Subjects/)
 ├── 6th SEM/
@@ -354,6 +360,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | EC303 Signals and System | 5 | ✅ All compiled | `EC303_Signals_and_System.pdf` | 57 |
 | EC304 Network Theory | 4 | ✅ All compiled | `EC304_Network_Theory.pdf` | 51 |
 | ES-CS301 Data Structure and Algorithms | 4 | ✅ All compiled | `ES-CS301_Data_Structure_and_Algorithms.pdf` | 51 |
+| BS-M301 Probability and Statistics | 6 | ✅ All compiled | `BS-M301_Probability_and_Statistics.pdf` | 73 |
 
 **6th SEM — complete and compiled:**
 
@@ -406,6 +413,6 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | OE-EC804C Organizational Behavior | 4 | ✅ All compiled | `OE-EC804C_Organizational_Behavior.pdf` | 26 |
 
 **1st SEM & 2nd SEM:** Chemistry-I (7 modules + combined PDF) and Physics-I (5 modules + combined PDF) are complete.
-**3rd SEM:** Electronic Devices (EC301) (4 modules + combined PDF), Digital System Design (EC302) (4 modules + combined PDF), Signals and System (EC303) (5 modules + combined PDF), Network Theory (EC304) (4 modules + combined PDF), and Data Structure and Algorithms (ES-CS301) (4 modules + combined PDF) are complete.
+**3rd SEM:** Electronic Devices (EC301) (4 modules + combined PDF), Digital System Design (EC302) (4 modules + combined PDF), Signals and System (EC303) (5 modules + combined PDF), Network Theory (EC304) (4 modules + combined PDF), Data Structure and Algorithms (ES-CS301) (4 modules + combined PDF), and Probability and Statistics (BS-M301) (6 modules + combined PDF) are complete.
 **8th SEM:** Antennas and Propagation (PE-EC801A), Fiber Optic Communication (PE-EC801B), Error Correcting Codes (PE-EC801C), Mixed Signal Design (PE-EC802A), Industrial Automation and Control (PE-EC802B), VLSI Design Automation (PE-EC802C), Internet of Things (OE-EC803A), Big Data Analysis (OE-EC803B), Cyber Security (OE-EC803C), Artificial Intelligence (OE-EC804A), Microwave Integrated Circuits (OE-EC804B), and Organizational Behavior (OE-EC804C) are complete.
 

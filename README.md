@@ -38,7 +38,7 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 |---|---|---|---|
 | 1st SEM | ✅ Complete | 2 subjects (12 modules) | [`SEM-1 ECE_MAKAUT_SYLLABUS.pdf`](1st%20SEM/SEM-1%20ECE_MAKAUT_SYLLABUS.pdf) |
 | 2nd SEM | ✅ Complete | 2 subjects (12 modules) | [`SEM-2 ECE_MAKAUT_SYLLABUS.pdf`](2nd%20SEM/SEM-2%20ECE_MAKAUT_SYLLABUS.pdf) |
-| 3rd SEM | 🟡 In Progress | 4 subjects (17 modules) | [`SEM-3 ECE_MAKAUT_SYLLABUS.pdf`](3rd%20SEM/SEM-3%20ECE_MAKAUT_SYLLABUS.pdf) |
+| 3rd SEM | 🟡 In Progress | 6 subjects (27 modules) | [`SEM-3 ECE_MAKAUT_SYLLABUS.pdf`](3rd%20SEM/SEM-3%20ECE_MAKAUT_SYLLABUS.pdf) |
 | 4th – 5th SEM | 🔲 Planned | — | Planned |
 | 6th SEM | ✅ Complete | 10 subjects (55 modules) | [`SEM-6 ECE_MAKAUT_SYLLABUS.pdf`](6th%20SEM/SEM-6%20ECE_MAKAUT_SYLLABUS.pdf) |
 | 7th SEM | ✅ Complete | 13 subjects (80 modules) | [`SEM-7 ECE_MAKAUT_SYLLABUS.pdf`](7th%20SEM/SEM-7%20ECE_MAKAUT_SYLLABUS.pdf) |
@@ -75,6 +75,7 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 | EC303 | Signals and System | 5 |
 | EC304 | Network Theory | 4 |
 | ES-CS301 | Data Structure & Algorithms | 4 |
+| BS-M301 | Probability and Statistics | 6 |
 
 ---
 
