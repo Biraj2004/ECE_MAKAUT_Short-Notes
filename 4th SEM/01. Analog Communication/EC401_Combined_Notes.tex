@@ -246,6 +246,24 @@ An analog communication system carries a continuously varying message from sourc
 
 Modulation varies a carrier parameter according to the message. It makes antennas practical, fits signals to a channel passband and separates simultaneous transmissions by frequency. In amplitude modulation the message varies one or both carrier amplitude components. In angle modulation information varies phase or instantaneous frequency.
 
+\subsection{Baseband, Passband and Channel Selection}
+A microphone or sensor usually produces a \textbf{baseband} waveform whose useful frequencies extend from near DC to $W$. The transmitter chooses a sinusoidal carrier in the allocated band and translates the message around it. A channel of usable RF bandwidth $B_{\rm ch}$ must pass the resulting spectrum. An RF filter at the receiver selects the channel before demodulation. The recovered audio is then selected by a baseband low-pass filter.
+
+\begin{tcolorbox}[formulabox, title={Why Carrier Multiplication Shifts the Spectrum}]
+For $\mathcal F\{m(t)\}=M(f)$ and angular frequency $\omega_c=2\pi f_c$,
+\[
+\begin{aligned}
+ m(t)\cos\omega_ct
+   &=\tfrac12m(t)e^{j\omega_ct}+\tfrac12m(t)e^{-j\omega_ct},\\
+ \mathcal F\{m(t)\cos\omega_ct\}
+   &=\tfrac12M(f-f_c)+\tfrac12M(f+f_c).
+\end{aligned}
+\]
+The positive-frequency copy lies between $f_c-W$ and $f_c+W$. For example, a message limited to $4\,\mathrm{kHz}$ sent on a $200\,\mathrm{kHz}$ carrier occupies $196$--$204\,\mathrm{kHz}$ before any guard bands are added. Its negative-frequency mirror is required because the time waveform is real.
+\end{tcolorbox}
+
+A nearly flat gain and approximately linear phase over the occupied band preserve the waveform shape up to gain and delay. A selective notch inside a sideband removes particular message components. This is why frequency allocation, channel selectivity and modulation bandwidth have to be considered together.
+
 \begin{tcolorbox}[examplebox, title={Quarter-Wave Antenna Length}]
 With $c\approx3\times10^8\,\mathrm{m/s}$,
 \[
@@ -381,6 +399,34 @@ For $s(t)=[20+12\cos(2\pi\,5000t)]\cos(2\pi\,100000t)$ and $R=50\,\Omega$, the i
 \]
 \end{tcolorbox}
 
+\subsection{Total Power for a General Zero-Mean Message}
+Suppose $m(t)$ is zero mean, with mean-square value $P_m=\overline{m^2(t)}$ in $\mathrm{V^2}$. The RF voltage is $A_c[1+k_am(t)]\cos\omega_ct$. Using $\cos^2\omega_ct=(1+\cos2\omega_ct)/2$, the RF term near $2f_c$ averages to zero for a separated message band. The surviving terms give
+\[
+\begin{aligned}
+ P_T &= \frac{A_c^2}{2R}\overline{[1+k_am(t)]^2}\\
+     &= P_c[1+2k_a\overline{m(t)}+k_a^2P_m]\\
+     &= P_c(1+k_a^2P_m),\\
+ P_{\rm SB}&=P_c k_a^2P_m,\qquad
+ \eta=\frac{k_a^2P_m}{1+k_a^2P_m}.
+\end{aligned}
+\]
+For one tone $P_m=A_m^2/2$, so this reduces to the single-tone result. The $\mu=1$ efficiency limit quoted for one tone should be applied with that waveform assumption. Overmodulation depends on the most negative value of $1+k_am(t)$, which is a peak constraint.
+
+\begin{tcolorbox}[examplebox, title={Two-Tone AM from Envelope Constraint to Transmitted Power}]
+A $250\,\mathrm{kHz}$ carrier has $P_c=80\,\mathrm W$. Its signed envelope factor is
+$1+0.5\cos(2\pi\,1000t)+0.3\cos(2\pi\,4000t)$.
+\[
+\begin{aligned}
+ 1+0.5\cos(2\pi\,1000t)+0.3\cos(2\pi\,4000t)&\ge 1-0.5-0.3=0.2,\\
+ P_{\rm SB}&=80\left(\frac{0.5^2}{2}+\frac{0.3^2}{2}\right)
+              =13.6\,\mathrm W,\\
+ P_T&=80+13.6=93.6\,\mathrm W,\qquad
+ \eta=\frac{13.6}{93.6}\approx14.5\%.
+\end{aligned}
+\]
+The carrier and the four sidebands are at $250$, $249$, $251$, $246$ and $254\,\mathrm{kHz}$. Each $1\,\mathrm{kHz}$ sideband contributes $5\,\mathrm W$ and each $4\,\mathrm{kHz}$ sideband $1.8\,\mathrm W$. The positive lower bound proves there is no envelope folding. It need not be the actual minimum of the sum.
+\end{tcolorbox}
+
 \section{DSB-SC, SSB and Vestigial Sideband}
 \subsection{Double Sideband Suppressed Carrier}
 For dimensionless, zero-mean $m(t)$ of bandwidth $W$ and carrier scale $A_c$ in volts,
@@ -403,6 +449,19 @@ The two AM sidebands contain redundant information for a real message. A filter 
  s_{\mathrm{U/L}}(t)=K[m(t)\cos(2\pi f_ct)\mp\widehat m(t)\sin(2\pi f_ct)].
 \]
 For a cosine, $\widehat m$ is a sine. The difference produces the upper frequency and the sum the lower frequency. The positive-frequency occupied band is $[f_c,f_c+W]$ for USB or $[f_c-W,f_c]$ for LSB. Real signals also have the negative-frequency mirror. SSB-TC inserts a line at $f_c$, increasing transmitted power without increasing bandwidth. The line can assist synchronization. With a sufficiently strong carrier approximate envelope detection is possible, but coherent recovery avoids quadrature envelope distortion.
+
+\begin{tcolorbox}[examplebox, title={Compare DSB-SC and Filtered SSB for the Same Tone}]
+A balanced modulator produces $s_D(t)=12\cos(2\pi\,3000t)\cos(2\pi\,120000t)$ across a $50\,\Omega$ load. The product expansion gives two equal $6\,\mathrm V$ peaks at $117$ and $123\,\mathrm{kHz}$.
+\[
+ \begin{aligned}
+ P_D&=2\frac{6^2}{2(50)}=0.72\,\mathrm W,\\
+ P_{\mathrm{USB}}&=\frac{6^2}{2(50)}=0.36\,\mathrm W,\\
+ P_{\mathrm{USB+carrier}}&=0.36+\frac{10^2}{2(50)}
+                      =1.36\,\mathrm W.
+ \end{aligned}
+\]
+The last case adds a $10\,\mathrm V$ peak carrier at $120\,\mathrm{kHz}$. Keep peak volts, RMS volts and impulse weights separate. A message limited to $3\,\mathrm{kHz}$ requires $6\,\mathrm{kHz}$ in DSB or $3\,\mathrm{kHz}$ in SSB.
+\end{tcolorbox}
 
 \subsection{Vestigial Sideband}
 VSB keeps one complete sideband and a fraction of the other. With a vestige extending $f_v$ hertz beyond the carrier into the other side, $B_{\mathrm{VSB}}\approx W+f_v$. The relaxed transition suits messages with strong low-frequency components such as analog TV video. For flat coherent recovery, the translated responses of the idealized real VSB filter add to a constant across baseband.
@@ -428,19 +487,27 @@ VSB keeps one complete sideband and a fraction of the other. With a vestige exte
 \end{tcolorbox}
 
 
-\begin{tcolorbox}[examplebox, title={Compare DSB-SC and Filtered SSB for the Same Tone}]
-A balanced modulator produces $s_D(t)=12\cos(2\pi\,3000t)\cos(2\pi\,120000t)$ across a $50\,\Omega$ load. The product expansion gives two equal $6\,\mathrm V$ peaks at $117$ and $123\,\mathrm{kHz}$.
+\subsection{Recovering the Baseband through a VSB Filter}
+Consider the baseband-equivalent response of an ideal zero-phase RF filter. After filtering a DSB-SC signal, synchronous multiplication shifts the positive and negative RF bands back to baseband:
 \[
- \begin{aligned}
- P_D&=2\frac{6^2}{2(50)}=0.72\,\mathrm W,\\
- P_{\mathrm{USB}}&=\frac{6^2}{2(50)}=0.36\,\mathrm W,\\
- P_{\mathrm{USB+carrier}}&=0.36+\frac{10^2}{2(50)}
-                      =1.36\,\mathrm W.
- \end{aligned}
+\begin{aligned}
+ S_D(f)&=\tfrac{A_c}{2}[M(f-f_c)+M(f+f_c)],\\
+ Y(f)&=\tfrac{A_c}{2}M(f)\,[H(f+f_c)+H(f-f_c)],
+       \qquad |f|\le W .
+\end{aligned}
 \]
-The last case adds a $10\,\mathrm V$ peak carrier at $120\,\mathrm{kHz}$. Keep peak volts, RMS volts and impulse weights separate. A message limited to $3\,\mathrm{kHz}$ requires $6\,\mathrm{kHz}$ in DSB or $3\,\mathrm{kHz}$ in SSB.
-\end{tcolorbox}
+This assumes a local oscillator of amplitude two and an ideal output low-pass filter. For a real, even response $H$, the two terms are $H(f_c+f)$ and $H(f_c-f)$. Their sum must be constant across the message band. Thus, near $f_c$, the decreasing response on one side complements the increasing response on the other. For unity target sum, $H(f_c)=1/2$. The spectrum sketch above shows occupied bands, while this condition explains why retaining a partial sideband can still give a flat recovered message.
 
+\begin{tcolorbox}[examplebox, title={Check Complementary VSB Gain at Two Message Frequencies}]
+Normalize the desired sum of the two VSB responses to one. At a $1\,\mathrm{kHz}$ offset, suppose the upper response is $0.82$ and the vestige response is $0.18$. At $3\,\mathrm{kHz}$ the full sideband has gain one and the vestige is zero.
+\[
+\begin{aligned}
+ H(f_c+1\,\mathrm{kHz})+H(f_c-1\,\mathrm{kHz})&=0.82+0.18=1,\\
+ H(f_c+3\,\mathrm{kHz})+H(f_c-3\,\mathrm{kHz})&=1+0=1.
+\end{aligned}
+\]
+Both message components receive the same baseband gain $A_c/2$ in the chosen detector normalization. If the $1\,\mathrm{kHz}$ vestige is wrongly removed, that component falls to $0.82$ of its intended amplitude while the $3\,\mathrm{kHz}$ component stays the same.
+\end{tcolorbox}
 
 \newpage
 \begin{center}
@@ -583,6 +650,30 @@ Two matched AM branches receive opposite message voltages and a common carrier. 
 \]
 A transformer-coupled diode ring can implement balanced switching by reversing message polarity at the carrier rate. Mismatch leaves residual carrier. Balance and filtering set suppression in practice.
 
+\begin{tcolorbox}[examplebox, title={Square-Law Modulator with a Specified Carrier and Tone}]
+Let $v_o=2v_i+0.2v_i^2$, with the quadratic coefficient in $\mathrm{V^{-1}}$. The input combines a $4\,\mathrm V$ peak carrier and a $1.5\,\mathrm V$ peak message tone.
+\[
+\begin{aligned}
+ A_{c,\rm out} &= a_1A=2(4)=8\,\mathrm V,\\
+ k_a &= \frac{2a_2}{a_1}=\frac{2(0.2)}{2}=0.2\,\mathrm{V^{-1}},\\
+ \mu&=k_aA_m=(0.2)(1.5)=0.30,\\
+ A_{\rm USB}=A_{\rm LSB}&=\frac{\mu A_{c,\rm out}}2=1.2\,\mathrm V.
+\end{aligned}
+\]
+The RF filter must pass both sidebands of the selected carrier and reject the terms around DC and $2f_c$. The result follows from the quadratic model. A practical circuit has higher-order terms and must limit its input swing.
+\end{tcolorbox}
+
+\subsection{Carrier Leakage in a Balanced Modulator}
+If the lower branch has gain $g$ relative to the upper branch, the subtractor output is
+\[
+\begin{aligned}
+ s(t) &= A_c[(1+k_am)-g(1-k_am)]\cos\omega_ct\\
+      &= A_c(1-g)\cos\omega_ct
+        +A_c(1+g)k_am(t)\cos\omega_ct.
+\end{aligned}
+\]
+The first term is carrier leakage. For $g=0.98$ and $k_aA_m=0.5$, the leakage amplitude is $0.02A_c$. Each sideband has amplitude $(1.98)(0.5)A_c/2=0.495A_c$. The carrier is about $20\log_{10}(0.495/0.02)=27.9\,\mathrm{dB}$ below either sideband. Matching bias and gain reduces the leakage. Carrier suppression and sideband selection are separate design steps.
+
 \section{Generation of Single Sideband}
 \subsection{Filter Method}
 Generate DSB-SC, pass only the desired sideband with a sharp BPF, and translate the retained band to its final channel if required. A message with lowest nonzero frequency $f_{\min}$ gives a gap of $2f_{\min}$ between the occupied bands. Little or no gap makes the filter difficult. Speech transmitters can limit low-frequency audio and first form SSB at a convenient IF.
@@ -632,6 +723,26 @@ The second stage combines $I\cos\omega_2t-Q\sin\omega_2t$ for USB with $f_2=f_c+
   \draw[arrow] (sub.east)--++(8mm,0) node[right] {USB};
 \end{tikzpicture}\par
 \end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={Weaver Frequency Plan for a Speech Channel}]
+A voice channel spans $300$ to $2700\,\mathrm{Hz}$. Form USB on a $500\,\mathrm{kHz}$ nominal carrier.
+\[
+\begin{aligned}
+ f_0&=\frac{300+2700}{2}=1500\,\mathrm{Hz},\\
+ W_{\rm LP}&=\frac{2700-300}{2}=1200\,\mathrm{Hz},\\
+ f_2&=f_c+f_0=501.5\,\mathrm{kHz}.
+\end{aligned}
+\]
+After quadrature mixing and subtraction, the RF frequencies are $f_2+(f_m-f_0)$. A $900\,\mathrm{Hz}$ tone produces $500.9\,\mathrm{kHz}$, whereas $2400\,\mathrm{Hz}$ produces $502.4\,\mathrm{kHz}$. The occupied band is $500.3$--$502.7\,\mathrm{kHz}$. The negative difference frequency for $900\,\mathrm{Hz}$ is preserved by the quadrature paths.
+\end{tcolorbox}
+
+\subsection{Effect of Phase Error in the Phase-Shift Method}
+For matched gains and an error $\delta$ in the relative quadrature phase, the two branch contributions at the wanted line add as $1+e^{j\delta}$. The unwanted line receives the difference $1-e^{j\delta}$. The amplitude leakage ratio is
+\[
+ \left|\frac{1-e^{j\delta}}{1+e^{j\delta}}\right|
+   =\left|\tan\frac{\delta}{2}\right|.
+\]
+At a $5^\circ$ phase error, leakage is about $0.0437$ times the wanted line amplitude, or about $27.2\,\mathrm{dB}$ below it. A phase shifter that is accurate only at one audio frequency will give different rejection over the message band.
 
 \section{Demodulation of Linear Modulation}
 \subsection{AM Envelope Detector}
@@ -747,6 +858,23 @@ The unwanted image lies on the opposite side of the LO from the desired RF. Both
 The low-side image expression here assumes a positive physical RF image in the difference-mixing case. A larger IF separates the image further, while a lower IF can simplify sharp selectivity. Dual conversion can combine these benefits.
 \end{tcolorbox}
 
+\subsection{Receiver Selectivity before and after Mixing}
+In high-side injection the wanted RF and the image lie below and above the LO, respectively. Taking the difference at the mixer maps both to the same IF. Increasing IF increases the $2f_{\rm IF}$ image separation. Tightening the RF preselector also improves image rejection, but it must still pass both wanted AM sidebands. The fixed IF filter sets adjacent-channel selectivity after conversion. Automatic gain control adjusts receiver gain as station strength varies.
+
+\begin{tcolorbox}[tikzbox, unbreakable, title={Two RF Inputs Can Produce the Same Intermediate Frequency}]
+\centering
+\begin{tikzpicture}[x=1.2cm,y=1cm]
+ \draw[arrow] (-0.45,0)--(10.5,0) node[right] {$f$};
+ \foreach \x/\f/\lab in {1/1000/Wanted,5/1455/LO,9/1910/Image}{
+   \draw[myteal,thick] (\x,0)--(\x,0.56);
+   \node[above=2pt] at (\x,0.56) {\lab};
+   \node[below=3pt] at (\x,0) {\small $\f\,\mathrm{kHz}$};
+ }
+ \draw[|-|,myred] (1,1.52)--(5,1.52) node[midway,above] {$455\,\mathrm{kHz}$};
+ \draw[|-|,myred] (5,1.52)--(9,1.52) node[midway,above] {$455\,\mathrm{kHz}$};
+\end{tikzpicture}\par
+\end{tcolorbox}
+
 \begin{tcolorbox}[examplebox, title={Compute LO and Image Frequencies}]
 For $f_{\rm RF}=1000\,\mathrm{kHz}$, $f_{\rm IF}=455\,\mathrm{kHz}$ and high-side injection,
 \[
@@ -759,13 +887,23 @@ For $f_{\rm RF}=1000\,\mathrm{kHz}$, $f_{\rm IF}=455\,\mathrm{kHz}$ and high-sid
 With low-side injection the LO is at $545\,\mathrm{kHz}$ and the corresponding image is at $90\,\mathrm{kHz}$. Both cases place the image $910\,\mathrm{kHz}$ from the desired station.
 \end{tcolorbox}
 
-
-
-
-\begin{tcolorbox}[masonbox, title={Exam Checks}]
-Show the unwanted mixer product before removing it. Distinguish the station frequency from IF and image frequency. For an envelope detector, check both the RF ripple limit and the steepest-envelope limit.
+\begin{tcolorbox}[examplebox, title={Calculate Image Rejection of a Single Tuned RF Stage}]
+For an ideal single tuned preselector at $f_s$ with loaded quality factor $Q$, the normalized off-tune voltage gain is
+\[
+ \frac{|H(f)|}{|H(f_s)|}
+ =\frac{1}{\sqrt{1+Q^2(f/f_s-f_s/f)^2}} .
+\]
+This form follows from the conductance and susceptance of a parallel RLC circuit. At $f_s=1\,\mathrm{MHz}$ with $Q=50$, compare high-side injection at two IFs:
+\[
+\begin{aligned}
+ f_{\rm IF}=455\,\mathrm{kHz}:\quad f_{\rm im}&=1.910\,\mathrm{MHz},
+ & |H(f_{\rm im})|/|H(f_s)|&\approx0.0144,\\[2pt]
+ f_{\rm IF}=100\,\mathrm{kHz}:\quad f_{\rm im}&=1.200\,\mathrm{MHz},
+ & |H(f_{\rm im})|/|H(f_s)|&\approx0.0545.
+\end{aligned}
+\]
+The reductions are approximately $36.8$ and $25.3\,\mathrm{dB}$ respectively for equal antenna input voltages. A higher IF moves the image farther down the preselector response. The loaded bandwidth near resonance is about $f_s/Q=20\,\mathrm{kHz}$, so this example can still pass a $10\,\mathrm{kHz}$ wide AM channel.
 \end{tcolorbox}
-
 
 \newpage
 \begin{center}
@@ -900,6 +1038,19 @@ Here $\omega=2\pi f$ and $\Delta f$ denotes the peak absolute frequency deviatio
 \small Here $k_f>0$. The RF envelope remains constant at all three positions.
 \end{tcolorbox}
 
+\begin{tcolorbox}[examplebox, title={Compare FM and PM When the Message Frequency Doubles}]
+Apply $m(t)=2\cos(2\pi\,2000t)\,\mathrm V$ to an FM modulator with $k_f=2\,\mathrm{kHz/V}$ and a PM modulator with $k_p=0.8\,\mathrm{rad/V}$.
+\[
+\begin{aligned}
+ \Delta f_{\rm FM} &= k_f A_m=4\,\mathrm{kHz},\\
+ \beta_{\rm FM}&=\Delta f_{\rm FM}/f_m=2,\\
+ \beta_{\rm PM}&=k_pA_m=1.6,\\
+ \Delta f_{\rm PM} &=\beta_{\rm PM}f_m=3.2\,\mathrm{kHz}.
+\end{aligned}
+\]
+At $f_m=4\,\mathrm{kHz}$ with the same message peak, the FM deviation is still $4\,\mathrm{kHz}$ and its index becomes $1$. The PM index stays $1.6$ and its deviation rises to $6.4\,\mathrm{kHz}$. These are peak deviations. For the cosine message the FM frequency varies as a cosine, whereas in PM it varies as a negative sine from differentiating the phase.
+\end{tcolorbox}
+
 \section{Single-Tone Spectrum and Bessel Coefficients}
 \subsection{Fourier Series Representation}
 The complex factor $e^{j\beta\sin\omega_mt}$ is periodic at $f_m$. Its Fourier coefficient of order $n$ is a Bessel function of the first kind:
@@ -950,6 +1101,20 @@ Here $P_c$ denotes unmodulated carrier power. The line remaining at $f_c$ has po
   }
 \end{tikzpicture}\par
 \small For FM, the odd-order lower lines have reversed signs. For PM, apply the additional order-dependent $n\pi/2$ phase shift at the same index.
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={Calculate Carrier and Sideband Power from Bessel Coefficients}]
+A constant-envelope FM carrier has peak $10\,\mathrm V$ across $50\,\Omega$, with $\beta=1$. The unmodulated carrier power is $1\,\mathrm W$. Using $J_0(1)\approx0.765198$, $J_1(1)\approx0.440051$ and $J_2(1)\approx0.114903$,
+\[
+\begin{aligned}
+ P_{\rm carrier} &= P_cJ_0^2(1)\approx0.5855\,\mathrm W,\\
+ P_{\pm1}\ \text{(each)} &=P_c J_1^2(1)\approx0.1936\,\mathrm W,\\
+ P_{\pm2}\ \text{(each)} &=P_c J_2^2(1)\approx0.0132\,\mathrm W,\\
+ P_{\text{through order 2}}
+   &=P_{\rm carrier}+2P_{+1}+2P_{+2}\approx0.9992\,\mathrm W.
+\end{aligned}
+\]
+The remaining power lies in the higher orders. Squaring the coefficient removes its sign for the power calculation. The same result holds for PM at index one because its additional line factors have unit magnitude.
 \end{tcolorbox}
 
 \subsection{Narrowband Approximation and Phasors}
@@ -1053,6 +1218,19 @@ For indirect FM, integrate the message before the crystal-based narrowband phase
 \end{tikzpicture}\par
 \end{tcolorbox}
 
+\begin{tcolorbox}[examplebox, title={Plan an Armstrong FM Channel}]
+A stable $100\,\mathrm{kHz}$ narrowband source has $75\,\mathrm{Hz}$ peak deviation with a $3\,\mathrm{kHz}$ tone. The target is $100\,\mathrm{MHz}$ with $15\,\mathrm{kHz}$ peak deviation.
+\[
+\begin{aligned}
+ \beta_{\rm seed} &= 75/3000=0.025,\\
+ N &= \frac{15\,000}{75}=200,\\
+ f_{\rm after\ multiplier}&=200(100\,\mathrm{kHz})=20\,\mathrm{MHz},\\
+ \Delta f_{\rm after\ multiplier}&=200(75\,\mathrm{Hz})=15\,\mathrm{kHz}.
+\end{aligned}
+\]
+Use an $80\,\mathrm{MHz}$ local oscillator and select the sum at $100\,\mathrm{MHz}$. Reject the unwanted difference product at $60\,\mathrm{MHz}$. The mixer changes the centre frequency and the target deviation remains $15\,\mathrm{kHz}$. The final tone index is $15/3=5$.
+\end{tcolorbox}
+
 \pagebreak[3]
 \section{Demodulation of FM and PM}
 \subsection{Frequency Discriminator and PM Recovery}
@@ -1114,6 +1292,21 @@ The control voltage yields the time derivative of the phase deviation for PM. In
 \end{tikzpicture}\par
 \end{tcolorbox}
 
+\begin{samepage}
+\subsection{Why a Locked PLL Tracks Only within Its Loop Bandwidth}
+For an ideal first-order model, replace the loop filter by a constant gain $K_L$ in the frequency range being analysed. Let $\Theta_i(s)$ and $\Theta_o(s)$ be the Laplace transforms of the input and oscillator phase deviations. The VCO integrates the frequency change to produce phase, so
+\[
+\begin{aligned}
+ V_{\rm ctrl}(s)&=K_LK_p[\Theta_i(s)-\Theta_o(s)],\\
+ s\Theta_o(s)&=2\pi K_v V_{\rm ctrl}(s),\\
+ \frac{\Theta_o(s)}{\Theta_i(s)}
+   &=\frac{K}{s+K},\qquad K=2\pi K_vK_LK_p .
+\end{aligned}
+\]
+Here $K_p$ is the detector gain in $\mathrm{V/rad}$, $K_v$ is VCO sensitivity in $\mathrm{Hz/V}$, and $K$ is in $\mathrm{s^{-1}}$. With positive loop gain, the response is close to unity for angular modulation frequencies much smaller than $K$. A practical loop filter changes this transfer function. This small-signal result describes tracking after acquisition. Capture and lock range require the nonlinear loop behaviour.
+\par
+\end{samepage}
+
 \begin{tcolorbox}[examplebox, title={Demodulate FM with a Locked PLL}]
 Let $A_m=2\,\mathrm V$, $k_f=15\,\mathrm{kHz/V}$, $K_v=20\,\mathrm{kHz/V}$ and $f_{\rm free}=f_c$.
 \[
@@ -1123,6 +1316,16 @@ Let $A_m=2\,\mathrm V$, $k_f=15\,\mathrm{kHz/V}$, $K_v=20\,\mathrm{kHz/V}$ and $
 \end{aligned}
 \]
 A gain of $4/3$ restores the original voltage scale while the PLL stays locked and tracks the tone.
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={Check PLL Tracking for Two Audio Frequencies}]
+In the first-order model, let $K=2\pi(5000)\,\mathrm{s^{-1}}$. For an input phase tone of frequency $f_m$ the gain and phase lag of the tracked phase are
+\[
+ \left|\frac{\Theta_o}{\Theta_i}\right|
+    =\frac{1}{\sqrt{1+(2\pi f_m/K)^2}},\qquad
+ \angle\frac{\Theta_o}{\Theta_i}=-\tan^{-1}(2\pi f_m/K).
+\]
+At $1\,\mathrm{kHz}$ the ratio $2\pi f_m/K$ is $0.2$, so the tracked phase has gain $0.981$ and lag $11.3^\circ$. At $10\,\mathrm{kHz}$ the ratio is $2$, so gain falls to $0.447$ and lag rises to $63.4^\circ$. The second case illustrates attenuation and phase lag while locked. It does not by itself predict loss of lock.
 \end{tcolorbox}
 
 \newpage
@@ -1281,6 +1484,16 @@ Pilot recovery and matched audio paths maintain stereo separation. Without a usa
 \end{tikzpicture}\par
 \end{tcolorbox}
 
+\begin{tcolorbox}[examplebox, title={Trace and Recover the FM Stereo Channels}]
+A left-only $8\,\mathrm{kHz}$ tone $L(t)$ enters the encoder, with $R(t)=0$. The sum and difference signals both equal $L(t)$.
+\begin{itemize}[leftmargin=*, itemsep=3pt]
+ \item The sum occupies baseband at $8\,\mathrm{kHz}$. A mono receiver passes it directly.
+ \item The difference modulates the suppressed $38\,\mathrm{kHz}$ subcarrier. Its two lines lie at $30$ and $46\,\mathrm{kHz}$. A pilot at $19\,\mathrm{kHz}$ supplies the receiver's phase reference.
+ \item After product detection and low-pass filtering, the decoder obtains $S=D=L(t)$. The matrix therefore gives $(S+D)/2=L(t)$ and $(S-D)/2=0$.
+\end{itemize}
+If the regenerated subcarrier has phase error $\theta$, the recovered difference is scaled by $\cos\theta$ in the ideal product detector. The unwanted right-channel output is then $L(t)(1-\cos\theta)/2$, showing how phase mismatch reduces stereo separation.
+\end{tcolorbox}
+
 \subsection{Compatible AM Stereo}
 In a representative C-QUAM system the normalized mono sum controls the AM envelope, while the difference controls a quadrature phase component. With $a(t)=1+k_s S(t)>0$, $b(t)=k_dD(t)$ and $\phi=\tan^{-1}(b/a)$,
 \[
@@ -1368,6 +1581,23 @@ A receiver has $F=2$, an antenna has $T_A=150\,\mathrm K$, and $B=10\,\mathrm{kH
 \]
 \end{tcolorbox}
 
+\begin{tcolorbox}[examplebox, title={Calculate a Two-Stage Receiver Noise Temperature}]
+The first amplifier has gain $G_1=10$ and input-referred noise temperature $T_{e1}=70\,\mathrm K$. The converter that follows has $T_{e2}=400\,\mathrm K$.
+\[
+\begin{aligned}
+ T_e &= T_{e1}+\frac{T_{e2}}{G_1}
+      =70+\frac{400}{10}=110\,\mathrm K,\\
+ F&=1+\frac{T_e}{290}=1.379,\qquad
+ NF=10\log_{10}F\approx1.40\,\mathrm{dB}.
+\end{aligned}
+\]
+With an antenna at $120\,\mathrm K$, the total input-referred system temperature is $230\,\mathrm K$. For a $200\,\mathrm{kHz}$ noise bandwidth the available noise is
+\[
+ P_N=k(230)(200\,000)\approx6.35\times10^{-16}\,\mathrm W.
+\]
+The later converter contributes only $40\,\mathrm K$ referred to the input because the preceding amplifier has gain ten. In cascade formulas use linear gain and noise factor, then convert to decibels if required.
+\end{tcolorbox}
+
 \section{Noise Performance of Analog Modulation}
 \subsection{Reference SNR and Detection Assumptions}
 Let $W$ be the baseband bandwidth and $N_0/2$ the two-sided RF noise PSD. Express powers at a normalized $1\,\Omega$ load. Let $P_R$ be total received RF signal power, including any transmitted carrier, and $P_U$ its information-bearing RF power. Use the same baseband reference for every scheme:
@@ -1389,6 +1619,28 @@ For SSB, $s_U(t)=u(t)\cos\omega_ct-\widehat u(t)\sin\omega_ct$. With zero-mean $
  P_U=\tfrac12[E(u^2)+E(\widehat u^2)]=E(u^2).
 \]
 Only one translated noise contribution remains at each nonzero baseband frequency, giving $S_{n,\rm out}=N_0/2$ and $N_0W$ in-band noise. Coherent SSB detection therefore also gives $P_U/(N_0W)$. SSB-SC has $P_R=P_U$. SSB-TC has $P_R=P_U+P_c$. The carrier becomes removable DC. A strong-carrier envelope detector can approximate coherent output to first order, with quadrature distortion as the carrier becomes less dominant.
+
+\begin{tcolorbox}[formulabox, title={Track the RF Noise through the Product Detector}]
+The oscillator $2\cos(2\pi f_ct)$ translates RF noise to baseband through two unit-amplitude frequency shifts. For filtered, wide-sense stationary noise with RF PSD $S_{n,\rm RF}$, the time-averaged baseband PSD is
+\[
+ S_{n,\rm out}(f)=S_{n,\rm RF}(f-f_c)+S_{n,\rm RF}(f+f_c),
+ \qquad |f|\le W .
+\]
+The two separated RF contributions have uncorrelated spectral increments. A DSB RF filter passes both terms at each in-band $f$, yielding $N_0$. An SSB RF filter passes one, yielding $N_0/2$. The carrier line in a transmitted-carrier scheme shifts to DC and is removed when calculating useful audio power.
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={Keep Reference SNR and RF Input SNR Separate}]
+For DSB-TC, let $P_R=2\,\mathrm{mW}$, $W=4\,\mathrm{kHz}$, $N_0=5\times10^{-10}\,\mathrm{W/Hz}$ and tone index $\mu=0.5$. The RF filter has $B_{\rm RF}=2W$.
+\[
+\begin{aligned}
+ \gamma_{\rm ref} &=\frac{2\times10^{-3}}{(5\times10^{-10})(4000)}=1000,\\
+ \gamma_{\rm RF,in}&=\frac{2\times10^{-3}}{(5\times10^{-10})(8000)}=500,\\
+ \eta &= \frac{\mu^2}{2+\mu^2}=\frac19,\\
+ \gamma_{\rm out}&=\eta\gamma_{\rm ref}=\frac{1000}{9}\approx111.1 .
+\end{aligned}
+\]
+The figure of merit under the common-reference convention is $1/9$. Under the actual RF input convention it is $111.1/500\approx2/9$. The receiver and its output SNR are the same in both calculations.
+\end{tcolorbox}
 
 \subsection{FM Discriminator Noise Above Threshold}
 A limiter removes amplitude variations. Let the received FM amplitude be $A$, so that $P_R=A^2/2$. For high predetection carrier-to-noise ratio, received quadrature noise $n_Q(t)$ gives a small phase error $n_Q/A$. Ideal broad predetection filtering gives quadrature noise PSD approximately $N_0$ over the output band. A unity-frequency-gain discriminator followed by scaling by $1/k_f$ gives the output $m(t)$ plus
@@ -1498,6 +1750,34 @@ Both are zero for $r<0$. This envelope model is used for diffuse multipath witho
 \]
 The PDF is zero for negative $r$. Here $I_0$ is the modified Bessel function of order zero, arising from angular integration of the shifted Gaussian density. The CDF is $\int_0^r f_R(u)\,du$ for $r\ge0$. The ratio of deterministic to diffuse power is $K=a^2/(2\sigma^2)$. At $a=0$, $I_0(0)=1$ and the density becomes Rayleigh.
 \end{tcolorbox}
+
+\subsection{Derive the Envelope Distributions from Gaussian Quadratures}
+For independent quadrature voltages $I,Q\sim\mathcal N(0,\sigma^2)$, write $i=r\cos\theta$ and $q=r\sin\theta$. The area element changes from $di\,dq$ to $r\,dr\,d\theta$. Therefore the joint density of radius and angle and its marginal are
+\[
+\begin{aligned}
+ f_{R,\Theta}(r,\theta)
+   &=\frac{r}{2\pi\sigma^2}\exp[-r^2/(2\sigma^2)],\\
+ f_R(r)&=\int_0^{2\pi} f_{R,\Theta}(r,\theta)\,d\theta
+        =\frac{r}{\sigma^2}e^{-r^2/(2\sigma^2)},\\
+ F_R(r)&=\int_0^r\frac{u}{\sigma^2}e^{-u^2/(2\sigma^2)}\,du
+        =\left[-e^{-u^2/(2\sigma^2)}\right]_0^r .
+\end{aligned}
+\]
+Now choose the in-phase axis along a deterministic phasor so $I\sim\mathcal N(a,\sigma^2)$ and $Q\sim\mathcal N(0,\sigma^2)$ remain independent. The shifted quadratic becomes
+\[
+ (i-a)^2+q^2=r^2+a^2-2ra\cos\theta.
+\]
+After the same Jacobian and angular integration,
+\[
+\begin{aligned}
+ f_R(r)&=\frac r{\sigma^2}e^{-(r^2+a^2)/(2\sigma^2)}
+          \left[\frac{1}{2\pi}\int_0^{2\pi}
+                 e^{(ra/\sigma^2)\cos\theta}\,d\theta\right],\\
+       &=\frac r{\sigma^2}e^{-(r^2+a^2)/(2\sigma^2)}
+                       I_0(ra/\sigma^2),\qquad r\ge0.
+\end{aligned}
+\]
+This is the Rician density. Setting $a=0$ makes the bracket one and gives the Rayleigh density. The Gaussian model describes the signed quadrature voltages. Their nonnegative magnitude follows the envelope model.
 
 \begin{tcolorbox}[tikzbox, unbreakable, title={Gaussian, Rayleigh and Rician Density Shapes}]
 \centering

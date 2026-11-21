@@ -211,6 +211,24 @@ An analog communication system carries a continuously varying message from sourc
 
 Modulation varies a carrier parameter according to the message. It makes antennas practical, fits signals to a channel passband and separates simultaneous transmissions by frequency. In amplitude modulation the message varies one or both carrier amplitude components. In angle modulation information varies phase or instantaneous frequency.
 
+\subsection{Baseband, Passband and Channel Selection}
+A microphone or sensor usually produces a \textbf{baseband} waveform whose useful frequencies extend from near DC to $W$. The transmitter chooses a sinusoidal carrier in the allocated band and translates the message around it. A channel of usable RF bandwidth $B_{\rm ch}$ must pass the resulting spectrum. An RF filter at the receiver selects the channel before demodulation. The recovered audio is then selected by a baseband low-pass filter.
+
+\begin{tcolorbox}[formulabox, title={Why Carrier Multiplication Shifts the Spectrum}]
+For $\mathcal F\{m(t)\}=M(f)$ and angular frequency $\omega_c=2\pi f_c$,
+\[
+\begin{aligned}
+ m(t)\cos\omega_ct
+   &=\tfrac12m(t)e^{j\omega_ct}+\tfrac12m(t)e^{-j\omega_ct},\\
+ \mathcal F\{m(t)\cos\omega_ct\}
+   &=\tfrac12M(f-f_c)+\tfrac12M(f+f_c).
+\end{aligned}
+\]
+The positive-frequency copy lies between $f_c-W$ and $f_c+W$. For example, a message limited to $4\,\mathrm{kHz}$ sent on a $200\,\mathrm{kHz}$ carrier occupies $196$--$204\,\mathrm{kHz}$ before any guard bands are added. Its negative-frequency mirror is required because the time waveform is real.
+\end{tcolorbox}
+
+A nearly flat gain and approximately linear phase over the occupied band preserve the waveform shape up to gain and delay. A selective notch inside a sideband removes particular message components. This is why frequency allocation, channel selectivity and modulation bandwidth have to be considered together.
+
 \begin{tcolorbox}[examplebox, title={Quarter-Wave Antenna Length}]
 With $c\approx3\times10^8\,\mathrm{m/s}$,
 \[
@@ -346,6 +364,34 @@ For $s(t)=[20+12\cos(2\pi\,5000t)]\cos(2\pi\,100000t)$ and $R=50\,\Omega$, the i
 \]
 \end{tcolorbox}
 
+\subsection{Total Power for a General Zero-Mean Message}
+Suppose $m(t)$ is zero mean, with mean-square value $P_m=\overline{m^2(t)}$ in $\mathrm{V^2}$. The RF voltage is $A_c[1+k_am(t)]\cos\omega_ct$. Using $\cos^2\omega_ct=(1+\cos2\omega_ct)/2$, the RF term near $2f_c$ averages to zero for a separated message band. The surviving terms give
+\[
+\begin{aligned}
+ P_T &= \frac{A_c^2}{2R}\overline{[1+k_am(t)]^2}\\
+     &= P_c[1+2k_a\overline{m(t)}+k_a^2P_m]\\
+     &= P_c(1+k_a^2P_m),\\
+ P_{\rm SB}&=P_c k_a^2P_m,\qquad
+ \eta=\frac{k_a^2P_m}{1+k_a^2P_m}.
+\end{aligned}
+\]
+For one tone $P_m=A_m^2/2$, so this reduces to the single-tone result. The $\mu=1$ efficiency limit quoted for one tone should be applied with that waveform assumption. Overmodulation depends on the most negative value of $1+k_am(t)$, which is a peak constraint.
+
+\begin{tcolorbox}[examplebox, title={Two-Tone AM from Envelope Constraint to Transmitted Power}]
+A $250\,\mathrm{kHz}$ carrier has $P_c=80\,\mathrm W$. Its signed envelope factor is
+$1+0.5\cos(2\pi\,1000t)+0.3\cos(2\pi\,4000t)$.
+\[
+\begin{aligned}
+ 1+0.5\cos(2\pi\,1000t)+0.3\cos(2\pi\,4000t)&\ge 1-0.5-0.3=0.2,\\
+ P_{\rm SB}&=80\left(\frac{0.5^2}{2}+\frac{0.3^2}{2}\right)
+              =13.6\,\mathrm W,\\
+ P_T&=80+13.6=93.6\,\mathrm W,\qquad
+ \eta=\frac{13.6}{93.6}\approx14.5\%.
+\end{aligned}
+\]
+The carrier and the four sidebands are at $250$, $249$, $251$, $246$ and $254\,\mathrm{kHz}$. Each $1\,\mathrm{kHz}$ sideband contributes $5\,\mathrm W$ and each $4\,\mathrm{kHz}$ sideband $1.8\,\mathrm W$. The positive lower bound proves there is no envelope folding. It need not be the actual minimum of the sum.
+\end{tcolorbox}
+
 \section{DSB-SC, SSB and Vestigial Sideband}
 \subsection{Double Sideband Suppressed Carrier}
 For dimensionless, zero-mean $m(t)$ of bandwidth $W$ and carrier scale $A_c$ in volts,
@@ -368,6 +414,19 @@ The two AM sidebands contain redundant information for a real message. A filter 
  s_{\mathrm{U/L}}(t)=K[m(t)\cos(2\pi f_ct)\mp\widehat m(t)\sin(2\pi f_ct)].
 \]
 For a cosine, $\widehat m$ is a sine. The difference produces the upper frequency and the sum the lower frequency. The positive-frequency occupied band is $[f_c,f_c+W]$ for USB or $[f_c-W,f_c]$ for LSB. Real signals also have the negative-frequency mirror. SSB-TC inserts a line at $f_c$, increasing transmitted power without increasing bandwidth. The line can assist synchronization. With a sufficiently strong carrier approximate envelope detection is possible, but coherent recovery avoids quadrature envelope distortion.
+
+\begin{tcolorbox}[examplebox, title={Compare DSB-SC and Filtered SSB for the Same Tone}]
+A balanced modulator produces $s_D(t)=12\cos(2\pi\,3000t)\cos(2\pi\,120000t)$ across a $50\,\Omega$ load. The product expansion gives two equal $6\,\mathrm V$ peaks at $117$ and $123\,\mathrm{kHz}$.
+\[
+ \begin{aligned}
+ P_D&=2\frac{6^2}{2(50)}=0.72\,\mathrm W,\\
+ P_{\mathrm{USB}}&=\frac{6^2}{2(50)}=0.36\,\mathrm W,\\
+ P_{\mathrm{USB+carrier}}&=0.36+\frac{10^2}{2(50)}
+                      =1.36\,\mathrm W.
+ \end{aligned}
+\]
+The last case adds a $10\,\mathrm V$ peak carrier at $120\,\mathrm{kHz}$. Keep peak volts, RMS volts and impulse weights separate. A message limited to $3\,\mathrm{kHz}$ requires $6\,\mathrm{kHz}$ in DSB or $3\,\mathrm{kHz}$ in SSB.
+\end{tcolorbox}
 
 \subsection{Vestigial Sideband}
 VSB keeps one complete sideband and a fraction of the other. With a vestige extending $f_v$ hertz beyond the carrier into the other side, $B_{\mathrm{VSB}}\approx W+f_v$. The relaxed transition suits messages with strong low-frequency components such as analog TV video. For flat coherent recovery, the translated responses of the idealized real VSB filter add to a constant across baseband.
@@ -393,19 +452,27 @@ VSB keeps one complete sideband and a fraction of the other. With a vestige exte
 \end{tcolorbox}
 
 
-\begin{tcolorbox}[examplebox, title={Compare DSB-SC and Filtered SSB for the Same Tone}]
-A balanced modulator produces $s_D(t)=12\cos(2\pi\,3000t)\cos(2\pi\,120000t)$ across a $50\,\Omega$ load. The product expansion gives two equal $6\,\mathrm V$ peaks at $117$ and $123\,\mathrm{kHz}$.
+\subsection{Recovering the Baseband through a VSB Filter}
+Consider the baseband-equivalent response of an ideal zero-phase RF filter. After filtering a DSB-SC signal, synchronous multiplication shifts the positive and negative RF bands back to baseband:
 \[
- \begin{aligned}
- P_D&=2\frac{6^2}{2(50)}=0.72\,\mathrm W,\\
- P_{\mathrm{USB}}&=\frac{6^2}{2(50)}=0.36\,\mathrm W,\\
- P_{\mathrm{USB+carrier}}&=0.36+\frac{10^2}{2(50)}
-                      =1.36\,\mathrm W.
- \end{aligned}
+\begin{aligned}
+ S_D(f)&=\tfrac{A_c}{2}[M(f-f_c)+M(f+f_c)],\\
+ Y(f)&=\tfrac{A_c}{2}M(f)\,[H(f+f_c)+H(f-f_c)],
+       \qquad |f|\le W .
+\end{aligned}
 \]
-The last case adds a $10\,\mathrm V$ peak carrier at $120\,\mathrm{kHz}$. Keep peak volts, RMS volts and impulse weights separate. A message limited to $3\,\mathrm{kHz}$ requires $6\,\mathrm{kHz}$ in DSB or $3\,\mathrm{kHz}$ in SSB.
-\end{tcolorbox}
+This assumes a local oscillator of amplitude two and an ideal output low-pass filter. For a real, even response $H$, the two terms are $H(f_c+f)$ and $H(f_c-f)$. Their sum must be constant across the message band. Thus, near $f_c$, the decreasing response on one side complements the increasing response on the other. For unity target sum, $H(f_c)=1/2$. The spectrum sketch above shows occupied bands, while this condition explains why retaining a partial sideband can still give a flat recovered message.
 
+\begin{tcolorbox}[examplebox, title={Check Complementary VSB Gain at Two Message Frequencies}]
+Normalize the desired sum of the two VSB responses to one. At a $1\,\mathrm{kHz}$ offset, suppose the upper response is $0.82$ and the vestige response is $0.18$. At $3\,\mathrm{kHz}$ the full sideband has gain one and the vestige is zero.
+\[
+\begin{aligned}
+ H(f_c+1\,\mathrm{kHz})+H(f_c-1\,\mathrm{kHz})&=0.82+0.18=1,\\
+ H(f_c+3\,\mathrm{kHz})+H(f_c-3\,\mathrm{kHz})&=1+0=1.
+\end{aligned}
+\]
+Both message components receive the same baseband gain $A_c/2$ in the chosen detector normalization. If the $1\,\mathrm{kHz}$ vestige is wrongly removed, that component falls to $0.82$ of its intended amplitude while the $3\,\mathrm{kHz}$ component stays the same.
+\end{tcolorbox}
 
 \newpage
 \begin{center}

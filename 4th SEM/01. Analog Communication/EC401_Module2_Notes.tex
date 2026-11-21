@@ -247,6 +247,30 @@ Two matched AM branches receive opposite message voltages and a common carrier. 
 \]
 A transformer-coupled diode ring can implement balanced switching by reversing message polarity at the carrier rate. Mismatch leaves residual carrier. Balance and filtering set suppression in practice.
 
+\begin{tcolorbox}[examplebox, title={Square-Law Modulator with a Specified Carrier and Tone}]
+Let $v_o=2v_i+0.2v_i^2$, with the quadratic coefficient in $\mathrm{V^{-1}}$. The input combines a $4\,\mathrm V$ peak carrier and a $1.5\,\mathrm V$ peak message tone.
+\[
+\begin{aligned}
+ A_{c,\rm out} &= a_1A=2(4)=8\,\mathrm V,\\
+ k_a &= \frac{2a_2}{a_1}=\frac{2(0.2)}{2}=0.2\,\mathrm{V^{-1}},\\
+ \mu&=k_aA_m=(0.2)(1.5)=0.30,\\
+ A_{\rm USB}=A_{\rm LSB}&=\frac{\mu A_{c,\rm out}}2=1.2\,\mathrm V.
+\end{aligned}
+\]
+The RF filter must pass both sidebands of the selected carrier and reject the terms around DC and $2f_c$. The result follows from the quadratic model. A practical circuit has higher-order terms and must limit its input swing.
+\end{tcolorbox}
+
+\subsection{Carrier Leakage in a Balanced Modulator}
+If the lower branch has gain $g$ relative to the upper branch, the subtractor output is
+\[
+\begin{aligned}
+ s(t) &= A_c[(1+k_am)-g(1-k_am)]\cos\omega_ct\\
+      &= A_c(1-g)\cos\omega_ct
+        +A_c(1+g)k_am(t)\cos\omega_ct.
+\end{aligned}
+\]
+The first term is carrier leakage. For $g=0.98$ and $k_aA_m=0.5$, the leakage amplitude is $0.02A_c$. Each sideband has amplitude $(1.98)(0.5)A_c/2=0.495A_c$. The carrier is about $20\log_{10}(0.495/0.02)=27.9\,\mathrm{dB}$ below either sideband. Matching bias and gain reduces the leakage. Carrier suppression and sideband selection are separate design steps.
+
 \section{Generation of Single Sideband}
 \subsection{Filter Method}
 Generate DSB-SC, pass only the desired sideband with a sharp BPF, and translate the retained band to its final channel if required. A message with lowest nonzero frequency $f_{\min}$ gives a gap of $2f_{\min}$ between the occupied bands. Little or no gap makes the filter difficult. Speech transmitters can limit low-frequency audio and first form SSB at a convenient IF.
@@ -296,6 +320,26 @@ The second stage combines $I\cos\omega_2t-Q\sin\omega_2t$ for USB with $f_2=f_c+
   \draw[arrow] (sub.east)--++(8mm,0) node[right] {USB};
 \end{tikzpicture}\par
 \end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={Weaver Frequency Plan for a Speech Channel}]
+A voice channel spans $300$ to $2700\,\mathrm{Hz}$. Form USB on a $500\,\mathrm{kHz}$ nominal carrier.
+\[
+\begin{aligned}
+ f_0&=\frac{300+2700}{2}=1500\,\mathrm{Hz},\\
+ W_{\rm LP}&=\frac{2700-300}{2}=1200\,\mathrm{Hz},\\
+ f_2&=f_c+f_0=501.5\,\mathrm{kHz}.
+\end{aligned}
+\]
+After quadrature mixing and subtraction, the RF frequencies are $f_2+(f_m-f_0)$. A $900\,\mathrm{Hz}$ tone produces $500.9\,\mathrm{kHz}$, whereas $2400\,\mathrm{Hz}$ produces $502.4\,\mathrm{kHz}$. The occupied band is $500.3$--$502.7\,\mathrm{kHz}$. The negative difference frequency for $900\,\mathrm{Hz}$ is preserved by the quadrature paths.
+\end{tcolorbox}
+
+\subsection{Effect of Phase Error in the Phase-Shift Method}
+For matched gains and an error $\delta$ in the relative quadrature phase, the two branch contributions at the wanted line add as $1+e^{j\delta}$. The unwanted line receives the difference $1-e^{j\delta}$. The amplitude leakage ratio is
+\[
+ \left|\frac{1-e^{j\delta}}{1+e^{j\delta}}\right|
+   =\left|\tan\frac{\delta}{2}\right|.
+\]
+At a $5^\circ$ phase error, leakage is about $0.0437$ times the wanted line amplitude, or about $27.2\,\mathrm{dB}$ below it. A phase shifter that is accurate only at one audio frequency will give different rejection over the message band.
 
 \section{Demodulation of Linear Modulation}
 \subsection{AM Envelope Detector}
@@ -411,6 +455,23 @@ The unwanted image lies on the opposite side of the LO from the desired RF. Both
 The low-side image expression here assumes a positive physical RF image in the difference-mixing case. A larger IF separates the image further, while a lower IF can simplify sharp selectivity. Dual conversion can combine these benefits.
 \end{tcolorbox}
 
+\subsection{Receiver Selectivity before and after Mixing}
+In high-side injection the wanted RF and the image lie below and above the LO, respectively. Taking the difference at the mixer maps both to the same IF. Increasing IF increases the $2f_{\rm IF}$ image separation. Tightening the RF preselector also improves image rejection, but it must still pass both wanted AM sidebands. The fixed IF filter sets adjacent-channel selectivity after conversion. Automatic gain control adjusts receiver gain as station strength varies.
+
+\begin{tcolorbox}[tikzbox, unbreakable, title={Two RF Inputs Can Produce the Same Intermediate Frequency}]
+\centering
+\begin{tikzpicture}[x=1.2cm,y=1cm]
+ \draw[arrow] (-0.45,0)--(10.5,0) node[right] {$f$};
+ \foreach \x/\f/\lab in {1/1000/Wanted,5/1455/LO,9/1910/Image}{
+   \draw[myteal,thick] (\x,0)--(\x,0.56);
+   \node[above=2pt] at (\x,0.56) {\lab};
+   \node[below=3pt] at (\x,0) {\small $\f\,\mathrm{kHz}$};
+ }
+ \draw[|-|,myred] (1,1.52)--(5,1.52) node[midway,above] {$455\,\mathrm{kHz}$};
+ \draw[|-|,myred] (5,1.52)--(9,1.52) node[midway,above] {$455\,\mathrm{kHz}$};
+\end{tikzpicture}\par
+\end{tcolorbox}
+
 \begin{tcolorbox}[examplebox, title={Compute LO and Image Frequencies}]
 For $f_{\rm RF}=1000\,\mathrm{kHz}$, $f_{\rm IF}=455\,\mathrm{kHz}$ and high-side injection,
 \[
@@ -423,13 +484,23 @@ For $f_{\rm RF}=1000\,\mathrm{kHz}$, $f_{\rm IF}=455\,\mathrm{kHz}$ and high-sid
 With low-side injection the LO is at $545\,\mathrm{kHz}$ and the corresponding image is at $90\,\mathrm{kHz}$. Both cases place the image $910\,\mathrm{kHz}$ from the desired station.
 \end{tcolorbox}
 
-
-
-
-\begin{tcolorbox}[masonbox, title={Exam Checks}]
-Show the unwanted mixer product before removing it. Distinguish the station frequency from IF and image frequency. For an envelope detector, check both the RF ripple limit and the steepest-envelope limit.
+\begin{tcolorbox}[examplebox, title={Calculate Image Rejection of a Single Tuned RF Stage}]
+For an ideal single tuned preselector at $f_s$ with loaded quality factor $Q$, the normalized off-tune voltage gain is
+\[
+ \frac{|H(f)|}{|H(f_s)|}
+ =\frac{1}{\sqrt{1+Q^2(f/f_s-f_s/f)^2}} .
+\]
+This form follows from the conductance and susceptance of a parallel RLC circuit. At $f_s=1\,\mathrm{MHz}$ with $Q=50$, compare high-side injection at two IFs:
+\[
+\begin{aligned}
+ f_{\rm IF}=455\,\mathrm{kHz}:\quad f_{\rm im}&=1.910\,\mathrm{MHz},
+ & |H(f_{\rm im})|/|H(f_s)|&\approx0.0144,\\[2pt]
+ f_{\rm IF}=100\,\mathrm{kHz}:\quad f_{\rm im}&=1.200\,\mathrm{MHz},
+ & |H(f_{\rm im})|/|H(f_s)|&\approx0.0545.
+\end{aligned}
+\]
+The reductions are approximately $36.8$ and $25.3\,\mathrm{dB}$ respectively for equal antenna input voltages. A higher IF moves the image farther down the preselector response. The loaded bandwidth near resonance is about $f_s/Q=20\,\mathrm{kHz}$, so this example can still pass a $10\,\mathrm{kHz}$ wide AM channel.
 \end{tcolorbox}
-
 
 \newpage
 \begin{center}

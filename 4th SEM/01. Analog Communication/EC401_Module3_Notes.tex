@@ -237,6 +237,19 @@ Here $\omega=2\pi f$ and $\Delta f$ denotes the peak absolute frequency deviatio
 \small Here $k_f>0$. The RF envelope remains constant at all three positions.
 \end{tcolorbox}
 
+\begin{tcolorbox}[examplebox, title={Compare FM and PM When the Message Frequency Doubles}]
+Apply $m(t)=2\cos(2\pi\,2000t)\,\mathrm V$ to an FM modulator with $k_f=2\,\mathrm{kHz/V}$ and a PM modulator with $k_p=0.8\,\mathrm{rad/V}$.
+\[
+\begin{aligned}
+ \Delta f_{\rm FM} &= k_f A_m=4\,\mathrm{kHz},\\
+ \beta_{\rm FM}&=\Delta f_{\rm FM}/f_m=2,\\
+ \beta_{\rm PM}&=k_pA_m=1.6,\\
+ \Delta f_{\rm PM} &=\beta_{\rm PM}f_m=3.2\,\mathrm{kHz}.
+\end{aligned}
+\]
+At $f_m=4\,\mathrm{kHz}$ with the same message peak, the FM deviation is still $4\,\mathrm{kHz}$ and its index becomes $1$. The PM index stays $1.6$ and its deviation rises to $6.4\,\mathrm{kHz}$. These are peak deviations. For the cosine message the FM frequency varies as a cosine, whereas in PM it varies as a negative sine from differentiating the phase.
+\end{tcolorbox}
+
 \section{Single-Tone Spectrum and Bessel Coefficients}
 \subsection{Fourier Series Representation}
 The complex factor $e^{j\beta\sin\omega_mt}$ is periodic at $f_m$. Its Fourier coefficient of order $n$ is a Bessel function of the first kind:
@@ -287,6 +300,20 @@ Here $P_c$ denotes unmodulated carrier power. The line remaining at $f_c$ has po
   }
 \end{tikzpicture}\par
 \small For FM, the odd-order lower lines have reversed signs. For PM, apply the additional order-dependent $n\pi/2$ phase shift at the same index.
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={Calculate Carrier and Sideband Power from Bessel Coefficients}]
+A constant-envelope FM carrier has peak $10\,\mathrm V$ across $50\,\Omega$, with $\beta=1$. The unmodulated carrier power is $1\,\mathrm W$. Using $J_0(1)\approx0.765198$, $J_1(1)\approx0.440051$ and $J_2(1)\approx0.114903$,
+\[
+\begin{aligned}
+ P_{\rm carrier} &= P_cJ_0^2(1)\approx0.5855\,\mathrm W,\\
+ P_{\pm1}\ \text{(each)} &=P_c J_1^2(1)\approx0.1936\,\mathrm W,\\
+ P_{\pm2}\ \text{(each)} &=P_c J_2^2(1)\approx0.0132\,\mathrm W,\\
+ P_{\text{through order 2}}
+   &=P_{\rm carrier}+2P_{+1}+2P_{+2}\approx0.9992\,\mathrm W.
+\end{aligned}
+\]
+The remaining power lies in the higher orders. Squaring the coefficient removes its sign for the power calculation. The same result holds for PM at index one because its additional line factors have unit magnitude.
 \end{tcolorbox}
 
 \subsection{Narrowband Approximation and Phasors}
@@ -390,6 +417,19 @@ For indirect FM, integrate the message before the crystal-based narrowband phase
 \end{tikzpicture}\par
 \end{tcolorbox}
 
+\begin{tcolorbox}[examplebox, title={Plan an Armstrong FM Channel}]
+A stable $100\,\mathrm{kHz}$ narrowband source has $75\,\mathrm{Hz}$ peak deviation with a $3\,\mathrm{kHz}$ tone. The target is $100\,\mathrm{MHz}$ with $15\,\mathrm{kHz}$ peak deviation.
+\[
+\begin{aligned}
+ \beta_{\rm seed} &= 75/3000=0.025,\\
+ N &= \frac{15\,000}{75}=200,\\
+ f_{\rm after\ multiplier}&=200(100\,\mathrm{kHz})=20\,\mathrm{MHz},\\
+ \Delta f_{\rm after\ multiplier}&=200(75\,\mathrm{Hz})=15\,\mathrm{kHz}.
+\end{aligned}
+\]
+Use an $80\,\mathrm{MHz}$ local oscillator and select the sum at $100\,\mathrm{MHz}$. Reject the unwanted difference product at $60\,\mathrm{MHz}$. The mixer changes the centre frequency and the target deviation remains $15\,\mathrm{kHz}$. The final tone index is $15/3=5$.
+\end{tcolorbox}
+
 \pagebreak[3]
 \section{Demodulation of FM and PM}
 \subsection{Frequency Discriminator and PM Recovery}
@@ -451,6 +491,21 @@ The control voltage yields the time derivative of the phase deviation for PM. In
 \end{tikzpicture}\par
 \end{tcolorbox}
 
+\begin{samepage}
+\subsection{Why a Locked PLL Tracks Only within Its Loop Bandwidth}
+For an ideal first-order model, replace the loop filter by a constant gain $K_L$ in the frequency range being analysed. Let $\Theta_i(s)$ and $\Theta_o(s)$ be the Laplace transforms of the input and oscillator phase deviations. The VCO integrates the frequency change to produce phase, so
+\[
+\begin{aligned}
+ V_{\rm ctrl}(s)&=K_LK_p[\Theta_i(s)-\Theta_o(s)],\\
+ s\Theta_o(s)&=2\pi K_v V_{\rm ctrl}(s),\\
+ \frac{\Theta_o(s)}{\Theta_i(s)}
+   &=\frac{K}{s+K},\qquad K=2\pi K_vK_LK_p .
+\end{aligned}
+\]
+Here $K_p$ is the detector gain in $\mathrm{V/rad}$, $K_v$ is VCO sensitivity in $\mathrm{Hz/V}$, and $K$ is in $\mathrm{s^{-1}}$. With positive loop gain, the response is close to unity for angular modulation frequencies much smaller than $K$. A practical loop filter changes this transfer function. This small-signal result describes tracking after acquisition. Capture and lock range require the nonlinear loop behaviour.
+\par
+\end{samepage}
+
 \begin{tcolorbox}[examplebox, title={Demodulate FM with a Locked PLL}]
 Let $A_m=2\,\mathrm V$, $k_f=15\,\mathrm{kHz/V}$, $K_v=20\,\mathrm{kHz/V}$ and $f_{\rm free}=f_c$.
 \[
@@ -460,6 +515,16 @@ Let $A_m=2\,\mathrm V$, $k_f=15\,\mathrm{kHz/V}$, $K_v=20\,\mathrm{kHz/V}$ and $
 \end{aligned}
 \]
 A gain of $4/3$ restores the original voltage scale while the PLL stays locked and tracks the tone.
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={Check PLL Tracking for Two Audio Frequencies}]
+In the first-order model, let $K=2\pi(5000)\,\mathrm{s^{-1}}$. For an input phase tone of frequency $f_m$ the gain and phase lag of the tracked phase are
+\[
+ \left|\frac{\Theta_o}{\Theta_i}\right|
+    =\frac{1}{\sqrt{1+(2\pi f_m/K)^2}},\qquad
+ \angle\frac{\Theta_o}{\Theta_i}=-\tan^{-1}(2\pi f_m/K).
+\]
+At $1\,\mathrm{kHz}$ the ratio $2\pi f_m/K$ is $0.2$, so the tracked phase has gain $0.981$ and lag $11.3^\circ$. At $10\,\mathrm{kHz}$ the ratio is $2$, so gain falls to $0.447$ and lag rises to $63.4^\circ$. The second case illustrates attenuation and phase lag while locked. It does not by itself predict loss of lock.
 \end{tcolorbox}
 
 \newpage
