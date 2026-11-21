@@ -147,7 +147,7 @@ const AcademicCatalog = (function () {
       status: 'coming-soon',
       description: 'Analog Communications, Microprocessors & Algorithm Foundations',
       expectedSubjects: [
-        { code: 'EC401', name: 'Analog Communication', modules: 5 },
+        { code: 'EC401', name: 'Analog Communication', modules: 4 },
         { code: 'EC402', name: 'Analog Electronic Circuits', modules: 5 },
         { code: 'EC403', name: 'Microprocessor & Microcontrollers', modules: 5 },
         { code: 'ES-CS401', name: 'Design & Analysis of Algorithms', modules: 4 }
