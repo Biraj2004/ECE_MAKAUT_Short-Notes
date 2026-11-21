@@ -1055,9 +1055,13 @@ Automates post-processing of archive PDFs using PyMuPDF (`fitz`) and AES-256 per
 python pdf_secure.py --check
 
 # Secure and brand a single PDF file:
+python pdf_secure.py "path\to\file.pdf"
 python pdf_secure.py --file "path\to\file.pdf"
 
-# Secure and brand all 268+ PDFs across all semesters:
+# Audit, auto-secure any updated/new PDFs, and sync local tracker (PDF_SECURITY_TRACKER.local.md):
+python pdf_secure.py --sync-tracker
+
+# Secure and brand all PDFs across all semesters:
 python pdf_secure.py --all
 ```
 
@@ -1070,6 +1074,18 @@ python pdf_secure.py --all
   - **Open Password:** `None` (opens instantly in all browsers, Acrobat, phone apps)
 - **Password Management:** Reads `PDF_PERMISSIONS_PASSWORD` from `.env`. Never commit `.env` (it is git-ignored; template provided in `.env.example`).
 - **Academic Metadata:** Injects standardized Title, Author (`Biraj Sarkar (CGEC)`), Subject, Keywords, Creator link, and CC BY-NC-SA 4.0 license attribution. Avoids legacy replacement characters (``).
+- **Advisory Policy Notice:** Embeds document-level XMP notice under namespace `https://biraj2004.github.io/ECE_MAKAUT_Short-Notes/ns/pdf-policy/1.0/`.
+- **Local Tracker (`PDF_SECURITY_TRACKER.local.md`):** Git-ignored status matrix tracking all repository PDFs against the latest commit.
+
+#### Mandatory Pre-Commit & Pre-Push Security Instructions
+
+> [!IMPORTANT]
+> **Never commit or push unencrypted or raw compiled PDFs to GitHub.**
+> Always verify that all PDFs are secured before staging and committing.
+
+1. **Audit or Sync:** Run `python pdf_secure.py --sync-tracker` to automatically audit and secure any newly compiled/updated PDFs and sync `PDF_SECURITY_TRACKER.local.md`.
+2. **Verify:** Run `python pdf_secure.py --check` to confirm `0 needing update`.
+3. **Commit & Push:** Only proceed with `git commit` and `git push` when 100% of PDFs report `[BRANDED & SECURED]`.
 
 > **Direct xelatex fallback** (if scripts fail):
 > ```powershell

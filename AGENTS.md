@@ -203,9 +203,13 @@ Automates post-processing of all archive PDFs using PyMuPDF (`fitz`) and AES-256
 python pdf_secure.py --check
 
 # Apply protection and metadata to a single PDF
+python pdf_secure.py "path\to\file.pdf"
 python pdf_secure.py --file "path\to\file.pdf"
 
-# Secure and brand all 268+ PDFs across all semesters
+# Audit, auto-secure any updated/new PDFs, and sync local tracker (PDF_SECURITY_TRACKER.local.md)
+python pdf_secure.py --sync-tracker
+
+# Secure and brand all PDFs across all semesters
 python pdf_secure.py --all
 ```
 
@@ -218,6 +222,28 @@ python pdf_secure.py --all
   - **Open Password:** `None` (opens instantly in all browsers, Acrobat, phone apps)
 - **Password Management:** Reads `PDF_PERMISSIONS_PASSWORD` from `.env`. Never commit `.env` (it is git-ignored; template provided in `.env.example`).
 - **Academic Metadata:** Injects standardized Title, Author (`Biraj Sarkar (CGEC)`), Subject, Keywords, Creator link, and CC BY-NC-SA 4.0 license attribution. Avoids legacy replacement characters (``).
+- **Advisory Policy Notice:** Embeds document-level XMP metadata notice under `https://biraj2004.github.io/ECE_MAKAUT_Short-Notes/ns/pdf-policy/1.0/` requesting automated tools respect content protection.
+- **Local Tracker (`PDF_SECURITY_TRACKER.local.md`):** Git-ignored status matrix tracking all repository PDFs against the latest commit.
+
+### Mandatory Pre-Commit & Pre-Push Security Instructions
+
+> [!IMPORTANT]
+> **Never commit or push unencrypted or raw compiled PDFs to GitHub.**
+> Always verify that all PDFs are secured before staging and committing.
+
+1. **Audit or Sync:**
+   ```powershell
+   # Automatically audit and secure any modified/new PDFs, syncing the local tracker:
+   python pdf_secure.py --sync-tracker
+   ```
+2. **Verify:**
+   ```powershell
+   # Confirm all PDFs report [BRANDED & SECURED]:
+   python pdf_secure.py --check
+   ```
+3. **Commit & Push:**
+   Only proceed with `git commit` and `git push` when `python pdf_secure.py --check` reports:
+   `Summary: <N> complete, 0 needing update out of <N> total.`
 
 ---
 

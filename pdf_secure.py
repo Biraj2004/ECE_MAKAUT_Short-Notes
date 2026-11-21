@@ -34,6 +34,8 @@ import argparse
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 from xml.etree import ElementTree as ET
+import subprocess
+from datetime import datetime
 import pymupdf
 
 # Target permissions bitmask:
@@ -291,6 +293,204 @@ def secure_single_pdf(pdf_path, owner_pw, mod_dict=None, force=False, verbose=Tr
             temp_file.unlink(missing_ok=True)
 
 
+TRACKER_FILENAME = "PDF_SECURITY_TRACKER.local.md"
+
+
+def get_git_info(repo_root):
+    """Retrieve the latest commit hash, date, message, and branch from git."""
+    try:
+        commit_hash = subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], cwd=repo_root, text=True, stderr=subprocess.DEVNULL
+        ).strip()
+        commit_short = commit_hash[:7]
+        commit_msg = subprocess.check_output(
+            ["git", "log", "-1", "--pretty=%s"], cwd=repo_root, text=True, stderr=subprocess.DEVNULL
+        ).strip()
+        commit_date = subprocess.check_output(
+            ["git", "log", "-1", "--pretty=%cd", "--date=iso-strict"], cwd=repo_root, text=True, stderr=subprocess.DEVNULL
+        ).strip()
+        branch = subprocess.check_output(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=repo_root, text=True, stderr=subprocess.DEVNULL
+        ).strip()
+        return {
+            "hash": commit_hash,
+            "short": commit_short,
+            "message": commit_msg,
+            "date": commit_date,
+            "branch": branch,
+        }
+    except Exception:
+        return {
+            "hash": "unknown",
+            "short": "unknown",
+            "message": "N/A",
+            "date": datetime.now().isoformat(),
+            "branch": "main",
+        }
+
+
+def sync_tracker_file(repo_root, owner_pw, mod_dict=None, auto_secure=True, force=False, verbose=True):
+    """
+    Audit all PDFs, automatically secure any that need updating (if auto_secure=True),
+    and generate/update the git-ignored PDF_SECURITY_TRACKER.local.md file with latest commit info.
+    """
+    repo_root = Path(repo_root).resolve()
+    tracker_path = repo_root / TRACKER_FILENAME
+    pdfs = find_all_pdfs(repo_root)
+    git_info = get_git_info(repo_root)
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    if verbose:
+        print(f"Auditing and syncing security tracker for {len(pdfs)} PDFs...")
+
+    secured_items = []
+    unsecured_items = []
+    auto_secured_count = 0
+
+    for p in pdfs:
+        is_sec, correct_pw = is_pdf_secured_and_branded(p, owner_pw)
+        if (not is_sec or not correct_pw) and auto_secure:
+            ok = secure_single_pdf(p, owner_pw, mod_dict=mod_dict, force=force, verbose=verbose)
+            if ok:
+                auto_secured_count += 1
+                is_sec, correct_pw = is_pdf_secured_and_branded(p, owner_pw)
+
+        rel = p.relative_to(repo_root)
+        size_kb = round(p.stat().st_size / 1024, 1)
+        item_data = {
+            "path": p,
+            "rel": str(rel),
+            "name": p.name,
+            "size_kb": size_kb,
+            "is_secured": (is_sec and correct_pw),
+        }
+        if is_sec and correct_pw:
+            secured_items.append(item_data)
+        else:
+            unsecured_items.append(item_data)
+
+    # Group items by folder category
+    categories = {}
+    for item in secured_items + unsecured_items:
+        rel = Path(item["rel"])
+        parts = rel.parts
+        if len(parts) > 1 and "SEM" in parts[0]:
+            cat = parts[0]
+            if len(parts) > 2:
+                subcat = parts[1]
+            else:
+                subcat = "Syllabus / Overview"
+        else:
+            cat = "Templates & Standalone PDFs"
+            subcat = "Templates"
+
+        categories.setdefault(cat, {}).setdefault(subcat, []).append(item)
+
+    lines = []
+    lines.append(f"# PDF Security Status & Tracking Matrix (`{TRACKER_FILENAME}`)")
+    lines.append("")
+    lines.append("> **Notice:** This document is dynamically managed and git-ignored via `*.local.md`. It tracks the encryption status, academic branding, and permissions policy for all compiled PDFs based on repository commits.")
+    lines.append("")
+    lines.append("## 📌 Git Commit & Repository State")
+    lines.append("")
+    lines.append(f"- **Tracked Git Commit**: `{git_info['short']}` (`{git_info['hash']}`)")
+    lines.append(f"- **Commit Message**: {git_info['message']}")
+    lines.append(f"- **Git Branch**: `{git_info['branch']}`")
+    lines.append(f"- **Last Verified / Synced**: `{now_str}`")
+    lines.append(f"- **Total PDFs Monitored**: **{len(pdfs)}**")
+    lines.append(f"- **Fully Secured & Branded**: **{len(secured_items)}** ({(len(secured_items)/len(pdfs)*100 if pdfs else 0):.1f}%)")
+    lines.append(f"- **Pending / Needing Update**: **{len(unsecured_items)}**")
+    if auto_secured_count > 0:
+        lines.append(f"- **Newly Secured During This Sync**: **{auto_secured_count}**")
+    lines.append("")
+    lines.append("---")
+    lines.append("")
+    lines.append("## ⚠️ Mandatory Pre-Commit & Pre-Push Security Instructions")
+    lines.append("")
+    lines.append("To ensure that only protected PDFs with proper academic branding, permissions locking, and advisory notices are committed to GitHub, follow these mandatory instructions:")
+    lines.append("")
+    lines.append("### 1. Audit & Synchronize Command")
+    lines.append("Run the tracker sync command before `git add` or `git commit`:")
+    lines.append("```powershell")
+    lines.append("# Audit all PDFs, auto-secure any updated/new ones, and refresh this tracker:")
+    lines.append("python pdf_secure.py --sync-tracker")
+    lines.append("```")
+    lines.append("")
+    lines.append("### 2. Verification Command")
+    lines.append("Ensure 100% of PDFs report `[BRANDED & SECURED]`:")
+    lines.append("```powershell")
+    lines.append("python pdf_secure.py --check")
+    lines.append("```")
+    lines.append("Expected output: `Summary: <N> complete, 0 needing update out of <N> total.`")
+    lines.append("")
+    lines.append("### 3. Git Staging, Commit & Push Workflow")
+    lines.append("Once verification passes:")
+    lines.append("```powershell")
+    lines.append("git add .")
+    lines.append('git commit -m "docs: update notes and ensure all PDFs are secured"')
+    lines.append("git push origin main")
+    lines.append("```")
+    lines.append("")
+    lines.append("### 4. Git Pre-Commit Hook (Automated Safety Net)")
+    lines.append("To prevent accidental commits of unencrypted PDFs, create `.git/hooks/pre-commit`:")
+    lines.append("```bash")
+    lines.append("#!/bin/sh")
+    lines.append("# .git/hooks/pre-commit")
+    lines.append('python pdf_secure.py --check || {')
+    lines.append('    echo "[ERROR] Unsecured PDFs detected! Run \'python pdf_secure.py --sync-tracker\' before committing."')
+    lines.append('    exit 1')
+    lines.append('}')
+    lines.append("```")
+    lines.append("")
+    lines.append("---")
+    lines.append("")
+    lines.append("## 🔒 Active Permissions & Protection Policy")
+    lines.append("")
+    lines.append("| Property | Policy Setting | Purpose |")
+    lines.append("|---|---|---|")
+    lines.append("| **Encryption Engine** | PyMuPDF (`fitz`) AES-256 (`PDF_ENCRYPT_AES_256`) | Industry standard strong document encryption |")
+    lines.append("| **User Password** | None (empty string) | Allows instant reading in browser, Acrobat, mobile apps without entering password |")
+    lines.append("| **Owner Password** | Loaded from `.env` (`PDF_PERMISSIONS_PASSWORD`) | Required for administrative permission overrides |")
+    lines.append("| **Modifications** | ❌ **NOT Allowed** | Prevents modifying notes, tampering with derivations or diagrams |")
+    lines.append("| **Page Extraction** | ❌ **NOT Allowed** | Prevents page splitting, extracting, and unauthorized bundling |")
+    lines.append("| **Content Copying** | ✅ **ALLOWED** | Students can freely select and copy text, code, and math formulas |")
+    lines.append("| **High-Quality Print**| ✅ **ALLOWED** | Enables full 1200+ DPI printing for physical revision and study |")
+    lines.append("| **Annotations & Forms**| ✅ **ALLOWED** | Students can highlight text, add sticky notes, and fill forms |")
+    lines.append("| **Accessibility** | ✅ **ALLOWED** | Screen-readers supported for visually impaired students |")
+    lines.append(f"| **Author Branding** | `{AUTHOR_BRAND}` | Academic attribution across all metadata fields |")
+    lines.append(f"| **Creator Branding**| `{CREATOR_BRAND}` | Portal repository source attribution |")
+    lines.append(f"| **XMP Policy Notice**| `{POLICY_FIELDS[f'{{{POLICY_NS}}}Notice']}` | Advisory notice embedded in document XML metadata packet |")
+    lines.append("")
+    lines.append("---")
+    lines.append("")
+    lines.append("## 📑 Monitored PDF Inventory Matrix")
+    lines.append("")
+
+    for cat_name in sorted(categories.keys()):
+        lines.append(f"### 📂 {cat_name}")
+        lines.append("")
+        for subcat_name in sorted(categories[cat_name].keys()):
+            items = categories[cat_name][subcat_name]
+            lines.append(f"#### {subcat_name} ({len(items)} PDFs)")
+            lines.append("")
+            lines.append("| Status | PDF File | Size | Encryption | XMP Policy Notice | File Path |")
+            lines.append("|:---:|---|:---:|:---:|:---:|---|")
+            for it in sorted(items, key=lambda x: x["name"]):
+                st = "✅ Secured" if it["is_secured"] else "❌ Needs Update"
+                enc = "AES-256" if it["is_secured"] else "Unsecured"
+                xmp = "Embedded" if it["is_secured"] else "Missing"
+                rel_posix = it["rel"].replace("\\", "/")
+                lines.append(f"| {st} | `{it['name']}` | {it['size_kb']} KB | {enc} | {xmp} | `{rel_posix}` |")
+            lines.append("")
+
+    with open(tracker_path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
+    if verbose:
+        print(f"[OK]   Synced security tracker: {tracker_path.name} ({len(secured_items)}/{len(pdfs)} secured)")
+    return tracker_path
+
+
 def find_all_pdfs(root_dir):
     """Recursively find all .pdf files, excluding temporary or build files."""
     root = Path(root_dir).resolve()
@@ -308,8 +508,16 @@ def main():
         description="Apply Academic Branding Metadata & Permissions Restrictions to PDFs."
     )
     parser.add_argument("file", nargs="?", help="Path to a single PDF to secure.")
+    parser.add_argument("--file", dest="file_flag", help="Path to a single PDF to secure (flag alias).")
     parser.add_argument("--all", action="store_true", help="Secure & brand all PDFs in repository.")
     parser.add_argument("--check", action="store_true", help="Check security & branding status without modifying.")
+    parser.add_argument(
+        "--sync-tracker",
+        "--track",
+        dest="track",
+        action="store_true",
+        help="Audit, auto-secure any unsecured/updated PDFs, and update the local tracker (.local.md).",
+    )
     parser.add_argument("--force", action="store_true", help="Re-apply metadata & encryption even if already done.")
     parser.add_argument("--password", help="Override password instead of reading .env")
     args = parser.parse_args()
@@ -342,8 +550,9 @@ def main():
         return
 
     # Mode 2: Single PDF
-    if args.file:
-        success = secure_single_pdf(args.file, owner_pw, mod_dict=mod_dict, force=args.force, verbose=True)
+    target_file = args.file or args.file_flag
+    if target_file:
+        success = secure_single_pdf(target_file, owner_pw, mod_dict=mod_dict, force=args.force, verbose=True)
         sys.exit(0 if success else 1)
 
     # Mode 3: All PDFs
@@ -369,7 +578,15 @@ def main():
         print(f"  Secured & Branded : {success_count}")
         print(f"  Skipped           : {skip_count} (already branded & secured)")
         print(f"  Failed            : {fail_count}")
+
+        # Sync local tracker file
+        sync_tracker_file(repo_root, owner_pw, mod_dict=mod_dict, auto_secure=False, verbose=True)
         sys.exit(1 if fail_count else 0)
+
+    # Mode 4: Sync tracker & auto-secure
+    if args.track:
+        sync_tracker_file(repo_root, owner_pw, mod_dict=mod_dict, auto_secure=True, force=args.force, verbose=True)
+        return
 
     parser.print_help()
 
