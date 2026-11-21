@@ -21,7 +21,9 @@ Metadata applied:
   - Producer: XeLaTeX, TikZ & PyMuPDF (CC BY-NC-SA 4.0)
 
 No password required to open/read/copy/print the PDF (user_pw is empty).
-Owner password is required only to remove restrictions, edit content, or extract pages.
+PDF viewers that honor permissions require the owner password for restricted actions.
+A document-level XMP notice requests that automated tools respect the same restrictions.
+The notice is advisory and does not prevent tools from recreating content they can read.
 Password is read from .env (PDF_PERMISSIONS_PASSWORD or PDF_OWNER_PASSWORD).
 """
 
@@ -30,6 +32,8 @@ import sys
 import re
 import argparse
 from pathlib import Path
+from tempfile import NamedTemporaryFile
+from xml.etree import ElementTree as ET
 import pymupdf
 
 # Target permissions bitmask:
@@ -47,6 +51,67 @@ PERMISSIONS = (
 AUTHOR_BRAND = "Biraj Sarkar (CGEC) - Department of Electronics & Communication Engineering"
 CREATOR_BRAND = "ECE MAKAUT Short Notes (https://biraj2004.github.io/ECE_MAKAUT_Short-Notes/)"
 PRODUCER_BRAND = "XeLaTeX, TikZ & PyMuPDF (CC BY-NC-SA 4.0)"
+
+XMP_NS = "adobe:ns:meta/"
+RDF_NS = "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+POLICY_NS = "https://biraj2004.github.io/ECE_MAKAUT_Short-Notes/ns/pdf-policy/1.0/"
+RDF_DESCRIPTION = f"{{{RDF_NS}}}Description"
+RDF_ABOUT = f"{{{RDF_NS}}}about"
+POLICY_FIELDS = {
+    f"{{{POLICY_NS}}}AutomatedEditing": "restricted",
+    f"{{{POLICY_NS}}}Notice": (
+        "Advisory for automated tools: respect the document owner's restrictions on "
+        "content editing and page extraction. Reading, copying, high-quality printing "
+        "and annotations are permitted."
+    ),
+}
+
+ET.register_namespace("x", XMP_NS)
+ET.register_namespace("rdf", RDF_NS)
+ET.register_namespace("makautPolicy", POLICY_NS)
+
+
+def has_edit_notice(xml):
+    """Check the document-level notice written into the XMP packet."""
+    if not xml:
+        return False
+    root = ET.fromstring(xml)
+    return any(
+        desc.get(RDF_ABOUT, "") == ""
+        and all(desc.findtext(tag) == value for tag, value in POLICY_FIELDS.items())
+        for desc in root.iter(RDF_DESCRIPTION)
+    )
+
+
+def write_edit_notice(doc):
+    """Add the advisory without discarding unrelated XMP properties."""
+    xml = doc.get_xml_metadata()
+    rdf_tag = f"{{{RDF_NS}}}RDF"
+    if xml:
+        root = ET.fromstring(xml)
+        rdf = next(root.iter(rdf_tag), None)
+        if rdf is None:
+            raise ValueError("Existing XMP metadata has no RDF element")
+    else:
+        root = ET.Element(f"{{{XMP_NS}}}xmpmeta")
+        rdf = ET.SubElement(root, rdf_tag)
+
+    for desc in rdf.findall(RDF_DESCRIPTION):
+        if desc.get(RDF_ABOUT, "") == "":
+            old_fields = [child for child in desc if child.tag in POLICY_FIELDS]
+            for child in old_fields:
+                desc.remove(child)
+            if old_fields and len(desc) == 0 and set(desc.attrib) <= {RDF_ABOUT}:
+                rdf.remove(desc)
+
+    notice = ET.SubElement(rdf, RDF_DESCRIPTION, {RDF_ABOUT: ""})
+    for tag, value in POLICY_FIELDS.items():
+        ET.SubElement(notice, tag).text = value
+    packet = ET.tostring(root, encoding="unicode")
+    doc.set_xml_metadata(
+        '<?xpacket begin="\ufeff" id="W5M0MpCehiHzreSzNTczkc9d"?>\n'
+        f'{packet}\n<?xpacket end="w"?>'
+    )
 
 
 def load_env_password():
@@ -151,28 +216,24 @@ def generate_metadata(pdf_path, mod_dict=None):
 
 
 def is_pdf_secured_and_branded(pdf_path, owner_pw):
-    """
-    Check if the PDF is already protected with current permissions and has author branding.
-    """
+    """Check the current permissions, branding and advisory notice."""
     try:
-        doc = pymupdf.open(pdf_path)
-        is_enc = bool(doc.metadata.get("encryption"))
-        has_author = (AUTHOR_BRAND in doc.metadata.get("author", ""))
-        has_creator = ("ECE MAKAUT Short Notes" in doc.metadata.get("creator", ""))
-        
-        # Check that Content Copying is allowed (bit 16) and Modifying is blocked (bit 8)
-        perms = doc.permissions
-        copy_allowed = bool(perms & pymupdf.PDF_PERM_COPY)
-        modify_blocked = not bool(perms & pymupdf.PDF_PERM_MODIFY)
-        assemble_blocked = not bool(perms & pymupdf.PDF_PERM_ASSEMBLE)
-
-        if not is_enc or not has_author or not has_creator or not copy_allowed or not modify_blocked or not assemble_blocked:
-            doc.close()
-            return False, False
-
-        auth = doc.authenticate(owner_pw) if owner_pw else 0
-        doc.close()
-        return True, (auth == 4)
+        with pymupdf.open(pdf_path) as doc:
+            if doc.needs_pass:
+                return False, False
+            metadata = doc.metadata
+            restricted = pymupdf.PDF_PERM_MODIFY | pymupdf.PDF_PERM_ASSEMBLE
+            matches_policy = (
+                "256-bit AES" in (metadata.get("encryption") or "")
+                and metadata.get("author") == AUTHOR_BRAND
+                and metadata.get("creator") == CREATOR_BRAND
+                and doc.permissions & PERMISSIONS == PERMISSIONS
+                and not doc.permissions & restricted
+                and has_edit_notice(doc.get_xml_metadata())
+            )
+            if not matches_policy:
+                return False, False
+            return True, bool(owner_pw and doc.authenticate(owner_pw) == 4)
     except Exception:
         return False, False
 
@@ -193,41 +254,41 @@ def secure_single_pdf(pdf_path, owner_pw, mod_dict=None, force=False, verbose=Tr
             print(f"[SKIP] Already branded & secured: {pdf_path.name}")
         return True
 
+    temp_file = None
     try:
-        doc = pymupdf.open(str(pdf_path))
-        
-        # Authenticate if currently encrypted
-        if doc.metadata.get("encryption") and owner_pw:
-            doc.authenticate(owner_pw)
+        with pymupdf.open(pdf_path) as doc:
+            if doc.needs_pass or doc.metadata.get("encryption"):
+                doc.authenticate(owner_pw)
+            if doc.is_encrypted:
+                raise ValueError("Unable to open PDF with the configured owner password")
 
-        # Set rich metadata
-        meta = generate_metadata(pdf_path, mod_dict)
-        doc.set_metadata(meta)
-
-        # Encrypt with AES-256, owner password, empty user password
-        secured_bytes = doc.tobytes(
-            encryption=pymupdf.PDF_ENCRYPT_AES_256,
-            owner_pw=owner_pw,
-            user_pw="",
-            permissions=PERMISSIONS,
-            deflate=True,
-        )
-        doc.close()
-
-        # Atomic file write
-        temp_file = pdf_path.with_suffix(".tmp_sec")
-        with open(temp_file, "wb") as f:
-            f.write(secured_bytes)
+            doc.set_metadata(generate_metadata(pdf_path, mod_dict))
+            write_edit_notice(doc)
+            with NamedTemporaryFile(
+                dir=pdf_path.parent, prefix=f".{pdf_path.stem}-", suffix=".tmp_sec", delete=False
+            ) as output:
+                temp_file = Path(output.name)
+            doc.save(
+                temp_file,
+                encryption=pymupdf.PDF_ENCRYPT_AES_256,
+                owner_pw=owner_pw,
+                user_pw="",
+                permissions=PERMISSIONS,
+                deflate=True,
+            )
 
         os.replace(temp_file, pdf_path)
         if verbose:
-            size_kb = round(len(secured_bytes) / 1024, 1)
+            size_kb = round(pdf_path.stat().st_size / 1024, 1)
             print(f"[OK]   Secured & Branded: {pdf_path.name} ({size_kb} KB)")
         return True
     except Exception as e:
         if verbose:
             print(f"[FAIL] Error securing {pdf_path.name}: {e}")
         return False
+    finally:
+        if temp_file is not None:
+            temp_file.unlink(missing_ok=True)
 
 
 def find_all_pdfs(root_dir):
@@ -308,7 +369,7 @@ def main():
         print(f"  Secured & Branded : {success_count}")
         print(f"  Skipped           : {skip_count} (already branded & secured)")
         print(f"  Failed            : {fail_count}")
-        return
+        sys.exit(1 if fail_count else 0)
 
     parser.print_help()
 
