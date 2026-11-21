@@ -209,10 +209,32 @@ An analog communication system carries a continuously varying message from sourc
 \end{tikzpicture}\par
 \end{tcolorbox}
 
-Modulation varies a carrier parameter according to the message. It makes antennas practical, fits signals to a channel passband and separates simultaneous transmissions by frequency. In amplitude modulation the message varies one or both carrier amplitude components. In angle modulation information varies phase or instantaneous frequency.
+\subsection{Concept of Modulation and Need for Modulation}
+Modulation is the systematic variation of one or more parameters (amplitude, phase, or frequency) of a high-frequency carrier signal in accordance with the instantaneous value of a baseband message signal $m(t)$. Baseband signals cannot be transmitted directly through free space. Five critical engineering reasons mandate modulation:
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{Practicable Antenna Dimensions}: For efficient radiation, an antenna length must be of the order of a quarter wavelength ($\ell \ge \lambda/4 = c/(4f)$). Directly transmitting a baseband audio tone of $5\,\mathrm{kHz}$ requires $\ell = 3\times10^8/(4\times5\times10^3) = 15\,\mathrm{km}$, which is physically unrealizable. Translating to an RF carrier of $1\,\mathrm{MHz}$ reduces the required length to $\ell = 75\,\mathrm{m}$, which is readily constructed.
+  \item \textbf{Multiplexing (Frequency Division Multiplexing)}: Baseband audio signals from all sources occupy the identical spectral range ($20\,\mathrm{Hz}$--$20\,\mathrm{kHz}$). Direct transmission over a common wireless medium causes complete mutual interference and unintelligible reception. Modulation translates each message to a distinct non-overlapping frequency slot ($f_{c1}, f_{c2}, \dots$), permitting simultaneous multichannel broadcast.
+  \item \textbf{Narrowbanding and Fractional Bandwidth}: An antenna cannot maintain impedance matching across a wide frequency ratio. Baseband audio spans $20\,\mathrm{Hz}$ to $20\,\mathrm{kHz}$ (a $1000:1$ ratio). When modulated onto a $1\,\mathrm{MHz}$ carrier, the occupied passband is $0.98$--$1.02\,\mathrm{MHz}$, yielding a fractional bandwidth of only $20\,\mathrm{kHz}/1\,\mathrm{MHz} = 2\%$, easily tuned by a single resonant circuit.
+  \item \textbf{Antenna Radiation Efficiency}: Radiated power from an antenna of physical length $\ell$ obeys $P_{\mathrm{rad}} \propto (\ell/\lambda)^2$. At low baseband frequencies, $\lambda$ is tens of kilometers, making $(\ell/\lambda)^2 \to 0$ and converting almost all power into thermal losses. Raising the carrier frequency makes $\lambda$ small, maximizing radiated power.
+  \item \textbf{Noise and Interference Immunity}: Audio frequencies suffer heavily from industrial $50\,\mathrm{Hz}$ power hum, atmospheric noise, and semiconductor $1/f$ flicker noise. Translating to RF moves the transmission into low-noise spectral windows.
+\end{enumerate}
+
+\begin{tcolorbox}[examplebox, title={Quarter-Wave Antenna Dimension Calculation}]
+Compare the physical quarter-wave vertical antenna lengths required for direct audio transmission versus RF carrier transmission ($c=3\times10^8\,\mathrm{m/s}$):
+\[
+\begin{aligned}
+ \ell&=\frac{\lambda}{4}=\frac{c}{4f},\\
+ \text{Audio tone ($f_m = 5\,\mathrm{kHz}$):}\quad \ell_{\mathrm{audio}}&=\frac{3\times10^8}{4(5\times10^3)}\,\mathrm{m} = 15\,000\,\mathrm{m} = 15\,\mathrm{km},\\
+ \text{RF carrier ($f_c = 1\,\mathrm{MHz}$):}\quad \ell_{\mathrm{RF}}&=\frac{3\times10^8}{4(10^6)}\,\mathrm{m} = 75\,\mathrm{m},\\
+ \text{VHF FM ($f_c = 100\,\mathrm{MHz}$):}\quad \ell_{\mathrm{VHF}}&=\frac{3\times10^8}{4(10^8)}\,\mathrm{m} = 0.75\,\mathrm{m} = 75\,\mathrm{cm}.
+\end{aligned}
+\]
+Modulation reduces antenna height from an impossible $15\,\mathrm{km}$ tower to a convenient $75\,\mathrm{cm}$ rod.
+\end{tcolorbox}
 
 \subsection{Baseband, Passband and Channel Selection}
-A microphone or sensor usually produces a \textbf{baseband} waveform whose useful frequencies extend from near DC to $W$. The transmitter chooses a sinusoidal carrier in the allocated band and translates the message around it. A channel of usable RF bandwidth $B_{\rm ch}$ must pass the resulting spectrum. An RF filter at the receiver selects the channel before demodulation. The recovered audio is then selected by a baseband low-pass filter.
+A microphone or sensor produces a \textbf{baseband} waveform whose useful frequencies extend from near DC to $W$. The transmitter translates the message around an allocated RF carrier $f_c$. A channel of usable bandwidth $B_{\rm ch}$ must pass the resulting spectrum. An RF filter at the receiver selects the channel before demodulation, and a baseband low-pass filter extracts the recovered message.
 
 \begin{tcolorbox}[formulabox, title={Why Carrier Multiplication Shifts the Spectrum}]
 For $\mathcal F\{m(t)\}=M(f)$ and angular frequency $\omega_c=2\pi f_c$,
@@ -228,19 +250,6 @@ The positive-frequency copy lies between $f_c-W$ and $f_c+W$. For example, a mes
 \end{tcolorbox}
 
 A nearly flat gain and approximately linear phase over the occupied band preserve the waveform shape up to gain and delay. A selective notch inside a sideband removes particular message components. This is why frequency allocation, channel selectivity and modulation bandwidth have to be considered together.
-
-\begin{tcolorbox}[examplebox, title={Quarter-Wave Antenna Length}]
-With $c\approx3\times10^8\,\mathrm{m/s}$,
-\[
-\begin{aligned}
- \ell&=\lambda/4=c/(4f),\\
- \ell_{5\,\mathrm{kHz}}&=\frac{3\times10^8}{4(5\times10^3)}\,\mathrm{m}
-     =15\,\mathrm{km},\\
- \ell_{1\,\mathrm{MHz}}&=\frac{3\times10^8}{4(10^6)}\,\mathrm{m}
-     =75\,\mathrm{m}.
-\end{aligned}
-\]
-\end{tcolorbox}
 
 \section{Conventional AM with Transmitted Carrier}
 The transmitter sends a carrier alongside two shifted versions of the message. This allows a simple receiver to recover the audio from the envelope.

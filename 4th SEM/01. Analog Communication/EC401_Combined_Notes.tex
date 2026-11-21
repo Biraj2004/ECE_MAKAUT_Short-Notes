@@ -244,10 +244,32 @@ An analog communication system carries a continuously varying message from sourc
 \end{tikzpicture}\par
 \end{tcolorbox}
 
-Modulation varies a carrier parameter according to the message. It makes antennas practical, fits signals to a channel passband and separates simultaneous transmissions by frequency. In amplitude modulation the message varies one or both carrier amplitude components. In angle modulation information varies phase or instantaneous frequency.
+\subsection{Concept of Modulation and Need for Modulation}
+Modulation is the systematic variation of one or more parameters (amplitude, phase, or frequency) of a high-frequency carrier signal in accordance with the instantaneous value of a baseband message signal $m(t)$. Baseband signals cannot be transmitted directly through free space. Five critical engineering reasons mandate modulation:
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{Practicable Antenna Dimensions}: For efficient radiation, an antenna length must be of the order of a quarter wavelength ($\ell \ge \lambda/4 = c/(4f)$). Directly transmitting a baseband audio tone of $5\,\mathrm{kHz}$ requires $\ell = 3\times10^8/(4\times5\times10^3) = 15\,\mathrm{km}$, which is physically unrealizable. Translating to an RF carrier of $1\,\mathrm{MHz}$ reduces the required length to $\ell = 75\,\mathrm{m}$, which is readily constructed.
+  \item \textbf{Multiplexing (Frequency Division Multiplexing)}: Baseband audio signals from all sources occupy the identical spectral range ($20\,\mathrm{Hz}$--$20\,\mathrm{kHz}$). Direct transmission over a common wireless medium causes complete mutual interference and unintelligible reception. Modulation translates each message to a distinct non-overlapping frequency slot ($f_{c1}, f_{c2}, \dots$), permitting simultaneous multichannel broadcast.
+  \item \textbf{Narrowbanding and Fractional Bandwidth}: An antenna cannot maintain impedance matching across a wide frequency ratio. Baseband audio spans $20\,\mathrm{Hz}$ to $20\,\mathrm{kHz}$ (a $1000:1$ ratio). When modulated onto a $1\,\mathrm{MHz}$ carrier, the occupied passband is $0.98$--$1.02\,\mathrm{MHz}$, yielding a fractional bandwidth of only $20\,\mathrm{kHz}/1\,\mathrm{MHz} = 2\%$, easily tuned by a single resonant circuit.
+  \item \textbf{Antenna Radiation Efficiency}: Radiated power from an antenna of physical length $\ell$ obeys $P_{\mathrm{rad}} \propto (\ell/\lambda)^2$. At low baseband frequencies, $\lambda$ is tens of kilometers, making $(\ell/\lambda)^2 \to 0$ and converting almost all power into thermal losses. Raising the carrier frequency makes $\lambda$ small, maximizing radiated power.
+  \item \textbf{Noise and Interference Immunity}: Audio frequencies suffer heavily from industrial $50\,\mathrm{Hz}$ power hum, atmospheric noise, and semiconductor $1/f$ flicker noise. Translating to RF moves the transmission into low-noise spectral windows.
+\end{enumerate}
+
+\begin{tcolorbox}[examplebox, title={Quarter-Wave Antenna Dimension Calculation}]
+Compare the physical quarter-wave vertical antenna lengths required for direct audio transmission versus RF carrier transmission ($c=3\times10^8\,\mathrm{m/s}$):
+\[
+\begin{aligned}
+ \ell&=\frac{\lambda}{4}=\frac{c}{4f},\\
+ \text{Audio tone ($f_m = 5\,\mathrm{kHz}$):}\quad \ell_{\mathrm{audio}}&=\frac{3\times10^8}{4(5\times10^3)}\,\mathrm{m} = 15\,000\,\mathrm{m} = 15\,\mathrm{km},\\
+ \text{RF carrier ($f_c = 1\,\mathrm{MHz}$):}\quad \ell_{\mathrm{RF}}&=\frac{3\times10^8}{4(10^6)}\,\mathrm{m} = 75\,\mathrm{m},\\
+ \text{VHF FM ($f_c = 100\,\mathrm{MHz}$):}\quad \ell_{\mathrm{VHF}}&=\frac{3\times10^8}{4(10^8)}\,\mathrm{m} = 0.75\,\mathrm{m} = 75\,\mathrm{cm}.
+\end{aligned}
+\]
+Modulation reduces antenna height from an impossible $15\,\mathrm{km}$ tower to a convenient $75\,\mathrm{cm}$ rod.
+\end{tcolorbox}
 
 \subsection{Baseband, Passband and Channel Selection}
-A microphone or sensor usually produces a \textbf{baseband} waveform whose useful frequencies extend from near DC to $W$. The transmitter chooses a sinusoidal carrier in the allocated band and translates the message around it. A channel of usable RF bandwidth $B_{\rm ch}$ must pass the resulting spectrum. An RF filter at the receiver selects the channel before demodulation. The recovered audio is then selected by a baseband low-pass filter.
+A microphone or sensor produces a \textbf{baseband} waveform whose useful frequencies extend from near DC to $W$. The transmitter translates the message around an allocated RF carrier $f_c$. A channel of usable bandwidth $B_{\rm ch}$ must pass the resulting spectrum. An RF filter at the receiver selects the channel before demodulation, and a baseband low-pass filter extracts the recovered message.
 
 \begin{tcolorbox}[formulabox, title={Why Carrier Multiplication Shifts the Spectrum}]
 For $\mathcal F\{m(t)\}=M(f)$ and angular frequency $\omega_c=2\pi f_c$,
@@ -263,19 +285,6 @@ The positive-frequency copy lies between $f_c-W$ and $f_c+W$. For example, a mes
 \end{tcolorbox}
 
 A nearly flat gain and approximately linear phase over the occupied band preserve the waveform shape up to gain and delay. A selective notch inside a sideband removes particular message components. This is why frequency allocation, channel selectivity and modulation bandwidth have to be considered together.
-
-\begin{tcolorbox}[examplebox, title={Quarter-Wave Antenna Length}]
-With $c\approx3\times10^8\,\mathrm{m/s}$,
-\[
-\begin{aligned}
- \ell&=\lambda/4=c/(4f),\\
- \ell_{5\,\mathrm{kHz}}&=\frac{3\times10^8}{4(5\times10^3)}\,\mathrm{m}
-     =15\,\mathrm{km},\\
- \ell_{1\,\mathrm{MHz}}&=\frac{3\times10^8}{4(10^6)}\,\mathrm{m}
-     =75\,\mathrm{m}.
-\end{aligned}
-\]
-\end{tcolorbox}
 
 \section{Conventional AM with Transmitted Carrier}
 The transmitter sends a carrier alongside two shifted versions of the message. This allows a simple receiver to recover the audio from the envelope.
@@ -807,6 +816,52 @@ Multiply $A_cm(t)\cos(2\pi f_ct)$ by $2\cos[2\pi(f_c+\Delta f)t+\phi]$ and low-p
 \]
 With only phase error, recovered amplitude scales by $\cos\phi$. At $90^\circ$ it vanishes. With frequency error the gain oscillates, causing beats and sign changes. A transmitted pilot can drive a carrier-recovery PLL. For DSB-SC without a pilot, a Costas loop or squaring loop can regenerate the reference. A recovered reference may retain a $180^\circ$ ambiguity, resolved by a known pilot or polarity reference. If RF filtering or the LPF removes part of a mismatch-shifted spectrum, the resulting waveform is additionally distorted.
 
+\subsection{Carrier Recovery for DSB-SC: Squaring Loop and Costas Loop}
+Because DSB-SC suppresses the carrier component completely, a coherent receiver must synthesize the carrier frequency and phase directly from the received sidebands. Two canonical circuits accomplish this:
+
+\paragraph{1. Squaring Loop}
+Passing $s(t)=A_cm(t)\cos(\omega_ct+\theta)$ through a square-law nonlinearity gives:
+\[
+s^2(t)=A_c^2m^2(t)\cos^2(\omega_ct+\theta)=\frac{1}{2}A_c^2m^2(t)\left[1+\cos(2\omega_ct+2\theta)\right].
+\]
+Since $m^2(t)\ge 0$ for all $t$, its expected value $\overline{m^2(t)}=P_m$ is strictly non-zero. A narrow bandpass filter (or PLL) centered at $2f_c$ extracts this discrete harmonic:
+\[
+v_{2f_c}(t)=\frac{1}{2}A_c^2P_m\cos(2\omega_ct+2\theta).
+\]
+Passing this signal through a frequency divider by two produces $\cos(\omega_ct+\theta)$ or $-\cos(\omega_ct+\theta)$, providing the coherent local reference with a $180^\circ$ phase ambiguity.
+
+\paragraph{2. Costas Loop}
+The Costas loop avoids RF frequency squaring by detecting the phase error directly at baseband through In-phase ($I$) and Quadrature ($Q$) channels:
+
+\begin{tcolorbox}[tikzbox, unbreakable, title={Costas Loop Architecture for Coherent Carrier Recovery}]
+\centering
+\begin{tikzpicture}[node distance=6mm, sblock/.style={block, text width=1.85cm, minimum height=0.75cm, font=\scriptsize}]
+  \node (in) at (0,1.2) {\small $s(t)$};
+  \node[sumjunc] (m1) at (1.8,2.1) {$\times$};
+  \node[sumjunc] (m2) at (1.8,0.3) {$\times$};
+  \node[sblock, right=of m1] (lpf1) {I-Arm LPF};
+  \node[sblock, right=of m2] (lpf2) {Q-Arm LPF};
+  \node[sumjunc] (m3) at (6.2,1.2) {$\times$};
+  \node[sblock, right=of m3] (lf) {Loop Filter};
+  \node[sblock, below=of lf] (vco) {VCO};
+  \node[sblock, left=of vco] (ps) {$-90^\circ$ Shift};
+
+  \draw[arrow] (in) |- (m1);
+  \draw[arrow] (in) |- (m2);
+  \draw[arrow] (m1) -- (lpf1);
+  \draw[arrow] (m2) -- (lpf2);
+  \draw[arrow] (lpf1.east) -| (m3.north);
+  \draw[arrow] (lpf2.east) -| (m3.south);
+  \draw[arrow] (m3) -- node[above] {\scriptsize $e(t)$} (lf);
+  \draw[arrow] (lf) -- (vco);
+  \draw[arrow] (vco) -- (ps);
+  \draw[arrow] (vco.west) -| (m1.south) node[pos=0.15, right] {\tiny $\cos(\omega_c t+\phi)$};
+  \draw[arrow] (ps.west) -| (m2.south) node[pos=0.15, right] {\tiny $-\sin(\omega_c t+\phi)$};
+  \draw[arrow] (lpf1.east) -- ++(1.4,0) node[right] {\scriptsize \textbf{Audio $m(t)$}};
+\end{tikzpicture}\par
+\small When $\phi$ is small, the I-arm LPF yields $v_I(t)\approx\frac{A_c}{2}m(t)$ and the Q-arm LPF yields $v_Q(t)\approx\frac{A_c}{2}m(t)\phi$. Their product is $e(t)\approx\frac{A_c^2}{4}m^2(t)\phi$. Since $m^2(t)>0$, the loop filter integrates a DC error voltage strictly proportional to $\phi$, steering the VCO until $\phi\to 0$.
+\end{tcolorbox}
+
 \begin{tcolorbox}[examplebox, title={Frequency and Phase Error in a Coherent Receiver}]
 For $m(t)=\cos(2\pi\,1000t)$, unit RF scale, and LO frequency offset $20\,\mathrm{Hz}$ with zero initial phase error, the detector yields
 \[
@@ -1233,12 +1288,34 @@ Use an $80\,\mathrm{MHz}$ local oscillator and select the sum at $100\,\mathrm{M
 
 \pagebreak[3]
 \section{Demodulation of FM and PM}
-\subsection{Frequency Discriminator and PM Recovery}
-A frequency discriminator produces voltage proportional to the instantaneous frequency offset within its linear range. A slope detector converts frequency changes to envelope changes using one side of a tuned response and then detects that envelope. Its output is sensitive to unwanted AM and to response curvature. A balanced discriminator subtracts the outputs of two offset responses, giving an approximately odd output near $f_c$ and improved linearity. A limiter precedes many discriminators. For gain $K_d$ in $\mathrm{V/Hz}$,
-\[
- v_d(t)\approx K_d[f_i(t)-f_c].
-\]
-For FM, $v_d\propto m(t)$. For PM, $v_d\propto m'(t)$, so integrate and restore the reference level as required. PM may also be recovered by a phase detector comparing with a coherent carrier reference, provided the phase swing remains in the usable range or is unwrapped.
+\subsection{Frequency Discriminators: Slope, Balanced, Foster-Seeley and Ratio Detector}
+A frequency discriminator produces an output voltage strictly proportional to the instantaneous frequency deviation: $v_d(t) \approx K_d[f_i(t)-f_c] \propto m(t)$. For PM, $v_d \propto m'(t)$, requiring post-detection integration to recover the original baseband message. The four canonical discriminator topologies are:
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{Simple Slope Detector}: Uses a single parallel-tuned LC circuit tuned off-resonance ($f_0 \approx f_c + \delta f$). Operating along the slope of the resonance curve converts frequency swings into proportional envelope variations, rectified by an envelope detector. \textit{Drawback}: Highly non-linear transfer characteristic and severe susceptibility to input amplitude fluctuations.
+  \item \textbf{Balanced Slope Detector (Round-Travis Circuit)}: Combines two tuned circuits staggered symmetrically at $f_c + \delta f$ and $f_c - \delta f$ with their rectified outputs connected in series opposition. The resulting S-curve cancels even-harmonic distortion and provides a linear response centered at $f_c$.
+  \item \textbf{Foster-Seeley Discriminator}: Uses a double-tuned center-tapped transformer where primary voltage $V_p$ is coupled to the secondary center tap. At resonance ($f = f_c$), the secondary voltage $V_s$ is in exact quadrature ($90^\circ$ phase shift) with $V_p$. The diode voltages $|V_p + V_s/2|$ and $|V_p - V_s/2|$ are equal, yielding zero differential output. As frequency deviates, the phase shifts from $90^\circ$, producing a highly linear voltage proportional to $\Delta f$. However, output scales directly with input amplitude, requiring a prior limiter stage.
+  \item \textbf{Ratio Detector}: Modifies the Foster-Seeley topology by reversing one diode and placing a large reservoir capacitor ($C_s \approx 10\,\mu\mathrm{F}$) across the load resistors. The large time constant ($R_LC_s \gg 1/f_m$) clamps the total voltage constant ($V_1 + V_2 = V_{\mathrm{const}}$). Fast amplitude fluctuations (such as ignition noise or multipath AM fading) cannot change this voltage, providing \textbf{inherent amplitude limiting} and eliminating the need for an external limiter stage.
+\end{enumerate}
+
+\par\vspace{6pt}\noindent
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|Y|}
+\hline
+\rowcolor{hdrgray}
+\textbf{Parameter} & \textbf{Balanced Slope} & \textbf{Foster-Seeley} & \textbf{Ratio Detector} \\
+\hline
+\textbf{Operating Principle} & Dual staggered LC slope conversion & Phase shift in center-tapped transformer & Phase shift with clamped sum voltage \\
+\hline
+\textbf{Linearity} & Moderate (limited linear skirt) & Excellent across wide deviation & Very good across linear S-curve \\
+\hline
+\textbf{Limiter Requirement} & Mandatory (sensitive to AM noise) & Mandatory (output $\propto$ RF amplitude) & \textbf{Not Required} (inherent AM suppression) \\
+\hline
+\textbf{Alignment Complexity}& High (three distinct tuned frequencies) & Moderate (both tuned to exact $f_c$) & Moderate (both tuned to exact $f_c$) \\
+\hline
+\textbf{Primary Application}& Low-cost communication receivers & High-fidelity FM test instrumentation & Standard commercial broadcast FM receivers \\
+\hline
+\end{tabularx}
+\par\vspace{12pt}
 
 \begin{tcolorbox}[tikzbox, unbreakable, title={Balanced Frequency Discriminator}]
 \centering
@@ -1561,11 +1638,18 @@ For a resistor at temperature $T$, the classical one-sided open-circuit voltage 
 Here $k=1.380649\times10^{-23}\,\mathrm{J/K}$. Use equivalent noise bandwidth for a nonrectangular filter.
 \end{tcolorbox}
 
-Equivalent input noise temperature $T_e$ expresses receiver-added noise as an input source $kT_eB$. For source noise temperature $T_A$, input-referred system noise is $k(T_A+T_e)B$. Noise factor $F$ is input SNR divided by output SNR at the reference input temperature $T_0=290\,\mathrm K$:
+Equivalent input noise temperature $T_e$ expresses receiver-added noise as an input source $kT_eB$. For source noise temperature $T_A$, input-referred system noise is $k(T_A+T_e)B$. Noise factor $F$ is input SNR divided by output SNR at the standard reference temperature $T_0=290\,\mathrm K$:
 \[
- F=1+\frac{T_e}{T_0},\qquad NF=10\log_{10}F.
+ F=\frac{\mathrm{SNR}_{\rm in}}{\mathrm{SNR}_{\rm out}}=1+\frac{T_e}{T_0},\qquad \mathrm{NF}_{\rm dB}=10\log_{10}F.
 \]
-Cascaded input-referred temperatures are $T_{e1}+T_{e2}/G_1+\cdots$, because the equivalent noise of each later stage is divided by preceding linear power gain.
+For a cascade of $n$ amplifier stages with available gains $G_1, G_2, \dots$ and noise figures $F_1, F_2, \dots$, \textbf{Friis' Formulas} express overall noise performance:
+\[
+\begin{aligned}
+ F_{\rm sys} &= F_1 + \frac{F_2 - 1}{G_1} + \frac{F_3 - 1}{G_1 G_2} + \dots + \frac{F_n - 1}{G_1 G_2 \cdots G_{n-1}},\\
+ T_{e,\rm sys} &= T_{e1} + \frac{T_{e2}}{G_1} + \frac{T_{e3}}{G_1 G_2} + \dots + \frac{T_{en}}{G_1 G_2 \cdots G_{n-1}}.
+\end{aligned}
+\]
+\textit{Key Architectural Consequence}: The first stage noise figure $F_1$ and equivalent temperature $T_{e1}$ directly enter the sum unattenuated, while noise from subsequent stages is divided by the preceding linear gains ($G_1, G_1G_2, \dots$). Therefore, a high-gain, low-noise pre-amplifier (LNA) placed as the first receiver stage renders all downstream stage noise contributions virtually negligible.
 
 \begin{tcolorbox}[examplebox, title={Noise Temperature and Input-Referred SNR}]
 A receiver has $F=2$, an antenna has $T_A=150\,\mathrm K$, and $B=10\,\mathrm{kHz}$. Received signal power is $10^{-13}\,\mathrm W$.

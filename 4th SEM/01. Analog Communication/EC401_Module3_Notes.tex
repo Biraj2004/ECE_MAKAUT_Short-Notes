@@ -432,12 +432,34 @@ Use an $80\,\mathrm{MHz}$ local oscillator and select the sum at $100\,\mathrm{M
 
 \pagebreak[3]
 \section{Demodulation of FM and PM}
-\subsection{Frequency Discriminator and PM Recovery}
-A frequency discriminator produces voltage proportional to the instantaneous frequency offset within its linear range. A slope detector converts frequency changes to envelope changes using one side of a tuned response and then detects that envelope. Its output is sensitive to unwanted AM and to response curvature. A balanced discriminator subtracts the outputs of two offset responses, giving an approximately odd output near $f_c$ and improved linearity. A limiter precedes many discriminators. For gain $K_d$ in $\mathrm{V/Hz}$,
-\[
- v_d(t)\approx K_d[f_i(t)-f_c].
-\]
-For FM, $v_d\propto m(t)$. For PM, $v_d\propto m'(t)$, so integrate and restore the reference level as required. PM may also be recovered by a phase detector comparing with a coherent carrier reference, provided the phase swing remains in the usable range or is unwrapped.
+\subsection{Frequency Discriminators: Slope, Balanced, Foster-Seeley and Ratio Detector}
+A frequency discriminator produces an output voltage strictly proportional to the instantaneous frequency deviation: $v_d(t) \approx K_d[f_i(t)-f_c] \propto m(t)$. For PM, $v_d \propto m'(t)$, requiring post-detection integration to recover the original baseband message. The four canonical discriminator topologies are:
+
+\begin{enumerate}[leftmargin=1.5em, itemsep=3pt]
+  \item \textbf{Simple Slope Detector}: Uses a single parallel-tuned LC circuit tuned off-resonance ($f_0 \approx f_c + \delta f$). Operating along the slope of the resonance curve converts frequency swings into proportional envelope variations, rectified by an envelope detector. \textit{Drawback}: Highly non-linear transfer characteristic and severe susceptibility to input amplitude fluctuations.
+  \item \textbf{Balanced Slope Detector (Round-Travis Circuit)}: Combines two tuned circuits staggered symmetrically at $f_c + \delta f$ and $f_c - \delta f$ with their rectified outputs connected in series opposition. The resulting S-curve cancels even-harmonic distortion and provides a linear response centered at $f_c$.
+  \item \textbf{Foster-Seeley Discriminator}: Uses a double-tuned center-tapped transformer where primary voltage $V_p$ is coupled to the secondary center tap. At resonance ($f = f_c$), the secondary voltage $V_s$ is in exact quadrature ($90^\circ$ phase shift) with $V_p$. The diode voltages $|V_p + V_s/2|$ and $|V_p - V_s/2|$ are equal, yielding zero differential output. As frequency deviates, the phase shifts from $90^\circ$, producing a highly linear voltage proportional to $\Delta f$. However, output scales directly with input amplitude, requiring a prior limiter stage.
+  \item \textbf{Ratio Detector}: Modifies the Foster-Seeley topology by reversing one diode and placing a large reservoir capacitor ($C_s \approx 10\,\mu\mathrm{F}$) across the load resistors. The large time constant ($R_LC_s \gg 1/f_m$) clamps the total voltage constant ($V_1 + V_2 = V_{\mathrm{const}}$). Fast amplitude fluctuations (such as ignition noise or multipath AM fading) cannot change this voltage, providing \textbf{inherent amplitude limiting} and eliminating the need for an external limiter stage.
+\end{enumerate}
+
+\par\vspace{6pt}\noindent
+\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|Y|}
+\hline
+\rowcolor{hdrgray}
+\textbf{Parameter} & \textbf{Balanced Slope} & \textbf{Foster-Seeley} & \textbf{Ratio Detector} \\
+\hline
+\textbf{Operating Principle} & Dual staggered LC slope conversion & Phase shift in center-tapped transformer & Phase shift with clamped sum voltage \\
+\hline
+\textbf{Linearity} & Moderate (limited linear skirt) & Excellent across wide deviation & Very good across linear S-curve \\
+\hline
+\textbf{Limiter Requirement} & Mandatory (sensitive to AM noise) & Mandatory (output $\propto$ RF amplitude) & \textbf{Not Required} (inherent AM suppression) \\
+\hline
+\textbf{Alignment Complexity}& High (three distinct tuned frequencies) & Moderate (both tuned to exact $f_c$) & Moderate (both tuned to exact $f_c$) \\
+\hline
+\textbf{Primary Application}& Low-cost communication receivers & High-fidelity FM test instrumentation & Standard commercial broadcast FM receivers \\
+\hline
+\end{tabularx}
+\par\vspace{12pt}
 
 \begin{tcolorbox}[tikzbox, unbreakable, title={Balanced Frequency Discriminator}]
 \centering

@@ -404,6 +404,52 @@ Multiply $A_cm(t)\cos(2\pi f_ct)$ by $2\cos[2\pi(f_c+\Delta f)t+\phi]$ and low-p
 \]
 With only phase error, recovered amplitude scales by $\cos\phi$. At $90^\circ$ it vanishes. With frequency error the gain oscillates, causing beats and sign changes. A transmitted pilot can drive a carrier-recovery PLL. For DSB-SC without a pilot, a Costas loop or squaring loop can regenerate the reference. A recovered reference may retain a $180^\circ$ ambiguity, resolved by a known pilot or polarity reference. If RF filtering or the LPF removes part of a mismatch-shifted spectrum, the resulting waveform is additionally distorted.
 
+\subsection{Carrier Recovery for DSB-SC: Squaring Loop and Costas Loop}
+Because DSB-SC suppresses the carrier component completely, a coherent receiver must synthesize the carrier frequency and phase directly from the received sidebands. Two canonical circuits accomplish this:
+
+\paragraph{1. Squaring Loop}
+Passing $s(t)=A_cm(t)\cos(\omega_ct+\theta)$ through a square-law nonlinearity gives:
+\[
+s^2(t)=A_c^2m^2(t)\cos^2(\omega_ct+\theta)=\frac{1}{2}A_c^2m^2(t)\left[1+\cos(2\omega_ct+2\theta)\right].
+\]
+Since $m^2(t)\ge 0$ for all $t$, its expected value $\overline{m^2(t)}=P_m$ is strictly non-zero. A narrow bandpass filter (or PLL) centered at $2f_c$ extracts this discrete harmonic:
+\[
+v_{2f_c}(t)=\frac{1}{2}A_c^2P_m\cos(2\omega_ct+2\theta).
+\]
+Passing this signal through a frequency divider by two produces $\cos(\omega_ct+\theta)$ or $-\cos(\omega_ct+\theta)$, providing the coherent local reference with a $180^\circ$ phase ambiguity.
+
+\paragraph{2. Costas Loop}
+The Costas loop avoids RF frequency squaring by detecting the phase error directly at baseband through In-phase ($I$) and Quadrature ($Q$) channels:
+
+\begin{tcolorbox}[tikzbox, unbreakable, title={Costas Loop Architecture for Coherent Carrier Recovery}]
+\centering
+\begin{tikzpicture}[node distance=6mm, sblock/.style={block, text width=1.85cm, minimum height=0.75cm, font=\scriptsize}]
+  \node (in) at (0,1.2) {\small $s(t)$};
+  \node[sumjunc] (m1) at (1.8,2.1) {$\times$};
+  \node[sumjunc] (m2) at (1.8,0.3) {$\times$};
+  \node[sblock, right=of m1] (lpf1) {I-Arm LPF};
+  \node[sblock, right=of m2] (lpf2) {Q-Arm LPF};
+  \node[sumjunc] (m3) at (6.2,1.2) {$\times$};
+  \node[sblock, right=of m3] (lf) {Loop Filter};
+  \node[sblock, below=of lf] (vco) {VCO};
+  \node[sblock, left=of vco] (ps) {$-90^\circ$ Shift};
+
+  \draw[arrow] (in) |- (m1);
+  \draw[arrow] (in) |- (m2);
+  \draw[arrow] (m1) -- (lpf1);
+  \draw[arrow] (m2) -- (lpf2);
+  \draw[arrow] (lpf1.east) -| (m3.north);
+  \draw[arrow] (lpf2.east) -| (m3.south);
+  \draw[arrow] (m3) -- node[above] {\scriptsize $e(t)$} (lf);
+  \draw[arrow] (lf) -- (vco);
+  \draw[arrow] (vco) -- (ps);
+  \draw[arrow] (vco.west) -| (m1.south) node[pos=0.15, right] {\tiny $\cos(\omega_c t+\phi)$};
+  \draw[arrow] (ps.west) -| (m2.south) node[pos=0.15, right] {\tiny $-\sin(\omega_c t+\phi)$};
+  \draw[arrow] (lpf1.east) -- ++(1.4,0) node[right] {\scriptsize \textbf{Audio $m(t)$}};
+\end{tikzpicture}\par
+\small When $\phi$ is small, the I-arm LPF yields $v_I(t)\approx\frac{A_c}{2}m(t)$ and the Q-arm LPF yields $v_Q(t)\approx\frac{A_c}{2}m(t)\phi$. Their product is $e(t)\approx\frac{A_c^2}{4}m^2(t)\phi$. Since $m^2(t)>0$, the loop filter integrates a DC error voltage strictly proportional to $\phi$, steering the VCO until $\phi\to 0$.
+\end{tcolorbox}
+
 \begin{tcolorbox}[examplebox, title={Frequency and Phase Error in a Coherent Receiver}]
 For $m(t)=\cos(2\pi\,1000t)$, unit RF scale, and LO frequency offset $20\,\mathrm{Hz}$ with zero initial phase error, the detector yields
 \[
