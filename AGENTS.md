@@ -55,7 +55,21 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── BS-M301_Combined_Notes.tex   (auto-generated — do not hand-edit)
 │   │   └── BS-M301_Probability_and_Statistics.pdf (combined output)
 │   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
-├── 4th SEM/ … 5th SEM/             # Planned (each with New Syllabus Subjects/)
+├── 4th SEM/
+│   ├── 01. Analog Communication/   # EC401 — 4 modules (All complete)
+│   │   ├── EC401_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── EC401_Module4_Notes.tex / .pdf
+│   │   ├── EC401_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│   │   └── EC401_Analog_Communication.pdf (combined output)
+│   ├── 02. Analog Circuits/        # EC402 — 4 modules (All complete)
+│   │   ├── EC402_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── EC402_Module4_Notes.tex / .pdf
+│   │   ├── EC402_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│   │   └── EC402_Analog_Circuits.pdf (combined output)
+│   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
+├── 5th SEM/                        # Planned (each with New Syllabus Subjects/)
 ├── 6th SEM/
 │   ├── 01. Control System/         # EC601 — 7 modules (All complete)
 │   │   ├── EC601_Module1_Notes.tex / .pdf
@@ -377,7 +391,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 
 ## Current state (as of October 2026)
 
-**3rd SEM — in progress:**
+**3rd SEM — complete:**
 
 | Subject | Modules | Module PDFs | Combined PDF | Pages |
 |---|---|---|---|---|
@@ -387,6 +401,13 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | EC304 Network Theory | 4 | ✅ All compiled | `EC304_Network_Theory.pdf` | 51 |
 | ES-CS301 Data Structure and Algorithms | 4 | ✅ All compiled | `ES-CS301_Data_Structure_and_Algorithms.pdf` | 51 |
 | BS-M301 Probability and Statistics | 6 | ✅ All compiled | `BS-M301_Probability_and_Statistics.pdf` | 71 |
+
+**4th SEM — in progress:**
+
+| Subject | Modules | Module PDFs | Combined PDF | Pages |
+|---|---|---|---|---|
+| EC401 Analog Communication | 4 | ✅ All compiled | `EC401_Analog_Communication.pdf` | 46 |
+| EC402 Analog Circuits | 4 | ✅ All compiled | `EC402_Analog_Circuits.pdf` | 45 |
 
 **6th SEM — complete and compiled:**
 
