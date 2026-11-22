@@ -32,6 +32,7 @@
 \usepackage{multirow}
 \usepackage{tocloft}
 \newcommand{\Q}[1]{\textbf{#1}\par\noindent\ignorespaces}
+\usepackage{longtable}
 \definecolor{myred}{RGB}{196,30,58}
 \definecolor{mydark}{RGB}{30,30,50}
 \definecolor{mygreen}{RGB}{14,120,80}
@@ -63,14 +64,14 @@
 \renewcommand{\cftsecfont}{\normalsize\bfseries\color{mydark}}
 \renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{mydark}}
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
-\setlength{\cftbeforesecskip}{7pt}
+\setlength{\cftbeforesecskip}{5pt}
 \renewcommand{\cftsubsecfont}{\small\color{mydark}}
 \renewcommand{\cftsubsecpagefont}{\small\color{mydark}}
-\setlength{\cftbeforesubsecskip}{3pt}
+\setlength{\cftbeforesubsecskip}{2pt}
 \setlength{\cftsubsecindent}{1.4em}
 \renewcommand{\cftpartfont}{\normalsize\bfseries\color{myteal}}
 \renewcommand{\cftpartpagefont}{\normalsize\bfseries\color{myteal}}
-\setlength{\cftbeforepartskip}{14pt}
+\setlength{\cftbeforepartskip}{10pt}
 \renewcommand{\arraystretch}{1.45}
 \setlength{\tabcolsep}{6pt}
 \arrayrulecolor{mydark}
@@ -159,12 +160,10 @@
   \addcontentsline{toc}{part}{Module #1: #2}%
   \setcounter{section}{0}%
   \begin{center}
-    \vspace*{1.0cm}
-    {\Huge\bfseries\color{myred} Module #1}\\[10pt]
-    {\Large\bfseries\color{mydark} #2}\\[10pt]
-    {\color{myred}\rule{0.55\linewidth}{1.2pt}}
+    {\LARGE\bfseries\color{myred} Module #1: #2}\\[4pt]
+    {\color{myred}\rule{0.65\linewidth}{1.2pt}}
   \end{center}
-  \vspace{14pt}
+  \vspace{6pt}
 }
 \begin{document}
 
@@ -1573,11 +1572,20 @@ Use case        & Small, stable networks     & Large, dynamic networks \\
 
 \subsection{Other Network Layer Protocols}
 
-\begin{tabularx}{\linewidth}{|B{2.4cm}|X|}
+\begingroup
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\begin{longtable}{|B{2.4cm}|>{\small\raggedright\arraybackslash}m{\dimexpr(\linewidth-2.4cm-4\tabcolsep-3\arrayrulewidth)/1\relax}|}
 \hline
-\multicolumn{1}{|>{\centering\arraybackslash}p{2.4cm}|}{\textbf{\color{myteal}Protocol}} &
-\multicolumn{1}{>{\centering\arraybackslash}X|}{\textbf{\color{myteal}Function}} \\
+\multicolumn{1}{|c|}{\textbf{\color{myteal}Protocol}} &
+\multicolumn{1}{c|}{\textbf{\color{myteal}Function}} \\
 \hline
+\endfirsthead
+\hline
+\multicolumn{1}{|c|}{\textbf{\color{myteal}Protocol}} &
+\multicolumn{1}{c|}{\textbf{\color{myteal}Function}} \\
+\hline
+\endhead
 ARP            & Address Resolution Protocol. Maps IP address $\to$ MAC address. Broadcasts ARP request; target replies with its MAC. \\
 \hline
 RARP           & Reverse ARP. Maps MAC address $\to$ IP address. Used by diskless workstations (replaced by DHCP). \\
@@ -1588,7 +1596,8 @@ IP (IPv4)      & Connectionless, unreliable packet delivery. 32-bit addressing, 
 \hline
 IPv6           & 128-bit addressing (340 undecillion addresses), simplified header, no fragmentation by routers, built-in IPSec. \\
 \hline
-\end{tabularx}
+\end{longtable}
+\endgroup
 
 \begin{tcolorbox}[tikzbox, title={ARP --- Address Resolution Process}]
 \centering
@@ -2026,23 +2035,23 @@ Use case        & Bulk data encryption          & Key exchange, digital signatur
 %--- SENDER column ---
 \node[font=\small\bfseries\color{myred}] (slbl) at (1.1, 0.0) {Sender};
 \node[proc,  below=0.4cm of slbl]  (msg1)  {Message};
-\node[proc,  below=0.8cm of msg1]  (hash1) {Hash (SHA-256)};
-\node[pkey,  below=0.8cm of hash1] (priv)  {Sign with private key};
-\node[proc,  below=0.8cm of priv]  (sig)   {Signature};
+\node[proc,  below=0.57cm of msg1]  (hash1) {Hash (SHA-256)};
+\node[pkey,  below=0.57cm of hash1] (priv)  {Sign with private key};
+\node[proc,  below=0.57cm of priv]  (sig)   {Signature};
 \draw[arr] (msg1)  -- (hash1);
 \draw[arr] (hash1) -- (priv);
 \draw[arr] (priv)  -- (sig);
 
 %--- transfer arrow (horizontal, between columns) ---
 \draw[-Stealth, very thick, color=myamber]
-  (2.5, -2.4) -- node[above, font=\scriptsize\color{myamber}] {Msg + Sig} (4.7, -2.4);
+  (2.5, -2.05) -- node[above, font=\scriptsize\color{myamber}] {Msg + Sig} (4.7, -2.05);
 
 %--- RECEIVER column ---
 \node[font=\small\bfseries\color{myred}] (rlbl) at (6.1, 0.0) {Receiver};
 \node[proc,  below=0.4cm of rlbl]  (msg2)  {Message};
-\node[proc,  below=0.8cm of msg2]  (hash2) {Hash (SHA-256)};
-\node[gkey,  below=0.8cm of hash2] (pub)   {Verify signature with public key};
-\node[proc,  below=0.8cm of pub]   (result) {Valid or invalid};
+\node[proc,  below=0.57cm of msg2]  (hash2) {Hash (SHA-256)};
+\node[gkey,  below=0.57cm of hash2] (pub)   {Verify signature with public key};
+\node[proc,  below=0.57cm of pub]   (result) {Valid or invalid};
 \draw[arr] (msg2)  -- (hash2);
 \draw[arr] (hash2) -- (pub);
 \draw[arr] (pub)   -- (result);
