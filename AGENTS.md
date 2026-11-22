@@ -77,6 +77,9 @@ ECE_MAKAUT_Short-Notes/
 │   ├── 04. Design and Analysis of Algorithms/ # ES-CS401 — 5 modules (All complete)
 │   │   ├── ES-CS401_Module1_Notes.tex through ES-CS401_Module5_Notes.tex + PDFs
 │   │   └── ES-CS401_Design_and_Analysis_of_Algorithms.pdf (combined output)
+│   ├── 05. Numerical Methods/             # BS-M401 — 3 modules (All complete)
+│   │   ├── BS-M401_Module1_Notes.tex through BS-M401_Module3_Notes.tex + PDFs
+│   │   └── BS-M401_Numerical_Methods.pdf (combined output)
 │   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
 ├── 5th SEM/                        # Planned (each with New Syllabus Subjects/)
 ├── 6th SEM/
@@ -418,7 +421,8 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | EC401 Analog Communication | 4 | ✅ All compiled | `EC401_Analog_Communication.pdf` | 46 |
 | EC402 Analog Circuits | 4 | ✅ All compiled | `EC402_Analog_Circuits.pdf` | 45 |
 | EC403 Microprocessor and Microcontroller | 4 | ✅ All compiled | `EC403_Microprocessor_and_Microcontroller.pdf` | 56 |
-| ES-CS401 Design and Analysis of Algorithms | 5 | ✅ All compiled | `ES-CS401_Design_and_Analysis_of_Algorithms.pdf` | 48 |
+| ES-CS401 Design and Analysis of Algorithms | 5 | ✅ All compiled | `ES-CS401_Design_and_Analysis_of_Algorithms.pdf` | 49 |
+| BS-M401 Numerical Methods | 3 | ✅ All compiled | `BS-M401_Numerical_Methods.pdf` | 25 |
 
 **6th SEM — complete and compiled:**
 

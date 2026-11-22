@@ -150,7 +150,8 @@ const AcademicCatalog = (function () {
         { code: 'EC401', name: 'Analog Communication', modules: 4 },
         { code: 'EC402', name: 'Analog Electronic Circuits', modules: 5 },
         { code: 'EC403', name: 'Microprocessor and Microcontroller', modules: 4 },
-        { code: 'ES-CS401', name: 'Design & Analysis of Algorithms', modules: 5 }
+        { code: 'ES-CS401', name: 'Design & Analysis of Algorithms', modules: 5 },
+        { code: 'BS-M401', name: 'Numerical Methods', modules: 3 }
       ],
       note: 'Scheduled for compilation following Semester 3 notes completion.'
     },
