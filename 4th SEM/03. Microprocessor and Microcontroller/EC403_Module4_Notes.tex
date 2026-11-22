@@ -1,0 +1,366 @@
+\documentclass[12pt,a4paper]{article}
+
+% ─── Page Layout ───────────────────────────────────────────────────────────────
+\usepackage[a4paper, margin=0.8in, headheight=14pt]{geometry}
+
+% ─── Fonts (XeLaTeX) ───────────────────────────────────────────────────────────
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{TeX Gyre Pagella}
+\setmonofont[Scale=0.88]{TeX Gyre Cursor}
+\setmathfont{Latin Modern Math}
+
+% ─── Packages ──────────────────────────────────────────────────────────────────
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, patterns}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{microtype}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\sloppy
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{tocloft}
+
+% ─── Q&A helper ────────────────────────────────────────────────────────────────
+\newcommand{\Q}[1]{\textbf{#1}\par\noindent\ignorespaces}
+
+% ─── Colour Palette ────────────────────────────────────────────────────────────
+\definecolor{myred}{RGB}{196,30,58}
+\definecolor{mydark}{RGB}{30,30,50}
+\definecolor{mygreen}{RGB}{14,120,80}
+\definecolor{myteal}{RGB}{0,130,140}
+\definecolor{myamber}{RGB}{180,100,0}
+\definecolor{mypurple}{RGB}{100,30,160}
+\definecolor{mygray}{RGB}{246,247,249}
+\definecolor{mgframe}{RGB}{180,185,200}
+\definecolor{watermark}{RGB}{145,150,170}
+\definecolor{hdrred}{RGB}{250,232,235}
+\definecolor{hdrgreen}{RGB}{220,244,233}
+\definecolor{hdrteal}{RGB}{220,242,244}
+\definecolor{hdramber}{RGB}{253,242,215}
+\definecolor{hdrpurple}{RGB}{238,228,255}
+\definecolor{hdrgray}{RGB}{238,240,245}
+\definecolor{rowalt}{RGB}{250,251,253}
+
+% ─── Section Formatting ────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{myred}}{\thesection.}{0.5em}{}
+  [\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{myteal}}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{18pt}{7pt}
+\titlespacing*{\subsection}{0pt}{11pt}{4pt}
+
+% ─── Paragraph ─────────────────────────────────────────────────────────────────
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+% ─── TOC Styling ───────────────────────────────────────────────────────────────
+\renewcommand{\cfttoctitlefont}{\large\bfseries\color{myred}}
+\renewcommand{\cftaftertoctitle}{\par\noindent{\color{myred}\rule{\linewidth}{0.8pt}}}
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{6pt}
+\renewcommand{\cftsecfont}{\normalsize\bfseries\color{mydark}}
+\renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{mydark}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftbeforesecskip}{7pt}
+\renewcommand{\cftsubsecfont}{\small\color{mydark}}
+\renewcommand{\cftsubsecpagefont}{\small\color{mydark}}
+\setlength{\cftbeforesubsecskip}{3pt}
+\setlength{\cftsubsecindent}{1.4em}
+
+% ─── Table helpers ─────────────────────────────────────────────────────────────
+\renewcommand{\arraystretch}{1.45}
+\setlength{\tabcolsep}{6pt}
+\arrayrulecolor{mydark}
+\newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}m{#1}}
+\newcolumntype{Y}{>{\small\raggedright\arraybackslash}X}
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
+
+% ─── Header / Footer ───────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{myred}\textbf{EC403}\;\color{mydark}--- Microprocessor and Microcontroller}
+\fancyhead[R]{\small\color{myteal}\textbf{Module 4 Notes}}
+\fancyfoot[C]{\small\color{mydark}\thepage}
+\fancyfoot[R]{\small\color{watermark}\textit{\copyright\ Biraj}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+% ─── Hyperref ──────────────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks=true, linkcolor=myteal, urlcolor=myteal,
+  pdfauthor={Biraj Sarkar (CGEC)},
+  pdftitle={EC403 --- Module 4 Notes: RISC Processors and ARM Interfacing}
+}
+
+% ─── tcolorbox styles ──────────────────────────────────────────────────────────
+\tcbset{
+  tikzbox/.style={
+    colback=mygray, colframe=mgframe, boxrule=0.6pt, arc=4pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    colbacktitle=mgframe, coltitle=mydark, fonttitle=\small\bfseries
+  },
+  defbox/.style={
+    colback=hdrgreen, colframe=mygreen, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=mygreen, coltitle=white, fonttitle=\small\bfseries
+  },
+  formulabox/.style={
+    colback=hdrteal, colframe=myteal, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=7pt, bottom=7pt,
+    colbacktitle=myteal, coltitle=white, fonttitle=\small\bfseries
+  },
+  examplebox/.style={
+    colback=hdramber, colframe=myamber, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=myamber, coltitle=white, fonttitle=\small\bfseries
+  },
+  masonbox/.style={
+    colback=hdrpurple, colframe=mypurple, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=mypurple, coltitle=white, fonttitle=\small\bfseries
+  },
+  exambox/.style={
+    colback=hdrpurple, colframe=mypurple, boxrule=1pt, arc=5pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    colbacktitle=mypurple, coltitle=white, fonttitle=\bfseries,
+    breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}
+  }
+}
+\tcbset{breakable}
+\tcbset{after={\par\color{black}}}
+
+% ─── TikZ styles ───────────────────────────────────────────────────────────────
+\tikzset{
+  block/.style={rectangle, draw=myteal, fill=hdrteal,
+    text width=2.4cm, align=center, minimum height=0.95cm,
+    font=\small, rounded corners=3pt, line width=0.7pt},
+  redblock/.style={rectangle, draw=myred, fill=hdrred,
+    text width=2.4cm, align=center, minimum height=0.95cm,
+    font=\small, rounded corners=3pt, line width=0.7pt},
+  sumjunc/.style={circle, draw=myamber, fill=hdramber,
+    minimum size=0.62cm, font=\small, line width=0.8pt},
+  arrow/.style={-Stealth, thick, color=mydark},
+  redarrow/.style={-Stealth, thick, color=myred},
+  line/.style={thick, color=mydark}
+}
+
+\begin{document}
+
+% ─── Title Page ───────────────────────────────────────────────────────────────
+\begin{center}
+  {\LARGE\bfseries\color{myred} EC403 --- Microprocessor and Microcontroller}\\[5pt]
+  {\normalsize\color{mydark} Semester IV \quad$\bullet$\quad 3L:0T:0P \quad$\bullet$\quad 3 Credits}\\[3pt]
+  {\normalsize\color{myteal}\textbf{Module 4 Exam Notes: RISC Processors and ARM Interfacing}}\\[3pt]
+  {\small\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27) \;$|$\; \textit{Biraj Sarkar}}
+\end{center}
+\vspace{2pt}
+\noindent{\color{myred}\rule{\linewidth}{1.5pt}}
+\vspace{2pt}
+
+\hypersetup{linkcolor=mydark}
+\tableofcontents
+\hypersetup{linkcolor=myteal}
+\newpage
+
+\section{RISC Processors and ARM Interfacing}
+\subsection{Load/Store Organisation and RISC Design}
+\begin{tcolorbox}[defbox,title={Reduced Instruction Set Computer}]
+A \textbf{reduced instruction set computer (RISC)} uses an instruction set designed around regular operations and efficient decoding. In a typical load/store design, explicit load and store instructions access memory and most arithmetic instructions operate on registers. The simpler instruction formats can help pipeline execution.
+\end{tcolorbox}
+\par\addvspace{7pt}\noindent
+In a load/store sequence, load operands from memory into registers, compute in registers, then store the result. The RISC and complex instruction set computer (CISC) labels describe instruction-set design tendencies. They do not guarantee a particular clock rate, cycle count, program size or energy use.
+\par\addvspace{6pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3.0cm}|Y|Y|}
+\hline
+\textbf{Aspect} & \textbf{Typical RISC design} & \textbf{Typical CISC design} \\ \hline
+Operand model & Most computation uses registers. & Many instructions allow a memory operand. \\ \hline
+Instruction encoding & Regular formats; compact variants can coexist. & More varied formats and lengths are common. \\ \hline
+Memory access & Explicit loads and stores. & An instruction may combine memory access with arithmetic. \\ \hline
+Trade-offs & Simpler decoding, potentially more instructions for a task. & Rich instructions can shorten sequences, with more complex decoding. \\ \hline
+\end{tabularx}\par
+\endgroup
+\subsection{Pipelining and Hazards}
+A \textbf{pipeline} overlaps the stages of different instructions. For fetch, decode and execute, the ideal pipeline can complete one instruction per cycle once full, even though a particular instruction takes three stages. A data hazard occurs when an instruction needs a result that has not arrived. A structural hazard occurs when stages contend for hardware. A control hazard occurs when a branch changes the next address. Interlocks, forwarding, hardware resources and branch handling reduce their effect.
+\begin{tcolorbox}[tikzbox,title={Instruction Flow Through a Three-Stage Pipeline}]
+\centering
+\begin{tikzpicture}
+\node[block] (f) at (0,0) {Fetch};
+\node[block] (d) at (4.3,0) {Decode};
+\node[block] (e) at (8.6,0) {Execute};
+\draw[arrow] (f) -- (d);
+\draw[arrow] (d) -- (e);
+\end{tikzpicture}
+\end{tcolorbox}
+\begin{tcolorbox}[examplebox,title={Ideal Pipeline Timing}]
+For $N$ instructions in a $k$-stage pipeline with equal stage time $t_c$ and no stalls, the first result needs $k$ clocks and the remaining $N-1$ results need one clock each.
+\[
+ T_{\mathrm{pipe}}=(k+N-1)t_c.
+\]
+For $k=3$, $N=8$ and $t_c=10$ ns, the ideal time is 100 ns. Executing each full instruction before starting the next takes $Nk t_c=240$ ns under the same stage-time model. The ideal speedup for this short sequence is 2.4.
+\end{tcolorbox}
+
+\section{Arm Cores and Microcontroller Organisation}
+\begin{tcolorbox}[defbox,title={Arm Core and Microcontroller}]
+An \textbf{Arm core} executes the instruction set for a given Arm architecture. A microcontroller integrates that core with Flash, SRAM, clock and reset logic, GPIO and other peripheral blocks. Peripheral register names and pin mappings depend on the chip.
+\end{tcolorbox}
+\subsection{ARM7TDMI and Cortex-M3}
+ARM7TDMI implements Armv4T, with a three-stage pipeline, 32-bit ARM instructions and compact 16-bit Thumb instructions. It has separate fast interrupt and ordinary interrupt (FIQ and IRQ) exception paths with banked state for exception modes. Cortex-M3 implements Armv7-M and executes Thumb instructions, including 16- and 32-bit encodings. It integrates the Nested Vectored Interrupt Controller (NVIC) and uses a different exception model. Cortex-A generally targets application processors, Cortex-R targets timing-critical systems and Cortex-M targets microcontrollers.
+\subsection{Registers and Load/Store Example}
+On Cortex-M3, R0--R12 are general-purpose registers, R13 denotes SP, R14 is the link register (LR), and R15 denotes PC. The program status is available through xPSR. On reset, the first vector-table word initializes the main stack pointer and the next word gives the reset handler entry. For a call, BL saves the return link and branches. The following Thumb sequence adds two words, assuming R0 points to aligned inputs and R3 points to writable word storage.
+\begin{verbatim}
+        LDR  r1,[r0,#0]
+        LDR  r2,[r0,#4]
+        ADDS r1,r1,r2       ; C records unsigned carry
+        STR  r1,[r3,#0]
+\end{verbatim}
+
+\par\ifdim\dimexpr\pagegoal-\pagetotal\relax<105pt\relax\newpage\fi
+\section{ARM Microcontroller Interface Design}
+\begin{tcolorbox}[defbox,title={Memory-Mapped I/O}]
+\textbf{Memory-mapped I/O} gives a peripheral register an address in the processor's address map. The CPU uses ordinary load and store instructions to reach that register. Firmware must use the supported width and register semantics, and enable the peripheral clock where required.
+\end{tcolorbox}
+\begin{tcolorbox}[tikzbox,title={Microcontroller Interface Paths}]
+\centering
+\begin{tikzpicture}
+\node[block] (core) at (0,0) {Cortex-M3\\and NVIC};
+\node[block] (bus) at (4.8,0) {On-chip\\bus fabric};
+\node[block] (per) at (9.6,0) {GPIO, timer\\and serial I/O};
+\node[block] (mem) at (4.8,-2) {Flash and SRAM};
+\draw[<->,thick] (core) -- (bus);
+\draw[<->,thick] (bus) -- (per);
+\draw[<->,thick] (bus) -- (mem);
+\end{tikzpicture}
+\end{tcolorbox}
+\subsection{Design Checklist}
+\begin{enumerate}[leftmargin=*,itemsep=4pt]
+\item \textbf{Choose an interface.} Determine signal rate, direction, voltage, device count and timing. GPIO suits discrete signals. A timer produces independent periodic events. Select a serial interface for a continuous data stream.
+\item \textbf{Make the connections.} Use a common reference ground, suitable supply decoupling and levels compatible with the MCU and device. Use pull-ups where required. Use a transistor or driver for loads beyond the pin rating.
+\item \textbf{Configure the MCU.} Enable peripheral clocks and select pin mode or alternate function. Set timing, data format and polarity. Clear stale status before enabling requests.
+\item \textbf{Select a transfer method.} Poll for simple tests, use interrupts for asynchronous events, or use DMA for repeated transfers when the hardware supports it.
+\item \textbf{Test failure cases.} Check reset states, clock assumptions, timeouts, busy flags, missed interrupts, overrun and disconnected devices.
+\end{enumerate}
+
+\subsection{GPIO and External Interrupt on STM32F103}
+The register examples use STM32F103 with default pin mapping. Verify that the chosen package exposes the pins. For an active-high LED on PA5, connect PA5 through a current-limiting resistor to the LED anode and return its cathode to ground. For an active-low switch on PA0, use an internal or external pull-up and connect the switch to ground.
+\begin{tcolorbox}[examplebox,title={LED and Push-Button Interface}, title after break={LED and Push-Button Interface (contd.)}]
+\begin{enumerate}[leftmargin=*,itemsep=4pt]
+\item Enable GPIOA in \texttt{RCC\_APB2ENR}. For interrupt pin routing also enable the alternate-function I/O (AFIO) clock.
+\item Configure PA5 as general-purpose push-pull output at 2 MHz using its four-bit field in \texttt{GPIOA\_CRL}: CNF=00 and MODE=10. Write bit 5 of \texttt{GPIOA\_BSRR} to set PA5 or bit 21 to clear it.
+\item Configure PA0 as input with pull-up/pull-down (CNF=10, MODE=00), then set ODR bit 0 to select the pull-up. Read bit 0 of \texttt{GPIOA\_IDR} for polling.
+\item For an interrupt, route port A to EXTI0 in AFIO, select a falling edge and unmask EXTI0. Clear pending by writing 1 to EXTI PR bit 0, then enable EXTI0 in the NVIC. In the handler, acknowledge the event through the peripheral and debounce the switch.
+\end{enumerate}
+For a 3.3 V supply, a 2.0 V LED drop and 4 mA target, $R\approx(3.3-2.0)/0.004=325\ \Omega$. A $330\ \Omega$ resistor gives approximately 3.9 mA under the stated assumptions. Confirm the pin current and output-voltage limits in the device data sheet.
+\end{tcolorbox}
+
+\subsection{Serial Interfaces and Timer Output}
+\par\addvspace{5pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{2.4cm}|Y|Y|}
+\hline
+\textbf{Interface} & \textbf{Signals and operation} & \textbf{Design decision} \\ \hline
+UART & TX, RX and common ground. Asynchronous framed data. & Match baud and frame format. Cross logic-level TX and RX between devices. Use a line transceiver when required. \\ \hline
+SPI & SCK, controller output and input, and a device-select signal. Synchronous transfer. & Match clock polarity and phase, transfer order and chip-select timing. Keep only the intended device selected. \\ \hline
+I2C & SDA and SCL with open-drain outputs and pull-ups. Addressed transfers and ACK. & Choose pull-ups and rate for the bus capacitance. Ensure the addresses and signal levels are compatible. \\ \hline
+Timer/PWM & A timer counts clock ticks and drives an output compare channel. & Select the clock, divider, period and compare value. Configure the output pin's alternate function. \\ \hline
+\end{tabularx}\par
+\endgroup
+For USART1 on STM32F103 with default mapping, PA9 is TX and PA10 is RX. Enable the USART and GPIO clocks, configure alternate-function push-pull TX and an appropriate input mode for RX, set baud and frame format, then enable transmit and receive. For an oversampling-by-16 USART at a 72 MHz peripheral clock and 9600 baud, the divisor in the baud-rate register encoding is $72000000/9600=7500$, or \texttt{1D4CH}. Use the actual peripheral clock rather than assuming it equals the CPU frequency.
+\begin{tcolorbox}[examplebox,title={Generate 1 kHz PWM at 25 Percent Duty}]
+For edge-aligned upcounting with PWM mode 1 and active-high output, take the timer input clock as 72 MHz, the prescaler as 71 and the auto-reload register as 999:
+\begin{align*}
+ f_{\mathrm{count}} &= 72\,\mathrm{MHz}/(71+1)=1\,\mathrm{MHz},\\
+ f_{\mathrm{PWM}} &= 1\,\mathrm{MHz}/(999+1)=1\,\mathrm{kHz},\\
+ \mathrm{CCR} &= 0.25(999+1)=250.
+\end{align*}
+The output is active for the first 250 of the 1000 counts. On STM32F103, an APB prescaler can change the relationship between the peripheral-bus clock and timer clock, so check the clock tree before using these values.
+\end{tcolorbox}
+\par\addvspace{7pt}\noindent
+ADC pins use analog mode, a legal analog input range and the expected reference. Sampling time must suit source impedance. A sensor application can use a timer trigger and DMA, where supported, to record samples while the CPU performs other work.
+
+\subsection{Worked System Design: Periodic SPI Sensor Reading}
+\begin{tcolorbox}[examplebox,title={Wire, Configure, Transfer and Verify}]
+Assume a 3.3 V SPI sensor and an STM32F103 using default SPI1 routing.
+\begin{enumerate}[leftmargin=*,itemsep=4pt]
+\item Connect PA5 to the sensor clock, PA7 to its data input, PA6 to its data output, and a GPIO such as PA4 to chip select. Use a common ground. Check voltage limits and keep chip select inactive while the MCU starts.
+\item Enable the GPIO and SPI1 clocks. Set SCK and MOSI to alternate-function output, MISO as input and PA4 as a GPIO output. Set the master clock divider, bit order, polarity and phase from the sensor specification.
+\item For each sample, assert chip select, transmit the read command, and clock the response bytes while sending appropriate filler bytes. Read the receive register as data becomes available. Finish the transfer before releasing chip select.
+\item Use a hardware timer to schedule samples. Use a timeout so a failed or missing device does not hold the application in a busy loop. Verify clock, chip-select timing and data order on a logic analyser.
+\end{enumerate}
+SPI is full duplex at the wire level. Reading a response requires transmitted clocks, even when the outgoing data bits have no meaning for that phase of the transaction.
+\end{tcolorbox}
+
+\subsection*{References}
+Arm's \href{https://support.arm.com/documentation/ddi0210/c/Introduction/About-the-ARM7TDMI-core}{ARM7TDMI technical reference} and \href{https://documentation-service.arm.com/static/5ea823e69931941038df1af5}{Cortex-M3 Devices Generic User Guide} explain the core features. STMicroelectronics \href{https://www.st.com/resource/en/reference_manual/rm0008-.pdf}{RM0008} describes the STM32F103 register and peripheral examples.
+
+\newpage
+\begin{center}
+{\large\bfseries\color{myred} Quick Revision --- Module 4}\\[3pt]
+{\small\color{mydark} RISC Processors and ARM Interfacing $|$ EC403}
+\end{center}
+\noindent{\color{myred}\rule{\linewidth}{1.2pt}}\vspace{4pt}
+\begin{tcolorbox}[formulabox,title={Key Formulas at a Glance}]
+\renewcommand{\arraystretch}{1.35}
+\noindent\begin{tabularx}{\linewidth}{B{4.2cm}Y}
+Ideal pipeline time & $(k+N-1)t_c$ for $k$ stages and $N$ instructions. \\
+Timer count clock & $f_{\mathrm{TIM}}/(\mathrm{PSC}+1)$. \\
+Edge-aligned PWM & $f_{\mathrm{count}}/(\mathrm{ARR}+1)$. Duty $=\mathrm{CCR}/(\mathrm{ARR}+1)$ under the stated PWM model. \\
+LED resistor & $R\approx(V_{\mathrm{out}}-V_F)/I$. \\
+\end{tabularx}\par
+\end{tcolorbox}
+\begin{tcolorbox}[defbox,title={One-Line Definitions}]
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+\item \textbf{Load/store architecture:} Arithmetic mainly uses registers and explicit loads and stores access memory.
+\item \textbf{NVIC:} Cortex-M controller that prioritises and dispatches supported interrupts.
+\item \textbf{Alternate function:} A pin mode that connects a peripheral signal to a physical pin.
+\item \textbf{PWM duty cycle:} Fraction of each period during which the output is active.
+\end{itemize}
+\end{tcolorbox}
+\begin{tcolorbox}[exambox,title={Frequently Asked / Viva Questions}]
+\begin{enumerate}[leftmargin=*,label=\textbf{Q\arabic*.},itemsep=5pt]
+\item \Q{What separates a load from a store?} A load moves a value from memory into a register, and a store moves a register value to memory.
+\item \Q{What does a pipeline improve?} Instruction throughput by overlapping stages.
+\item \Q{Which instruction states does ARM7TDMI support?} ARM and Thumb.
+\item \Q{Does Cortex-M3 execute ARM-state instructions?} Cortex-M3 executes Thumb instructions.
+\item \Q{What is a peripheral clock gate?} A control that enables or stops the clock to a peripheral block.
+\item \Q{Why is a pull-up used on an active-low switch input?} It provides a defined high level when the switch is open.
+\item \Q{What advantage does BSRR give on STM32F103?} It sets or resets selected output latch bits without a read-modify-write of ODR.
+\item \Q{Why use a hardware timer to generate PWM?} The waveform timing does not depend on software delays.
+\item \Q{Which serial bus typically uses open-drain pins and pull-ups?} I2C.
+\item \Q{What must SPI devices agree on?} Clock polarity, phase, bit order and device-select timing.
+\item \Q{Where do you find register and pin details?} Use the MCU reference manual and the data sheet for the selected part and package.
+\end{enumerate}
+\end{tcolorbox}
+\begin{tcolorbox}[tikzbox,title={Choose an Interface at a Glance}]
+\par\addvspace{5pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Task} & \textbf{Interface} & \textbf{Design check} \\ \hline
+Read a switch & GPIO with pull-up & Input level, edge and debounce. \\ \hline
+Send periodic pulses & Timer output & Clock tree, period and duty cycle. \\ \hline
+Exchange serial data & UART, SPI or I2C & Format, wiring, logic levels and timing. \\ \hline
+\end{tabularx}\par
+\endgroup
+\end{tcolorbox}
+
+\end{document}

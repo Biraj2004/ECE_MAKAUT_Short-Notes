@@ -1,0 +1,396 @@
+\documentclass[12pt,a4paper]{article}
+
+% ─── Page Layout ───────────────────────────────────────────────────────────────
+\usepackage[a4paper, margin=0.8in, headheight=14pt]{geometry}
+
+% ─── Fonts (XeLaTeX) ───────────────────────────────────────────────────────────
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{TeX Gyre Pagella}
+\setmonofont[Scale=0.88]{TeX Gyre Cursor}
+\setmathfont{Latin Modern Math}
+
+% ─── Packages ──────────────────────────────────────────────────────────────────
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, patterns}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{microtype}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\sloppy
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{tocloft}
+
+% ─── Q&A helper ────────────────────────────────────────────────────────────────
+\newcommand{\Q}[1]{\textbf{#1}\par\noindent\ignorespaces}
+
+% ─── Colour Palette ────────────────────────────────────────────────────────────
+\definecolor{myred}{RGB}{196,30,58}
+\definecolor{mydark}{RGB}{30,30,50}
+\definecolor{mygreen}{RGB}{14,120,80}
+\definecolor{myteal}{RGB}{0,130,140}
+\definecolor{myamber}{RGB}{180,100,0}
+\definecolor{mypurple}{RGB}{100,30,160}
+\definecolor{mygray}{RGB}{246,247,249}
+\definecolor{mgframe}{RGB}{180,185,200}
+\definecolor{watermark}{RGB}{145,150,170}
+\definecolor{hdrred}{RGB}{250,232,235}
+\definecolor{hdrgreen}{RGB}{220,244,233}
+\definecolor{hdrteal}{RGB}{220,242,244}
+\definecolor{hdramber}{RGB}{253,242,215}
+\definecolor{hdrpurple}{RGB}{238,228,255}
+\definecolor{hdrgray}{RGB}{238,240,245}
+\definecolor{rowalt}{RGB}{250,251,253}
+
+% ─── Section Formatting ────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{myred}}{\thesection.}{0.5em}{}
+  [\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{myteal}}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{18pt}{7pt}
+\titlespacing*{\subsection}{0pt}{11pt}{4pt}
+
+% ─── Paragraph ─────────────────────────────────────────────────────────────────
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+% ─── TOC Styling ───────────────────────────────────────────────────────────────
+\renewcommand{\cfttoctitlefont}{\large\bfseries\color{myred}}
+\renewcommand{\cftaftertoctitle}{\par\noindent{\color{myred}\rule{\linewidth}{0.8pt}}}
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{6pt}
+\renewcommand{\cftsecfont}{\normalsize\bfseries\color{mydark}}
+\renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{mydark}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftbeforesecskip}{7pt}
+\renewcommand{\cftsubsecfont}{\small\color{mydark}}
+\renewcommand{\cftsubsecpagefont}{\small\color{mydark}}
+\setlength{\cftbeforesubsecskip}{3pt}
+\setlength{\cftsubsecindent}{1.4em}
+
+% ─── Table helpers ─────────────────────────────────────────────────────────────
+\renewcommand{\arraystretch}{1.45}
+\setlength{\tabcolsep}{6pt}
+\arrayrulecolor{mydark}
+\newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}m{#1}}
+\newcolumntype{Y}{>{\small\raggedright\arraybackslash}X}
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
+
+% ─── Header / Footer ───────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{myred}\textbf{EC403}\;\color{mydark}--- Microprocessor and Microcontroller}
+\fancyhead[R]{\small\color{myteal}\textbf{Module 2 Notes}}
+\fancyfoot[C]{\small\color{mydark}\thepage}
+\fancyfoot[R]{\small\color{watermark}\textit{\copyright\ Biraj}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+% ─── Hyperref ──────────────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks=true, linkcolor=myteal, urlcolor=myteal,
+  pdfauthor={Biraj Sarkar (CGEC)},
+  pdftitle={EC403 --- Module 2 Notes: Peripheral Interfacing and Arithmetic Coprocessors}
+}
+
+% ─── tcolorbox styles ──────────────────────────────────────────────────────────
+\tcbset{
+  tikzbox/.style={
+    colback=mygray, colframe=mgframe, boxrule=0.6pt, arc=4pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    colbacktitle=mgframe, coltitle=mydark, fonttitle=\small\bfseries
+  },
+  defbox/.style={
+    colback=hdrgreen, colframe=mygreen, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=mygreen, coltitle=white, fonttitle=\small\bfseries
+  },
+  formulabox/.style={
+    colback=hdrteal, colframe=myteal, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=7pt, bottom=7pt,
+    colbacktitle=myteal, coltitle=white, fonttitle=\small\bfseries
+  },
+  examplebox/.style={
+    colback=hdramber, colframe=myamber, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=myamber, coltitle=white, fonttitle=\small\bfseries
+  },
+  masonbox/.style={
+    colback=hdrpurple, colframe=mypurple, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=mypurple, coltitle=white, fonttitle=\small\bfseries
+  },
+  exambox/.style={
+    colback=hdrpurple, colframe=mypurple, boxrule=1pt, arc=5pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    colbacktitle=mypurple, coltitle=white, fonttitle=\bfseries,
+    breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}
+  }
+}
+\tcbset{breakable}
+\tcbset{after={\par\color{black}}}
+
+% ─── TikZ styles ───────────────────────────────────────────────────────────────
+\tikzset{
+  block/.style={rectangle, draw=myteal, fill=hdrteal,
+    text width=2.4cm, align=center, minimum height=0.95cm,
+    font=\small, rounded corners=3pt, line width=0.7pt},
+  redblock/.style={rectangle, draw=myred, fill=hdrred,
+    text width=2.4cm, align=center, minimum height=0.95cm,
+    font=\small, rounded corners=3pt, line width=0.7pt},
+  sumjunc/.style={circle, draw=myamber, fill=hdramber,
+    minimum size=0.62cm, font=\small, line width=0.8pt},
+  arrow/.style={-Stealth, thick, color=mydark},
+  redarrow/.style={-Stealth, thick, color=myred},
+  line/.style={thick, color=mydark}
+}
+
+\begin{document}
+
+% ─── Title Page ───────────────────────────────────────────────────────────────
+\begin{center}
+  {\LARGE\bfseries\color{myred} EC403 --- Microprocessor and Microcontroller}\\[5pt]
+  {\normalsize\color{mydark} Semester IV \quad$\bullet$\quad 3L:0T:0P \quad$\bullet$\quad 3 Credits}\\[3pt]
+  {\normalsize\color{myteal}\textbf{Module 2 Exam Notes: Peripheral Interfacing and Arithmetic Coprocessors}}\\[3pt]
+  {\small\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27) \;$|$\; \textit{Biraj Sarkar}}
+\end{center}
+\vspace{2pt}
+\noindent{\color{myred}\rule{\linewidth}{1.5pt}}
+\vspace{2pt}
+
+\hypersetup{linkcolor=mydark}
+\tableofcontents
+\hypersetup{linkcolor=myteal}
+\newpage
+
+\section{Peripheral Interfacing and Arithmetic Coprocessors}
+\begin{tcolorbox}[defbox,title={Peripheral Interface}]
+A \textbf{peripheral interface} connects a CPU bus to a device with different timing, signal levels or data formats. Its data register holds the value being sent or received, its status register reports events such as ready or busy, and its control register selects how the device operates.
+\end{tcolorbox}
+\par\addvspace{7pt}\noindent
+In an isolated I/O design the address decoder selects the interface only during an I/O cycle. In a memory-mapped design it selects the interface only during a memory cycle. The lower address lines select the internal register. In both designs, read and write strobes must meet the interface timing requirements.
+\begin{tcolorbox}[tikzbox,title={Address, Control and Data Paths}]
+\centering
+\begin{tikzpicture}
+\node[block] (cpu) at (0,0) {CPU bus};
+\node[block] (decode) at (5,1) {Address decoder};
+\node[block] (dev) at (10,0) {Peripheral\\registers};
+\draw[arrow] (cpu) -- (decode) node[midway,above,sloped,font=\small] {Address and cycle type};
+\draw[arrow] (decode) -- (dev) node[midway,above,sloped,font=\small] {Chip select};
+\draw[<->,thick] (cpu) -- (dev) node[midway,below,font=\small] {Data bus};
+\end{tikzpicture}
+\end{tcolorbox}
+\par\addvspace{7pt}\noindent
+Polling suits simple, low-rate transfers, but CPU time is spent reading status. Interrupt-driven I/O lets the CPU run other work until the device signals an event. DMA is useful for blocks when sustained rate matters. Handshaking keeps data valid until the receiver can accept it.
+
+\section{Timer Interfacing with the 8253 and 8254}
+\begin{tcolorbox}[defbox,title={Programmable Interval Timer}]
+The 8253 and 8254 have three independent 16-bit counters. Each counts pulses at CLK, accepts control through GATE and changes its output at OUT according to the selected mode. The CPU writes a control word followed by the initial count.
+\end{tcolorbox}
+\par\addvspace{7pt}\noindent
+A1:A0 selects counters 0, 1 and 2 or the control register at addresses 00, 01, 10 and 11. The control word selects the counter, byte-access format, mode and binary or binary-coded decimal (BCD) counting. With low-byte/high-byte access, send the low byte first. The 8254 adds a read-back command for latching count or status.
+\par\addvspace{6pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3.9cm}|Y|}
+\hline
+\textbf{Mode} & \textbf{Output and typical use} \\ \hline
+0, terminal count & OUT goes high at completion. Delayed interrupt. \\ \hline
+1, retriggerable one-shot & A GATE trigger starts a timed low pulse. \\ \hline
+2, rate generator & Repeating period of $N$ clocks with a one-clock low pulse. \\ \hline
+3, square-wave generator & Period of $N$ clocks. Equal high and low times for even $N$. \\ \hline
+4, software-triggered strobe & Writing the count starts a delay ending in a one-clock low strobe. \\ \hline
+5, hardware-triggered strobe & A rising GATE edge starts the delay. Retriggerable. \\ \hline
+\end{tabularx}\par
+\endgroup
+\begin{tcolorbox}[examplebox,title={Design a 1 kHz Square Wave}]
+Use counter 0 in mode 3 with a 1 MHz input clock and GATE high.
+\begin{align*}
+ N &= \frac{f_{\mathrm{CLK}}}{f_{\mathrm{OUT}}}\\
+   &= \frac{10^6}{10^3}=1000=\text{\texttt{03E8H}}.
+\end{align*}
+The control bits are \texttt{00 11 011 0}, giving \texttt{36H}. Write \texttt{36H} to the control port, then \texttt{E8H} and \texttt{03H} to counter 0. In binary mode a count word of zero represents 65,536.
+\end{tcolorbox}
+
+\section{Parallel I/O with the 8255A}
+\begin{tcolorbox}[defbox,title={Programmable Peripheral Interface}]
+The 8255A provides 24 parallel I/O lines as Ports A, B and C. Port C is divided into two four-bit halves. A1:A0 selects A, B, C or the control register in order. RESET places the ports in input configuration.
+\end{tcolorbox}
+\par\addvspace{6pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3cm}|Y|}
+\hline
+\textbf{Mode} & \textbf{Operation} \\ \hline
+0 & Basic parallel I/O. Outputs are latched. Inputs can be sampled directly. \\ \hline
+1 & Strobed input or output on Port A or B. Selected Port C lines provide handshaking and interrupt signals. \\ \hline
+2 & Bidirectional strobed data on Port A. Its handshaking uses Port C lines. Port B can use mode 0 or 1. \\ \hline
+BSR & Bit set/reset changes an individual Port C latch bit. Control word D7 is zero. \\ \hline
+\end{tabularx}\par
+\endgroup
+In a mode 1 input transaction, the peripheral asserts STB to latch data, the interface reports input-buffer full (IBF), and the CPU reads the port. On output the CPU writes a byte, output-buffer full (OBF) signals the device, and ACK confirms acceptance. INTR can signal the CPU when the corresponding interrupt enable is set.
+\begin{tcolorbox}[examplebox,title={Switches on Port B and LEDs on Port A}]
+Choose mode 0, A output, B input and both halves of C output. In the mode-set word D7=1, D6:D5=00, D4=0, D3=0, D2=0, D1=1 and D0=0, so write \texttt{82H} to the control port. Read B, then write the byte to A. Use suitable resistors and a driver where the LED current exceeds the port rating. For BSR, D3:D1 encode the Port C bit number and D0 selects set (1) or reset (0). The words \texttt{0BH} and \texttt{0AH} set and reset PC5.
+\end{tcolorbox}
+
+\subsection{8255A Mode 1 Port C Signals}
+\par\addvspace{5pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Mode 1 group} & \textbf{Input signalling} & \textbf{Output signalling} \\ \hline
+Port A & PC4 is STB, PC5 is IBF, and PC3 is INTR. & PC7 is OBF, PC6 is ACK, and PC3 is INTR. \\ \hline
+Port B & PC2 is STB, PC1 is IBF, and PC0 is INTR. & PC1 is OBF, PC2 is ACK, and PC0 is INTR. \\ \hline
+\end{tabularx}\par
+\endgroup
+STB, OBF and ACK are active-low signals. The mode determines which Port C bits are assigned to the handshake. Treat these pins as signals for that handshake while the mode is active.
+
+\section{Serial I/O with the 8251A}
+\begin{tcolorbox}[defbox,title={USART and Serial Framing}]
+A \textbf{universal synchronous/asynchronous receiver/transmitter (USART)} converts parallel CPU data into a serial bit stream and converts received bits back into parallel data. Asynchronous framing adds a start bit and stop bit or bits to each character. Synchronous operation uses a shared bit clock and synchronisation characters.
+\end{tcolorbox}
+\par\addvspace{7pt}\noindent
+The CPU selects data or control/status using C/D. After reset, write the mode instruction defining the character format and clock factor. In synchronous mode write the required sync characters, then write a command to enable the transmitter or receiver. On transmission, test TxRDY before writing each character. On reception, test RxRDY, read the byte, and handle parity, overrun and framing errors. TxEMPTY indicates the transmitter buffer and shift path are empty, which matters before disabling a line driver. TXC and RXC provide transmit and receive clocks. TXD and RXD are logic-level data pins, so use an appropriate transceiver for RS-232.
+\begin{tcolorbox}[examplebox,title={9600 Baud and an 8N1 Character}]
+For asynchronous 16-times operation, the clock is
+\[
+ f_{\mathrm{clock}}=16(9600)=153.6\ \mathrm{kHz}.
+\]
+Eight data bits, no parity and one stop bit give mode word \texttt{4EH} for the 8251A at the 16-times setting. The link sends one start bit, eight data bits and one stop bit. With no gaps the payload rate is $9600/10=960$ characters/s.
+\end{tcolorbox}
+
+\subsection{Transmit and Receive a Byte}
+Write the mode word after hardware reset, then set TxEN and RxE in the command word. Ensure CTS is at its asserted level when transmission is required. To send one byte, check TxRDY, write the data register and let the USART add the framing bits. To receive, check RxRDY, read the data register and check or handle the error flags using the command register as required. An overrun means a new character arrived before the preceding one was read. It is a service-rate problem, while a framing error usually indicates a wrong stop-bit level, clock mismatch or line problem.
+
+\section{Analog-to-Digital and Digital-to-Analog Interfaces}
+\begin{tcolorbox}[defbox,title={ADC, DAC and Resolution}]
+An \textbf{analog-to-digital converter (ADC)} assigns a digital code to an analog input range. A \textbf{digital-to-analog converter (DAC)} converts a digital code to a voltage or current. An ideal $n$-bit converter has $2^n$ codes, and for a specified span $V_{\mathrm{span}}$ the ideal code step is $V_{\mathrm{span}}/2^n$.
+\end{tcolorbox}
+\begin{tcolorbox}[tikzbox,title={Acquisition and Analog Output Paths}]
+\centering
+\begin{tikzpicture}
+\node[block] (sensor) at (0,1.2) {Sensor};
+\node[block] (adc) at (4.8,1.2) {ADC0804};
+\node[block] (cpu) at (9.6,1.2) {CPU};
+\node[block] (dac) at (4.8,-1.0) {Output latch\\and DAC0808};
+\node[block] (out) at (0,-1.0) {I-to-V\\output stage};
+\draw[arrow] (sensor) -- (adc);
+\draw[arrow] (adc) -- (cpu) node[midway,above=11pt,font=\small] {Code and INTR};
+\draw[arrow] (cpu.south) |- (dac.east) node[pos=.75,below,font=\small] {Output code};
+\draw[arrow] (dac) -- (out);
+\end{tikzpicture}
+\end{tcolorbox}
+\subsection{ADC0804 Successive-Approximation Interface}
+A successive-approximation converter compares the input with trial values, starting at the most significant bit (MSB). The ADC0804 uses differential inputs, an external or RC clock and active-low CS, WR and RD. With CS low, pulse WR low and release it to start conversion. Wait until INTR falls, then assert RD low to read the tri-state 8-bit result. Use a stable input during conversion, and choose the reference and analog grounding for the required input range. The VREF/2 pin sets half the differential full-scale span when driven.
+\begin{tcolorbox}[examplebox,title={Resolution and Example Code}]
+For an ideal 8-bit converter over 0--5 V, $\Delta=5/256=19.53\ \mathrm{mV}$. An input of 2.5 V is at half scale, about code \texttt{80H}. Under an ideal rounding model, the interior quantisation uncertainty is $\pm\Delta/2$. The actual code near a boundary depends on the transfer characteristic and practical errors.
+\end{tcolorbox}
+\subsection{DAC0808 Current Output}
+The DAC0808 uses a reference current and digital input bits to produce an output current. A latch holds the CPU's 8-bit word. An op-amp current-to-voltage stage can convert the DAC current into a voltage, with the sign and scale set by the circuit.
+\begin{tcolorbox}[examplebox,title={DAC Code and Current}]
+For unsigned code $D$ in an ideal 8-bit model,
+\[
+ I_{\mathrm{out}}=I_{\mathrm{ref}}\frac{D}{256}.
+\]
+For \texttt{C0H}, $D=192$ and $I_{\mathrm{out}}=1.50\ \mathrm{mA}$ when $I_{\mathrm{ref}}=2.00\ \mathrm{mA}$. For an ideal inverting converter, a $2\ \mathrm{k}\Omega$ feedback resistor gives $-3.00\ \mathrm{V}$. The highest code is 255, so the current is one step below the reference current.
+\end{tcolorbox}
+
+\section{Arithmetic Coprocessors and System-Level Design}
+\begin{tcolorbox}[defbox,title={8087 Numeric Coprocessor}]
+A \textbf{coprocessor} executes a specialised group of operations under coordination with the main processor. The Intel 8087 adds floating-point arithmetic to an 8086/8088 system and uses a stack of eight 80-bit extended-precision registers. It supports operations such as load, add, multiply, divide and square root.
+\end{tcolorbox}
+\par\addvspace{7pt}\noindent
+The 8087 works with the CPU in a maximum-mode system. It monitors the instruction stream and queue status, recognises numeric ESC instructions and acquires the bus when required to transfer operands. The CPU forms effective addresses for memory operands. The 8087 BUSY signal connects to the CPU's TEST input. WAIT/FWAIT synchronises the CPU before depending on a coprocessor result. Large parts of the CPU program can continue independently where no result is needed yet.
+\begin{tcolorbox}[examplebox,title={Integrated 8085 Data Acquisition and Output}, title after break={Data Acquisition and Output (contd.)}]
+Use isolated I/O. Decode A7--A2 for each four-port block and feed A1:A0 to each 8255A and 8253.
+\par\addvspace{6pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3cm}|Y|}
+\hline
+\textbf{I/O ports} & \textbf{Assignment} \\ \hline
+\texttt{40H--43H} & 8255A ports A, B, C and control. \\ \hline
+\texttt{48H--4BH} & Timer counters 0, 1, 2 and control. \\ \hline
+\texttt{50H}, \texttt{51H} & 8251A data and control/status. Decode A0 as C/D. \\ \hline
+\texttt{58H} & ADC command on a write, conversion byte on a read. Route INTR to status or to an interrupt input with suitable polarity/timing conditioning. \\ \hline
+\texttt{60H} & DAC input latch on a write. \\ \hline
+\end{tabularx}\par
+\endgroup
+The timer signals the sample interval. Firmware starts the ADC, waits for completion, reads the byte and writes it to the DAC latch. Verify that conversion and service time fit the sampling period. Only one read device may drive the data bus at a time. Decode all relevant address bits to prevent aliases, or document any intentional aliases. Check propagation delay, setup and hold times, input levels, grounding and interrupt polarity.
+\end{tcolorbox}
+\par\addvspace{7pt}\noindent
+For an 8086 interface on D0--D7, use even port addresses and qualify selection for the lower byte bank. Wire CPU A1, A2 to peripheral A0, A1 when four consecutive peripheral registers map to ports two apart.
+
+\subsection*{References}
+Intel's \textit{Microprocessor and Peripheral Handbook}, the \href{https://www.ti.com/lit/ds/symlink/adc0804-n.pdf}{TI ADC080x data sheet}, and the \href{https://www.ti.com/lit/ds/symlink/dac0808.pdf}{TI DAC0808 data sheet} describe the device signals and timing.
+
+\newpage
+\begin{center}
+{\large\bfseries\color{myred} Quick Revision --- Module 2}\\[3pt]
+{\small\color{mydark} Peripheral Interfacing and Coprocessors $|$ EC403}
+\end{center}
+\noindent{\color{myred}\rule{\linewidth}{1.2pt}}\vspace{4pt}
+\begin{tcolorbox}[formulabox,title={Key Formulas at a Glance}]
+\renewcommand{\arraystretch}{1.35}
+\noindent\begin{tabularx}{\linewidth}{B{4.2cm}Y}
+Timer period & $T=N/f_{\mathrm{CLK}}$ in modes 2 and 3. \\
+USART clock & $f_{\mathrm{clock}}=kR$ with the selected async factor $k$ and baud rate $R$. \\
+ADC step & $\Delta=V_{\mathrm{span}}/2^n$. \\
+DAC output & $I_{\mathrm{out}}=I_{\mathrm{ref}}D/2^8$ for the DAC0808 model. \\
+\end{tabularx}\par
+\end{tcolorbox}
+\begin{tcolorbox}[defbox,title={One-Line Definitions}]
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+\item \textbf{Chip select:} Signal that enables one device to respond to a bus cycle.
+\item \textbf{Handshaking:} Exchange of data-ready and acknowledgement signals.
+\item \textbf{Baud:} Number of signalling symbols sent per second.
+\item \textbf{Quantisation:} Assignment of an analog level to one of a finite number of codes.
+\end{itemize}
+\end{tcolorbox}
+\begin{tcolorbox}[exambox,title={Frequently Asked / Viva Questions}]
+\begin{enumerate}[leftmargin=*,label=\textbf{Q\arabic*.},itemsep=5pt]
+\item \Q{What are the three timer signals?} CLK, GATE and OUT.
+\item \Q{Which timer mode generates a square wave?} Mode 3.
+\item \Q{How many data lines does an 8255A provide?} 24, arranged as three eight-bit ports.
+\item \Q{What makes 8255 mode 2 different?} Port A transfers data in either direction using handshaking.
+\item \Q{What does BSR change?} One selected Port C latch bit.
+\item \Q{What marks the start of an async character?} The start bit.
+\item \Q{What does RxRDY report?} A received character is available to read.
+\item \Q{How does the ADC0804 indicate completion?} INTR goes low.
+\item \Q{What kind of output comes from the DAC0808?} Current.
+\item \Q{Why does the 8087 use WAIT?} WAIT lets the CPU synchronise with BUSY before it needs the result.
+\item \Q{Why decode every relevant address bit?} It prevents unwanted mirrored addresses and bus contention.
+\end{enumerate}
+\end{tcolorbox}
+\begin{tcolorbox}[tikzbox,title={Peripheral Selection at a Glance}]
+\par\addvspace{5pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3.2cm}|Y|Y|}
+\hline
+\textbf{Device} & \textbf{Function} & \textbf{Check before transfer} \\ \hline
+8253/8254 & Timing or pulse generation & Mode, count, clock, gate. \\ \hline
+8255A & Parallel data & Port direction and handshake. \\ \hline
+8251A & Serial data & Frame format, clock, ready status. \\ \hline
+ADC/DAC & Analog conversion & Scaling, completion or latch timing. \\ \hline
+\end{tabularx}\par
+\endgroup
+\end{tcolorbox}
+
+\end{document}

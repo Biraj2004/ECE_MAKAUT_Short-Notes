@@ -1,0 +1,518 @@
+\documentclass[12pt,a4paper]{article}
+
+% ─── Page Layout ───────────────────────────────────────────────────────────────
+\usepackage[a4paper, margin=0.8in, headheight=14pt]{geometry}
+
+% ─── Fonts (XeLaTeX) ───────────────────────────────────────────────────────────
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{TeX Gyre Pagella}
+\setmonofont[Scale=0.88]{TeX Gyre Cursor}
+\setmathfont{Latin Modern Math}
+
+% ─── Packages ──────────────────────────────────────────────────────────────────
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, patterns}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{graphicx}
+\usepackage{microtype}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\sloppy
+\usepackage{caption}
+\usepackage{setspace}
+\usepackage{multirow}
+\usepackage{tocloft}
+
+% ─── Q&A helper ────────────────────────────────────────────────────────────────
+\newcommand{\Q}[1]{\textbf{#1}\par\noindent\ignorespaces}
+
+% ─── Colour Palette ────────────────────────────────────────────────────────────
+\definecolor{myred}{RGB}{196,30,58}
+\definecolor{mydark}{RGB}{30,30,50}
+\definecolor{mygreen}{RGB}{14,120,80}
+\definecolor{myteal}{RGB}{0,130,140}
+\definecolor{myamber}{RGB}{180,100,0}
+\definecolor{mypurple}{RGB}{100,30,160}
+\definecolor{mygray}{RGB}{246,247,249}
+\definecolor{mgframe}{RGB}{180,185,200}
+\definecolor{watermark}{RGB}{145,150,170}
+\definecolor{hdrred}{RGB}{250,232,235}
+\definecolor{hdrgreen}{RGB}{220,244,233}
+\definecolor{hdrteal}{RGB}{220,242,244}
+\definecolor{hdramber}{RGB}{253,242,215}
+\definecolor{hdrpurple}{RGB}{238,228,255}
+\definecolor{hdrgray}{RGB}{238,240,245}
+\definecolor{rowalt}{RGB}{250,251,253}
+
+% ─── Section Formatting ────────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries\color{myred}}{\thesection.}{0.5em}{}
+  [\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
+\titleformat{\subsection}
+  {\normalsize\bfseries\color{myteal}}{\thesubsection}{0.5em}{}
+\titlespacing*{\section}{0pt}{18pt}{7pt}
+\titlespacing*{\subsection}{0pt}{11pt}{4pt}
+
+% ─── Paragraph ─────────────────────────────────────────────────────────────────
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{4pt}
+
+% ─── TOC Styling ───────────────────────────────────────────────────────────────
+\renewcommand{\cfttoctitlefont}{\large\bfseries\color{myred}}
+\renewcommand{\cftaftertoctitle}{\par\noindent{\color{myred}\rule{\linewidth}{0.8pt}}}
+\setlength{\cftbeforetoctitleskip}{0pt}
+\setlength{\cftaftertoctitleskip}{6pt}
+\renewcommand{\cftsecfont}{\normalsize\bfseries\color{mydark}}
+\renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{mydark}}
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
+\setlength{\cftbeforesecskip}{7pt}
+\renewcommand{\cftsubsecfont}{\small\color{mydark}}
+\renewcommand{\cftsubsecpagefont}{\small\color{mydark}}
+\setlength{\cftbeforesubsecskip}{3pt}
+\setlength{\cftsubsecindent}{1.4em}
+
+% ─── Table helpers ─────────────────────────────────────────────────────────────
+\renewcommand{\arraystretch}{1.45}
+\setlength{\tabcolsep}{6pt}
+\arrayrulecolor{mydark}
+\newcolumntype{B}[1]{>{\small\bfseries\raggedright\arraybackslash}m{#1}}
+\newcolumntype{Y}{>{\small\raggedright\arraybackslash}X}
+\renewcommand{\tabularxcolumn}[1]{m{#1}}
+
+% ─── Header / Footer ───────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{myred}\textbf{EC403}\;\color{mydark}--- Microprocessor and Microcontroller}
+\fancyhead[R]{\small\color{myteal}\textbf{Module 1 Notes}}
+\fancyfoot[C]{\small\color{mydark}\thepage}
+\fancyfoot[R]{\small\color{watermark}\textit{\copyright\ Biraj}}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+% ─── Hyperref ──────────────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks=true, linkcolor=myteal, urlcolor=myteal,
+  pdfauthor={Biraj Sarkar (CGEC)},
+  pdftitle={EC403 --- Module 1 Notes: 8085 and 8086 Microprocessor Systems}
+}
+
+% ─── tcolorbox styles ──────────────────────────────────────────────────────────
+\tcbset{
+  tikzbox/.style={
+    colback=mygray, colframe=mgframe, boxrule=0.6pt, arc=4pt,
+    left=8pt, right=8pt, top=6pt, bottom=6pt,
+    colbacktitle=mgframe, coltitle=mydark, fonttitle=\small\bfseries
+  },
+  defbox/.style={
+    colback=hdrgreen, colframe=mygreen, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=mygreen, coltitle=white, fonttitle=\small\bfseries
+  },
+  formulabox/.style={
+    colback=hdrteal, colframe=myteal, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=7pt, bottom=7pt,
+    colbacktitle=myteal, coltitle=white, fonttitle=\small\bfseries
+  },
+  examplebox/.style={
+    colback=hdramber, colframe=myamber, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=myamber, coltitle=white, fonttitle=\small\bfseries
+  },
+  masonbox/.style={
+    colback=hdrpurple, colframe=mypurple, boxrule=0.8pt, arc=4pt,
+    left=9pt, right=9pt, top=6pt, bottom=6pt,
+    colbacktitle=mypurple, coltitle=white, fonttitle=\small\bfseries
+  },
+  exambox/.style={
+    colback=hdrpurple, colframe=mypurple, boxrule=1pt, arc=5pt,
+    left=10pt, right=10pt, top=8pt, bottom=8pt,
+    colbacktitle=mypurple, coltitle=white, fonttitle=\bfseries,
+    breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}
+  }
+}
+\tcbset{breakable}
+\tcbset{after={\par\color{black}}}
+
+% ─── TikZ styles ───────────────────────────────────────────────────────────────
+\tikzset{
+  block/.style={rectangle, draw=myteal, fill=hdrteal,
+    text width=2.4cm, align=center, minimum height=0.95cm,
+    font=\small, rounded corners=3pt, line width=0.7pt},
+  redblock/.style={rectangle, draw=myred, fill=hdrred,
+    text width=2.4cm, align=center, minimum height=0.95cm,
+    font=\small, rounded corners=3pt, line width=0.7pt},
+  sumjunc/.style={circle, draw=myamber, fill=hdramber,
+    minimum size=0.62cm, font=\small, line width=0.8pt},
+  arrow/.style={-Stealth, thick, color=mydark},
+  redarrow/.style={-Stealth, thick, color=myred},
+  line/.style={thick, color=mydark}
+}
+
+\begin{document}
+
+% ─── Title Page ───────────────────────────────────────────────────────────────
+\begin{center}
+  {\LARGE\bfseries\color{myred} EC403 --- Microprocessor and Microcontroller}\\[5pt]
+  {\normalsize\color{mydark} Semester IV \quad$\bullet$\quad 3L:0T:0P \quad$\bullet$\quad 3 Credits}\\[3pt]
+  {\normalsize\color{myteal}\textbf{Module 1 Exam Notes: 8085 and 8086 Microprocessor Systems}}\\[3pt]
+  {\small\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27) \;$|$\; \textit{Biraj Sarkar}}
+\end{center}
+\vspace{2pt}
+\noindent{\color{myred}\rule{\linewidth}{1.5pt}}
+\vspace{2pt}
+
+\hypersetup{linkcolor=mydark}
+\tableofcontents
+\hypersetup{linkcolor=myteal}
+\newpage
+
+\section{Microcomputer Systems, 8085 and 8086}
+\begin{tcolorbox}[defbox,title={Microprocessor and Microcomputer}]
+A \textbf{microprocessor} is a programmable central processing unit on a chip. A \textbf{microcomputer} adds program and data memory, input/output interfaces, clock and reset circuits, and the buses that connect them. A microcontroller integrates the processor, memory and peripherals on the same chip.
+\end{tcolorbox}
+\begin{tcolorbox}[tikzbox,title={Basic Microcomputer}]
+\centering
+\begin{tikzpicture}
+\node[block] (cpu) at (0,0) {CPU};
+\node[block] (mem) at (5,1) {ROM and RAM};
+\node[block] (io) at (5,-1) {I/O interface};
+\draw[<->,thick] (cpu) -- (mem) node[midway,above,sloped,font=\small] {Address, data, control};
+\draw[<->,thick] (cpu) -- (io);
+\end{tikzpicture}
+\end{tcolorbox}
+\par\addvspace{7pt}\noindent
+The address bus selects a byte or peripheral register, the bidirectional data bus carries its contents, and control signals identify the transfer and its timing. A decoder generates chip select from high address bits. ROM holds the reset program, while RAM holds variables and the stack. An instruction cycle can contain several bus cycles, each of which takes several clock periods (T-states). A wait state gives slower hardware extra time.
+
+\section{Intel 8085 Architecture and Pin Description}
+\begin{tcolorbox}[defbox,title={8085 Programmer's Model}]
+The \href{https://www.bitsavers.org/components/intel/MCS80/9800301D_8080_8085_Assembly_Language_Programming_Manual_May81.pdf}{8085} is an 8-bit processor with a 16-bit byte address and a 64 KiB memory space. The accumulator A feeds the arithmetic and logic unit. B, C, D, E, H and L form the register pairs BC, DE and HL. PC points to the next instruction and SP points to the top of a downward-growing stack. The status flags are sign (S), zero (Z), auxiliary carry (AC), parity (P) and carry (CY).
+\end{tcolorbox}
+\par\addvspace{5pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3.1cm}|Y|Y|}
+\hline
+\textbf{Pins} & \textbf{Signal} & \textbf{Purpose} \\ \hline
+1--3 & X1, X2, RESET OUT & Clock oscillator and system reset indication. \\ \hline
+4--5 & SOD, SID & Serial data output and input, used with SIM and RIM. \\ \hline
+6--11 & TRAP, RST 7.5, RST 6.5, RST 5.5, INTR, $\overline{\mathrm{INTA}}$ & Interrupt requests and active-low INTR acknowledge. \\ \hline
+12--19, 21--28 & AD0--AD7, A8--A15 & Multiplexed low address/data byte and dedicated high address. Pin 20 is ground. \\ \hline
+29--34 & S0, ALE, $\overline{\mathrm{WR}}$, $\overline{\mathrm{RD}}$, S1, IO/M & Bus status, latch enable, read/write strobes and memory/I/O selection. \\ \hline
+35--40 & READY, $\overline{\mathrm{RESET\ IN}}$, CLK OUT, HLDA, HOLD, VCC & Wait-state input, CPU reset, clock output, DMA handshake and supply. \\ \hline
+\end{tabularx}\par
+\endgroup
+\par\addvspace{8pt}
+\begin{tcolorbox}[tikzbox,unbreakable,title={8085 40-Pin DIP, Top View}]
+\centering
+\begin{tikzpicture}[x=1cm,y=0.49cm,every node/.style={font=\small}]
+\draw[thick,rounded corners=3pt] (-1.45,0.8) rectangle (1.45,-19.8);
+\draw (-0.32,0.8) arc[start angle=180,end angle=360,radius=0.32cm];
+\node[font=\small\bfseries] at (0,-9.5) {8085};
+\foreach \i/\leftpin/\rightpin in {
+{0}/{X1}/{VCC},
+{1}/{X2}/{HOLD},
+{2}/{RESET OUT}/{HLDA},
+{3}/{SOD}/{CLK OUT},
+{4}/{SID}/{$\overline{\mathrm{RESET\,IN}}$},
+{5}/{TRAP}/{READY},
+{6}/{RST 7.5}/{IO/M},
+{7}/{RST 6.5}/{S1},
+{8}/{RST 5.5}/{$\overline{\mathrm{RD}}$},
+{9}/{INTR}/{$\overline{\mathrm{WR}}$},
+{10}/{$\overline{\mathrm{INTA}}$}/{ALE},
+{11}/{AD0}/{S0},
+{12}/{AD1}/{A15},
+{13}/{AD2}/{A14},
+{14}/{AD3}/{A13},
+{15}/{AD4}/{A12},
+{16}/{AD5}/{A11},
+{17}/{AD6}/{A10},
+{18}/{AD7}/{A9},
+{19}/{GND}/{A8}
+} {
+  \pgfmathtruncatemacro{\lp}{\i+1}
+  \pgfmathtruncatemacro{\rp}{40-\i}
+  \draw (-1.45,-\i) -- (-2.05,-\i) node[left=2pt] {\leftpin};
+  \draw (1.45,-\i) -- (2.05,-\i) node[right=2pt] {\rightpin};
+  \node[anchor=west,font=\scriptsize] at (-1.33,-\i) {\lp};
+  \node[anchor=east,font=\scriptsize] at (1.33,-\i) {\rp};
+}
+\end{tikzpicture}
+\par\vspace{7pt}
+An overbar identifies an active-low signal. IO/M is high for I/O and low for a memory cycle.
+\end{tcolorbox}
+
+\subsection{Bus Timing and Memory Access}
+In T1, AD0--AD7 carry the low address and ALE enables an external latch. The falling edge of ALE retains that address. In T2 and T3, the same pins carry data. A read cycle asserts $\overline{\mathrm{RD}}$ and the selected device drives the data bus. A write cycle asserts $\overline{\mathrm{WR}}$ and the processor drives it. A slow device can hold READY low to insert wait states. For opcode fetch, IO/M, S1 and S0 are $0,1,1$. For memory read and write the status triplets are $0,1,0$ and $0,0,1$.
+\begin{tcolorbox}[examplebox,title={8085 Address Decoding}]
+Map a 4 KiB ROM at \texttt{0000H} and an 8 KiB RAM at \texttt{2000H}.
+\begin{enumerate}[leftmargin=*,itemsep=4pt]
+\item The 4 KiB ROM needs A0--A11. Decode A15--A12 as \texttt{0000} to select \texttt{0000H--0FFFH}.
+\item The 8 KiB RAM needs A0--A12. Decode A15--A13 as \texttt{001} to select \texttt{2000H--3FFFH}.
+\item Use latched A0--A7 at both chips. Qualify selection for a memory cycle. Connect the read strobe to output enable and the write strobe to RAM write enable. The ROM contains the reset location \texttt{0000H}.
+\end{enumerate}
+\end{tcolorbox}
+
+\section{Intel 8086 Architecture, Pins and Segmented Access}
+\begin{tcolorbox}[defbox,title={Execution Unit and Bus Interface Unit}]
+The \href{https://bitsavers.trailing-edge.com/components/intel/8086/9800722-03_The_8086_Family_Users_Manual_Oct79.pdf}{8086} is a 16-bit processor with a 20-bit physical byte address and a 1 MiB memory space. The \textbf{execution unit (EU)} decodes and executes instructions. The \textbf{bus interface unit (BIU)} forms addresses, manages bus cycles and prefetches up to six instruction bytes. A taken branch changes the fetch address and discards obsolete prefetched bytes.
+\end{tcolorbox}
+\par\addvspace{7pt}\noindent
+The general registers AX, BX, CX and DX have individually accessible high and low bytes. SP and BP are stack-related registers, and SI and DI are index registers. CS:IP selects the next instruction, SS:SP selects the stack, DS usually selects data, and ES is the extra segment used as the destination segment for string operations. A BP-based effective address defaults to SS. FLAGS contains status flags CF, PF, AF, ZF, SF and OF and control flags TF, IF and DF.
+\par\addvspace{6pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{2.7cm}|Y|Y|}
+\hline
+\textbf{DIP pins} & \textbf{Signals} & \textbf{Function} \\ \hline
+1, 20, 40 & GND, GND, VCC & Supply and ground. \\ \hline
+2--16, 39 & AD14--AD0, AD15 & Multiplexed low 16 address bits and data. \\ \hline
+17--19, 21--23 & NMI, INTR, CLK, RESET, READY, $\overline{\mathrm{TEST}}$ & Interrupt inputs, clock, reset, wait control and input tested by WAIT. WAIT continues when TEST is low. \\ \hline
+32--38 & $\overline{\mathrm{RD}}$, MN/$\overline{\mathrm{MX}}$, $\overline{\mathrm{BHE}}$/S7, A19/S6--A16/S3 & Read strobe, mode select, high-bank enable and high address/status signals. \\ \hline
+24--31, minimum & $\overline{\mathrm{INTA}}$, ALE, $\overline{\mathrm{DEN}}$, DT/$\overline{\mathrm{R}}$, M/IO, $\overline{\mathrm{WR}}$, HLDA, HOLD & CPU directly supplies bus commands and HOLD/HLDA handshake. \\ \hline
+24--31, maximum & QS1, QS0, S0, S1, S2, $\overline{\mathrm{LOCK}}$, $\overline{\mathrm{RQ/GT1}}$, $\overline{\mathrm{RQ/GT0}}$ & Queue and bus status, lock and arbitration. An 8288 decodes S2--S0 into bus commands. \\ \hline
+\end{tabularx}\par
+\endgroup
+\par\addvspace{8pt}
+\begin{tcolorbox}[tikzbox,unbreakable,title={8086 Minimum Mode 40-Pin DIP, Top View}]
+\centering
+\begin{tikzpicture}[x=1cm,y=0.49cm,every node/.style={font=\small}]
+\draw[thick,rounded corners=3pt] (-1.45,0.8) rectangle (1.45,-19.8);
+\draw (-0.32,0.8) arc[start angle=180,end angle=360,radius=0.32cm];
+\node[font=\small\bfseries] at (0,-9.5) {8086};
+\foreach \i/\leftpin/\rightpin in {
+{0}/{GND}/{VCC},
+{1}/{AD14}/{AD15},
+{2}/{AD13}/{A16/S3},
+{3}/{AD12}/{A17/S4},
+{4}/{AD11}/{A18/S5},
+{5}/{AD10}/{A19/S6},
+{6}/{AD9}/{$\overline{\mathrm{BHE}}$/S7},
+{7}/{AD8}/{MN/$\overline{\mathrm{MX}}$},
+{8}/{AD7}/{$\overline{\mathrm{RD}}$},
+{9}/{AD6}/{HOLD},
+{10}/{AD5}/{HLDA},
+{11}/{AD4}/{$\overline{\mathrm{WR}}$},
+{12}/{AD3}/{M/IO},
+{13}/{AD2}/{DT/$\overline{\mathrm{R}}$},
+{14}/{AD1}/{$\overline{\mathrm{DEN}}$},
+{15}/{AD0}/{ALE},
+{16}/{NMI}/{$\overline{\mathrm{INTA}}$},
+{17}/{INTR}/{$\overline{\mathrm{TEST}}$},
+{18}/{CLK}/{READY},
+{19}/{GND}/{RESET}
+} {
+  \pgfmathtruncatemacro{\lp}{\i+1}
+  \pgfmathtruncatemacro{\rp}{40-\i}
+  \draw (-1.45,-\i) -- (-2.05,-\i) node[left=2pt] {\leftpin};
+  \draw (1.45,-\i) -- (2.05,-\i) node[right=2pt] {\rightpin};
+  \node[anchor=west,font=\scriptsize] at (-1.33,-\i) {\lp};
+  \node[anchor=east,font=\scriptsize] at (1.33,-\i) {\rp};
+}
+\end{tikzpicture}
+\par\vspace{7pt}
+Pin 33 is held high for minimum mode. In maximum mode pins 24--31 use the alternate names listed above.
+\end{tcolorbox}
+
+\begin{tcolorbox}[formulabox,title={Segment and Offset}]
+For a segment register value $S$ and a 16-bit effective offset $d$,
+\[
+ A_{\mathrm{physical}}=(16S+d)\bmod 2^{20}.
+\]
+For example, \texttt{1234H:00F0H} gives \texttt{12340H + 00F0H = 12430H}. Different segment:offset pairs can identify the same byte. A segment can cover up to 64 KiB.
+\end{tcolorbox}
+
+\subsection{Little-Endian Data and Bank Selection}
+A word \texttt{1234H} is stored as byte \texttt{34H} at the lower address and byte \texttt{12H} at the next address. The even bank connects to D0--D7 and the odd bank to D8--D15. A0 selects the even bank when low, and $\overline{\mathrm{BHE}}$ selects the odd bank when low.
+\par\addvspace{6pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{2.6cm}|B{2.6cm}|Y|}
+\hline
+\textbf{A0} & \textbf{BHE pin level} & \textbf{Transfer} \\ \hline
+0 & 0 & Both banks, one aligned word transfer. \\ \hline
+0 & 1 & Even byte on D0--D7. \\ \hline
+1 & 0 & Odd byte on D8--D15. An odd-address word uses two cycles. \\ \hline
+1 & 1 & Neither bank. \\ \hline
+\end{tabularx}\par
+\endgroup
+In a minimum-mode system, latch AD0--AD15, the high address/status lines and bank select as needed. Route data through transceivers and use DT/$\overline{\mathrm{R}}$ and $\overline{\mathrm{DEN}}$ for direction and enable. The bus carries the address during T1, changes roles in T2, transfers data in T3, and releases the cycle in T4. Wait states can precede T4. Isolated I/O uses IN/OUT and a separate I/O address space. Memory-mapped I/O occupies memory addresses and uses normal memory instructions.
+
+\begin{tcolorbox}[examplebox,title={8086 Boot ROM Address and Bank Design}]
+Map a 32 KiB EPROM block to physical \texttt{F8000H--FFFFFH} so it contains the 8086 reset fetch at \texttt{FFFF0H}.
+\begin{enumerate}[leftmargin=*,itemsep=4pt]
+\item Two 16 KiB by 8 devices supply the even and odd banks. Each requires 14 chip-address bits, connected to latched CPU A1--A14.
+\item Decode A19--A15 as \texttt{11111}. Within the selected block, qualify the low device using A0 low and the high device using latched BHE low.
+\item Connect the devices to the low and high data bytes, respectively. Qualify output enable with the memory-read command. A reset stub in the mapped ROM jumps to the rest of the initialisation routine.
+\end{enumerate}
+\end{tcolorbox}
+
+\section{Interrupts and Direct Memory Access}
+\begin{tcolorbox}[defbox,title={Interrupt and DMA}]
+An \textbf{interrupt} temporarily redirects the CPU to an interrupt service routine (ISR). \textbf{Direct memory access (DMA)} lets another bus master move data between memory and an interface without the CPU copying each byte.
+\end{tcolorbox}
+\subsection{8085 Interrupts}
+\par\addvspace{5pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{2.6cm}|B{2.6cm}|Y|}
+\hline
+\textbf{Priority order} & \textbf{Vector} & \textbf{Recognition} \\ \hline
+TRAP & \texttt{0024H} & Non-maskable, edge and level sensitive. \\ \hline
+RST 7.5 & \texttt{003CH} & Maskable, rising edge latched. \\ \hline
+RST 6.5 & \texttt{0034H} & Maskable, level sensitive. \\ \hline
+RST 5.5 & \texttt{002CH} & Maskable, level sensitive. \\ \hline
+INTR & Device supplies opcode & Maskable, level sensitive. CPU issues $\overline{\mathrm{INTA}}$. \\ \hline
+\end{tabularx}\par
+\endgroup
+EI and DI control global maskable-interrupt acceptance. SIM controls masks for RST 7.5, 6.5 and 5.5 and can clear the RST 7.5 latch. RIM reads interrupt status and SID. The ISR saves any registers it changes, services the source, restores registers and returns with RET. Arrange interrupt re-enabling in accordance with the ISR design.
+\subsection{8086 Interrupt Vector Table}
+INTR is maskable through IF. NMI uses type 2 and is non-maskable. Software \texttt{INT n} selects type $n$. The 256 four-byte vectors occupy \texttt{00000H--003FFH}. Entry $4n$ holds the new IP word, followed by the new CS word. The CPU saves FLAGS, CS and IP, clears IF and TF, and jumps to the vector. IRET restores IP, CS and FLAGS. For example, type \texttt{21H} starts at \texttt{0084H}, and its CS word starts at \texttt{0086H}.
+
+\subsection{DMA Request, Grant and Release}
+\begin{tcolorbox}[tikzbox,title={Minimum-Mode DMA Handshake}]
+\centering
+\begin{tikzpicture}
+\node[block] (cpu) at (0,0) {CPU};
+\node[block] (dma) at (6,0) {DMA controller};
+\draw[arrow] ([yshift=3pt]dma.west) -- ([yshift=3pt]cpu.east) node[midway,above,font=\small] {HOLD};
+\draw[arrow] ([yshift=-3pt]cpu.east) -- ([yshift=-3pt]dma.west) node[midway,below,font=\small] {HLDA};
+\end{tikzpicture}
+\end{tcolorbox}
+\par\addvspace{7pt}\noindent
+The device requests DMA. The controller requests the bus through HOLD. After relinquishing the bus, the CPU asserts HLDA and releases its bus outputs. The controller drives the memory address and the relevant read/write commands, updates the address and count, and releases HOLD when done. The CPU withdraws HLDA and resumes bus use. Burst transfer holds the bus for a block, while cycle stealing obtains it for individual transfers. An 8237A is an example controller. Program the start address, direction and transfer count before enabling the channel.
+
+\subsection{Compare Polling, Interrupts and DMA}
+\par\addvspace{5pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3.1cm}|Y|Y|}
+\hline
+\textbf{Method} & \textbf{How it works} & \textbf{Design trade-off} \\ \hline
+Polling & CPU checks a status bit repeatedly before transferring a byte. & Very simple control, but the loop uses CPU time while the device is idle. \\ \hline
+Interrupts & Device signals readiness and the ISR performs the required transfer. & Good for occasional events. Entry, exit and register saving cost time. \\ \hline
+DMA & A bus master carries out the data transfers after setup. & Efficient for a block. Arbitration and address/count setup add hardware complexity. \\ \hline
+\end{tabularx}\par
+\endgroup
+
+\section{Instruction Sets and Assembly Examples}
+An \textbf{addressing mode} specifies where an operand comes from. Register and immediate operands are internal or encoded in the instruction. A direct memory operand contains an address or offset. A register-indirect operand uses the contents of a register or pair as the address. The 8086 also supports base-plus-index and displacement combinations using permitted registers BX/BP and SI/DI.
+\par\addvspace{6pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{2.8cm}|Y|Y|}
+\hline
+\textbf{Group} & \textbf{8085 examples} & \textbf{8086 examples} \\ \hline
+Transfer and address & MOV, MVI, LXI, LDA, STA, LHLD, XCHG & MOV, LEA, XCHG, LDS, LES \\ \hline
+Arithmetic & ADD, ADC, SUB, SBB, INR, DCR, DAD, DAA & ADD, ADC, SUB, SBB, INC, DEC, MUL, IMUL, DIV, IDIV \\ \hline
+Logic and bit handling & ANA, ORA, XRA, CMP, RLC, RAR & AND, OR, XOR, TEST, CMP, SHL, SHR, SAR, ROL \\ \hline
+Flow and stack & JMP, JZ, JC, CALL, RET, RST, PUSH, POP & JMP, JZ, JC, LOOP, CALL, RET, INT, IRET, PUSH, POP \\ \hline
+I/O and control & IN, OUT, EI, DI, HLT, NOP & IN, OUT, STI, CLI, CLD, STD, HLT, WAIT \\ \hline
+String operations & Explicit load, store and loop & MOVSB, LODSB, STOSB, CMPSB, SCASB with repeat prefixes as applicable. \\ \hline
+\end{tabularx}\par
+\endgroup
+
+\begin{tcolorbox}[examplebox,title={Trace an 8086 Based-Indexed Access}]
+For \texttt{MOV AL,[BX+SI+08H]}, let BX=\texttt{0120H}, SI=\texttt{0010H} and DS=\texttt{2000H}.
+\begin{align*}
+ \text{effective offset} &= \text{\texttt{0120H + 0010H + 0008H = 0138H}},\\
+ \text{physical address} &= \text{\texttt{20000H + 0138H = 20138H}}.
+\end{align*}
+The instruction copies the selected byte into AL. Replacing BX with BP would select SS by default. Replacing the destination with AX would read a word, taking two bus cycles if the first byte started at an odd address.
+\end{tcolorbox}
+
+\subsection{Worked 8085 Addition and 8086 Block Copy}
+\begin{tcolorbox}[examplebox,title={8085 Unsigned Byte Addition}]
+Add the bytes at \texttt{2000H} and \texttt{2001H}, store the low byte at \texttt{2002H}, then store the carry as a byte at \texttt{2003H}. INR or DCR can change Z without altering CY. MVI and STA preserve flags here.
+\end{tcolorbox}
+\begin{verbatim}
+        LDA  2000H
+        MOV  B,A
+        LDA  2001H
+        ADD  B
+        STA  2002H
+        MVI  A,00H
+        ACI  00H
+        STA  2003H
+        HLT
+\end{verbatim}
+For \texttt{F2H + 24H = 116H}, the stored bytes are \texttt{16H} and \texttt{01H}.
+\begin{tcolorbox}[examplebox,title={8086 Copy Four Bytes}]
+Assume DS and ES already address the source and destination segments and that the regions do not overlap. CLD makes SI and DI increment. REP repeats MOVSB until CX reaches zero. The source offset moves from \texttt{0200H} to \texttt{0204H}, and the destination from \texttt{0300H} to \texttt{0304H}.
+\end{tcolorbox}
+\begin{verbatim}
+        CLD
+        MOV  SI,0200H
+        MOV  DI,0300H
+        MOV  CX,4
+        REP  MOVSB
+\end{verbatim}
+\begin{tcolorbox}[exambox,title={Exam Checks}]
+In an interfacing answer, show address range, decoding, latch, control strobes and data-bus direction. For assembly, trace the registers that select operands and the flags used by decisions. A carry represents unsigned overflow. On 8086 the OF flag represents signed overflow.
+\end{tcolorbox}
+
+\newpage
+\begin{center}
+{\large\bfseries\color{myred} Quick Revision --- Module 1}\\[3pt]
+{\small\color{mydark} 8085 and 8086 Microprocessor Systems $|$ EC403}
+\end{center}
+\noindent{\color{myred}\rule{\linewidth}{1.2pt}}\vspace{4pt}
+\begin{tcolorbox}[formulabox,title={Key Formulas at a Glance}]
+\renewcommand{\arraystretch}{1.35}
+\noindent\begin{tabularx}{\linewidth}{B{4.5cm}Y}
+Address capacity & $2^n$ bytes for $n$ byte-address lines. \\
+Chip decoding & A $2^k$-byte chip uses $k$ internal address lines. \\
+8086 address & $A_{\mathrm{physical}}=(16S+d)\bmod2^{20}$. \\
+Interrupt vector & 8086 type $n$ starts at physical byte $4n$. \\
+\end{tabularx}\par
+\end{tcolorbox}
+\begin{tcolorbox}[defbox,title={One-Line Definitions}]
+\begin{itemize}[leftmargin=*,itemsep=3pt]
+\item \textbf{ALE:} Address latch enable pulse used to retain a multiplexed bus address.
+\item \textbf{Wait state:} Extra bus time inserted for a slower device.
+\item \textbf{Vector:} A defined ISR address or a table entry that gives that address.
+\item \textbf{DMA:} Data transfer managed by an alternate bus master.
+\end{itemize}
+\end{tcolorbox}
+\begin{tcolorbox}[exambox,title={Frequently Asked / Viva Questions}]
+\begin{enumerate}[leftmargin=*,label=\textbf{Q\arabic*.},itemsep=5pt]
+\item \Q{What is the 8085 memory capacity?} $2^{16}$ bytes, or 64 KiB.
+\item \Q{Why latch AD0--AD7?} They carry address in T1 and data later.
+\item \Q{Which 8085 interrupt is non-maskable?} TRAP.
+\item \Q{Which 8085 maskable interrupt is edge latched?} RST 7.5.
+\item \Q{What does READY low do?} It requests a wait state while the interface becomes ready.
+\item \Q{What is the 8086 prefetch queue size?} Six bytes.
+\item \Q{Why does an odd-address word take two cycles?} Its bytes belong to different aligned bank pairs.
+\item \Q{How is an 8086 interrupt-type entry located?} Multiply the type number by four.
+\item \Q{How does the DMA controller obtain the minimum-mode bus?} It asserts HOLD and waits for HLDA.
+\item \Q{How does the stack grow?} It grows towards lower addresses on both processors.
+\item \Q{What does REP MOVSB modify?} It advances or retreats SI and DI according to DF and decreases CX to zero.
+\end{enumerate}
+\end{tcolorbox}
+\begin{tcolorbox}[tikzbox,title={8085 and 8086 at a Glance}]
+\par\addvspace{5pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3.6cm}|Y|Y|}
+\hline
+\textbf{Feature} & \textbf{8085} & \textbf{8086} \\ \hline
+Data width and memory & 8-bit, 64 KiB & 16-bit, 1 MiB \\ \hline
+Addressing & 16-bit byte address & Segment:offset and even/odd banks \\ \hline
+Interrupt return & RET with software register restoration & IRET restores IP, CS and FLAGS \\ \hline
+\end{tabularx}\par
+\endgroup
+\end{tcolorbox}
+
+\end{document}
