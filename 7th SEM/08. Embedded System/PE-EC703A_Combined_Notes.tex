@@ -32,6 +32,7 @@
 \usepackage{multirow}
 \usepackage{tocloft}
 \newcommand{\Q}[1]{\textbf{#1}\par\noindent\ignorespaces}
+\usepackage{longtable}
 \definecolor{myred}{RGB}{196,30,58}
 \definecolor{mydark}{RGB}{30,30,50}
 \definecolor{mygreen}{RGB}{14,120,80}
@@ -63,14 +64,14 @@
 \renewcommand{\cftsecfont}{\normalsize\bfseries\color{mydark}}
 \renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{mydark}}
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
-\setlength{\cftbeforesecskip}{7pt}
+\setlength{\cftbeforesecskip}{5pt}
 \renewcommand{\cftsubsecfont}{\small\color{mydark}}
 \renewcommand{\cftsubsecpagefont}{\small\color{mydark}}
-\setlength{\cftbeforesubsecskip}{3pt}
+\setlength{\cftbeforesubsecskip}{2pt}
 \setlength{\cftsubsecindent}{1.4em}
 \renewcommand{\cftpartfont}{\normalsize\bfseries\color{myteal}}
 \renewcommand{\cftpartpagefont}{\normalsize\bfseries\color{myteal}}
-\setlength{\cftbeforepartskip}{14pt}
+\setlength{\cftbeforepartskip}{10pt}
 \renewcommand{\arraystretch}{1.45}
 \setlength{\tabcolsep}{6pt}
 \arrayrulecolor{mydark}
@@ -675,7 +676,7 @@ The memory-mapped addressing scheme of a microcontroller assigns fixed addresses
 
 \begin{tcolorbox}[tikzbox, title={Typical MCU Memory Map (ARM Cortex-M)}]
 \centering
-\begin{tikzpicture}[scale=1.0, every node/.style={font=\small}]
+\begin{tikzpicture}[yscale=0.85, scale=1.0, every node/.style={font=\small}]
   % Memory blocks stacked vertically
   \draw[fill=hdrred, draw=myred] (0,5.0) rectangle (5,6.0)
     node[midway, font=\small\bfseries, color=myred] {Peripherals (0x40000000--)};
@@ -975,23 +976,30 @@ A \textbf{watchdog timer} is a hardware timer that automatically \textbf{resets 
 
 \begin{tcolorbox}[tikzbox, title={Watchdog Timer Operation Flow}]
 \centering
-\begin{tikzpicture}[node distance=0.5cm and 1.2cm,
-  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=2.4cm,
-    align=center, minimum height=0.8cm, font=\small, rounded corners=3pt, line width=0.7pt}]
-  \node[sblock] (run) {System\\Running\\Normally};
-  \node[sblock, right=1.0cm of run] (kick) {WDT Reset\\(``Kicking''\\the Dog)};
-  \node[sblock, right=1.0cm of kick] (cnt) {WDT Counter\\Restarted};
-  \node[redblock, below=0.8cm of kick] (crash) {Software\\Crash /\\Hang};
-  \node[redblock, right=1.0cm of crash] (timeout) {WDT Times\\Out};
-  \node[redblock, right=1.0cm of timeout] (reset) {System\\Hardware\\Reset};
+\begin{tikzpicture}[
+  normal/.style={draw=myteal,fill=hdrteal,rounded corners=3pt,
+    text width=2.72cm,minimum height=1.05cm,align=center,font=\small},
+  fault/.style={normal,draw=myred,fill=hdrred},
+  patharrow/.style={thick,-Stealth}
+]
+  \node[normal] (run) at (0,0) {System running normally};
+  \node[normal] (kick) at (4.1,0) {Software services the watchdog};
+  \node[normal] (count) at (8.2,0) {Watchdog countdown restarts};
+  \draw[patharrow] (run)--(kick);
+  \draw[patharrow] (kick)--(count);
+  \draw[patharrow,myteal] (count.north)--(8.2,1.05)
+    -- node[midway,above=2pt,font=\footnotesize] {Normal operation continues}
+    (0,1.05)--(run.north);
 
-  \draw[arrow] (run) -- (kick);
-  \draw[arrow] (kick) -- (cnt);
-  \draw[arrow] (cnt.east) to[bend left=30] (run.east);
-  \draw[redarrow] (run.south) -- (crash.north);
-  \draw[redarrow] (crash) -- (timeout);
-  \draw[redarrow] (timeout) -- (reset);
-  \draw[redarrow] (reset.east) to[bend right=40] node[above, font=\scriptsize\color{myred}] {Restart} (run.east);
+  \node[fault] (hang) at (0,-2.4) {Software hangs or crashes};
+  \node[fault] (timeout) at (4.1,-2.4) {Watchdog times out};
+  \node[fault] (reset) at (8.2,-2.4) {Hardware resets the system};
+  \draw[patharrow,myred] (run.south)--(hang.north);
+  \draw[patharrow,myred] (hang)--(timeout);
+  \draw[patharrow,myred] (timeout)--(reset);
+  \draw[patharrow,myred] (reset.south)--(8.2,-3.48)
+    -- node[midway,below=2pt,font=\footnotesize] {System restarts}
+    (-2.2,-3.48)|-(run.west);
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -1392,10 +1400,18 @@ RTC Crystal Freq & $f = 32768\,\text{Hz} = 2^{15}\,\text{Hz}$ (15-bit counter, 1
 
 \par\noindent
 {\renewcommand{\arraystretch}{1.55}%
-\begin{tabularx}{\linewidth}{|B{3.0cm}|Y|Y|}
+\begingroup
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\begin{longtable}{|B{3.0cm}|>{\small\raggedright\arraybackslash}m{\dimexpr(\linewidth-3.0cm-6\tabcolsep-4\arrayrulewidth)/2\relax}|>{\small\raggedright\arraybackslash}m{\dimexpr(\linewidth-3.0cm-6\tabcolsep-4\arrayrulewidth)/2\relax}|}
 \hline
 \textbf{Instruction} & \textbf{Syntax / Example} & \textbf{Description} \\
 \hline
+\endfirsthead
+\hline
+\textbf{Instruction} & \textbf{Syntax / Example} & \textbf{Description} \\
+\hline
+\endhead
 \textbf{MOV} & \texttt{MOV A, \#55H} & Move immediate data to accumulator \\
 \hline
 \textbf{ADD} & \texttt{ADD A, R0} & Add R0 to Accumulator (A = A + R0) \\
@@ -1414,7 +1430,8 @@ RTC Crystal Freq & $f = 32768\,\text{Hz} = 2^{15}\,\text{Hz}$ (15-bit counter, 1
 \hline
 \textbf{RETI} & \texttt{RETI} & Return from interrupt (restores context) \\
 \hline
-\end{tabularx}}
+\end{longtable}
+\endgroup}
 
 \begin{tcolorbox}[examplebox, title={\textbf{8051 ALP Example: LED Toggle on Port 1}}]
 \begin{verbatim}

@@ -279,23 +279,30 @@ A \textbf{watchdog timer} is a hardware timer that automatically \textbf{resets 
 
 \begin{tcolorbox}[tikzbox, title={Watchdog Timer Operation Flow}]
 \centering
-\begin{tikzpicture}[node distance=0.5cm and 1.2cm,
-  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=2.4cm,
-    align=center, minimum height=0.8cm, font=\small, rounded corners=3pt, line width=0.7pt}]
-  \node[sblock] (run) {System\\Running\\Normally};
-  \node[sblock, right=1.0cm of run] (kick) {WDT Reset\\(``Kicking''\\the Dog)};
-  \node[sblock, right=1.0cm of kick] (cnt) {WDT Counter\\Restarted};
-  \node[redblock, below=0.8cm of kick] (crash) {Software\\Crash /\\Hang};
-  \node[redblock, right=1.0cm of crash] (timeout) {WDT Times\\Out};
-  \node[redblock, right=1.0cm of timeout] (reset) {System\\Hardware\\Reset};
+\begin{tikzpicture}[
+  normal/.style={draw=myteal,fill=hdrteal,rounded corners=3pt,
+    text width=2.72cm,minimum height=1.05cm,align=center,font=\small},
+  fault/.style={normal,draw=myred,fill=hdrred},
+  patharrow/.style={thick,-Stealth}
+]
+  \node[normal] (run) at (0,0) {System running normally};
+  \node[normal] (kick) at (4.1,0) {Software services the watchdog};
+  \node[normal] (count) at (8.2,0) {Watchdog countdown restarts};
+  \draw[patharrow] (run)--(kick);
+  \draw[patharrow] (kick)--(count);
+  \draw[patharrow,myteal] (count.north)--(8.2,1.05)
+    -- node[midway,above=2pt,font=\footnotesize] {Normal operation continues}
+    (0,1.05)--(run.north);
 
-  \draw[arrow] (run) -- (kick);
-  \draw[arrow] (kick) -- (cnt);
-  \draw[arrow] (cnt.east) to[bend left=30] (run.east);
-  \draw[redarrow] (run.south) -- (crash.north);
-  \draw[redarrow] (crash) -- (timeout);
-  \draw[redarrow] (timeout) -- (reset);
-  \draw[redarrow] (reset.east) to[bend right=40] node[above, font=\scriptsize\color{myred}] {Restart} (run.east);
+  \node[fault] (hang) at (0,-2.4) {Software hangs or crashes};
+  \node[fault] (timeout) at (4.1,-2.4) {Watchdog times out};
+  \node[fault] (reset) at (8.2,-2.4) {Hardware resets the system};
+  \draw[patharrow,myred] (run.south)--(hang.north);
+  \draw[patharrow,myred] (hang)--(timeout);
+  \draw[patharrow,myred] (timeout)--(reset);
+  \draw[patharrow,myred] (reset.south)--(8.2,-3.48)
+    -- node[midway,below=2pt,font=\footnotesize] {System restarts}
+    (-2.2,-3.48)|-(run.west);
 \end{tikzpicture}
 \end{tcolorbox}
 

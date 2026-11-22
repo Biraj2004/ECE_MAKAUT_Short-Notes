@@ -203,34 +203,30 @@ Multiple access schemes allow many mobile users to share the same physical radio
 
 \begin{tcolorbox}[tikzbox, title={TDMA Frame and Slot Structure}]
 \centering
-\begin{tikzpicture}[scale=0.9, every node/.style={font=\scriptsize}]
-  % Draw TDMA Frame
-  \draw[thick, fill=hdrteal!30] (0,1.2) rectangle (8,2.0);
-
-  % Split slots
-  \foreach \x in {1,2,3,4,5,6,7} {
-    \draw[thick] (\x,1.2) -- (\x,2.0);
+\begin{tikzpicture}[x=1.05cm,y=0.96cm,font=\small]
+  \node[font=\small\bfseries,above=4pt] at (6,2.76) {GSM TDMA frame (approximately 4.615\,ms)};
+  \foreach \i in {0,...,7}{
+    \ifnum\i=1\relax
+      \draw[fill=hdramber,draw=myamber,thick] ({1.5*\i},2.0) rectangle ({1.5*(\i+1)},2.76);
+    \else
+      \draw[fill=hdrteal!45] ({1.5*\i},2.0) rectangle ({1.5*(\i+1)},2.76);
+    \fi
+    \node at ({1.5*(\i+0.5)},2.38) {Slot \i};
   }
-  \node at (0.5, 1.6) {Slot 0};
-  \node at (1.5, 1.6) {Slot 1};
-  \node at (2.5, 1.6) {Slot 2};
-  \node at (7.5, 1.6) {Slot 7};
-  \node at (5.0, 1.6) {\dots};
-
-  % Frame Label above
-  \node[above=0.15cm, color=mydark] at (4, 2.0) {\textbf{TDMA Frame} (e.g., 4.615 ms for GSM)};
-
-  % Expand Slot 1
-  \draw[dashed, color=mydark] (1.0, 1.2) -- (0, -0.2);
-  \draw[dashed, color=mydark] (2.0, 1.2) -- (8.0, -0.2);
-
-  % Detail Slot structure
-  \draw[thick, fill=hdrred!20] (0,-0.2) rectangle (0.8,-0.8) node[midway, align=center] {\tiny Guard\\ \tiny Time};
-  \draw[thick, fill=mygray] (0.8,-0.2) rectangle (1.8,-0.8) node[midway, align=center] {\tiny Tail\\ \tiny Bits};
-  \draw[thick, fill=hdrteal!40] (1.8,-0.2) rectangle (4.2,-0.8) node[midway, align=center] {\tiny User Data\\ \tiny (57 bits)};
-  \draw[thick, fill=hdramber!30] (4.2,-0.2) rectangle (5.0,-0.8) node[midway, align=center] {\tiny Training\\ \tiny Sequence};
-  \draw[thick, fill=hdrteal!40] (5.0,-0.2) rectangle (7.4,-0.8) node[midway, align=center] {\tiny User Data\\ \tiny (57 bits)};
-  \draw[thick, fill=mygray] (7.4,-0.2) rectangle (8.0,-0.8) node[midway, align=center] {\tiny Tail};
+  \draw[densely dashed,mgframe,thick] (1.5,2)--(0,0.72) (3,2)--(12,0.72);
+  \node[font=\footnotesize,fill=mygray,inner sep=3pt] at (4.9,1.27)
+    {Expanded slot with normal burst (schematic)};
+  \foreach \l/\r/\shade/\caption in {
+    0/1.30/hdrgray/{Tail\\3 bits},
+    1.30/3.75/hdrteal/{Encrypted\\field\\58 bits},
+    3.75/6.20/hdramber/{Training\\sequence\\26 bits},
+    6.20/8.65/hdrteal/{Encrypted\\field\\58 bits},
+    8.65/9.95/hdrgray/{Tail\\3 bits},
+    9.95/12/hdrred/{Guard period\\8.25 bit\\periods}}{
+    \draw[fill=\shade] (\l,-0.66) rectangle (\r,0.72);
+    \node[align=center,font=\footnotesize] at ({(\l+\r)/2},0.03) {\caption};
+  }
+  \node[anchor=north,font=\footnotesize] at (6,-0.84) {Burst fields follow 3GPP TS 45.002, Fig.~3.};
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -319,39 +315,32 @@ The primary drawback of OFDM is its high PAPR.
 
 \begin{tcolorbox}[tikzbox, title={OFDM Transmitter and Receiver Block Diagrams}]
 \centering
-\begin{tikzpicture}[node distance=0.35cm and 0.55cm,
-  sblock/.style={rectangle, draw=myteal, fill=hdrteal, text width=1.5cm,
-    align=center, minimum height=0.85cm, font=\scriptsize,
-    rounded corners=3pt, line width=0.7pt}]
+\begin{tikzpicture}[
+  stage/.style={draw=myteal,fill=hdrteal,rounded corners=3pt,
+    text width=1.99cm,minimum height=1.15cm,align=center,font=\small},
+  patharrow/.style={thick,-Stealth}
+]
+  \node[stage] (txin) at (0,0) {Serial input\\$d(n)$};
+  \node[stage] (map) at (2.65,0) {S/P and QAM mapping};
+  \node[stage] (ifft) at (5.30,0) {$N$-point\\IFFT};
+  \node[stage] (prefix) at (7.95,0) {Add cyclic prefix};
+  \node[stage] (txout) at (10.60,0) {P/S and\\DAC/RF};
+  \node[anchor=south west,font=\small\bfseries] at (txin.north west) {Transmitter};
+  \foreach \a/\b in {txin/map,map/ifft,ifft/prefix,prefix/txout}
+    \draw[patharrow] (\a)--(\b);
 
-  % Transmitter
-  \node[font=\scriptsize\bfseries] at (0,1.2) {Transmitter:};
-  \node[sblock] (tx_in) {Serial Input $d(n)$};
-  \node[sblock, right=0.4cm of tx_in] (tx_s2p) {S/P \& QAM Mapping};
-  \node[sblock, right=0.4cm of tx_s2p] (tx_ifft) {IFFT\\(N-point)};
-  \node[sblock, right=0.4cm of tx_ifft] (tx_cp) {Add Cyclic Prefix};
-  \node[sblock, right=0.4cm of tx_cp] (tx_p2s) {P/S \& DAC / RF};
-  \draw[arrow] (tx_in) -- (tx_s2p);
-  \draw[arrow] (tx_s2p) -- (tx_ifft);
-  \draw[arrow] (tx_ifft) -- (tx_cp);
-  \draw[arrow] (tx_cp) -- (tx_p2s);
+  \node[stage] (rxin) at (0,-2.65) {RF front end\\and ADC};
+  \node[stage] (remove) at (2.65,-2.65) {Remove cyclic prefix};
+  \node[stage] (fft) at (5.30,-2.65) {$N$-point\\FFT};
+  \node[stage] (eq) at (7.95,-2.65) {1-tap FDE and demapping};
+  \node[stage] (rxout) at (10.60,-2.65) {Parallel to serial};
+  \node[anchor=south east,font=\small\bfseries] at (rxout.north east) {Receiver};
+  \foreach \a/\b in {rxin/remove,remove/fft,fft/eq,eq/rxout}
+    \draw[patharrow] (\a)--(\b);
 
-  % Receiver
-  \node[font=\scriptsize\bfseries] at (0,-0.4) {Receiver:};
-  \begin{scope}[shift={(0,-1.6)}]
-    \node[sblock] (rx_in) {RF Front / ADC};
-    \node[sblock, right=0.4cm of rx_in] (rx_cp) {Remove Cyclic Prefix};
-    \node[sblock, right=0.4cm of rx_cp] (rx_fft) {FFT\\(N-point)};
-    \node[sblock, right=0.4cm of rx_fft] (rx_eq) {1-Tap FDE \& De-mapping};
-    \node[sblock, right=0.4cm of rx_eq] (rx_out) {Parallel to Serial};
-    \draw[arrow] (rx_in) -- (rx_cp);
-    \draw[arrow] (rx_cp) -- (rx_fft);
-    \draw[arrow] (rx_fft) -- (rx_eq);
-    \draw[arrow] (rx_eq) -- (rx_out);
-  \end{scope}
-
-  % Connect Tx to Rx
-  \draw[arrow, redarrow] (tx_p2s.south) -- +(0,-0.3) -- node[midway, above, color=myred] {Multipath Channel} +(-7.6,-0.3) -- (rx_in.north);
+  \draw[patharrow,myred] (txout.south)--(10.60,-1.51)
+    -- node[midway,above=3pt,font=\small\bfseries] {Multipath channel}
+    (0,-1.51)--(rxin.north);
 \end{tikzpicture}
 \end{tcolorbox}
 
