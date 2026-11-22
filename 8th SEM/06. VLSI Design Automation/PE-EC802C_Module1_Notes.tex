@@ -21,7 +21,6 @@
 \usepackage{amsmath}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, patterns}
-\usepackage[american]{circuitikz}
 \usepackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
 \usepackage{hyperref}
@@ -403,38 +402,38 @@ Simulated Annealing is a stochastic global optimization technique inspired by th
 
 \begin{tcolorbox}[tikzbox, title={Simulated Annealing Flow Chart}]
 \centering
-\begin{tikzpicture}[scale=0.88, transform shape, node distance=1.3cm]
-  \tikzset{decision/.style={draw=myamber, fill=hdramber, diamond, aspect=2, minimum width=2.4cm, minimum height=1.0cm, align=center, font=\scriptsize, line width=0.8pt}}
-  
-  \node[block] (start) {Start};
-  \node[block, below=0.5cm of start] (init) {Init: $S = S_0$,\\$T = T_0$};
-  \node[block, below=0.5cm of init] (move) {Perturb State:\\$S' = \text{Move}(S)$};
-  \node[block, below=0.5cm of move] (diff) {$\Delta E = \text{Cost}(S') - \text{Cost}(S)$};
-  \node[decision, below=0.6cm of diff] (cond1) {$\Delta E < 0$?};
-  
-  \node[decision, right=1.6cm of cond1] (cond2) {$r < e^{-\frac{\Delta E}{T}}$?};
-  \node[block, below=1.2cm of cond1] (accept) {Accept:\\$S = S'$};
-  \node[block, right=1.6cm of accept] (reject) {Reject:\\Keep $S$};
-  \node[block, below=0.8cm of accept] (cool) {Cool Temp:\\$T = \alpha T$};
-  \node[decision, below=0.6cm of cool] (cond3) {$T < T_f$?};
-  \node[block, below=0.5cm of cond3] (end) {End:\\Output $S$};
-  
-  % Connections
-  \draw[arrow] (start) -- (init);
-  \draw[arrow] (init) -- (move);
-  \draw[arrow] (move) -- (diff);
-  \draw[arrow] (diff) -- (cond1);
-  \draw[arrow] (cond1) -- node[left, font=\tiny] {Yes} (accept);
-  \draw[arrow] (cond1) -- node[above, font=\tiny] {No} (cond2);
-  \draw[arrow] (cond2) -- node[left, font=\tiny] {Yes} (accept);
-  \draw[arrow] (cond2) -- node[right, font=\tiny] {No} (reject);
-  \draw[arrow] (accept) -- (cool);
-  \draw[arrow] (reject) |- (cool);
-  \draw[arrow] (cool) -- (cond3);
-  \draw[arrow] (cond3) -- node[left, font=\tiny] {Yes} (end);
-  
-  % Loopback
-  \draw[arrow] (cond3.west) -- node[above, pos=0.8, font=\tiny] {No} ++(-1.8,0) |- (move.west);
+\begin{tikzpicture}[
+  state/.style={draw=myteal, fill=hdrteal, rounded corners=3pt,
+    minimum height=0.72cm, text width=2.45cm, align=center, font=\small},
+  test/.style={draw=myamber, fill=hdramber, diamond, aspect=2,
+    inner sep=1.4pt, minimum width=2.4cm, minimum height=1.05cm,
+    align=center, font=\small},
+  branch/.style={font=\scriptsize, fill=mygray, inner sep=1.3pt}
+]
+  \node[state] (init) at (-4,0) {Start: $S=S_0$, $T=T_0$};
+  \node[state] (move) at (0,0) {Perturb: $S'=\text{Move}(S)$};
+  \node[state] (diff) at (4,0) {$\Delta E=\text{Cost}(S')-\text{Cost}(S)$};
+  \node[test] (better) at (4,-1.6) {$\Delta E<0$?};
+  \node[test] (random) at (0,-1.6) {$r<e^{-\Delta E/T}$?};
+  \node[state] (accept) at (4,-3.25) {Accept: $S=S'$};
+  \node[state] (reject) at (0,-3.25) {Reject: keep $S$};
+  \node[state] (cool) at (2,-4.6) {Cool: $T=\alpha T$};
+  \node[test] (stop) at (-1.45,-4.6) {$T<T_f$?};
+  \node[state] (output) at (-5,-4.6) {End: output $S$};
+
+  \draw[arrow] (init)--(move);
+  \draw[arrow] (move)--(diff);
+  \draw[arrow] (diff)--(better);
+  \draw[arrow] (better)--node[branch,right] {Yes} (accept);
+  \draw[arrow] (better)--node[branch,above] {No} (random);
+  \draw[arrow] (random)--node[branch,left] {No} (reject);
+  \draw[arrow] (random.south east)--node[branch,above right] {Yes} (accept.north west);
+  \draw[arrow] (accept.south) |- (cool.east);
+  \draw[arrow] (reject.south east)--(cool.north west);
+  \draw[arrow] (cool)--(stop);
+  \draw[arrow] (stop)--node[branch,above] {Yes} (output);
+  \draw[arrow] (stop.south) -- ++(0,-0.55)
+    -- node[branch,below] {No} (-6.75,-5.75) |- (-6.75,1.0) -| (move.north);
 \end{tikzpicture}
 \end{tcolorbox}
 
