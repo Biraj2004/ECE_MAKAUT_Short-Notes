@@ -291,7 +291,11 @@ v_{be}&=h_{ie}i_b+h_{re}v_{ce},\\
 i_c&=h_{fe}i_b+h_{oe}v_{ce}.
 \end{aligned}
 \]
-\(h_{ie}\) (in \(\Omega\)) and \(h_{fe}\) (dimensionless) are found with the small-signal output voltage zero. \(h_{re}\) (dimensionless) and \(h_{oe}\) (in S) are found with the small-signal input current zero. These are incremental conditions about the Q point. In the unilateral approximation \(h_{re}\) is small. The output then looks like a controlled current \(h_{fe}i_b\) in parallel with \(1/h_{oe}\).
+\begin{itemize}[leftmargin=*, itemsep=3pt, topsep=4pt]
+  \item \textbf{Set \(v_{ce}=0\).} Read input resistance \(h_{ie}=v_{be}/i_b\) in \(\Omega\) and forward current gain \(h_{fe}=i_c/i_b\) (dimensionless).
+  \item \textbf{Set \(i_b=0\).} Read reverse voltage gain \(h_{re}=v_{be}/v_{ce}\) (dimensionless) and output admittance \(h_{oe}=i_c/v_{ce}\) in S.
+  \item \textbf{Simplify the model.} The conditions above apply to small changes about the Q point. When \(h_{re}\) can be neglected, the output is a current source \(h_{fe}i_b\) in parallel with \(1/h_{oe}\).
+\end{itemize}
 
 \begin{tcolorbox}[examplebox,title={Convert BJT current gains}]
 For a transistor in forward active mode with \(\alpha=0.98\) and \(I_E=2\,\mathrm{mA}\),
@@ -336,7 +340,40 @@ At small \(V_{DS}\) the channel is nearly ohmic. Increasing \(V_{DS}\) widens it
 \[
 I_D=I_{DSS}\left(1-\frac{V_{GS}}{V_P}\right)^2,\qquad V_P\le V_{GS}\le0 .
 \]
-Here \(I_{DSS}\) is the saturation drain current at \(V_{GS}=0\). For \(I_{DSS}=8\,\mathrm{mA}\), \(V_P=-4\,\mathrm V\) and \(V_{GS}=-2\,\mathrm V\), \(I_D=8(1-0.5)^2=2\,\mathrm{mA}\). This solution requires \(V_{DS}\gtrsim2\,\mathrm V\) and below breakdown.
+Here \(I_{DSS}\) is the saturation drain current at \(V_{GS}=0\).
+
+\begin{tcolorbox}[tikzbox,title={N-channel JFET transfer characteristic in saturation},unbreakable]
+\centering
+\begin{tikzpicture}[x=1.35cm,y=0.41cm,font=\small]
+\draw[arrow] (-4.45,0)--(0.85,0) node[right] {$V_{GS}$ (V)};
+\draw[arrow] (-4.45,0)--(-4.45,9.3) node[above] {$I_D$ (mA)};
+\foreach \x in {-4,-3,-2,-1,0} {
+  \draw (\x,0.14)--(\x,-0.14) node[below] {$\x$};
+}
+\foreach \y in {2,4,6,8} {
+  \draw (-4.35,\y)--(-4.55,\y) node[left] {$\y$};
+}
+\draw[densely dashed,mgframe] (-4.45,2)--(-2,2)--(-2,0);
+\draw[densely dashed,mgframe] (-4.45,8)--(0,8)--(0,0);
+\draw[myteal,very thick,domain=-4:0,samples=41] plot (\x,{0.5*(\x+4)^2});
+\fill[myteal] (-4,0) circle[radius=1.7pt]
+             (-2,2) circle[radius=1.7pt]
+             (0,8) circle[radius=1.7pt];
+\node[anchor=west] at (-4.28,1.38) {Cut-off};
+\node[anchor=west] at (0.12,8) {$I_{DSS}$};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox,title={Read the gate-voltage curve and check the bias region}]
+\begin{enumerate}[leftmargin=*, itemsep=3pt, topsep=4pt]
+  \item \textbf{Read the endpoints.} At \(V_{GS}=0\), \(I_{DSS}=8\,\mathrm{mA}\). At \(V_{GS}=V_P=-4\,\mathrm V\), \(I_D\approx0\).
+  \item \textbf{Read and check an intermediate point.} For \(V_{GS}=-2\,\mathrm V\), the curve gives \(2\,\mathrm{mA}\). The square-law model gives the same value:
+  \[
+    I_D=(8\,\mathrm{mA})\left(1-\frac{-2}{-4}\right)^2=2\,\mathrm{mA}.
+  \]
+  \item \textbf{Check \(V_{DS}\).} The knee of this drain curve is at \(V_{GS}-V_P=2\,\mathrm V\). Use the transfer-curve value at or above the knee and below breakdown. Below the knee, read the rising portion of the drain curve instead.
+\end{enumerate}
+\end{tcolorbox}
 
 \subsection{MOSFET construction and output characteristics}
 \begin{itemize}[leftmargin=*, itemsep=3pt, topsep=4pt]
