@@ -174,6 +174,16 @@ def generate_metadata(pdf_path, mod_dict=None):
     name = p.stem
     parent_folder = p.parent.name
     sem_folder = p.parent.parent.name if len(p.parents) > 1 else ""
+    curriculum = "2023-2027"
+    if sem_folder == "New Syllabus Subjects" and len(p.parents) > 2:
+        sem_folder = p.parents[2].name
+        source = p.with_suffix(".tex")
+        if not source.is_file() and "_" in name:
+            source = p.with_name(f"{name.split('_', 1)[0]}_Combined_Notes.tex")
+        if source.is_file():
+            match = re.search(r"MAKAUT Syllabus \(A\.Y\. (\d{4})--(\d{2})\)", source.read_text(encoding="utf-8"))
+            if match:
+                curriculum = f"Syllabus {match[1]}-{match[2]}"
 
     clean_subj = re.sub(r"^\d+\.\s*", "", parent_folder) if parent_folder else ""
     clean_sem = sem_folder.replace("SEM", "Semester").strip() if "SEM" in sem_folder else ""
@@ -190,12 +200,12 @@ def generate_metadata(pdf_path, mod_dict=None):
         topic_suffix = f" - {mod_name}" if mod_name else ""
         title = f"{code} - {clean_subj}: Module {mod_num}{topic_suffix}"
         subject = f"MAKAUT B.Tech ECE {clean_sem} Notes | {clean_subj}"
-        keywords = f"MAKAUT, B.Tech, ECE, {clean_sem}, {code}, {clean_subj}, Module {mod_num}, {mod_name}, Short Notes, Revision Notes, Exam Prep, Formulas, Derivations, Biraj Sarkar, CGEC, 2023-2027"
+        keywords = f"MAKAUT, B.Tech, ECE, {clean_sem}, {code}, {clean_subj}, Module {mod_num}, {mod_name}, Short Notes, Revision Notes, Exam Prep, Formulas, Derivations, Biraj Sarkar, CGEC, {curriculum}"
     elif "Combined" in name or ("_" in name and not name.lower().startswith("sem")):
         code = name.split("_")[0]
         title = f"{code} - {clean_subj}: Complete Exam Revision Notes"
         subject = f"MAKAUT B.Tech ECE {clean_sem} Comprehensive Exam Notes & Official Syllabus"
-        keywords = f"MAKAUT, B.Tech, ECE, {clean_sem}, {code}, {clean_subj}, Combined Notes, Full Subject Notes, Revision Notes, Formulas, Derivations, Biraj Sarkar, CGEC, 2023-2027"
+        keywords = f"MAKAUT, B.Tech, ECE, {clean_sem}, {code}, {clean_subj}, Combined Notes, Full Subject Notes, Revision Notes, Formulas, Derivations, Biraj Sarkar, CGEC, {curriculum}"
     elif name.lower().startswith("sem"):
         sem_label = clean_sem or name
         title = f"MAKAUT B.Tech ECE - {sem_label} Official Syllabus"

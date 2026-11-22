@@ -46,6 +46,15 @@ Follow this order for every topic:
 
 > **Definition → Concept → Working → Formula → Diagram → Advantages/Disadvantages → Applications → Exam Points**
 
+### Pointwise explanations for revision
+
+- Open with a self-contained definition. Use a short paragraph where a concept needs a continuous explanation.
+- Use labelled bullets for distinct parts, types, characteristics, causes and effects. Put the term or takeaway in bold so students can scan the list while revising.
+- Use numbered steps for working principles, analysis methods and exam procedures that have an order. Use a comparison table when the same criteria apply to several devices or methods.
+- Keep the depth needed for the exam. Add the operating conditions, assumptions and reasons to each point. Keep complete derivations in aligned displays and show the substitutions and units in worked problems.
+- Give students enough in the definition and key points to write a short answer. Support longer answers with the diagram, working, derivation and interpretation. Add exam pointers where a choice of sign, region or formula commonly changes the answer.
+- Review the compiled pages after restructuring. Keep labels with their explanations, diagrams with the points they illustrate, and enough space around boxes and tables.
+
 ### Every topic must include
 
 | Element | Details |
@@ -245,12 +254,12 @@ Follow this order for every topic:
 
 ### ⚠ Page Breaking and White Space Mitigation (Strategic Splitting)
 
+Let sections and worked examples flow through the available space. Use a forced page break only when the compiled pages show a clear need, such as keeping a diagram or multi-line calculation readable. Check the standalone and combined PDFs after adding a break, because the same break can leave a large gap in one version.
+
 By default, all boxes must be breakable (`\tcbset{breakable}` in preamble) to prevent them from overflowing into the footer or leaving huge white spaces on the page. However, you must use page breaks **awarely** and **strategically**:
 
 1. **The Pushed-Box Problem:** If a breakable box starts with a tall unbreakable element (like a tall diagram, a large table, or a multi-line `\displaystyle\frac` equation) and is placed near the bottom of a page, LaTeX cannot split it at that first element. Instead of breaking, the compiler will push the **entire box** to the next page, leaving a large, ugly white space at the bottom of the current page.
-2. **The Strategic Fix (Internal Page-Breaking):** If a box is pushed to the next page and leaves empty space, you must manually intervene by inserting a strategic `\newpage` or `\pagebreak` inside the box body:
-   - For example, in an `exambox` containing several Q&A items, if the box is pushed to the next page because it starts too low, insert `\newpage` inside the box *after* the first or second Q&A item. This forces the box to start on the current page, print the first few items, break cleanly at the `\newpage`, and continue on the next page.
-   - For bulleted/numbered lists, place the `\newpage` or `\pagebreak` cleanly between items.
+2. **Keep the opening material short.** Introduce a tall table or display with a short explanation that can use the remaining space. If a worked example still needs a manual split, place it between complete steps and verify the result in both PDFs. Let the `exambox` split automatically so its continuation title is printed.
 3. **Isolate Unbreakable Elements:** If a box contains an unbreakable block diagram or comparative table that is causing the entire box to jump, pull that element out of the main text box. Place it in its own separate `tikzbox` or standalone table, allowing the remaining text boxes to break naturally.
 
 ---
@@ -297,7 +306,16 @@ In boxed tables, text or mathematical symbols can easily collide with vertical c
    \endgroup
    ```
 
-### Always use `tabularx` with `\linewidth`
+### Short tables with `tabularx`
+
+Use `tabularx` for short tables that fit comfortably where they start. For a long table that pushes its heading and rows to the next page, use the page-spanning pattern below.
+
+### Tables that span pages
+
+- Use `longtable` with `\usepackage{longtable}` in the module preamble when several rows can use an otherwise empty part of a page. The combined builder loads the package when a module uses the environment.
+- Keep `longtable` in the main document flow. For a tall table in a box, move the title and any introduction above the table so the rows can split. Repeat category labels in rows that can land on different pages. Reserve merged cells for short tables whose grouped rows stay together.
+- Repeat the column headings with `\endfirsthead` and `\endhead`. Keep the original cell padding and ragged-right text. Calculate fixed paragraph widths from `\linewidth`, allowing for both sides of every cell and the vertical rules.
+- Check the break in both PDFs. A reader should see the heading and useful rows on the first page and a full column header on the continuation page. Keep compact tables, individual diagrams and their labels together where possible.
 
 ```latex
 \begin{tabularx}{\linewidth}{...column spec...}
@@ -544,6 +562,10 @@ For combined subject-wise notes, a full-page cover sheet is generated dynamicall
    - **Affiliation Label:** "IN ASSOCIATION WITH" in small capitals (`\footnotesize\color{watermark}\textbf`).
    - **Associations:** `MAKAUT Wingman` and `MAKAUT Future Minds` in bold dark text (`\small\bfseries\color{mydark}`).
    - **College Name:** `Cooch Behar Government Engineering College` highlighted in bold teal (`\large\bfseries\color{myteal}`).
+
+### Combined module openings
+
+Use the shared `\modulestart` heading generated by `pdf_build_combined.ps1`. Place the red module number on the first line, the dark topic title on the second, and the red rule underneath. Match the spacing used in Microwave Theory and Technique. Keep both lines separate even when the topic title is short.
 
 ---
 

@@ -68,6 +68,12 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── EC402_Module4_Notes.tex / .pdf
 │   │   ├── EC402_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │   │   └── EC402_Analog_Circuits.pdf (combined output)
+│   ├── 03. Microprocessor and Microcontroller/ # EC403 — 4 modules (All complete)
+│   │   ├── EC403_Module1_Notes.tex / .pdf
+│   │   ├── ...
+│   │   ├── EC403_Module4_Notes.tex / .pdf
+│   │   ├── EC403_Combined_Notes.tex  (auto-generated — do not hand-edit)
+│   │   └── EC403_Microprocessor_and_Microcontroller.pdf (combined output)
 │   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
 ├── 5th SEM/                        # Planned (each with New Syllabus Subjects/)
 ├── 6th SEM/
@@ -280,7 +286,7 @@ These are non-negotiable. Violating them causes compile errors or broken output.
 - In TikZ: always `\color{myred}` — never `\color=myred`.
 
 ### Tables
-- Always `\begin{tabularx}{\linewidth}{...}`.
+- Use `\begin{tabularx}{\linewidth}{...}` for short tables. Use `longtable` with repeated column headers for tables that need to span pages, following §6 of `Notes_Build_Guide.md`.
 - Add `\par\vspace{6pt}\noindent` before any table that immediately follows inline text or headings (prevents the table top boundary line from colliding with the text baseline). Use `\vspace{12pt}` before subsequent headings.
 - Never use plain `X` columns for text cells. Because hyphenation is disabled globally (`\hyphenpenalty=10000`), plain `X` will produce ugly, uneven gaps between words due to full justification. Always use `Y` (ragged-right `X`) columns instead.
 - Never use `C{fixed-width}` inside `tabularx` — use `>{\centering\arraybackslash}X`.
@@ -408,6 +414,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 |---|---|---|---|---|
 | EC401 Analog Communication | 4 | ✅ All compiled | `EC401_Analog_Communication.pdf` | 46 |
 | EC402 Analog Circuits | 4 | ✅ All compiled | `EC402_Analog_Circuits.pdf` | 45 |
+| EC403 Microprocessor and Microcontroller | 4 | ✅ All compiled | `EC403_Microprocessor_and_Microcontroller.pdf` | 56 |
 
 **6th SEM — complete and compiled:**
 

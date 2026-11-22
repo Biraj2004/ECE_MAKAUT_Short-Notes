@@ -132,6 +132,8 @@ foreach ($folder in $subjectFolders) {
         $extracted = ($creditMatch.Line -replace '^\s*\{\\normalsize\\color\{[^}]+\}\s*','') -replace '\}\\\\.*','' -replace '^\s+|\s+$',''
         $extracted -replace '\d+L:\d+T:\d+P', 'ECE'
     } else { 'Semester' }
+    $curriculumMatch = $firstLines | Select-String 'MAKAUT Syllabus \(A\.Y\. \d{4}--\d{2}\)' | Select-Object -First 1
+    $curriculumLabel = if ($curriculumMatch) { $curriculumMatch.Matches[0].Value } else { 'B.Tech ECE (2023--27)' }
 
     # ---- Extract module titles from first \section of each module -----------
     $moduleTitles = @{}
@@ -287,14 +289,14 @@ foreach ($folder in $subjectFolders) {
 \renewcommand{\cftsecfont}{\normalsize\bfseries\color{mydark}}
 \renewcommand{\cftsecpagefont}{\normalsize\bfseries\color{mydark}}
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
-\setlength{\cftbeforesecskip}{7pt}
+\setlength{\cftbeforesecskip}{5pt}
 \renewcommand{\cftsubsecfont}{\small\color{mydark}}
 \renewcommand{\cftsubsecpagefont}{\small\color{mydark}}
-\setlength{\cftbeforesubsecskip}{3pt}
+\setlength{\cftbeforesubsecskip}{2pt}
 \setlength{\cftsubsecindent}{1.4em}
 \renewcommand{\cftpartfont}{\normalsize\bfseries\color{myteal}}
 \renewcommand{\cftpartpagefont}{\normalsize\bfseries\color{myteal}}
-\setlength{\cftbeforepartskip}{14pt}
+\setlength{\cftbeforepartskip}{10pt}
 '@
     [void]$sb.AppendLine($tocFmt)
 
@@ -391,7 +393,7 @@ foreach ($folder in $subjectFolders) {
     [void]$sb.AppendLine('  {\Large\color{myteal}\textbf{Combined Module Notes}}\\[8pt]')
     [void]$sb.AppendLine('  {\large\color{mydark} Modules 1 -- ' + $moduleFiles.Count + '}\\[40pt]')
     [void]$sb.AppendLine('  {\normalsize\color{mydark} ' + $creditStr + '}\\[12pt]')
-    [void]$sb.AppendLine('  {\normalsize\color{mydark} CGEC \;$|$\; B.Tech ECE (2023--27)}')
+    [void]$sb.AppendLine('  {\normalsize\color{mydark} CGEC \;$|$\; ' + $curriculumLabel + '}')
     [void]$sb.AppendLine('\end{center}')
     [void]$sb.AppendLine('\vspace{1.0cm}')
     [void]$sb.AppendLine('\begin{center}')
