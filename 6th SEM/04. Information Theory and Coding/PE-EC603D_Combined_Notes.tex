@@ -13,11 +13,13 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{amsmath}
+\allowdisplaybreaks
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns}
-\usepackage[american]{circuitikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns, backgrounds}
+% circuitikz not required for this subject
 \usepackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
+\usepackage{etoolbox}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
@@ -46,6 +48,7 @@
 \definecolor{hdrpurple}{RGB}{238,228,255}
 \definecolor{hdrgray}{RGB}{238,240,245}
 \definecolor{rowalt}{RGB}{250,251,253}
+\AfterEndEnvironment{tcolorbox}{\color{mydark}}
 
 \titleformat{\section}{\large\bfseries\color{myred}}{\thesection.}{0.5em}{}[\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
 \titleformat{\subsection}{\normalsize\bfseries\color{myteal}}{\thesubsection}{0.5em}{}
@@ -129,7 +132,8 @@
     breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}}
 }
 \tcbset{breakable}
-\tcbset{after={\color{black}}}
+\tcbset{coltext=mydark}
+\tcbset{after={\color{mydark}}}
 
 \tikzset{
   block/.style={rectangle, draw=myteal, fill=hdrteal,
@@ -614,14 +618,19 @@ $s_5$ & 0.05 & 1 & 1 & 1 & 111 & 3 \\
 \textbf{(b) Source Entropy $H(X)$:}
 \begin{align*}
   H(X) &= -\sum_{i=1}^5 P(s_i) \log_2 P(s_i) \\
-  &= -[0.35\log_2 0.35 + 0.30\log_2 0.30 + 0.20\log_2 0.20 + 0.10\log_2 0.10 + 0.05\log_2 0.05] \\
-  &= -[0.35(-1.5146) + 0.30(-1.7370) + 0.20(-2.3219) + 0.10(-3.3219) + 0.05(-4.3219)] \\
-  &= -[-0.5301 - 0.5211 - 0.4644 - 0.3322 - 0.2161] = 2.0639 \text{ bits/symbol}
+  &= -\bigl[0.35\log_2 0.35 + 0.30\log_2 0.30 + 0.20\log_2 0.20 \\
+  &\qquad + 0.10\log_2 0.10 + 0.05\log_2 0.05\bigr] \\
+  &= -\bigl[0.35(-1.5146) + 0.30(-1.7370) + 0.20(-2.3219) \\
+  &\qquad + 0.10(-3.3219) + 0.05(-4.3219)\bigr] \\
+  &= 0.5301 + 0.5211 + 0.4644 + 0.3322 + 0.2161 \\
+  &\approx 2.0639 \text{ bits/symbol}.
 \end{align*}
 
 \textbf{(c) Average Codeword Length $L$ and Efficiency $\eta$:}
 \begin{align*}
-  L &= \sum_{i=1}^5 P(s_i) l_i = (0.35 \times 2) + (0.30 \times 2) + (0.20 \times 2) + (0.10 \times 3) + (0.05 \times 3) \\
+  L &= \sum_{i=1}^5 P(s_i) l_i \\
+    &= (0.35 \times 2) + (0.30 \times 2) + (0.20 \times 2) \\
+    &\qquad + (0.10 \times 3) + (0.05 \times 3) \\
   &= 0.70 + 0.60 + 0.40 + 0.30 + 0.15 = 2.15 \text{ bits/symbol} \\[4pt]
   \eta &= \frac{H(X)}{L} \times 100\% = \frac{2.0639}{2.15} \times 100\% \approx 95.99\% \\[4pt]
   \text{Redundancy } R &= 1 - 0.9599 = 0.0401 \text{ or } 4.01\%
@@ -660,10 +669,10 @@ Kraft Inequality        & $\sum 2^{-l_i} \le 1 \quad (\text{For binary prefix co
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
 \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
-  \item \textbf{Information Content:} A measure of surprise or uncertainty of an event, dependent only on its probability.
+  \item \textbf{Information Content:} The information in an observed event of probability $p>0$ is $-\log_2 p$ bits. Less likely events carry more information.
   \item \textbf{Entropy:} The average uncertainty or information content per symbol emitted by a source.
   \item \textbf{Equivocation $H(X|Y)$:} The residual uncertainty of the input $X$ after output $Y$ is observed at the receiver.
-  \item \textbf{Mutual Information:} The amount of information shared between the transmitter and receiver.
+  \item \textbf{Mutual Information:} The average reduction in uncertainty about $X$ after observing $Y$: $I(X;Y)=H(X)-H(X\mid Y)$.
   \item \textbf{Prefix Code:} A code in which no codeword is a prefix of another, enabling instantaneous decoding.
   \item \textbf{Kraft Inequality:} A mathematical condition determining the existence of prefix codes for given lengths.
   \item \textbf{Source Coding Theorem:} Shannon's limit stating that average codeword length cannot be less than source entropy.

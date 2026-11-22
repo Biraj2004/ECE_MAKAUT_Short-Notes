@@ -13,11 +13,13 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{amsmath}
+\allowdisplaybreaks
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns}
-\usepackage[american]{circuitikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns, backgrounds}
+% circuitikz not required for this subject
 \usepackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
+\usepackage{etoolbox}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
@@ -46,6 +48,7 @@
 \definecolor{hdrpurple}{RGB}{238,228,255}
 \definecolor{hdrgray}{RGB}{238,240,245}
 \definecolor{rowalt}{RGB}{250,251,253}
+\AfterEndEnvironment{tcolorbox}{\color{mydark}}
 
 \titleformat{\section}{\large\bfseries\color{myred}}{\thesection.}{0.5em}{}[\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
 \titleformat{\subsection}{\normalsize\bfseries\color{myteal}}{\thesubsection}{0.5em}{}
@@ -128,7 +131,8 @@
     breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}}
 }
 \tcbset{breakable}
-\tcbset{after={\color{black}}}
+\tcbset{coltext=mydark}
+\tcbset{after={\color{mydark}}}
 
 \tikzset{
   block/.style={rectangle, draw=myteal, fill=hdrteal,
@@ -352,7 +356,7 @@ Soft Real-Time & Best-effort deadlines, priority scheduling, virtual memory allo
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
 \begin{itemize}[leftmargin=*, itemsep=2.5pt, topsep=0pt]
   \item \textbf{Operating System:} System software managing hardware resources and acting as a user-hardware interface.
-  \item \textbf{Spooling:} Simultaneous Peripheral Operations On-Line; placing I/O data in disk buffer to speed up batch execution.
+  \item \textbf{Spooling:} Simultaneous Peripheral Operations On-Line. Jobs are queued in storage so that a shared device such as a printer can process them in order.
   \item \textbf{Multiprogramming:} OS technique running multiple jobs concurrently to maximize CPU utilization.
   \item \textbf{Time-Sharing:} Preemptive multiprogramming where CPU switches quickly between users using a time slice.
   \item \textbf{Real-Time OS:} Time-bound operating system designed for deterministic response times and deadlines.
@@ -391,13 +395,13 @@ Soft Real-Time & Best-effort deadlines, priority scheduling, virtual memory allo
 \begin{tcolorbox}[tikzbox, title={Comparative Analysis of Operating Systems}]
 \renewcommand{\arraystretch}{1.4}
 \par\noindent
-\begin{tabularx}{\linewidth}{|B{2.2cm}|>{\small\centering\arraybackslash}X|>{\small\centering\arraybackslash}X|>{\small\centering\arraybackslash}X|}
+\begin{tabularx}{\linewidth}{|B{3.5cm}|>{\small\centering\arraybackslash}X|>{\small\centering\arraybackslash}X|>{\small\centering\arraybackslash}X|}
 \hline
 \textbf{System Type} & \textbf{\color{myred}Primary Goal} & \textbf{\color{myteal}CPU Utilization} & \textbf{\color{myamber}Interaction Level} \\
 \hline
 \textbf{Batch} & Maximize Throughput & Low to Moderate & None (offline jobs) \\
 \hline
-\textbf{Multiprogrammed} & Maximize CPU usage & High (context switches on I/O) & Low (background jobs) \\
+\textbf{Multiprogramming} & Maximize CPU usage & High (context switches on I/O) & Low (background jobs) \\
 \hline
 \textbf{Time-Sharing} & Minimize Response Time & Moderate to High & Very High (interactive) \\
 \hline
@@ -973,11 +977,13 @@ $$\text{Average Waiting Time} = \frac{1}{N}\sum_{i=1}^{N} WT_i$$
 A \textbf{deadlock} is a state where a set of processes are blocked because each process is holding a resource and waiting for another resource held by some other process in the set.
 
 \subsection{Four Necessary Conditions (Coffman Conditions)}
-A deadlock situation can arise if and only if all four of the following conditions hold simultaneously in a system:
-1. \textbf{Mutual Exclusion:} At least one resource must be held in a non-shareable mode (only one process can use it at a time).
-2. \textbf{Hold and Wait:} A process must be holding at least one resource and waiting to acquire additional resources that are currently being held by other processes.
-3. \textbf{No Preemption:} Resources cannot be preempted; a resource can be released only voluntarily by the process holding it, after that process has finished its task.
-4. \textbf{Circular Wait:} A closed loop of processes must exist, where each process waits for a resource held by the next process in the loop. E.g., $P_0$ waits for $R_1$ (held by $P_1$), $P_1$ waits for $R_2$ (held by $P_2$), and $P_n$ waits for $R_0$ (held by $P_0$).
+A deadlock can occur only if all four of the following conditions hold:
+\begin{enumerate}[leftmargin=*, itemsep=3pt]
+  \item \textbf{Mutual Exclusion:} At least one resource must be held in a non-shareable mode (only one process can use it at a time).
+  \item \textbf{Hold and Wait:} A process must be holding at least one resource and waiting to acquire additional resources that are currently being held by other processes.
+  \item \textbf{No Preemption:} Resources cannot be preempted; a resource can be released only voluntarily by the process holding it, after that process has finished its task.
+  \item \textbf{Circular Wait:} A closed loop of processes must exist, where each process waits for a resource held by the next process in the loop. E.g., $P_0$ waits for $R_1$ (held by $P_1$), $P_1$ waits for $R_2$ (held by $P_2$), and $P_n$ waits for $R_0$ (held by $P_0$).
+\end{enumerate}
 
 \subsection{Resource Allocation Graph (RAG)}
 Deadlocks can be described precisely using a directed graph called a \textbf{Resource Allocation Graph (RAG)}:
@@ -1079,13 +1085,19 @@ If a system does not prevent or avoid deadlocks, a deadlock may occur. The OS mu
 
 \begin{tcolorbox}[formulabox, title={\textbf{Banker's Safety Algorithm Equations}}]
 Let $\text{Work} = \text{Available}$ and $\text{Finish}[i] = \text{false}$ for $i = 0, 1, \dots, n-1$.
-Find an index $i$ such that both:
-1. $\text{Finish}[i] == \text{false}$
-2. $\text{Need}_i \le \text{Work}$
-If such an $i$ exists, update:
-$$\text{Work} = \text{Work} + \text{Allocation}_i$$
-$$\text{Finish}[i] = \text{true}$$
-Repeat. If $\text{Finish}[i] == \text{true}$ for all $i$, the system is in a \textbf{Safe State}.
+Find an unfinished process whose remaining need can be met. Both conditions must hold:
+\begin{itemize}[leftmargin=*, itemsep=2pt, topsep=2pt]
+  \item $\text{Finish}[i] = \text{false}$
+  \item $\text{Need}_i \le \text{Work}$ for every resource type.
+\end{itemize}
+If such a process exists, count its resources as released and mark it finished:
+\[
+\begin{aligned}
+  \text{Work} &\gets \text{Work} + \text{Allocation}_i,\\
+  \text{Finish}[i] &\gets \text{true}.
+\end{aligned}
+\]
+Repeat until all processes are marked finished (a \textbf{safe state}) or no further process can be selected (an \textbf{unsafe state}).
 \end{tcolorbox}
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
@@ -1096,7 +1108,7 @@ Repeat. If $\text{Finish}[i] == \text{true}$ for all $i$, the system is in a \te
   \item \textbf{Preemption:} Forcible retrieval of allocated resources from a process by the OS.
   \item \textbf{Circular Wait:} Chain of processes where each waits for a resource held by the next.
   \item \textbf{Resource Allocation Graph:} Directed graph showing resource allocations and process requests.
-  \item \textbf{Safe Sequence:} Order of process execution that guarantees no deadlock can occur.
+  \item \textbf{Safe Sequence:} An order in which each process can obtain its remaining maximum resource demand from the available resources and those released by earlier processes in the sequence.
   \item \textbf{Ostrich Algorithm:} Deadlock strategy of ignoring the problem (used when deadlocks are rare).
 \end{itemize}
 \end{tcolorbox}
@@ -1124,13 +1136,16 @@ Repeat. If $\text{Finish}[i] == \text{true}$ for all $i$, the system is in a \te
   \item \Q{How can the circular wait condition be prevented in operating systems?}
     By defining a global 1-to-1 enumeration function $F: R \to \mathbb{N}$ for all resource types. A process can only request resource $R_j$ if $F(R_j) > F(R_i)$, where $R_i$ is any resource currently held by the process.
   \item \Q{What is an unsafe state? Does it always lead to a deadlock?}
-    An unsafe state is a state from which the OS cannot guarantee that all processes can finish their maximum execution. It does \textbf{not} always lead to a deadlock; it will only deadlock if processes actually request their maximum declared resources.
+    An unsafe state is a state from which the OS cannot guarantee that all processes can finish their maximum execution. Deadlock is possible in an unsafe state. Whether it occurs depends on the requests and releases that follow.
   \item \Q{Why does a cycle in a Resource Allocation Graph (RAG) not always indicate a deadlock?}
     If a resource type has multiple instances, a cycle indicates a potential deadlock but not a guaranteed one, as a process outside the cycle might release an instance, breaking the cycle.
   \item \Q{What is the difference between a Resource Allocation Graph and a Wait-For Graph?}
     A Resource Allocation Graph shows both processes and resources with request/assignment edges. A Wait-For Graph is a simplified version for single-unit resource systems, showing only processes, where edge $P_i \to P_j$ means $P_i$ waits for $P_j$ to release a resource.
   \item \Q{Explain the recovery methods from deadlock.}
-    1. Process Termination: Abort all deadlocked processes, or abort processes one-by-one until the cycle is broken. 2. Resource Preemption: Take resources from a process, roll it back to a safe checkpoint, and restart it.
+    \begin{itemize}[leftmargin=*, itemsep=2pt, topsep=2pt]
+      \item \textbf{Process termination:} Abort the deadlocked processes or stop them one at a time until the cycle is broken.
+      \item \textbf{Resource preemption:} Take a resource from a process, roll it back to a safe checkpoint and restart it.
+    \end{itemize}
   \item \Q{What is the "Ostrich Algorithm" and when is it appropriate to use?}
     It is the strategy of ignoring deadlocks altogether, assuming they occur rarely. It is used by most general-purpose OS (like Windows/Linux) because deadlock prevention/avoidance adds heavy run-time overhead.
   \item \Q{Why is preemption difficult to implement for some resources?}

@@ -13,11 +13,13 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{amsmath}
+\allowdisplaybreaks
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns, backgrounds}
 \usepackage[american]{circuitikz}
 \usepackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
+\usepackage{etoolbox}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
@@ -46,6 +48,7 @@
 \definecolor{hdrpurple}{RGB}{238,228,255}
 \definecolor{hdrgray}{RGB}{238,240,245}
 \definecolor{rowalt}{RGB}{250,251,253}
+\AfterEndEnvironment{tcolorbox}{\color{mydark}}
 
 \titleformat{\section}{\large\bfseries\color{myred}}{\thesection.}{0.5em}{}[\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
 \titleformat{\subsection}{\normalsize\bfseries\color{myteal}}{\thesubsection}{0.5em}{}
@@ -111,7 +114,8 @@
     breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}}
 }
 \tcbset{breakable}
-\tcbset{after={\color{black}}}
+\tcbset{coltext=mydark}
+\tcbset{after={\color{mydark}}}
 
 \tikzset{
   block/.style={rectangle, draw=myteal, fill=hdrteal,
@@ -204,21 +208,22 @@ In an industrial automation loop, \textbf{sensors} act as the "eyes" of the syst
 
 \begin{tcolorbox}[tikzbox, title={Standard Industrial Closed-Loop Control System}]
 \centering
-\begin{tikzpicture}[scale=0.95, transform shape]
-  \node[block] (ctrl) at (0,0) {Controller\\(PLC/DCS)};
-  \node[block] (act) at (3.2,0) {Actuator\\(Motor/Valve)};
-  \node[block] (proc) at (6.4,0) {Process\\(Plant)};
-  \node[block] (sens) at (3.2,-1.5) {Sensor\\(RTD/Transducer)};
+\begin{tikzpicture}[scale=0.95, transform shape,
+  loopblock/.style={block, text width=2.6cm, align=center}]
+  \node[loopblock] (ctrl) at (0,0) {Controller\\(PLC/DCS)};
+  \node[loopblock] (act) at (3.2,0) {Actuator\\(Motor/Valve)};
+  \node[loopblock] (proc) at (6.4,0) {Process\\(Plant)};
+  \node[loopblock] (sens) at (3.2,-1.5) {Sensor\\(e.g., RTD)};
   \node[sumjunc] (sum) at (-2.0,0) {$+$};
 
   % Paths
   \draw[arrow] (-3.2, 0) node[left, font=\small] {Set Point} -- (sum);
   \draw[arrow] (sum) -- (ctrl);
-  \draw[arrow] (ctrl) -- (act) node[midway, above, font=\tiny] {Control Out};
-  \draw[arrow] (act) -- (proc) node[midway, above, font=\tiny] {Manipulated};
+  \draw[arrow] (ctrl) -- (act) node[midway, above=15pt, font=\scriptsize] {Control signal};
+  \draw[arrow] (act) -- (proc) node[midway, above=15pt, font=\scriptsize] {Plant input};
   \draw[arrow] (proc) -- (8.8, 0) node[right, font=\small] {Output};
   
-  \draw[thick] (7.6,0) to[short, *-] (7.6,-1.5) -- (sens);
+  \draw[thick] (8.05,0) to[short, *-] (8.05,-1.5) -- (sens);
   \draw[thick] (sens) -| (-2.0,-0.8);
   \draw[arrow] (-2.0,-0.8) -- (sum) node[left, pos=0.8, font=\scriptsize] {$-$};
 \end{tikzpicture}
@@ -534,7 +539,7 @@ Stepper Step Angle & $\theta_s = \frac{360^\circ}{N_s \times N_r}$ \\
 \begin{itemize}[leftmargin=*, itemsep=2pt, topsep=0pt]
   \item \textbf{LVDT:} A transformer-based passive sensor that outputs an AC voltage proportional to the linear displacement of a sliding core.
   \item \textbf{Gauge Factor:} The ratio of fractional change in resistance to the mechanical strain applied to a strain gauge.
-  \item \textbf{Poisson's Ratio ($\nu$):} The ratio of lateral transverse strain to longitudinal axial strain.
+  \item \textbf{Poisson's Ratio ($\nu$):} The negative ratio of transverse strain to axial strain under uniaxial loading: $\nu=-\varepsilon_{\mathrm{transverse}}/\varepsilon_{\mathrm{axial}}$.
   \item \textbf{PT100:} A platinum RTD having $100\,\Omega$ resistance at $0^\circ$C and a standard positive temperature coefficient.
   \item \textbf{Seebeck Effect:} The generation of a voltage at the open terminals of two dissimilar metals due to a temperature difference.
   \item \textbf{Microstepping:} Controlling stepper phases with fractional currents to position the rotor between full steps.

@@ -281,16 +281,15 @@ Use case        & Bulk data encryption          & Key exchange, digital signatur
 \subsection{Digital Signature}
 
 \begin{tcolorbox}[defbox]
-\textbf{Digital Signature:} A cryptographic mechanism that provides \textbf{authentication}, \textbf{integrity}, and \textbf{non-repudiation}. Created by encrypting a message digest (hash) with the sender's \textbf{private key}.
+\textbf{Digital Signature:} A value produced by a signing algorithm using the sender's \textbf{private key}. Verification with the corresponding \textbf{public key} checks the origin and integrity of the signed data and can support non-repudiation.
 \end{tcolorbox}
 
-\textbf{Process:}
+\textbf{Process for a hash-based signing workflow:}
 \begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=*, itemsep=3pt]
-  \item Sender computes hash of message using a hash function (e.g.\ SHA-256).
-  \item Sender encrypts the hash with their \textbf{private key} --- this is the digital signature.
-  \item Receiver decrypts the signature using sender's \textbf{public key} to get the hash.
-  \item Receiver independently computes hash of received message.
-  \item If both hashes match: message is authentic and unaltered.
+  \item The sender computes a message digest using the hash function specified by the signing scheme.
+  \item The signing algorithm uses the digest and the sender's private key to produce the signature.
+  \item The receiver computes the digest of the received message. The verification algorithm uses that digest, the signature, and the sender's public key.
+  \item A valid result confirms the signed content matches the signature. Identifying the sender also requires a trusted link between the sender and the public key.
 \end{enumerate}
 
 \begin{tcolorbox}[tikzbox, title={Digital Signature --- Sign \& Verify}]
@@ -305,10 +304,10 @@ Use case        & Bulk data encryption          & Key exchange, digital signatur
 \node[font=\small\bfseries\color{myred}] (slbl) at (1.1, 0.0) {Sender};
 \node[proc,  below=0.4cm of slbl]  (msg1)  {Message};
 \node[proc,  below=0.8cm of msg1]  (hash1) {Hash (SHA-256)};
-\node[pkey,  below=0.8cm of hash1] (priv)  {Private Key};
+\node[pkey,  below=0.8cm of hash1] (priv)  {Sign with private key};
 \node[proc,  below=0.8cm of priv]  (sig)   {Signature};
 \draw[arr] (msg1)  -- (hash1);
-\draw[arr] (hash1) -- node[right, font=\scriptsize] {encrypt} (priv);
+\draw[arr] (hash1) -- (priv);
 \draw[arr] (priv)  -- (sig);
 
 %--- transfer arrow (horizontal, between columns) ---
@@ -319,16 +318,11 @@ Use case        & Bulk data encryption          & Key exchange, digital signatur
 \node[font=\small\bfseries\color{myred}] (rlbl) at (6.1, 0.0) {Receiver};
 \node[proc,  below=0.4cm of rlbl]  (msg2)  {Message};
 \node[proc,  below=0.8cm of msg2]  (hash2) {Hash (SHA-256)};
-\node[gkey,  below=0.8cm of hash2] (pub)   {Public Key};
-\node[proc,  below=0.8cm of pub]   (dhash) {Decrypted Hash};
-\node[gkey,  below=0.8cm of dhash] (cmp)   {Compare Hashes};
+\node[gkey,  below=0.8cm of hash2] (pub)   {Verify signature with public key};
+\node[proc,  below=0.8cm of pub]   (result) {Valid or invalid};
 \draw[arr] (msg2)  -- (hash2);
-\draw[arr] (pub)   -- node[right, font=\scriptsize] {decrypt sig} (dhash);
-\draw[arr] (dhash) -- (cmp);
-% hash2 feeds into compare via right side detour
-\draw[arr] (hash2.east) -- ++(0.8,0) |- (cmp.east);
-
-\node[font=\scriptsize\color{mygreen}, below=0.3cm of cmp] {Match = Authentic};
+\draw[arr] (hash2) -- (pub);
+\draw[arr] (pub)   -- (result);
 \end{tikzpicture}
 \end{tcolorbox}
 
@@ -559,7 +553,7 @@ HTTP / HTTPS ports  & 80 / 443 \\[2pt]
 SNMP port           & 161 (UDP) \\[2pt]
 Symmetric key       & Same key for encrypt/decrypt (AES, DES) \\[2pt]
 Asymmetric key      & Public key encrypts; private key decrypts (RSA) \\[2pt]
-Digital signature   & Hash encrypted with sender's private key \\[2pt]
+Digital signature   & Sign with the private key; verify with the public key \\[2pt]
 ISDN BRI            & $2B + D$ = 144 Kbps \\[2pt]
 ISDN PRI (Europe)   & $30B + D$ = 2.048 Mbps \\[2pt]
 ATM cell size       & 53 bytes (5 header + 48 payload) \\[2pt]
@@ -573,15 +567,16 @@ Piconet             & 1 master + up to 7 active slaves \\[2pt]
 
 \vspace{6pt}
 
-\begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
+\begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}, title after break={One-Line Definitions (contd.)}]
+\interlinepenalty=10000
 \begin{itemize}[leftmargin=*, itemsep=3pt, topsep=0pt]
   \item \textbf{DNS:} Translates domain names to IP addresses using a hierarchical distributed database.
   \item \textbf{HTTP:} Stateless request-response protocol for transferring web content.
   \item \textbf{SMTP:} Protocol for sending email between mail servers.
   \item \textbf{FTP:} Protocol for transferring files; uses separate control (21) and data (20) connections.
   \item \textbf{Symmetric Cryptography:} Same secret key used for both encryption and decryption.
-  \item \textbf{Asymmetric Cryptography:} Public key encrypts; private key decrypts (or vice versa for signatures).
-  \item \textbf{Digital Signature:} Hash of message encrypted with sender's private key; proves authenticity.
+  \item \textbf{Asymmetric Cryptography:} Uses a paired public key and private key. The role of each key depends on whether the algorithm encrypts, signs, or establishes a shared key.
+  \item \textbf{Digital Signature:} A cryptographic value made with the signer's private key. The public key verifies the signature and helps detect changes to the signed message.
   \item \textbf{Firewall:} Security device that filters network traffic based on rules.
   \item \textbf{ISDN:} Digital telephone network supporting voice, video, and data simultaneously.
   \item \textbf{ATM:} Cell-switching technology using fixed 53-byte cells; supports QoS.
@@ -597,7 +592,7 @@ Piconet             & 1 master + up to 7 active slaves \\[2pt]
 \begin{enumerate}[leftmargin=*, topsep=0pt, label=\textbf{Q\arabic*.}, itemsep=8pt]
   \item \Q{What is DNS and how does it work?} DNS translates domain names to IP addresses. Client queries local DNS resolver; if not cached, resolver queries root $\to$ TLD $\to$ authoritative DNS servers recursively or iteratively.
   \item \Q{What is the difference between symmetric and asymmetric cryptography?} Symmetric: same key for encrypt/decrypt, fast, key distribution problem. Asymmetric: public/private key pair, slower, solves key distribution.
-  \item \Q{How does a digital signature work?} Sender hashes the message and encrypts the hash with their private key. Receiver decrypts with sender's public key and compares hashes to verify authenticity and integrity.
+  \item \Q{How does a digital signature work?} The sender signs with the private key. The receiver runs the verification algorithm on the message, signature, and sender's public key. A successful check supports authenticity and integrity.
   \item \Q{What is a firewall?} A security device that monitors and filters network traffic based on predefined rules, acting as a barrier between trusted and untrusted networks.
   \item \Q{What is the difference between packet filter and stateful firewall?} Packet filter: stateless, inspects each packet independently. Stateful: tracks connection state, allows only packets belonging to established connections.
   \item \Q{What is ATM and what is its cell size?} Asynchronous Transfer Mode; cell-switching technology using fixed 53-byte cells (5-byte header + 48-byte payload).

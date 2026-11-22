@@ -13,11 +13,13 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{amsmath}
+\allowdisplaybreaks
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns}
-\usepackage[american]{circuitikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns, backgrounds}
+% circuitikz not required for this subject
 \usepackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
+\usepackage{etoolbox}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
@@ -46,6 +48,7 @@
 \definecolor{hdrpurple}{RGB}{238,228,255}
 \definecolor{hdrgray}{RGB}{238,240,245}
 \definecolor{rowalt}{RGB}{250,251,253}
+\AfterEndEnvironment{tcolorbox}{\color{mydark}}
 
 \titleformat{\section}{\large\bfseries\color{myred}}{\thesection.}{0.5em}{}[\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
 \titleformat{\subsection}{\normalsize\bfseries\color{myteal}}{\thesubsection}{0.5em}{}
@@ -129,7 +132,8 @@
     breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}}
 }
 \tcbset{breakable}
-\tcbset{after={\color{black}}}
+\tcbset{coltext=mydark}
+\tcbset{after={\color{mydark}}}
 
 \tikzset{
   block/.style={rectangle, draw=myteal, fill=hdrteal,
@@ -1709,6 +1713,10 @@ The DCT has outstanding \textbf{energy compaction} (close to KLT) and avoids the
 % ===============================================================================
 
 \subsection{JPEG Standard (DCT-Based)}
+\begin{tcolorbox}[defbox, title={Baseline JPEG}]
+\textbf{Baseline JPEG} is a still-image compression method that applies the discrete cosine transform to $8\times8$ blocks, quantises the resulting coefficients, and encodes them. Quantisation is the main lossy step.
+\end{tcolorbox}
+
 \begin{tcolorbox}[tikzbox, title={JPEG Encoder Block Diagram}]
 \centering
 \begin{tikzpicture}[node distance=0.4cm and 0.55cm,
@@ -1802,9 +1810,12 @@ Assigning bits (0 to upper, 1 to lower path):
 \end{itemize}
 
 \textbf{(b) Average Code Word Length ($L_{\text{avg}}$):}
-\begin{equation*}
-  L_{\text{avg}} = \sum P(s_i) l_i = 0.4(1) + 0.2(2) + 0.2(3) + 0.1(4) + 0.1(4) = 0.4 + 0.4 + 0.6 + 0.4 + 0.4 = 2.2 \text{ bits/sym}
-\end{equation*}
+\begin{align*}
+  L_{\text{avg}} &= \sum_i P(s_i) l_i \\
+                &= 0.4(1) + 0.2(2) + 0.2(3) + 0.1(4) + 0.1(4) \\
+                &= 0.4 + 0.4 + 0.6 + 0.4 + 0.4 \\
+                &= 2.2 \text{ bits/symbol}.
+\end{align*}
 
 \textbf{(c) Entropy ($H(S)$):}
 \begin{align*}
@@ -1834,11 +1845,17 @@ Assigning bits (0 to upper, 1 to lower path):
 
 \begin{tcolorbox}[formulabox, title={\textbf{Key Formulas at a Glance}}]
 \renewcommand{\arraystretch}{1.3}
-\begin{tabularx}{\linewidth}{B{5.0cm} X}Average Code Length & $L_{\text{avg}} = \sum_{i=1}^J P(s_i) l_i$ \\
+\begin{tabularx}{\linewidth}{B{4.1cm} Y}
+Average Code Length & $L_{\text{avg}} = \sum_{i=1}^J P(s_i) l_i$ \\
 Source Entropy & $H(S) = - \sum_{i=1}^J P(s_i) \log_2 P(s_i)$ \\
 Coding Efficiency & $\eta = \frac{H(S)}{L_{\text{avg}}} \times 100\%$ \\
 DPCM Residual Error & $e(n) = f(n) - \hat{f}(n)$ \\
-2D Discrete Cosine Trans. & $T(u,v) = \alpha(u)\alpha(v) \sum_{x=0}^{N-1} \sum_{y=0}^{N-1} f(x,y) \cos\left[ \frac{(2x+1)u\pi}{2N} \right] \cos\left[ \frac{(2y+1)v\pi}{2N} \right]$ \\
+2D Discrete Cosine Transform &
+$\begin{aligned}
+ T(u,v) &= \alpha(u)\alpha(v)\sum_{x=0}^{N-1}\sum_{y=0}^{N-1} f(x,y) \\[2pt]
+ &\quad\times\cos\left[\frac{(2x+1)u\pi}{2N}\right]
+             \cos\left[\frac{(2y+1)v\pi}{2N}\right]
+\end{aligned}$ \\[4pt]
 Compression Ratio & $C_R = \frac{b_{\text{original}}}{b_{\text{compressed}}}$
 \end{tabularx}
 \tcbset{colbacktitle=myteal, coltitle=white}

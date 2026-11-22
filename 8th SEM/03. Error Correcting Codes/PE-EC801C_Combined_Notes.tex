@@ -13,11 +13,13 @@
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{amsmath}
+\allowdisplaybreaks
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns}
-\usepackage[american]{circuitikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, fit, decorations.pathreplacing, decorations.pathmorphing, patterns, backgrounds}
+% circuitikz not required for this subject
 \usepackage{tcolorbox}
 \tcbuselibrary{skins, breakable}
+\usepackage{etoolbox}
 \usepackage{hyperref}
 \usepackage{fancyhdr}
 \usepackage{graphicx}
@@ -44,6 +46,7 @@
 \definecolor{hdrteal}{RGB}{220,242,244}
 \definecolor{hdramber}{RGB}{253,242,215}
 \definecolor{hdrpurple}{RGB}{238,228,255}
+\AfterEndEnvironment{tcolorbox}{\color{mydark}}
 
 \titleformat{\section}{\large\bfseries\color{myred}}{\thesection.}{0.5em}{}[\vspace{1pt}{\color{myred}\rule{\linewidth}{0.8pt}}]
 \titleformat{\subsection}{\normalsize\bfseries\color{myteal}}{\thesubsection}{0.5em}{}
@@ -126,7 +129,8 @@
     breakable, title after break={\textbf{Frequently Asked / Viva Questions (contd.)}}}
 }
 \tcbset{breakable}
-\tcbset{after={\color{black}}}
+\tcbset{coltext=mydark}
+\tcbset{after={\color{mydark}}}
 
 \tikzset{
   block/.style={rectangle, draw=myteal, fill=hdrteal,
@@ -401,6 +405,10 @@ $e_{2^{n-k}-1}$ & $e_{2^{n-k}-1}$ & $e_{2^{n-k}-1} \oplus c_1$ & \dots & $e_{2^{
 Each row (coset) corresponds to a unique syndrome. The coset leader is the \textbf{most likely error pattern} for that syndrome because it has the minimum weight in its coset.
 
 \subsection{Syndrome Decoding Algorithm}
+\begin{tcolorbox}[defbox, title={Syndrome Decoding}]
+\textbf{Syndrome decoding} uses the parity-check result of a received word to select an estimated error pattern. Correcting the received word by that pattern gives the decoded codeword.
+\end{tcolorbox}
+
 \begin{tcolorbox}[formulabox, title={\textbf{Syndrome Decoding Steps}}]
 \begin{enumerate}[label=\textbf{Step \arabic*:}, leftmargin=2.0cm, itemsep=2pt]
   \item Compute the syndrome of the received vector: $S = r \cdot H^T$.
@@ -523,9 +531,9 @@ Hamming Code Parameters & Length $n = 2^m-1$, Info bits $k = 2^m-1-m$, $d_{min}=
 
 \begin{tcolorbox}[defbox, title={\textbf{One-Line Definitions}}]
 \begin{itemize}[leftmargin=*, itemsep=3pt, topsep=0pt]
-  \item \textbf{Linear Block Code:} A code where the modulo-2 sum of any two codewords is also a valid codeword.
+  \item \textbf{Linear Block Code:} A block code whose codewords form a vector space over the symbol field. In a binary linear code, the XOR of two codewords is also a codeword.
   \item \textbf{Minimum Distance ($d_{min}$):} The smallest Hamming distance between any two distinct codewords in a code.
-  \item \textbf{Syndrome:} A vector calculated as $r \cdot H^T$ that indicates if errors occurred and helps locate them.
+  \item \textbf{Syndrome:} For received word $r$ and parity-check matrix $H$, the syndrome is $s=rH^T$. A nonzero syndrome detects an error, while a zero syndrome means all parity checks pass.
   \item \textbf{Coset Leader:} The vector with the smallest Hamming weight in a coset, representing the most likely error.
   \item \textbf{Hamming Code:} A class of perfect single-error-correcting codes with minimum distance $d_{min} = 3$.
   \item \textbf{Perfect Code:} A code that satisfies the Hamming (sphere-packing) bound with strict equality.
@@ -1711,7 +1719,7 @@ The number of errors $t$ that the code can correct is:
 \subsection{Catastrophic Error Propagation}
 Catastrophic error propagation is a key hazard in convolutional code design.
 \begin{tcolorbox}[defbox, title={\textbf{Catastrophic Error Propagation}}]
-A code is \textbf{catastrophic} if a finite number of channel transmission errors leads to an infinite number of decoding decisions/bit errors in the reconstructed message sequence.
+A convolutional encoder is \textbf{catastrophic} if an infinite-weight input can produce a finite-weight output. Consequently, a finite number of channel errors can be mistaken for an input sequence with infinitely many errors.
 \end{tcolorbox}
 \textbf{Sufficient Condition:} In the state transition diagram of a catastrophic code, there exists a closed loop (cycle) containing a state other than $00$ where all transitions along the loop produce zero-weight output bits (all output bits are `0'), despite being triggered by non-zero inputs. 
 For systematic convolutional codes, catastrophic propagation is impossible because the inputs are mirrored directly in the output stream, preventing zero-weight outputs for non-zero inputs.
@@ -1904,7 +1912,7 @@ Viterbi Path Metric Update & $PM_t(S) = \min_{S' \to S} \left[ PM_{t-1}(S') + BM
   \item \textbf{Constraint Length ($K$):} The number of input bits that reside in the encoder and influence the output.
   \item \textbf{Trellis Diagram:} A time-indexed state diagram showing all possible transitions over time.
   \item \textbf{Free Distance ($d_{\text{free}}$):} The minimum Hamming distance between any two distinct paths in the trellis starting and ending in $00$.
-  \item \textbf{Catastrophic Code:} A code where a finite number of channel errors causes an infinite number of decoded bit errors.
+  \item \textbf{Catastrophic Code:} A convolutional encoder is catastrophic if an input sequence with infinitely many nonzero bits can produce an output sequence with only finitely many nonzero bits.
   \item \textbf{Survivor Path:} The path entering a trellis state that has the minimum accumulated path metric.
   \item \textbf{ACS (Add-Compare-Select):} The core hardware operation in Viterbi decoding that updates path metrics and retains survivors.
   \item \textbf{Fano Metric:} A dynamic search metric that penalizes paths that deviate from typical channel behavior.

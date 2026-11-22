@@ -34,6 +34,13 @@
 - Avoid unnecessary theory, history, research discussions, and textbook-style explanations.
 - Answers must be suitable for **2, 5, 10, and 15-mark** university questions.
 
+### Exam-ready definitions
+
+- At the first introduction, give a short, standalone definition in plain English. State what the term means and the property that distinguishes it from related terms.
+- Expand abbreviations at first use. Keep standard engineering terms and explain any qualifier a student needs to answer correctly. For a measured quantity, name what is measured, include its unit when applicable, and identify any symbols in a defining formula.
+- In Quick Revision, give key examinable terms complete definitions a student can use in a short-answer question. Keep the original technical conditions when shortening the wording.
+- If a definition box spans pages, keep each individual definition together and give the continued box a heading.
+
 ### Topic Structure
 Follow this order for every topic:
 
