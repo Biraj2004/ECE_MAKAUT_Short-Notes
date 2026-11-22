@@ -222,7 +222,12 @@ BFS(G, s):
 \end{verbatim}
 \end{tcolorbox}
 
-\textbf{Correctness.} The first discovered path of length $d$ is valid by following parents. A shorter path would have a predecessor at an earlier level. BFS would have processed that predecessor and discovered the vertex earlier. Assign distance before enqueuing so each vertex enters the queue once. The full traversal costs $O(V+E)$ with adjacency lists and $O(V^2)$ with a matrix. Parents and the queue use $O(V)$ extra memory.
+\textbf{Why BFS gives shortest unweighted paths.}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{A path exists.} Following parents gives a real path of the assigned length $d$. Each discovery adds exactly one edge.
+  \item \textbf{No shorter path exists.} A shorter route would reach a predecessor in an earlier layer. BFS would process that predecessor and discover the vertex before layer $d$.
+  \item \textbf{Cost.} Assign distance before enqueuing to avoid duplicates. Traversal costs $O(V+E)$ with adjacency lists or $O(V^2)$ with a matrix. Parents and the queue use $O(V)$ extra space.
+\end{itemize}
 
 \subsection{Depth-first search and rooted tree traversals}
 \begin{tcolorbox}[defbox, title={Depth-first search (DFS)}]
@@ -250,7 +255,12 @@ Visit(u):
 \end{verbatim}
 \end{tcolorbox}
 
-A DFS tree edge first discovers a vertex. In a directed graph a gray target lies on the active ancestor path, so a back edge proves a cycle. Edges to already finished vertices may be forward (to a descendant) or cross (between completed branches). In an undirected graph ignore the reverse copy of the parent tree edge when testing for cycles. A full DFS costs $O(V+E)$ time and $O(V)$ auxiliary space.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Tree edge.} The edge first discovers a vertex.
+  \item \textbf{Back edge.} In a directed graph, a gray target is on the active ancestor path. The path and the edge form a cycle.
+  \item \textbf{Finished target.} An edge to a completed descendant is forward. An edge between completed branches is cross.
+\end{itemize}
+In an undirected graph, skip the reverse copy of the parent edge when testing for a cycle. With adjacency lists, DFS takes $O(V+E)$ time and $O(V)$ auxiliary space.
 \begin{tcolorbox}[tikzbox, title={Directed graph for the traversal and ordering traces}]
 \centering
 \begin{tikzpicture}[every node/.style={font=\small}]
@@ -339,7 +349,12 @@ Take $s\to u:2$, $s\to v:5$, $v\to u:-4$. Finalising $u$ at value $2$ misses the
   \item Repeat up to $V-1$ full passes over all edges, relaxing from finite labels. Stop early if a pass makes no change.
   \item Scan all edges once more. A further improvement from a finite label signals a reachable negative-weight cycle. Such a cycle makes finite minimum walk costs undefined for vertices reachable from it.
 \end{enumerate}
-\textbf{Proof outline.} Any finite label is the length of a concrete walk. After $k$ complete passes, each walk using at most $k$ edges has had a chance to improve its final label. When no reachable negative cycle is relevant, a shortest path can be chosen simple and uses at most $V-1$ edges. If a reachable negative cycle exists and every edge on it satisfies the no-improvement inequalities, summing those inequalities around the cycle contradicts its negative total weight. Worst-case time is $O(VE)$ for edge scans plus $O(V)$ initialisation.
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item {\interlinepenalty=10000 \textbf{Proof invariant.} Every finite label is the length of a real walk. After $k$ full passes, the label is no greater than the length of any such walk using at most $k$ edges.\par}
+  \item \textbf{Why $V-1$ passes suffice.} If no reachable negative cycle can affect a destination, a shortest path to it can be chosen simple. A simple path has at most $V-1$ edges.
+  \item \textbf{Why the extra pass detects cycles.} If every edge on a reachable negative cycle obeyed the no-improvement inequality, adding the inequalities around the cycle would imply that its total weight is nonnegative. At least one edge must still improve a label.
+\end{enumerate}
+Initialisation uses $O(V)$ time and the edge scans use $O(VE)$.
 \begin{tcolorbox}[examplebox, title={A negative edge that Bellman--Ford handles}]
 Take $s\to A:4$, $s\to B:5$, $A\to B:-2$, $B\to C:3$, $A\to C:4$. In that edge order, the first pass sets $A=4$, improves $B$ from $5$ to $2$, and sets $C=5$. The result stays unchanged in the next pass. The shortest route to $C$ is $s,A,B,C$, using the negative edge once.
 \end{tcolorbox}
@@ -360,7 +375,11 @@ R^{(k)}_{ij}
  &=R^{(k-1)}_{ij}\lor
    (R^{(k-1)}_{ik}\land R^{(k-1)}_{kj}).
 \end{align*}
-Use Floyd--Warshall for distance and Warshall for Boolean reachability. Start distances with edge weights, zero on the diagonal in the absence of negative self-loops, and infinity for missing edges. If self-loops are present, initialise each diagonal to the minimum of zero and its loop weight. Start Boolean entries with adjacency and choose the diagonal convention. In either algorithm $k$ is the outer loop. Time is $O(V^3)$ and in-place memory for the matrix is $O(V^2)$.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Floyd--Warshall.} Start with edge weights and infinity for missing edges. Put zero on the diagonal, or the smaller of zero and the loop weight if a self-loop exists.
+  \item \textbf{Warshall.} Start with Boolean adjacency. Set the diagonal to true if zero-length paths are allowed.
+  \item \textbf{Loop order and cost.} Use intermediate vertex $k$ as the outer loop in both methods. The work is $O(V^3)$ and the in-place matrix uses $O(V^2)$ space.
+\end{itemize}
 \end{tcolorbox}
 
 \begin{tcolorbox}[examplebox, title={Intermediate vertex update}]
@@ -374,7 +393,12 @@ A minimum spanning tree minimises wiring cost when edges are weighted. A topolog
 An MST is a spanning tree of minimum total edge weight in a connected undirected weighted graph. It has $V-1$ edges and connects every vertex. A disconnected graph has a minimum spanning forest. The objective is total wiring cost, while a shortest-path tree minimises distances from one source.
 \end{tcolorbox}
 
-\textbf{Exchange proof for a safe edge.} A cut partitions the vertices into two sets. Assume the current chosen edges belong to some MST and none crosses this cut. Let $e$ be a minimum-weight crossing edge. If an MST containing the chosen edges omits $e$, adding $e$ forms a cycle containing another crossing edge $f$. Remove $f$. It was not among the chosen edges. Since $w(e)\le w(f)$, the result is also an MST and includes $e$.
+\textbf{Exchange proof for a safe edge.} A cut partitions the vertices into two sets. Assume an MST contains the current chosen edges and none of those edges crosses the cut.
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Add.} Choose a minimum-weight crossing edge $e$. If the MST already includes it, the choice is safe.
+  \item \textbf{Exchange.} Otherwise adding $e$ creates a cycle. That cycle crosses the cut again at an edge $f$ that was not among the current choices. Remove $f$.
+  \item \textbf{Compare.} The new graph is a spanning tree containing the earlier choices and $e$. Since $w(e)\le w(f)$, it is also minimum.
+\end{enumerate}
 \par\vspace{5pt}
 \begingroup
 \setlength{\extrarowheight}{1pt}
@@ -410,7 +434,11 @@ If the order has fewer than V vertices, report a cycle.
 \end{verbatim}
 \end{tcolorbox}
 
-Every removed vertex has no remaining incoming edge. If no vertex can be removed while vertices remain, repeatedly following incoming edges in that finite remainder reaches a cycle. DFS offers another method: reject back edges and output vertices in decreasing finish time. In the traversal example the DFS order is $A,C,B,D,E$. Both methods run in $O(V+E)$ time. Tasks with no dependency between them may appear in either order.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Kahn's method.} A removed vertex has no remaining incoming edge. If the queue empties early, follow incoming edges in the remaining graph. Finiteness forces a repetition, so a cycle exists.
+  \item \textbf{DFS alternative.} Reject back edges and list vertices in decreasing finish time. The traversal example gives $A,C,B,D,E$.
+  \item \textbf{Cost and ties.} Both methods take $O(V+E)$ time. Independent tasks can have more than one valid order.
+\end{itemize}
 
 \section{Network Flow Algorithms}
 \subsection{Flow, cuts and the residual graph}

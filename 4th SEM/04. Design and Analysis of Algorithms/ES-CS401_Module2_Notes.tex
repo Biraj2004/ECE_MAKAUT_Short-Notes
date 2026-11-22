@@ -212,7 +212,11 @@ A \textbf{greedy algorithm} commits to a locally preferred feasible choice accor
 \end{tcolorbox}
 
 \begin{tcolorbox}[examplebox, title={Interval scheduling by earliest finish}]
-To schedule the maximum number of non-overlapping intervals, sort by finish time and repeatedly take the first interval whose start is at least the last chosen finish. Suppose an optimal schedule begins with interval $o$ and the greedy algorithm chooses $g$. Then $f(g)\le f(o)$. Replacing $o$ by $g$ preserves feasibility and count, because every later interval starts at or after $f(o)$. Repeat the argument on the remaining intervals. Sorting costs $O(n\log n)$ and the scan costs $O(n)$.
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Choose.} Sort by finish time. Take the earliest-finishing interval whose start is at or after the last chosen finish.
+  \item \textbf{Exchange.} Let $o$ begin an optimal schedule and let $g$ be the greedy choice. Since $f(g)\le f(o)$, replacing $o$ by $g$ leaves room for every later interval and preserves the count.
+  \item \textbf{Repeat.} Apply the exchange to the remaining compatible intervals. The sort costs $O(n\log n)$ and the scan costs $O(n)$.
+\end{enumerate}
 \end{tcolorbox}
 
 A rule can be fast without being optimal. In the $0/1$ knapsack example below, value density supplies a good fractional solution and an upper bound for search, while the exact discrete solution needs a different argument.
@@ -268,7 +272,13 @@ For minimisation, discard a node when its lower bound is at least the incumbent 
 \end{tcolorbox}
 
 \begin{tcolorbox}[examplebox, title={Backtracking for subset sum}]
-For nonnegative items $(3,5,6)$ and target $8$, branch on taking or skipping each item. From prefix $(3,5)$ the sum is $8$ and a valid subset is found. The prefix $(3,6)$ has sum $9$ and can be pruned, because further nonnegative items cannot reduce it. A partial sum plus the sum of all remaining items below $8$ also permits pruning. If negatives are allowed, these two bounds require modification.
+For nonnegative items $(3,5,6)$ and target $8$, branch on taking or skipping each item.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Accept.} The chosen items $(3,5)$ sum to $8$.
+  \item \textbf{Prune above the target.} The choice $(3,6)$ already sums to $9$. Adding nonnegative items cannot lower it.
+  \item \textbf{Prune below the target.} Stop if the partial sum plus all remaining items is still below $8$.
+\end{itemize}
+If negative values are allowed, revise both bounds before using them.
 \end{tcolorbox}
 
 Both searches may still visit exponentially many nodes. A good branching order may find a strong incumbent early, but it does not change the exactness argument.
@@ -337,7 +347,13 @@ At $(3,5)$ the value is unchanged from row 2, so item 3 can be skipped. At $(2,5
 
 With one array, process capacities from $W$ down to $w_i$ for each item. Then $D[c-w_i]$ is still from the previous row when $D[c]$ is updated. Ascending iteration can reuse item $i$ within the same round. One-row memory is $O(W)$ for computing the value.
 \begin{tcolorbox}[examplebox, title={A fractional upper bound in zero-one branch-and-bound}]
-In the capacity-$50$ instance, first obtain a feasible incumbent of value $220$ using items 2 and 3. On the branch that includes item 1 and excludes item 2, at most $40$ capacity remains and only item 3 is available. Its fractional relaxation gives $60+120=180$. Prune the branch. On the branch excluding item 1, the upper bound is $220$. On the branch containing items 1 and 2, item 3 is infeasible as a whole, so its best complete value is $160$. This covers every branch and proves $220$ optimal.
+Use items 2 and 3 for a feasible incumbent of value $220$ in the capacity-$50$ problem.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Exclude item 1.} Items 2 and 3 both fit, so the upper bound equals the incumbent, $220$.
+  \item \textbf{Include item 1 and exclude item 2.} The remaining capacity is $40$, and only item 3 remains. Even the fractional bound is $60+120=180$.
+  \item \textbf{Include items 1 and 2.} The remaining capacity is $20$. Item 3 cannot be taken whole, so this branch gives at most $160$.
+\end{itemize}
+The cases cover every selection, proving that $220$ is optimal.
 \end{tcolorbox}
 
 \subsection{Travelling salesperson problem and route design}

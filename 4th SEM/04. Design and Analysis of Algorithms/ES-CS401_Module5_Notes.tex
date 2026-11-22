@@ -261,7 +261,12 @@ This proof assumes a complete symmetric graph of nonnegative metric costs. For u
 Let $A,B,C,D$ be the vertices in clockwise order. The MST can be $AB,BC,CD$ of total cost $3$. The doubled traversal $A,B,C,D,C,B,A$ costs $6$. Shortcut the repeated visits to get $A,B,C,D,A$ of cost $4$. Every tour needs four edges of cost at least $1$, so this particular tour is optimal.
 \end{tcolorbox}
 
-\textbf{Next Fit for bin packing.} When an item opens a new bin, it did not fit in the previous bin. Any two consecutive bins therefore have total load exceeding one bin capacity. Pair bins $(1,2),(3,4),\dots$. If $k\ge2$ bins are opened at capacity $C$, the total volume exceeds $\lfloor k/2\rfloor C$. Thus $\mathrm{OPT}\ge\lfloor k/2\rfloor+1$ and $k\le2\,\mathrm{OPT}-1$. The result also holds for a single nonempty bin. Next Fit uses $O(n)$ time. Module 2 compares practical placement rules such as First Fit and First Fit Decreasing.
+\textbf{Next Fit for bin packing.} When a new bin opens, its first item did not fit in the preceding bin. These two bins together therefore contain more than one bin's capacity.
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Pair the bins.} For $k\ge2$ bins of capacity $C$, group bins $(1,2),(3,4),\dots$. The combined load exceeds $\lfloor k/2\rfloor C$.
+  \item \textbf{Bound the optimum.} At least $\lfloor k/2\rfloor+1$ bins are necessary, so $k\le2\,\mathrm{OPT}-1$. A single nonempty bin satisfies the same bound.
+\end{enumerate}
+The scan takes $O(n)$ time. Module 2 compares the placement rules.
 
 \section{Randomized Algorithms}
 \subsection{Random choices, expectation and error}
@@ -311,7 +316,11 @@ The pair comparisons need not be independent. This bound applies to any fixed or
 \subsection{Freivalds' randomized matrix product test}
 Given three $n\times n$ matrices $A$, $B$ and $C$ over a field, test the claim $AB=C$ without constructing the entire product. Draw a vector $r$ with independent uniformly random zero-or-one entries. Accept if $A(Br)=Cr$. This test costs $O(n^2)$ field operations.
 \begin{tcolorbox}[examplebox, title={Why one trial accepts an incorrect product with probability at most one half}]
-If $AB=C$, every vector passes. Otherwise some row of $D=AB-C$ is nonzero. Choose a nonzero entry $D_{ij}$. Fix every random bit except $r_j$. The $i$th component of $Dr$ takes two different values as $r_j$ changes from $0$ to $1$, so at most one value makes the component zero. The probability that all components are zero is at most $1/2$. After $k$ independent trials it is at most $2^{-k}$.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Correct product.} If $AB=C$, every test vector passes.
+  \item \textbf{Incorrect product.} Put $D=AB-C$ and choose a nonzero entry $D_{ij}$. Fix every random bit except $r_j$. Changing $r_j$ from $0$ to $1$ changes the $i$th component of $Dr$ by $D_{ij}\ne0$. At most one choice makes that component zero.
+  \item \textbf{Error bound.} The chance that all components are zero is therefore at most $1/2$. With $k$ independent tests, the false-acceptance probability is at most $2^{-k}$.
+\end{itemize}
 \end{tcolorbox}
 
 \textbf{Example.} For $A=B=I_2$ and a claimed $C$ with diagonal $(1,0)$, the result is accepted exactly when $r_2=0$. A single trial therefore makes an error half the time, and eight independent trials reduce this to $1/256$.

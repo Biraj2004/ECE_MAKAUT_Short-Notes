@@ -540,7 +540,11 @@ A \textbf{greedy algorithm} commits to a locally preferred feasible choice accor
 \end{tcolorbox}
 
 \begin{tcolorbox}[examplebox, title={Interval scheduling by earliest finish}]
-To schedule the maximum number of non-overlapping intervals, sort by finish time and repeatedly take the first interval whose start is at least the last chosen finish. Suppose an optimal schedule begins with interval $o$ and the greedy algorithm chooses $g$. Then $f(g)\le f(o)$. Replacing $o$ by $g$ preserves feasibility and count, because every later interval starts at or after $f(o)$. Repeat the argument on the remaining intervals. Sorting costs $O(n\log n)$ and the scan costs $O(n)$.
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Choose.} Sort by finish time. Take the earliest-finishing interval whose start is at or after the last chosen finish.
+  \item \textbf{Exchange.} Let $o$ begin an optimal schedule and let $g$ be the greedy choice. Since $f(g)\le f(o)$, replacing $o$ by $g$ leaves room for every later interval and preserves the count.
+  \item \textbf{Repeat.} Apply the exchange to the remaining compatible intervals. The sort costs $O(n\log n)$ and the scan costs $O(n)$.
+\end{enumerate}
 \end{tcolorbox}
 
 A rule can be fast without being optimal. In the $0/1$ knapsack example below, value density supplies a good fractional solution and an upper bound for search, while the exact discrete solution needs a different argument.
@@ -596,7 +600,13 @@ For minimisation, discard a node when its lower bound is at least the incumbent 
 \end{tcolorbox}
 
 \begin{tcolorbox}[examplebox, title={Backtracking for subset sum}]
-For nonnegative items $(3,5,6)$ and target $8$, branch on taking or skipping each item. From prefix $(3,5)$ the sum is $8$ and a valid subset is found. The prefix $(3,6)$ has sum $9$ and can be pruned, because further nonnegative items cannot reduce it. A partial sum plus the sum of all remaining items below $8$ also permits pruning. If negatives are allowed, these two bounds require modification.
+For nonnegative items $(3,5,6)$ and target $8$, branch on taking or skipping each item.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Accept.} The chosen items $(3,5)$ sum to $8$.
+  \item \textbf{Prune above the target.} The choice $(3,6)$ already sums to $9$. Adding nonnegative items cannot lower it.
+  \item \textbf{Prune below the target.} Stop if the partial sum plus all remaining items is still below $8$.
+\end{itemize}
+If negative values are allowed, revise both bounds before using them.
 \end{tcolorbox}
 
 Both searches may still visit exponentially many nodes. A good branching order may find a strong incumbent early, but it does not change the exactness argument.
@@ -665,7 +675,13 @@ At $(3,5)$ the value is unchanged from row 2, so item 3 can be skipped. At $(2,5
 
 With one array, process capacities from $W$ down to $w_i$ for each item. Then $D[c-w_i]$ is still from the previous row when $D[c]$ is updated. Ascending iteration can reuse item $i$ within the same round. One-row memory is $O(W)$ for computing the value.
 \begin{tcolorbox}[examplebox, title={A fractional upper bound in zero-one branch-and-bound}]
-In the capacity-$50$ instance, first obtain a feasible incumbent of value $220$ using items 2 and 3. On the branch that includes item 1 and excludes item 2, at most $40$ capacity remains and only item 3 is available. Its fractional relaxation gives $60+120=180$. Prune the branch. On the branch excluding item 1, the upper bound is $220$. On the branch containing items 1 and 2, item 3 is infeasible as a whole, so its best complete value is $160$. This covers every branch and proves $220$ optimal.
+Use items 2 and 3 for a feasible incumbent of value $220$ in the capacity-$50$ problem.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Exclude item 1.} Items 2 and 3 both fit, so the upper bound equals the incumbent, $220$.
+  \item \textbf{Include item 1 and exclude item 2.} The remaining capacity is $40$, and only item 3 remains. Even the fractional bound is $60+120=180$.
+  \item \textbf{Include items 1 and 2.} The remaining capacity is $20$. Item 3 cannot be taken whole, so this branch gives at most $160$.
+\end{itemize}
+The cases cover every selection, proving that $220$ is optimal.
 \end{tcolorbox}
 
 \subsection{Travelling salesperson problem and route design}
@@ -831,7 +847,12 @@ BFS(G, s):
 \end{verbatim}
 \end{tcolorbox}
 
-\textbf{Correctness.} The first discovered path of length $d$ is valid by following parents. A shorter path would have a predecessor at an earlier level. BFS would have processed that predecessor and discovered the vertex earlier. Assign distance before enqueuing so each vertex enters the queue once. The full traversal costs $O(V+E)$ with adjacency lists and $O(V^2)$ with a matrix. Parents and the queue use $O(V)$ extra memory.
+\textbf{Why BFS gives shortest unweighted paths.}
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{A path exists.} Following parents gives a real path of the assigned length $d$. Each discovery adds exactly one edge.
+  \item \textbf{No shorter path exists.} A shorter route would reach a predecessor in an earlier layer. BFS would process that predecessor and discover the vertex before layer $d$.
+  \item \textbf{Cost.} Assign distance before enqueuing to avoid duplicates. Traversal costs $O(V+E)$ with adjacency lists or $O(V^2)$ with a matrix. Parents and the queue use $O(V)$ extra space.
+\end{itemize}
 
 \subsection{Depth-first search and rooted tree traversals}
 \begin{tcolorbox}[defbox, title={Depth-first search (DFS)}]
@@ -859,7 +880,12 @@ Visit(u):
 \end{verbatim}
 \end{tcolorbox}
 
-A DFS tree edge first discovers a vertex. In a directed graph a gray target lies on the active ancestor path, so a back edge proves a cycle. Edges to already finished vertices may be forward (to a descendant) or cross (between completed branches). In an undirected graph ignore the reverse copy of the parent tree edge when testing for cycles. A full DFS costs $O(V+E)$ time and $O(V)$ auxiliary space.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Tree edge.} The edge first discovers a vertex.
+  \item \textbf{Back edge.} In a directed graph, a gray target is on the active ancestor path. The path and the edge form a cycle.
+  \item \textbf{Finished target.} An edge to a completed descendant is forward. An edge between completed branches is cross.
+\end{itemize}
+In an undirected graph, skip the reverse copy of the parent edge when testing for a cycle. With adjacency lists, DFS takes $O(V+E)$ time and $O(V)$ auxiliary space.
 \begin{tcolorbox}[tikzbox, title={Directed graph for the traversal and ordering traces}]
 \centering
 \begin{tikzpicture}[every node/.style={font=\small}]
@@ -948,7 +974,12 @@ Take $s\to u:2$, $s\to v:5$, $v\to u:-4$. Finalising $u$ at value $2$ misses the
   \item Repeat up to $V-1$ full passes over all edges, relaxing from finite labels. Stop early if a pass makes no change.
   \item Scan all edges once more. A further improvement from a finite label signals a reachable negative-weight cycle. Such a cycle makes finite minimum walk costs undefined for vertices reachable from it.
 \end{enumerate}
-\textbf{Proof outline.} Any finite label is the length of a concrete walk. After $k$ complete passes, each walk using at most $k$ edges has had a chance to improve its final label. When no reachable negative cycle is relevant, a shortest path can be chosen simple and uses at most $V-1$ edges. If a reachable negative cycle exists and every edge on it satisfies the no-improvement inequalities, summing those inequalities around the cycle contradicts its negative total weight. Worst-case time is $O(VE)$ for edge scans plus $O(V)$ initialisation.
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item {\interlinepenalty=10000 \textbf{Proof invariant.} Every finite label is the length of a real walk. After $k$ full passes, the label is no greater than the length of any such walk using at most $k$ edges.\par}
+  \item \textbf{Why $V-1$ passes suffice.} If no reachable negative cycle can affect a destination, a shortest path to it can be chosen simple. A simple path has at most $V-1$ edges.
+  \item \textbf{Why the extra pass detects cycles.} If every edge on a reachable negative cycle obeyed the no-improvement inequality, adding the inequalities around the cycle would imply that its total weight is nonnegative. At least one edge must still improve a label.
+\end{enumerate}
+Initialisation uses $O(V)$ time and the edge scans use $O(VE)$.
 \begin{tcolorbox}[examplebox, title={A negative edge that Bellman--Ford handles}]
 Take $s\to A:4$, $s\to B:5$, $A\to B:-2$, $B\to C:3$, $A\to C:4$. In that edge order, the first pass sets $A=4$, improves $B$ from $5$ to $2$, and sets $C=5$. The result stays unchanged in the next pass. The shortest route to $C$ is $s,A,B,C$, using the negative edge once.
 \end{tcolorbox}
@@ -969,7 +1000,11 @@ R^{(k)}_{ij}
  &=R^{(k-1)}_{ij}\lor
    (R^{(k-1)}_{ik}\land R^{(k-1)}_{kj}).
 \end{align*}
-Use Floyd--Warshall for distance and Warshall for Boolean reachability. Start distances with edge weights, zero on the diagonal in the absence of negative self-loops, and infinity for missing edges. If self-loops are present, initialise each diagonal to the minimum of zero and its loop weight. Start Boolean entries with adjacency and choose the diagonal convention. In either algorithm $k$ is the outer loop. Time is $O(V^3)$ and in-place memory for the matrix is $O(V^2)$.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Floyd--Warshall.} Start with edge weights and infinity for missing edges. Put zero on the diagonal, or the smaller of zero and the loop weight if a self-loop exists.
+  \item \textbf{Warshall.} Start with Boolean adjacency. Set the diagonal to true if zero-length paths are allowed.
+  \item \textbf{Loop order and cost.} Use intermediate vertex $k$ as the outer loop in both methods. The work is $O(V^3)$ and the in-place matrix uses $O(V^2)$ space.
+\end{itemize}
 \end{tcolorbox}
 
 \begin{tcolorbox}[examplebox, title={Intermediate vertex update}]
@@ -983,7 +1018,12 @@ A minimum spanning tree minimises wiring cost when edges are weighted. A topolog
 An MST is a spanning tree of minimum total edge weight in a connected undirected weighted graph. It has $V-1$ edges and connects every vertex. A disconnected graph has a minimum spanning forest. The objective is total wiring cost, while a shortest-path tree minimises distances from one source.
 \end{tcolorbox}
 
-\textbf{Exchange proof for a safe edge.} A cut partitions the vertices into two sets. Assume the current chosen edges belong to some MST and none crosses this cut. Let $e$ be a minimum-weight crossing edge. If an MST containing the chosen edges omits $e$, adding $e$ forms a cycle containing another crossing edge $f$. Remove $f$. It was not among the chosen edges. Since $w(e)\le w(f)$, the result is also an MST and includes $e$.
+\textbf{Exchange proof for a safe edge.} A cut partitions the vertices into two sets. Assume an MST contains the current chosen edges and none of those edges crosses the cut.
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Add.} Choose a minimum-weight crossing edge $e$. If the MST already includes it, the choice is safe.
+  \item \textbf{Exchange.} Otherwise adding $e$ creates a cycle. That cycle crosses the cut again at an edge $f$ that was not among the current choices. Remove $f$.
+  \item \textbf{Compare.} The new graph is a spanning tree containing the earlier choices and $e$. Since $w(e)\le w(f)$, it is also minimum.
+\end{enumerate}
 \par\vspace{5pt}
 \begingroup
 \setlength{\extrarowheight}{1pt}
@@ -1019,7 +1059,11 @@ If the order has fewer than V vertices, report a cycle.
 \end{verbatim}
 \end{tcolorbox}
 
-Every removed vertex has no remaining incoming edge. If no vertex can be removed while vertices remain, repeatedly following incoming edges in that finite remainder reaches a cycle. DFS offers another method: reject back edges and output vertices in decreasing finish time. In the traversal example the DFS order is $A,C,B,D,E$. Both methods run in $O(V+E)$ time. Tasks with no dependency between them may appear in either order.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Kahn's method.} A removed vertex has no remaining incoming edge. If the queue empties early, follow incoming edges in the remaining graph. Finiteness forces a repetition, so a cycle exists.
+  \item \textbf{DFS alternative.} Reject back edges and list vertices in decreasing finish time. The traversal example gives $A,C,B,D,E$.
+  \item \textbf{Cost and ties.} Both methods take $O(V+E)$ time. Independent tasks can have more than one valid order.
+\end{itemize}
 
 \section{Network Flow Algorithms}
 \subsection{Flow, cuts and the residual graph}
@@ -1297,7 +1341,12 @@ preserves answers and is polynomial to construct.
 
 \subsection{Hamiltonian Cycle to TSP and Subset Sum to Knapsack}
 \begin{tcolorbox}[examplebox, title={TSP with costs 1 and 2}]
-For an undirected graph on $n\ge3$ vertices, make a complete weighted graph on the same vertices. Use cost $1$ for original edges and $2$ for nonedges. Set the decision budget to $n$. A Hamiltonian cycle in the original graph gives $n$ cost-$1$ edges. Conversely every tour uses exactly $n$ edges of cost at least $1$. It can reach the budget only by using original edges throughout. This construction also satisfies the triangle inequality.
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Build.} On the same $n\ge3$ vertices, build a complete weighted graph. Give original edges cost $1$ and nonedges cost $2$. Set the tour budget to $n$.
+  \item \textbf{Forward direction.} A Hamiltonian cycle from the original graph uses $n$ cost-$1$ edges, so the budget is met.
+  \item \textbf{Reverse direction.} Every tour uses $n$ edges. Any cost-$2$ edge makes the sum exceed $n$, so a tour meeting the budget uses original edges throughout.
+\end{enumerate}
+The construction has polynomial size and obeys the triangle inequality.
 \end{tcolorbox}
 
 \begin{tcolorbox}[examplebox, title={Decision Knapsack from Subset Sum}]
@@ -1472,7 +1521,12 @@ This proof assumes a complete symmetric graph of nonnegative metric costs. For u
 Let $A,B,C,D$ be the vertices in clockwise order. The MST can be $AB,BC,CD$ of total cost $3$. The doubled traversal $A,B,C,D,C,B,A$ costs $6$. Shortcut the repeated visits to get $A,B,C,D,A$ of cost $4$. Every tour needs four edges of cost at least $1$, so this particular tour is optimal.
 \end{tcolorbox}
 
-\textbf{Next Fit for bin packing.} When an item opens a new bin, it did not fit in the previous bin. Any two consecutive bins therefore have total load exceeding one bin capacity. Pair bins $(1,2),(3,4),\dots$. If $k\ge2$ bins are opened at capacity $C$, the total volume exceeds $\lfloor k/2\rfloor C$. Thus $\mathrm{OPT}\ge\lfloor k/2\rfloor+1$ and $k\le2\,\mathrm{OPT}-1$. The result also holds for a single nonempty bin. Next Fit uses $O(n)$ time. Module 2 compares practical placement rules such as First Fit and First Fit Decreasing.
+\textbf{Next Fit for bin packing.} When a new bin opens, its first item did not fit in the preceding bin. These two bins together therefore contain more than one bin's capacity.
+\begin{enumerate}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Pair the bins.} For $k\ge2$ bins of capacity $C$, group bins $(1,2),(3,4),\dots$. The combined load exceeds $\lfloor k/2\rfloor C$.
+  \item \textbf{Bound the optimum.} At least $\lfloor k/2\rfloor+1$ bins are necessary, so $k\le2\,\mathrm{OPT}-1$. A single nonempty bin satisfies the same bound.
+\end{enumerate}
+The scan takes $O(n)$ time. Module 2 compares the placement rules.
 
 \section{Randomized Algorithms}
 \subsection{Random choices, expectation and error}
@@ -1522,7 +1576,11 @@ The pair comparisons need not be independent. This bound applies to any fixed or
 \subsection{Freivalds' randomized matrix product test}
 Given three $n\times n$ matrices $A$, $B$ and $C$ over a field, test the claim $AB=C$ without constructing the entire product. Draw a vector $r$ with independent uniformly random zero-or-one entries. Accept if $A(Br)=Cr$. This test costs $O(n^2)$ field operations.
 \begin{tcolorbox}[examplebox, title={Why one trial accepts an incorrect product with probability at most one half}]
-If $AB=C$, every vector passes. Otherwise some row of $D=AB-C$ is nonzero. Choose a nonzero entry $D_{ij}$. Fix every random bit except $r_j$. The $i$th component of $Dr$ takes two different values as $r_j$ changes from $0$ to $1$, so at most one value makes the component zero. The probability that all components are zero is at most $1/2$. After $k$ independent trials it is at most $2^{-k}$.
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Correct product.} If $AB=C$, every test vector passes.
+  \item \textbf{Incorrect product.} Put $D=AB-C$ and choose a nonzero entry $D_{ij}$. Fix every random bit except $r_j$. Changing $r_j$ from $0$ to $1$ changes the $i$th component of $Dr$ by $D_{ij}\ne0$. At most one choice makes that component zero.
+  \item \textbf{Error bound.} The chance that all components are zero is therefore at most $1/2$. With $k$ independent tests, the false-acceptance probability is at most $2^{-k}$.
+\end{itemize}
 \end{tcolorbox}
 
 \textbf{Example.} For $A=B=I_2$ and a claimed $C$ with diagonal $(1,0)$, the result is accepted exactly when $r_2=0$. A single trial therefore makes an error half the time, and eight independent trials reduce this to $1/256$.
