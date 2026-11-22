@@ -256,6 +256,10 @@ foreach ($folder in $subjectFolders) {
     if (-not $hasCircuitikz) {
         $preamble = $preamble -replace '\\usepackage\[american\]\{circuitikz\}', '% circuitikz not required for this subject'
     }
+    $hasLongtable = Select-String -LiteralPath $moduleFiles.FullName -Pattern '\\begin\{longtable\}' -List | Select-Object -First 1
+    if ($hasLongtable) {
+        $preamble += "`n\usepackage{longtable}"
+    }
     [void]$sb.AppendLine($preamble)
 
     # -- Colours --------------------------------------------------------------

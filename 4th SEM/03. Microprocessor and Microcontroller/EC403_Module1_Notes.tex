@@ -16,6 +16,7 @@
 \usepackage{titlesec}
 \usepackage{enumitem}
 \usepackage{tabularx}
+\usepackage{longtable}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{amsmath}
@@ -54,7 +55,6 @@
 \definecolor{hdramber}{RGB}{253,242,215}
 \definecolor{hdrpurple}{RGB}{238,228,255}
 \definecolor{hdrgray}{RGB}{238,240,245}
-\definecolor{rowalt}{RGB}{250,251,253}
 
 % ─── Section Formatting ────────────────────────────────────────────────────────
 \titleformat{\section}
@@ -97,7 +97,7 @@
 \fancyhead[L]{\small\color{myred}\textbf{EC403}\;\color{mydark}--- Microprocessor and Microcontroller}
 \fancyhead[R]{\small\color{myteal}\textbf{Module 1 Notes}}
 \fancyfoot[C]{\small\color{mydark}\thepage}
-\fancyfoot[R]{\small\color{watermark}\textit{\copyright\ Biraj}}
+\fancyfoot[R]{\small\color{watermark}\textit{\copyright\ Biraj Sarkar (CGEC)}}
 \renewcommand{\headrulewidth}{0.5pt}
 \renewcommand{\footrulewidth}{0.3pt}
 
@@ -153,6 +153,9 @@
   redblock/.style={rectangle, draw=myred, fill=hdrred,
     text width=2.4cm, align=center, minimum height=0.95cm,
     font=\small, rounded corners=3pt, line width=0.7pt},
+  amberblock/.style={rectangle, draw=myamber, fill=hdramber,
+    text width=2.4cm, align=center, minimum height=0.95cm,
+    font=\small, rounded corners=3pt, line width=0.7pt},
   sumjunc/.style={circle, draw=myamber, fill=hdramber,
     minimum size=0.62cm, font=\small, line width=0.8pt},
   arrow/.style={-Stealth, thick, color=mydark},
@@ -178,341 +181,608 @@
 \hypersetup{linkcolor=myteal}
 \newpage
 
-\section{Microcomputer Systems, 8085 and 8086}
-\begin{tcolorbox}[defbox,title={Microprocessor and Microcomputer}]
-A \textbf{microprocessor} is a programmable central processing unit on a chip. A \textbf{microcomputer} adds program and data memory, input/output interfaces, clock and reset circuits, and the buses that connect them. A microcontroller integrates the processor, memory and peripherals on the same chip.
-\end{tcolorbox}
-\begin{tcolorbox}[tikzbox,title={Basic Microcomputer}]
-\centering
-\begin{tikzpicture}
-\node[block] (cpu) at (0,0) {CPU};
-\node[block] (mem) at (5,1) {ROM and RAM};
-\node[block] (io) at (5,-1) {I/O interface};
-\draw[<->,thick] (cpu) -- (mem) node[midway,above,sloped,font=\small] {Address, data, control};
-\draw[<->,thick] (cpu) -- (io);
-\end{tikzpicture}
-\end{tcolorbox}
-\par\addvspace{7pt}\noindent
-The address bus selects a byte or peripheral register, the bidirectional data bus carries its contents, and control signals identify the transfer and its timing. A decoder generates chip select from high address bits. ROM holds the reset program, while RAM holds variables and the stack. An instruction cycle can contain several bus cycles, each of which takes several clock periods (T-states). A wait state gives slower hardware extra time.
+\section{Overview of Microcomputer Systems and Building Blocks}
 
-\section{Intel 8085 Architecture and Pin Description}
-\begin{tcolorbox}[defbox,title={8085 Programmer's Model}]
-The \href{https://www.bitsavers.org/components/intel/MCS80/9800301D_8080_8085_Assembly_Language_Programming_Manual_May81.pdf}{8085} is an 8-bit processor with a 16-bit byte address and a 64 KiB memory space. The accumulator A feeds the arithmetic and logic unit. B, C, D, E, H and L form the register pairs BC, DE and HL. PC points to the next instruction and SP points to the top of a downward-growing stack. The status flags are sign (S), zero (Z), auxiliary carry (AC), parity (P) and carry (CY).
-\end{tcolorbox}
-\par\addvspace{5pt}
-\begingroup
-\setlength{\extrarowheight}{2.5pt}
-\noindent\begin{tabularx}{\linewidth}{|B{3.1cm}|Y|Y|}
-\hline
-\textbf{Pins} & \textbf{Signal} & \textbf{Purpose} \\ \hline
-1--3 & X1, X2, RESET OUT & Clock oscillator and system reset indication. \\ \hline
-4--5 & SOD, SID & Serial data output and input, used with SIM and RIM. \\ \hline
-6--11 & TRAP, RST 7.5, RST 6.5, RST 5.5, INTR, $\overline{\mathrm{INTA}}$ & Interrupt requests and active-low INTR acknowledge. \\ \hline
-12--19, 21--28 & AD0--AD7, A8--A15 & Multiplexed low address/data byte and dedicated high address. Pin 20 is ground. \\ \hline
-29--34 & S0, ALE, $\overline{\mathrm{WR}}$, $\overline{\mathrm{RD}}$, S1, IO/M & Bus status, latch enable, read/write strobes and memory/I/O selection. \\ \hline
-35--40 & READY, $\overline{\mathrm{RESET\ IN}}$, CLK OUT, HLDA, HOLD, VCC & Wait-state input, CPU reset, clock output, DMA handshake and supply. \\ \hline
-\end{tabularx}\par
-\endgroup
-\par\addvspace{8pt}
-\begin{tcolorbox}[tikzbox,unbreakable,title={8085 40-Pin DIP, Top View}]
-\centering
-\begin{tikzpicture}[x=1cm,y=0.49cm,every node/.style={font=\small}]
-\draw[thick,rounded corners=3pt] (-1.45,0.8) rectangle (1.45,-19.8);
-\draw (-0.32,0.8) arc[start angle=180,end angle=360,radius=0.32cm];
-\node[font=\small\bfseries] at (0,-9.5) {8085};
-\foreach \i/\leftpin/\rightpin in {
-{0}/{X1}/{VCC},
-{1}/{X2}/{HOLD},
-{2}/{RESET OUT}/{HLDA},
-{3}/{SOD}/{CLK OUT},
-{4}/{SID}/{$\overline{\mathrm{RESET\,IN}}$},
-{5}/{TRAP}/{READY},
-{6}/{RST 7.5}/{IO/M},
-{7}/{RST 6.5}/{S1},
-{8}/{RST 5.5}/{$\overline{\mathrm{RD}}$},
-{9}/{INTR}/{$\overline{\mathrm{WR}}$},
-{10}/{$\overline{\mathrm{INTA}}$}/{ALE},
-{11}/{AD0}/{S0},
-{12}/{AD1}/{A15},
-{13}/{AD2}/{A14},
-{14}/{AD3}/{A13},
-{15}/{AD4}/{A12},
-{16}/{AD5}/{A11},
-{17}/{AD6}/{A10},
-{18}/{AD7}/{A9},
-{19}/{GND}/{A8}
-} {
-  \pgfmathtruncatemacro{\lp}{\i+1}
-  \pgfmathtruncatemacro{\rp}{40-\i}
-  \draw (-1.45,-\i) -- (-2.05,-\i) node[left=2pt] {\leftpin};
-  \draw (1.45,-\i) -- (2.05,-\i) node[right=2pt] {\rightpin};
-  \node[anchor=west,font=\scriptsize] at (-1.33,-\i) {\lp};
-  \node[anchor=east,font=\scriptsize] at (1.33,-\i) {\rp};
-}
-\end{tikzpicture}
-\par\vspace{7pt}
-An overbar identifies an active-low signal. IO/M is high for I/O and low for a memory cycle.
+\begin{tcolorbox}[defbox, title={Microprocessor, Microcomputer, and Microcontroller}]
+A \textbf{microprocessor} is a multipurpose, programmable, clock-driven, register-based central processing unit (CPU) fabricated on a single integrated circuit chip. It fetches, decodes, and executes binary instructions from external memory.
+
+A \textbf{microcomputer} is a complete functional computing system comprising a microprocessor, primary memory (ROM and RAM), clock and reset generation circuits, and input/output (I/O) peripheral interfaces interconnected via system buses.
+
+A \textbf{microcontroller} is an integrated computer-on-a-chip containing a CPU, fixed memory, timer/counters, and I/O ports in a single silicon package.
 \end{tcolorbox}
 
-\subsection{Bus Timing and Memory Access}
-In T1, AD0--AD7 carry the low address and ALE enables an external latch. The falling edge of ALE retains that address. In T2 and T3, the same pins carry data. A read cycle asserts $\overline{\mathrm{RD}}$ and the selected device drives the data bus. A write cycle asserts $\overline{\mathrm{WR}}$ and the processor drives it. A slow device can hold READY low to insert wait states. For opcode fetch, IO/M, S1 and S0 are $0,1,1$. For memory read and write the status triplets are $0,1,0$ and $0,0,1$.
-\begin{tcolorbox}[examplebox,title={8085 Address Decoding}]
-Map a 4 KiB ROM at \texttt{0000H} and an 8 KiB RAM at \texttt{2000H}.
-\begin{enumerate}[leftmargin=*,itemsep=4pt]
-\item The 4 KiB ROM needs A0--A11. Decode A15--A12 as \texttt{0000} to select \texttt{0000H--0FFFH}.
-\item The 8 KiB RAM needs A0--A12. Decode A15--A13 as \texttt{001} to select \texttt{2000H--3FFFH}.
-\item Use latched A0--A7 at both chips. Qualify selection for a memory cycle. Connect the read strobe to output enable and the write strobe to RAM write enable. The ROM contains the reset location \texttt{0000H}.
+\begin{tcolorbox}[tikzbox, title={Microcomputer System Bus Architecture}]
+\centering
+\begin{tikzpicture}[every node/.style={font=\small},
+  unit/.style={align=center, inner sep=6pt, text width=3.6cm}]
+  \node[block, unit, minimum height=4.65cm] (cpu) at (0,0)
+    {\textbf{CPU (8085 / 8086)}\\[4pt] ALU and registers\\ Control unit};
+  \node[amberblock, unit, minimum height=1.0cm] (rom) at (9.2,1.62)
+    {\textbf{ROM}\\ Program memory};
+  \node[amberblock, unit, minimum height=1.0cm] (ram) at (9.2,0)
+    {\textbf{RAM}\\ Data and stack};
+  \node[redblock, unit, minimum height=1.0cm] (io) at (9.2,-1.62)
+    {\textbf{I/O subsystem}\\ Ports, timers, ADC/DAC};
+  % Each arrow represents a distinct bus connected to the device group.
+  \draw[mgframe,thick,rounded corners=4pt] (6.94,-2.7) rectangle (11.46,2.42);
+  \node[above,font=\small\bfseries] at (9.2,2.48) {Memory and I/O devices};
+  \draw[arrow,thick] ([yshift=1.49cm]cpu.east) --
+    node[above] {Address bus} (6.94,1.49);
+  \draw[arrow,<->,thick] (cpu.east) --
+    node[above] {Data bus} node[below,font=\scriptsize] {Bidirectional} (6.94,0);
+  \draw[arrow,thick] ([yshift=-1.49cm]cpu.east) --
+    node[above] {Control strobes}
+    node[below,font=\scriptsize] {$\overline{\mathrm{RD}},\ \overline{\mathrm{WR}},\ \mathrm{IO}/\overline{\mathrm M}$}
+    (6.94,-1.49);
+\end{tikzpicture}
+\end{tcolorbox}
+
+\subsection{Building Blocks and Bus Structures}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Address Bus:} Unidirectional lines that specify the physical memory address or I/O port address. For an $n$-bit address bus, the addressable space is $2^n$ bytes (16 bits in 8085 $\to$ 64 KiB; 20 bits in 8086 $\to$ 1 MiB).
+  \item \textbf{Data Bus:} Bidirectional lines that transfer instruction codes and data between the CPU and memory/peripherals (8 bits in 8085; 16 bits in 8086).
+  \item \textbf{Control Bus:} Dedicated timing and status lines that identify and synchronize the active transfer cycle ($\overline{\mathrm{RD}}$, $\overline{\mathrm{WR}}$, $\mathrm{IO}/\overline{\mathrm{M}}$, $\mathrm{ALE}$, $\mathrm{READY}$).
+  \item \textbf{Bus Buffering and Latching:}
+  \begin{itemize}[leftmargin=*]
+    \item \textbf{74LS373 (Octal D-type Transparent Latch):} Demultiplexes lower address bits from data lines ($AD_0-AD_7$) using the Address Latch Enable ($\mathrm{ALE}$) pulse.
+    \item \textbf{74LS245 (Octal Bidirectional Bus Transceiver):} Enhances bus fan-out drive capacity and isolates system components. Direction is governed by $\mathrm{DIR}$ (driven by $\mathrm{DT}/\overline{\mathrm{R}}$) and active-low chip enable $\overline{\mathrm{OE}}$ (driven by $\overline{\mathrm{DEN}}$).
+  \end{itemize}
 \end{enumerate}
+
+\section{Intel 8085 Microprocessor Architecture and Pin Details}
+
+\begin{tcolorbox}[defbox, title={Intel 8085 Architectural Overview}]
+The \textbf{Intel 8085A} is an 8-bit NMOS microprocessor operating on a single $+5\,\mathrm{V}$ DC supply. It has a multiplexed 8-bit data/lower address bus ($AD_0-AD_7$) and an 8-bit high address bus ($A_8-A_{15}$), addressing $64\,\mathrm{KiB}$ ($2^{16}$ bytes) of memory. It features an on-chip clock generator operating at an internal frequency of $3.072\,\mathrm{MHz}$ (using a $6.144\,\mathrm{MHz}$ quartz crystal connected across pins $X_1-X_2$).
 \end{tcolorbox}
 
-\section{Intel 8086 Architecture, Pins and Segmented Access}
-\begin{tcolorbox}[defbox,title={Execution Unit and Bus Interface Unit}]
-The \href{https://bitsavers.trailing-edge.com/components/intel/8086/9800722-03_The_8086_Family_Users_Manual_Oct79.pdf}{8086} is a 16-bit processor with a 20-bit physical byte address and a 1 MiB memory space. The \textbf{execution unit (EU)} decodes and executes instructions. The \textbf{bus interface unit (BIU)} forms addresses, manages bus cycles and prefetches up to six instruction bytes. A taken branch changes the fetch address and discards obsolete prefetched bytes.
-\end{tcolorbox}
-\par\addvspace{7pt}\noindent
-The general registers AX, BX, CX and DX have individually accessible high and low bytes. SP and BP are stack-related registers, and SI and DI are index registers. CS:IP selects the next instruction, SS:SP selects the stack, DS usually selects data, and ES is the extra segment used as the destination segment for string operations. A BP-based effective address defaults to SS. FLAGS contains status flags CF, PF, AF, ZF, SF and OF and control flags TF, IF and DF.
-\par\addvspace{6pt}
-\begingroup
-\setlength{\extrarowheight}{2.5pt}
-\noindent\begin{tabularx}{\linewidth}{|B{2.7cm}|Y|Y|}
-\hline
-\textbf{DIP pins} & \textbf{Signals} & \textbf{Function} \\ \hline
-1, 20, 40 & GND, GND, VCC & Supply and ground. \\ \hline
-2--16, 39 & AD14--AD0, AD15 & Multiplexed low 16 address bits and data. \\ \hline
-17--19, 21--23 & NMI, INTR, CLK, RESET, READY, $\overline{\mathrm{TEST}}$ & Interrupt inputs, clock, reset, wait control and input tested by WAIT. WAIT continues when TEST is low. \\ \hline
-32--38 & $\overline{\mathrm{RD}}$, MN/$\overline{\mathrm{MX}}$, $\overline{\mathrm{BHE}}$/S7, A19/S6--A16/S3 & Read strobe, mode select, high-bank enable and high address/status signals. \\ \hline
-24--31, minimum & $\overline{\mathrm{INTA}}$, ALE, $\overline{\mathrm{DEN}}$, DT/$\overline{\mathrm{R}}$, M/IO, $\overline{\mathrm{WR}}$, HLDA, HOLD & CPU directly supplies bus commands and HOLD/HLDA handshake. \\ \hline
-24--31, maximum & QS1, QS0, S0, S1, S2, $\overline{\mathrm{LOCK}}$, $\overline{\mathrm{RQ/GT1}}$, $\overline{\mathrm{RQ/GT0}}$ & Queue and bus status, lock and arbitration. An 8288 decodes S2--S0 into bus commands. \\ \hline
-\end{tabularx}\par
-\endgroup
-\par\addvspace{8pt}
-\begin{tcolorbox}[tikzbox,unbreakable,title={8086 Minimum Mode 40-Pin DIP, Top View}]
+\begin{tcolorbox}[tikzbox, title={Intel 8085 Functional Internal Architecture}]
 \centering
-\begin{tikzpicture}[x=1cm,y=0.49cm,every node/.style={font=\small}]
-\draw[thick,rounded corners=3pt] (-1.45,0.8) rectangle (1.45,-19.8);
-\draw (-0.32,0.8) arc[start angle=180,end angle=360,radius=0.32cm];
-\node[font=\small\bfseries] at (0,-9.5) {8086};
-\foreach \i/\leftpin/\rightpin in {
-{0}/{GND}/{VCC},
-{1}/{AD14}/{AD15},
-{2}/{AD13}/{A16/S3},
-{3}/{AD12}/{A17/S4},
-{4}/{AD11}/{A18/S5},
-{5}/{AD10}/{A19/S6},
-{6}/{AD9}/{$\overline{\mathrm{BHE}}$/S7},
-{7}/{AD8}/{MN/$\overline{\mathrm{MX}}$},
-{8}/{AD7}/{$\overline{\mathrm{RD}}$},
-{9}/{AD6}/{HOLD},
-{10}/{AD5}/{HLDA},
-{11}/{AD4}/{$\overline{\mathrm{WR}}$},
-{12}/{AD3}/{M/IO},
-{13}/{AD2}/{DT/$\overline{\mathrm{R}}$},
-{14}/{AD1}/{$\overline{\mathrm{DEN}}$},
-{15}/{AD0}/{ALE},
-{16}/{NMI}/{$\overline{\mathrm{INTA}}$},
-{17}/{INTR}/{$\overline{\mathrm{TEST}}$},
-{18}/{CLK}/{READY},
-{19}/{GND}/{RESET}
-} {
-  \pgfmathtruncatemacro{\lp}{\i+1}
-  \pgfmathtruncatemacro{\rp}{40-\i}
-  \draw (-1.45,-\i) -- (-2.05,-\i) node[left=2pt] {\leftpin};
-  \draw (1.45,-\i) -- (2.05,-\i) node[right=2pt] {\rightpin};
-  \node[anchor=west,font=\scriptsize] at (-1.33,-\i) {\lp};
-  \node[anchor=east,font=\scriptsize] at (1.33,-\i) {\rp};
-}
-\end{tikzpicture}
-\par\vspace{7pt}
-Pin 33 is held high for minimum mode. In maximum mode pins 24--31 use the alternate names listed above.
-\end{tcolorbox}
+\begin{tikzpicture}[every node/.style={font=\small},
+  unit/.style={align=center, text width=3.5cm, inner sep=6pt}]
+  \node[amberblock,unit] (alu) at (0,2.75) {\textbf{ALU (8-bit)}\\[3pt]
+    Accumulator and\\ temporary register\\[2pt] Flags\\S, Z, AC, P, CY};
+  \node[block,unit] (regs) at (4.7,2.75) {\textbf{Registers}\\[3pt]
+    $B/C,\ D/E,\ H/L$\\(8 bits per register)\\[2pt] SP and PC (16 bits each)};
+  \node[block,unit] (buf) at (9.4,2.75) {\textbf{Bus buffers}\\[3pt]
+    High address $A_8$--$A_{15}$\\[2pt] Multiplexed address/data\\ $AD_0$--$AD_7$};
 
-\begin{tcolorbox}[formulabox,title={Segment and Offset}]
-For a segment register value $S$ and a 16-bit effective offset $d$,
-\[
- A_{\mathrm{physical}}=(16S+d)\bmod 2^{20}.
-\]
-For example, \texttt{1234H:00F0H} gives \texttt{12340H + 00F0H = 12430H}. Different segment:offset pairs can identify the same byte. A segment can cover up to 64 KiB.
-\end{tcolorbox}
+  \draw[very thick,myteal] (0,0.25) -- (9.4,0.25);
+  \node[above,font=\small\bfseries,fill=mygray,inner sep=2pt] at (2.35,0.25)
+    {Internal 8-bit data bus};
+  \foreach \unitname/\column in {alu/0,regs/4.7,buf/9.4}
+    \draw[arrow,<->,thick] (\unitname.south) -- (\column,0.25);
 
-\subsection{Little-Endian Data and Bank Selection}
-A word \texttt{1234H} is stored as byte \texttt{34H} at the lower address and byte \texttt{12H} at the next address. The even bank connects to D0--D7 and the odd bank to D8--D15. A0 selects the even bank when low, and $\overline{\mathrm{BHE}}$ selects the odd bank when low.
-\par\addvspace{6pt}
-\begingroup
-\setlength{\extrarowheight}{2.5pt}
-\noindent\begin{tabularx}{\linewidth}{|B{2.6cm}|B{2.6cm}|Y|}
-\hline
-\textbf{A0} & \textbf{BHE pin level} & \textbf{Transfer} \\ \hline
-0 & 0 & Both banks, one aligned word transfer. \\ \hline
-0 & 1 & Even byte on D0--D7. \\ \hline
-1 & 0 & Odd byte on D8--D15. An odd-address word uses two cycles. \\ \hline
-1 & 1 & Neither bank. \\ \hline
-\end{tabularx}\par
-\endgroup
-In a minimum-mode system, latch AD0--AD15, the high address/status lines and bank select as needed. Route data through transceivers and use DT/$\overline{\mathrm{R}}$ and $\overline{\mathrm{DEN}}$ for direction and enable. The bus carries the address during T1, changes roles in T2, transfers data in T3, and releases the cycle in T4. Wait states can precede T4. Isolated I/O uses IN/OUT and a separate I/O address space. Memory-mapped I/O occupies memory addresses and uses normal memory instructions.
-
-\begin{tcolorbox}[examplebox,title={8086 Boot ROM Address and Bank Design}]
-Map a 32 KiB EPROM block to physical \texttt{F8000H--FFFFFH} so it contains the 8086 reset fetch at \texttt{FFFF0H}.
-\begin{enumerate}[leftmargin=*,itemsep=4pt]
-\item Two 16 KiB by 8 devices supply the even and odd banks. Each requires 14 chip-address bits, connected to latched CPU A1--A14.
-\item Decode A19--A15 as \texttt{11111}. Within the selected block, qualify the low device using A0 low and the high device using latched BHE low.
-\item Connect the devices to the low and high data bytes, respectively. Qualify output enable with the memory-read command. A reset stub in the mapped ROM jumps to the rest of the initialisation routine.
-\end{enumerate}
-\end{tcolorbox}
-
-\section{Interrupts and Direct Memory Access}
-\begin{tcolorbox}[defbox,title={Interrupt and DMA}]
-An \textbf{interrupt} temporarily redirects the CPU to an interrupt service routine (ISR). \textbf{Direct memory access (DMA)} lets another bus master move data between memory and an interface without the CPU copying each byte.
-\end{tcolorbox}
-\subsection{8085 Interrupts}
-\par\addvspace{5pt}
-\begingroup
-\setlength{\extrarowheight}{2.5pt}
-\noindent\begin{tabularx}{\linewidth}{|B{2.6cm}|B{2.6cm}|Y|}
-\hline
-\textbf{Priority order} & \textbf{Vector} & \textbf{Recognition} \\ \hline
-TRAP & \texttt{0024H} & Non-maskable, edge and level sensitive. \\ \hline
-RST 7.5 & \texttt{003CH} & Maskable, rising edge latched. \\ \hline
-RST 6.5 & \texttt{0034H} & Maskable, level sensitive. \\ \hline
-RST 5.5 & \texttt{002CH} & Maskable, level sensitive. \\ \hline
-INTR & Device supplies opcode & Maskable, level sensitive. CPU issues $\overline{\mathrm{INTA}}$. \\ \hline
-\end{tabularx}\par
-\endgroup
-EI and DI control global maskable-interrupt acceptance. SIM controls masks for RST 7.5, 6.5 and 5.5 and can clear the RST 7.5 latch. RIM reads interrupt status and SID. The ISR saves any registers it changes, services the source, restores registers and returns with RET. Arrange interrupt re-enabling in accordance with the ISR design.
-\subsection{8086 Interrupt Vector Table}
-INTR is maskable through IF. NMI uses type 2 and is non-maskable. Software \texttt{INT n} selects type $n$. The 256 four-byte vectors occupy \texttt{00000H--003FFH}. Entry $4n$ holds the new IP word, followed by the new CS word. The CPU saves FLAGS, CS and IP, clears IF and TF, and jumps to the vector. IRET restores IP, CS and FLAGS. For example, type \texttt{21H} starts at \texttt{0084H}, and its CS word starts at \texttt{0086H}.
-
-\subsection{DMA Request, Grant and Release}
-\begin{tcolorbox}[tikzbox,title={Minimum-Mode DMA Handshake}]
-\centering
-\begin{tikzpicture}
-\node[block] (cpu) at (0,0) {CPU};
-\node[block] (dma) at (6,0) {DMA controller};
-\draw[arrow] ([yshift=3pt]dma.west) -- ([yshift=3pt]cpu.east) node[midway,above,font=\small] {HOLD};
-\draw[arrow] ([yshift=-3pt]cpu.east) -- ([yshift=-3pt]dma.west) node[midway,below,font=\small] {HLDA};
+  \node[block,unit,anchor=north] (decode) at (0,-0.85)
+    {\textbf{Instruction register}\\ and decoder};
+  \node[redblock,unit,anchor=north] (ctrl) at (4.7,-0.85)
+    {\textbf{Timing and control}\\[3pt]
+     $X_1$, $X_2$, CLK OUT\\
+     ALE, $\overline{\mathrm{RD}}$, $\overline{\mathrm{WR}}$, $\mathrm{IO}/\overline{\mathrm M}$\\
+     $S_0$, $S_1$, READY, RESET};
+  \node[block,unit,anchor=north] (irq) at (9.4,-0.85)
+    {\textbf{Interrupt control}\\[3pt] TRAP\\ RST 7.5, 6.5, 5.5\\ INTR, $\overline{\mathrm{INTA}}$};
+  \node[block,unit,anchor=north] (serial) at (9.4,-3.62)
+    {\textbf{Serial I/O}\\ SID, SOD};
+  \draw[arrow,thick] (0,0.25) -- (decode.north);
+  \draw[arrow,thick] (decode.east) -- (decode.east -| ctrl.west);
+  \draw[arrow,thick] (irq.west) -- (irq.west -| ctrl.east);
 \end{tikzpicture}
 \end{tcolorbox}
-\par\addvspace{7pt}\noindent
-The device requests DMA. The controller requests the bus through HOLD. After relinquishing the bus, the CPU asserts HLDA and releases its bus outputs. The controller drives the memory address and the relevant read/write commands, updates the address and count, and releases HOLD when done. The CPU withdraws HLDA and resumes bus use. Burst transfer holds the bus for a block, while cycle stealing obtains it for individual transfers. An 8237A is an example controller. Program the start address, direction and transfer count before enabling the channel.
 
-\subsection{Compare Polling, Interrupts and DMA}
-\par\addvspace{5pt}
+\subsection{8085 Pin Description and Categorization}
+\par\vspace{4pt}\noindent
 \begingroup
-\setlength{\extrarowheight}{2.5pt}
-\noindent\begin{tabularx}{\linewidth}{|B{3.1cm}|Y|Y|}
+\renewcommand{\arraystretch}{1.2}
+\setlength{\extrarowheight}{1.5pt}
+\begingroup
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\begin{longtable}{|B{2.8cm}|B{2.8cm}|>{\small\raggedright\arraybackslash}m{\dimexpr(\linewidth-2.8cm-2.8cm-6\tabcolsep-4\arrayrulewidth)/1\relax}|}
 \hline
-\textbf{Method} & \textbf{How it works} & \textbf{Design trade-off} \\ \hline
-Polling & CPU checks a status bit repeatedly before transferring a byte. & Very simple control, but the loop uses CPU time while the device is idle. \\ \hline
-Interrupts & Device signals readiness and the ISR performs the required transfer. & Good for occasional events. Entry, exit and register saving cost time. \\ \hline
-DMA & A bus master carries out the data transfers after setup. & Efficient for a block. Arbitration and address/count setup add hardware complexity. \\ \hline
-\end{tabularx}\par
+\textbf{Functional Group} & \textbf{Pin Names} & \textbf{Pin Function and Operating Characteristics} \\ \hline
+\endfirsthead
+\hline
+\textbf{Functional Group} & \textbf{Pin Names} & \textbf{Pin Function and Operating Characteristics} \\ \hline
+\endhead
+Address \& Data & $AD_0-AD_7$ (Pins 12--19) & Time-multiplexed low-order address ($A_0-A_7$) during $T_1$, bidirectional data bus during $T_2-T_4$. \\ \hline
+Address \& Data & $A_8-A_{15}$ (Pins 21--28) & Unidirectional high-order memory address bus lines; tri-stated during HOLD and RESET. \\ \hline
+Control \& Status & $\mathrm{ALE}$ (Pin 30) & Address Latch Enable: Active-high pulse in $T_1$ to strobe $AD_0-AD_7$ into external latch (74LS373). \\ \hline
+Control \& Status & $\overline{\mathrm{RD}}$, $\overline{\mathrm{WR}}$ (Pins 32, 31) & Active-low read and write strobes for memory or I/O devices. \\ \hline
+Control \& Status & $\mathrm{IO}/\overline{\mathrm{M}}, S_1, S_0$ (Pins 34, 33, 29) & Identifies memory cycle ($0$) vs. I/O cycle ($1$) and exact machine cycle category. \\ \hline
+Interrupts & $\mathrm{TRAP},\ \mathrm{RST\,7.5}$\newline $\mathrm{RST\,6.5},\ \mathrm{RST\,5.5}$\newline $\mathrm{INTR}$ & Hardware vectored and non-vectored interrupt requests. \\ \hline
+Interrupts & $\overline{\mathrm{INTA}}$ (Pin 10) & Interrupt Acknowledge: Active-low strobe issued by 8085 to fetch opcode during INTR. \\ \hline
+Serial I/O & $\mathrm{SID}, \mathrm{SOD}$ (Pins 5, 4) & Serial Input Data and Serial Output Data lines, controlled via `RIM` and `SIM` instructions. \\ \hline
+DMA Control & $\mathrm{HOLD}, \mathrm{HLDA}$ (Pins 39, 38) & DMA Request input from alternate master and Hold Acknowledge output from 8085. \\ \hline
+Clock \& Reset & $X_1, X_2$, CLK OUT & Crystal connections (divide-by-2 internally) and system clock output. \\ \hline
+Clock \& Reset & $\overline{\mathrm{RESET\ IN}}$, RESET OUT & Active-low CPU reset input ($\ge 3$ clock cycles) and active-high peripheral reset output. \\ \hline
+Power Supply & $V_{CC}$ (Pin 40), GND (Pin 20) & $+5\,\mathrm{V}$ single power supply and ground reference. \\ \hline
+\end{longtable}
+\endgroup\par
 \endgroup
 
-\section{Instruction Sets and Assembly Examples}
-An \textbf{addressing mode} specifies where an operand comes from. Register and immediate operands are internal or encoded in the instruction. A direct memory operand contains an address or offset. A register-indirect operand uses the contents of a register or pair as the address. The 8086 also supports base-plus-index and displacement combinations using permitted registers BX/BP and SI/DI.
-\par\addvspace{6pt}
-\begingroup
-\setlength{\extrarowheight}{2.5pt}
-\noindent\begin{tabularx}{\linewidth}{|B{2.8cm}|Y|Y|}
+\subsection{8085 Flag Register Format}
+\begin{tcolorbox}[formulabox, title={8085 Flag Register (8-Bit)}]
+The Flag Register is an 8-bit register where 5 bits serve as active status flags:
+\par\vspace{3pt}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
 \hline
-\textbf{Group} & \textbf{8085 examples} & \textbf{8086 examples} \\ \hline
-Transfer and address & MOV, MVI, LXI, LDA, STA, LHLD, XCHG & MOV, LEA, XCHG, LDS, LES \\ \hline
-Arithmetic & ADD, ADC, SUB, SBB, INR, DCR, DAD, DAA & ADD, ADC, SUB, SBB, INC, DEC, MUL, IMUL, DIV, IDIV \\ \hline
-Logic and bit handling & ANA, ORA, XRA, CMP, RLC, RAR & AND, OR, XOR, TEST, CMP, SHL, SHR, SAR, ROL \\ \hline
-Flow and stack & JMP, JZ, JC, CALL, RET, RST, PUSH, POP & JMP, JZ, JC, LOOP, CALL, RET, INT, IRET, PUSH, POP \\ \hline
-I/O and control & IN, OUT, EI, DI, HLT, NOP & IN, OUT, STI, CLI, CLD, STD, HLT, WAIT \\ \hline
-String operations & Explicit load, store and loop & MOVSB, LODSB, STOSB, CMPSB, SCASB with repeat prefixes as applicable. \\ \hline
-\end{tabularx}\par
-\endgroup
-
-\begin{tcolorbox}[examplebox,title={Trace an 8086 Based-Indexed Access}]
-For \texttt{MOV AL,[BX+SI+08H]}, let BX=\texttt{0120H}, SI=\texttt{0010H} and DS=\texttt{2000H}.
-\begin{align*}
- \text{effective offset} &= \text{\texttt{0120H + 0010H + 0008H = 0138H}},\\
- \text{physical address} &= \text{\texttt{20000H + 0138H = 20138H}}.
-\end{align*}
-The instruction copies the selected byte into AL. Replacing BX with BP would select SS by default. Replacing the destination with AX would read a word, taking two bus cycles if the first byte started at an odd address.
-\end{tcolorbox}
-
-\subsection{Worked 8085 Addition and 8086 Block Copy}
-\begin{tcolorbox}[examplebox,title={8085 Unsigned Byte Addition}]
-Add the bytes at \texttt{2000H} and \texttt{2001H}, store the low byte at \texttt{2002H}, then store the carry as a byte at \texttt{2003H}. INR or DCR can change Z without altering CY. MVI and STA preserve flags here.
-\end{tcolorbox}
-\begin{verbatim}
-        LDA  2000H
-        MOV  B,A
-        LDA  2001H
-        ADD  B
-        STA  2002H
-        MVI  A,00H
-        ACI  00H
-        STA  2003H
-        HLT
-\end{verbatim}
-For \texttt{F2H + 24H = 116H}, the stored bytes are \texttt{16H} and \texttt{01H}.
-\begin{tcolorbox}[examplebox,title={8086 Copy Four Bytes}]
-Assume DS and ES already address the source and destination segments and that the regions do not overlap. CLD makes SI and DI increment. REP repeats MOVSB until CX reaches zero. The source offset moves from \texttt{0200H} to \texttt{0204H}, and the destination from \texttt{0300H} to \texttt{0304H}.
-\end{tcolorbox}
-\begin{verbatim}
-        CLD
-        MOV  SI,0200H
-        MOV  DI,0300H
-        MOV  CX,4
-        REP  MOVSB
-\end{verbatim}
-\begin{tcolorbox}[exambox,title={Exam Checks}]
-In an interfacing answer, show address range, decoding, latch, control strobes and data-bus direction. For assembly, trace the registers that select operands and the flags used by decisions. A carry represents unsigned overflow. On 8086 the OF flag represents signed overflow.
-\end{tcolorbox}
-
-\newpage
-\begin{center}
-{\large\bfseries\color{myred} Quick Revision --- Module 1}\\[3pt]
-{\small\color{mydark} 8085 and 8086 Microprocessor Systems $|$ EC403}
-\end{center}
-\noindent{\color{myred}\rule{\linewidth}{1.2pt}}\vspace{4pt}
-\begin{tcolorbox}[formulabox,title={Key Formulas at a Glance}]
-\renewcommand{\arraystretch}{1.35}
-\noindent\begin{tabularx}{\linewidth}{B{4.5cm}Y}
-Address capacity & $2^n$ bytes for $n$ byte-address lines. \\
-Chip decoding & A $2^k$-byte chip uses $k$ internal address lines. \\
-8086 address & $A_{\mathrm{physical}}=(16S+d)\bmod2^{20}$. \\
-Interrupt vector & 8086 type $n$ starts at physical byte $4n$. \\
-\end{tabularx}\par
-\end{tcolorbox}
-\begin{tcolorbox}[defbox,title={One-Line Definitions}]
-\begin{itemize}[leftmargin=*,itemsep=3pt]
-\item \textbf{ALE:} Address latch enable pulse used to retain a multiplexed bus address.
-\item \textbf{Wait state:} Extra bus time inserted for a slower device.
-\item \textbf{Vector:} A defined ISR address or a table entry that gives that address.
-\item \textbf{DMA:} Data transfer managed by an alternate bus master.
+\textbf{$D_7$} & \textbf{$D_6$} & \textbf{$D_5$} & \textbf{$D_4$} & \textbf{$D_3$} & \textbf{$D_2$} & \textbf{$D_1$} & \textbf{$D_0$} \\ \hline
+\textbf{S} & \textbf{Z} & \textbf{X} & \textbf{AC} & \textbf{X} & \textbf{P} & \textbf{X} & \textbf{CY} \\ \hline
+\end{tabular}
+\par\vspace{3pt}\raggedright
+\begin{itemize}[leftmargin=*, itemsep=1pt]
+  \item \textbf{S (Sign):} Set if most significant bit ($D_7$) of result is $1$ (negative); reset if $0$.
+  \item \textbf{Z (Zero):} Set if arithmetic/logic operation result is exactly zero; reset otherwise.
+  \item \textbf{AC (Auxiliary Carry):} Set if carry is generated from bit $D_3$ to bit $D_4$ during arithmetic (used exclusively by `DAA`).
+  \item \textbf{P (Parity):} Set if result contains an even number of $1$'s (even parity); reset for odd parity.
+  \item \textbf{CY (Carry):} Set if an arithmetic operation generates a carry out of bit $D_7$; reset otherwise.
+  \item \textbf{X:} Unused (don't-care) bits.
 \end{itemize}
 \end{tcolorbox}
-\begin{tcolorbox}[exambox,title={Frequently Asked / Viva Questions}]
-\begin{enumerate}[leftmargin=*,label=\textbf{Q\arabic*.},itemsep=5pt]
-\item \Q{What is the 8085 memory capacity?} $2^{16}$ bytes, or 64 KiB.
-\item \Q{Why latch AD0--AD7?} They carry address in T1 and data later.
-\item \Q{Which 8085 interrupt is non-maskable?} TRAP.
-\item \Q{Which 8085 maskable interrupt is edge latched?} RST 7.5.
-\item \Q{What does READY low do?} It requests a wait state while the interface becomes ready.
-\item \Q{What is the 8086 prefetch queue size?} Six bytes.
-\item \Q{Why does an odd-address word take two cycles?} Its bytes belong to different aligned bank pairs.
-\item \Q{How is an 8086 interrupt-type entry located?} Multiply the type number by four.
-\item \Q{How does the DMA controller obtain the minimum-mode bus?} It asserts HOLD and waits for HLDA.
-\item \Q{How does the stack grow?} It grows towards lower addresses on both processors.
-\item \Q{What does REP MOVSB modify?} It advances or retreats SI and DI according to DF and decreases CX to zero.
-\end{enumerate}
-\end{tcolorbox}
-\begin{tcolorbox}[tikzbox,title={8085 and 8086 at a Glance}]
-\par\addvspace{5pt}
+
+\section{Bus Timing, Machine Cycles and Memory Interfacing}
+
+\subsection{Instruction Cycle, Machine Cycles and T-States}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Instruction Cycle (IC):} Total time required by the CPU to fetch, decode, and execute a complete instruction. An instruction cycle comprises $1$ to $5$ machine cycles.
+  \item \textbf{Machine Cycle (MC):} Time required to access memory or an I/O device. In 8085, machine cycles include Opcode Fetch ($4T$ or $6T$), Memory Read ($3T$), Memory Write ($3T$), I/O Read ($3T$), I/O Write ($3T$), Interrupt Acknowledge, and Bus Idle.
+  \item \textbf{T-State:} One clock period ($T = 1/f_{CLK}$). For an 8085 operating at $3.072\,\mathrm{MHz}$, $T = 325.5\,\mathrm{ns}$.
+\end{itemize}
+
+\par\vspace{6pt}\noindent
 \begingroup
 \setlength{\extrarowheight}{2.5pt}
-\noindent\begin{tabularx}{\linewidth}{|B{3.6cm}|Y|Y|}
+\begingroup
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\begin{longtable}{|B{3.2cm}|B{1.6cm}|B{1.3cm}|B{1.3cm}|B{1.4cm}|B{1.4cm}|>{\small\raggedright\arraybackslash}m{\dimexpr(\linewidth-3.2cm-1.6cm-1.3cm-1.3cm-1.4cm-1.4cm-14\tabcolsep-8\arrayrulewidth)/1\relax}|}
 \hline
-\textbf{Feature} & \textbf{8085} & \textbf{8086} \\ \hline
-Data width and memory & 8-bit, 64 KiB & 16-bit, 1 MiB \\ \hline
-Addressing & 16-bit byte address & Segment:offset and even/odd banks \\ \hline
-Interrupt return & RET with software register restoration & IRET restores IP, CS and FLAGS \\ \hline
+\textbf{Machine Cycle} & $\mathbf{IO/\overline{M}}$ & $\mathbf{S_1}$ & $\mathbf{S_0}$ & $\mathbf{\overline{RD}}$ & $\mathbf{\overline{WR}}$ & \textbf{Control Action} \\ \hline
+\endfirsthead
+\hline
+\textbf{Machine Cycle} & $\mathbf{IO/\overline{M}}$ & $\mathbf{S_1}$ & $\mathbf{S_0}$ & $\mathbf{\overline{RD}}$ & $\mathbf{\overline{WR}}$ & \textbf{Control Action} \\ \hline
+\endhead
+Opcode Fetch (OF) & $0$ & $1$ & $1$ & $0$ & $1$ & Fetches opcode byte from memory; executes internal decode. \\ \hline
+Memory Read (MR) & $0$ & $1$ & $0$ & $0$ & $1$ & Reads data operand from memory address. \\ \hline
+Memory Write (MW) & $0$ & $0$ & $1$ & $1$ & $0$ & Writes accumulator or register data into memory. \\ \hline
+I/O Read (IOR) & $1$ & $1$ & $0$ & $0$ & $1$ & Reads data byte from input port address. \\ \hline
+I/O Write (IOW) & $1$ & $0$ & $1$ & $1$ & $0$ & Writes data byte to output port address. \\ \hline
+\end{longtable}
+\endgroup\par
+\endgroup
+
+\begin{tcolorbox}[tikzbox, title={Opcode Fetch Machine Cycle (4 T-States) Timing Diagram}]
+\centering
+\begin{tikzpicture}[x=1.6cm, y=0.75cm, every node/.style={font=\scriptsize}]
+  \foreach \boundary in {1,2,3}
+    \draw[mgframe,densely dotted] (\boundary,-1.44) -- (\boundary,4.55);
+  % Clock
+  \node[left] at (0, 4) {CLK};
+  \foreach \i in {0,1,2,3} {
+    \draw[thick] (\i, 4.4) -- ++(0.5,0) -- ++(0,-0.8) -- ++(0.5,0) -- ++(0,0.8);
+    \node[above, font=\small\bfseries] at (\i+0.5, 4.5) {$T_{\pgfmathparse{int(\i+1)}\pgfmathresult}$};
+  }
+
+  % A15-A8
+  \node[left] at (0, 3) {$A_{15}-A_8$};
+  \draw[thick] (0, 2.7) -- (0.1, 3.3) -- (3.9, 3.3) -- (4, 2.7) -- cycle;
+  \node at (2, 3) {Higher Memory Address ($PCH$)};
+
+  % AD7-AD0
+  \node[left] at (0, 2) {$AD_7-AD_0$};
+  \draw[thick] (0, 1.7) -- (0.1, 2.3) -- (0.9, 2.3) -- (1, 1.7) -- cycle;
+  \node at (0.5, 2) {$PCL$};
+  \draw[thick, dashed] (1, 2) -- (1.5, 2);
+  \draw[thick] (1.5, 1.7) -- (1.6, 2.3) -- (2.9, 2.3) -- (3, 1.7) -- cycle;
+  \node at (2.25, 2) {Opcode Data};
+  \draw[thick, dashed] (3, 2) -- (4, 2);
+
+  % ALE
+  \node[left] at (0, 1) {ALE};
+  \draw[thick] (0, 0.7) -- (0.1, 1.3) -- (0.7, 1.3) -- (0.8, 0.7) -- (4, 0.7);
+
+  % /RD
+  \node[left] at (0, 0) {$\overline{\mathrm{RD}}$};
+  \draw[thick] (0, 0.3) -- (1.2, 0.3) -- (1.3, -0.3) -- (2.7, -0.3) -- (2.8, 0.3) -- (4, 0.3);
+
+  % IO/M, S1, S0
+  \node[left] at (0, -1) {$\mathrm{IO}/\overline{\mathrm{M}}, S_1, S_0$};
+  \draw[thick] (0, -1.3) -- (0.1, -0.7) -- (3.9, -0.7) -- (4, -1.3) -- cycle;
+  \node at (2, -1) {$\mathrm{IO}/\overline{\mathrm{M}}=0,\; S_1=1,\; S_0=1$};
+\end{tikzpicture}
+\end{tcolorbox}
+
+\subsection{Memory Interfacing with 74LS138 Address Decoder}
+To interface memory chips with the 8085, the address lines are partitioned into:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Internal Address Lines:} Connected directly to the memory address pins to select an internal storage cell. For a chip of capacity $2^k$ bytes, $k$ address lines ($A_0$ to $A_{k-1}$) are used ($11$ lines for $2\,\mathrm{KiB}$, $12$ lines for $4\,\mathrm{KiB}$, $13$ lines for $8\,\mathrm{KiB}$).
+  \item \textbf{Chip Select Decoding Lines:} High-order address lines ($A_k$ to $A_{15}$) are decoded using a decoder (such as the \textbf{74LS138 3-to-8 line decoder}) to assert the unique active-low Chip Select ($\overline{\mathrm{CS}}$) pin of the designated device.
+  \item \textbf{Control Strobe Generation:} The 8085 produces $IO/\overline{M}$, $\overline{\mathrm{RD}}$, and $\overline{\mathrm{WR}}$. External logic generates $\overline{\mathrm{MEMR}} = \mathrm{OR}(IO/\overline{M}, \overline{\mathrm{RD}})$ and $\overline{\mathrm{MEMW}} = \mathrm{OR}(IO/\overline{M}, \overline{\mathrm{WR}})$.
+\end{enumerate}
+
+\begin{tcolorbox}[examplebox, title={Interfacing 4 KiB EPROM (2732) and 8 KiB RAM (6264)}]
+\textbf{Design Objective:} Map a $4\,\mathrm{KiB}$ EPROM at address \texttt{0000H}--\texttt{0FFFH} and an $8\,\mathrm{KiB}$ SRAM at address \texttt{8000H}--\texttt{9FFFH}.
+\par\vspace{4pt}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{EPROM (2732, 4 KiB):} Requires $12$ address lines ($A_0-A_{11}$). Range: \texttt{0000H} to \texttt{0FFFH} ($A_{15}A_{14}A_{13}A_{12} = \mathbf{0000_2}$).
+  \item \textbf{SRAM (6264, 8 KiB):} Requires $13$ address lines ($A_0-A_{12}$). Range: \texttt{8000H} to \texttt{9FFFH} ($A_{15}A_{14}A_{13} = \mathbf{100_2}$, with $A_{12}=0$ for \texttt{8000H-8FFFH} and $A_{12}=1$ for \texttt{9000H-9FFFH}).
+  \item \textbf{Decoder Hookup (74LS138):}
+  \begin{itemize}[leftmargin=*]
+    \item Connect inputs $C, B, A$ to $A_{15}, A_{14}, A_{13}$.
+    \item Set enables: $E_1 = \mathrm{GND}$, $E_2 = \mathrm{IO}/\overline{\mathrm{M}}$ (active-low memory enable), and $E_3 = +5\,\mathrm{V}$.
+    \item Output $\overline{Y}_0$ ($A_{15}A_{14}A_{13} = 000_2$, with $A_{12}=0$) selects the $4\,\mathrm{KiB}$ EPROM $\overline{\mathrm{CS}}$.
+    \item Output $\overline{Y}_4$ ($A_{15}A_{14}A_{13} = 100_2$) selects the $8\,\mathrm{KiB}$ RAM $\overline{\mathrm{CS}}$.
+  \end{itemize}
+\end{itemize}
+\end{tcolorbox}
+
+\par\vspace{6pt}\noindent
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3.2cm}|B{2.5cm}|B{2.5cm}|Y|}
+\hline
+\textbf{Device \& Capacity} & \textbf{Address Range} & \textbf{Address Lines Used} & \textbf{Decoding Logic / 74LS138 Output} \\ \hline
+EPROM (2732, $4\,\mathrm{KiB}$) & \texttt{0000H}--\texttt{0FFFH} & $A_0-A_{11}$ internal & $\overline{Y}_0 = \overline{A_{15}}\,\overline{A_{14}}\,\overline{A_{13}}$ connected to EPROM $\overline{\mathrm{CE}}$ \\ \hline
+SRAM (6264, $8\,\mathrm{KiB}$) & \texttt{8000H}--\texttt{9FFFH} & $A_0-A_{12}$ internal & $\overline{Y}_4 = A_{15}\,\overline{A_{14}}\,\overline{A_{13}}$ connected to SRAM $\overline{\mathrm{CE}}$ \\ \hline
+Unused Address Space & \texttt{1000H}--\texttt{7FFFH}, \texttt{A000H}--\texttt{FFFFH} & --- & Available for peripheral I/O and future memory expansion. \\ \hline
 \end{tabularx}\par
 \endgroup
+
+\section{Intel 8086 Architecture, Pins and Segmented Memory}
+
+\begin{tcolorbox}[defbox, title={Intel 8086 Architectural Overview}]
+The \textbf{Intel 8086} is a 16-bit H-MOS microprocessor with a 20-bit physical address bus ($1\,\mathrm{MiB}$ addressing space) and a 16-bit data bus. It divides internal operations into two autonomous processing units executing in parallel:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Bus Interface Unit (BIU):} Fetches instructions, handles address translation, reads and writes memory operands, and maintains a \textbf{6-byte Instruction Prefetch Queue}.
+  \item \textbf{Execution Unit (EU):} Receives pre-decoded opcodes from the queue, executes instructions using the 16-bit ALU, register file, and updates status flags.
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[tikzbox, title={Intel 8086 Functional Internal Architecture (BIU and EU)}]
+\centering
+\begin{tikzpicture}[every node/.style={font=\small},
+  unit/.style={align=center,text width=4.3cm,inner sep=6pt}]
+  \node[font=\normalsize\bfseries,text=myamber] at (0,4.45) {Execution Unit (EU)};
+  \node[font=\normalsize\bfseries,text=myteal] at (7.45,4.45) {Bus Interface Unit (BIU)};
+  \node[amberblock,unit,minimum height=2.55cm] (regs) at (0,2.25)
+    {\textbf{Registers}\\[3pt]
+    AX (AH/AL), BX (BH/BL)\\ CX (CH/CL), DX (DH/DL)\\[2pt]
+    SP, BP, SI, DI};
+  \node[block,unit,minimum height=2.55cm] (seg) at (7.45,2.25)
+    {\textbf{Address generation}\\[3pt]
+    Segments CS, DS, SS, ES\\ Instruction pointer (IP)\\
+    20-bit physical-address adder};
+  \node[amberblock,unit,minimum height=2.05cm] (alu) at (0,-1.48)
+    {\textbf{Instruction decode and execute}\\[3pt]
+    16-bit ALU\\ FLAGS (6 status, 3 control)};
+  \node[block,unit,minimum height=2.05cm] (queue) at (7.45,-1.48)
+    {\textbf{6-byte instruction queue}\\[3pt]
+    $B_1\enspace B_2\enspace B_3\enspace B_4\enspace B_5\enspace B_6$};
+  \draw[arrow,<->,thick] (regs.south) -- (alu.north);
+  \draw[arrow,thick] (seg.south) -- (queue.north);
+  \draw[arrow,thick] (queue.west) -- node[above,font=\scriptsize] {Instruction bytes} (alu.east);
+\end{tikzpicture}
+\end{tcolorbox}
+
+\subsection{Segmented Memory and Physical Address Generation}
+Memory in the 8086 is organized as a segmented address space of $1\,\mathrm{MiB}$ ($2^{20}$ bytes), divided into logical segments of up to $64\,\mathrm{KiB}$ each. Four segments can be active concurrently:
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Code Segment (CS):} Contains executable instructions; addressed with Instruction Pointer ($\mathrm{IP}$).
+  \item \textbf{Data Segment (DS):} Holds program data variables; default segment for general registers and strings.
+  \item \textbf{Stack Segment (SS):} Stores subroutines return addresses, parameters, and stack data; addressed with $\mathrm{SP}$ and $\mathrm{BP}$.
+  \item \textbf{Extra Segment (ES):} Holds alternate destination data in string instructions (addressed via $\mathrm{DI}$).
+\end{enumerate}
+
+\begin{tcolorbox}[formulabox, title={8086 Physical Address Calculation}]
+The 20-bit Physical Address is generated inside the BIU by shifting the 16-bit Segment Base Address left by 4 bit positions (multiplying by $16_{10}$ or $10_{16}$) and adding the 16-bit Offset Address:
+\[
+\mathbf{\mathrm{Physical\ Address}} = (\mathrm{Segment\ Base} \times 10_{\mathrm{H}}) + \mathrm{Offset}
+\]
+\textbf{Example:} If $\mathrm{CS} = 2500_{\mathrm{H}}$ and $\mathrm{IP} = 0128_{\mathrm{H}}$:
+\[
+\mathrm{Shifted\ Base} = 25000_{\mathrm{H}}, \quad \mathrm{Physical\ Address} = 25000_{\mathrm{H}} + 0128_{\mathrm{H}} = \mathbf{25128_{\mathrm{H}}}
+\]
+\end{tcolorbox}
+
+\subsection{Memory Banking: Odd and Even Banks}
+The $1\,\mathrm{MiB}$ physical memory is physically structured as two parallel $512\,\mathrm{KiB}$ banks to support both 8-bit and 16-bit transfers in a single bus cycle:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Even Bank (Lower Bank):} Stores even-addressed bytes ($00000_{\mathrm{H}}, 00002_{\mathrm{H}}, \dots$). Connected to lower data lines $D_0-D_7$. Enabled when address line $\mathbf{A_0 = 0}$.
+  \item \textbf{Odd Bank (Higher Bank):} Stores odd-addressed bytes ($00001_{\mathrm{H}}, 00003_{\mathrm{H}}, \dots$). Connected to upper data lines $D_8-D_{15}$. Enabled when Bus High Enable $\mathbf{\overline{BHE} = 0}$.
+\end{itemize}
+
+\par\vspace{6pt}\noindent
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{2.2cm}|B{2.2cm}|B{3.2cm}|Y|}
+\hline
+$\mathbf{\overline{BHE}}$ & $\mathbf{A_0}$ & \textbf{Data Transfer Type} & \textbf{Bus Operation Characteristics} \\ \hline
+$0$ & $0$ & Whole Word ($16$-bit) & Transfers 16-bit word at an even address in $1$ bus cycle ($D_0-D_{15}$). \\ \hline
+$0$ & $1$ & Odd Byte ($8$-bit) & Transfers single byte from odd address in $1$ bus cycle via $D_8-D_{15}$. \\ \hline
+$1$ & $0$ & Even Byte ($8$-bit) & Transfers single byte from even address in $1$ bus cycle via $D_0-D_7$. \\ \hline
+$1$ & $1$ & None (Inactive) & Both banks disabled. \\ \hline
+\end{tabularx}\par
+\endgroup
+
+\begin{tcolorbox}[examplebox, title={Aligned vs. Misaligned Word Access Penalty}]
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Aligned Word (Even Address, e.g., \texttt{2000H}):} $A_0=0$ and $\overline{\mathrm{BHE}}=0$. Both banks respond simultaneously. Transferred in strictly \textbf{1 bus cycle} ($4$ T-states).
+  \item \textbf{Misaligned Word (Odd Address, e.g., \texttt{2001H}):}
+  \begin{itemize}[leftmargin=*]
+    \item \textit{Cycle 1:} Read byte from odd bank at \texttt{2001H} ($A_0=1, \overline{\mathrm{BHE}}=0$ on $D_8-D_{15}$).
+    \item \textit{Cycle 2:} Read byte from even bank at \texttt{2002H} ($A_0=0, \overline{\mathrm{BHE}}=1$ on $D_0-D_7$).
+    \item Requires \textbf{2 consecutive bus cycles} ($8$ T-states), incurring a $100\%$ bus execution penalty.
+  \end{itemize}
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{Minimum Mode vs. Maximum Mode Operation}
+The 8086 operates in two distinct electrical modes selected by pin 33 ($\mathrm{MN}/\overline{\mathrm{MX}}$):
+\par\vspace{4pt}\noindent
+\begingroup
+\setlength{\extrarowheight}{2pt}
+\begingroup
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\begin{longtable}{|B{3.0cm}|>{\small\raggedright\arraybackslash}m{\dimexpr(\linewidth-3.0cm-6\tabcolsep-4\arrayrulewidth)/2\relax}|>{\small\raggedright\arraybackslash}m{\dimexpr(\linewidth-3.0cm-6\tabcolsep-4\arrayrulewidth)/2\relax}|}
+\hline
+\textbf{Parameter} & \textbf{Minimum Mode ($\mathrm{MN}/\overline{\mathrm{MX}} = V_{CC}$)} & \textbf{Maximum Mode ($\mathrm{MN}/\overline{\mathrm{MX}} = \mathrm{GND}$)} \\ \hline
+\endfirsthead
+\hline
+\textbf{Parameter} & \textbf{Minimum Mode ($\mathrm{MN}/\overline{\mathrm{MX}} = V_{CC}$)} & \textbf{Maximum Mode ($\mathrm{MN}/\overline{\mathrm{MX}} = \mathrm{GND}$)} \\ \hline
+\endhead
+Target System & Single-processor standalone configuration & Multiprocessor / coprocessor configuration (8086 + 8087) \\ \hline
+Control Generation & 8086 directly outputs $\overline{\mathrm{RD}}, \overline{\mathrm{WR}}, \mathrm{M}/\overline{\mathrm{IO}}, \mathrm{ALE}$ & External 8288 Bus Controller decodes status $\overline{S}_0-\overline{S}_2$ \\ \hline
+Bus Arbitration & Driven by $\mathrm{HOLD}$ and $\mathrm{HLDA}$ pins & Driven by $\overline{\mathrm{RQ}}/\overline{\mathrm{GT}}_0$ and $\overline{\mathrm{RQ}}/\overline{\mathrm{GT}}_1$ request/grant lines \\ \hline
+Queue Status Lines & Not available (control pins active) & Pins 24, 25 provide Queue Status ($\mathrm{QS}_0, \mathrm{QS}_1$) to 8087 \\ \hline
+\end{longtable}
+\endgroup\par
+\endgroup
+
+\section{Concepts of Interrupts and Direct Memory Access (DMA)}
+
+\subsection{8085 Interrupt System and SIM/RIM Bit Architectures}
+The 8085 supports 5 hardware interrupt pins with the following fixed priority order:
+\par\vspace{6pt}\noindent
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{2.2cm}|B{2.0cm}|B{2.6cm}|B{2.4cm}|Y|}
+\hline
+\textbf{Interrupt} & \textbf{Priority} & \textbf{Triggering Type} & \textbf{Vector Address} & \textbf{Maskability} \\ \hline
+TRAP & 1 (Highest) & Edge \& Level sensitive & $0024_{\mathrm{H}}$ ($4.5 \times 8$) & Non-Maskable (cannot be disabled). \\ \hline
+RST 7.5 & 2 & Rising edge sensitive & $003C_{\mathrm{H}}$ ($7.5 \times 8$) & Maskable via `SIM` instruction. \\ \hline
+RST 6.5 & 3 & High-level sensitive & $0034_{\mathrm{H}}$ ($6.5 \times 8$) & Maskable via `SIM` instruction. \\ \hline
+RST 5.5 & 4 & High-level sensitive & $002C_{\mathrm{H}}$ ($5.5 \times 8$) & Maskable via `SIM` instruction. \\ \hline
+INTR & 5 (Lowest) & High-level sensitive & Non-vectored & Maskable via `EI` / `DI` instructions. \\ \hline
+\end{tabularx}\par
+\endgroup
+
+\begin{tcolorbox}[formulabox, title={8085 SIM and RIM Instruction Bit Definitions}]
+\textbf{1. Set Interrupt Mask (SIM) Format:} Configures masks and serial output line SOD.
+\par\vspace{4pt}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+$D_7$ & $D_6$ & $D_5$ & $D_4$ & $D_3$ & $D_2$ & $D_1$ & $D_0$ \\ \hline
+\textbf{SOD} & \textbf{SOE} & \textbf{X} & \textbf{R7.5} & \textbf{MSE} & \textbf{M7.5} & \textbf{M6.5} & \textbf{M5.5} \\ \hline
+\end{tabular}
+\par\vspace{4pt}\raggedright
+\begin{itemize}[leftmargin=*, itemsep=1pt]
+  \item \textbf{SOD:} Serial Output Data to be latched into SOD pin.
+  \item \textbf{SOE:} Serial Output Enable ($1 = \text{enable SOD latch}$; $0 = \text{disable}$).
+  \item \textbf{R7.5:} Reset RST 7.5 flip-flop ($1 = \text{clear edge latch}$).
+  \item \textbf{MSE:} Mask Set Enable ($1 = \text{load M7.5, M6.5, M5.5}$; $0 = \text{ignore mask bits}$).
+  \item \textbf{M7.5, M6.5, M5.5:} Individual interrupt masks ($1 = \text{masked/disabled}$; $0 = \text{unmasked/available}$).
+\end{itemize}
+\par\vspace{6pt}
+\textbf{2. Read Interrupt Mask (RIM) Format:} Reads masks, pending interrupts, and SID pin.
+\par\vspace{4pt}
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+$D_7$ & $D_6$ & $D_5$ & $D_4$ & $D_3$ & $D_2$ & $D_1$ & $D_0$ \\ \hline
+\textbf{SID} & \textbf{I7.5} & \textbf{I6.5} & \textbf{I5.5} & \textbf{IE} & \textbf{M7.5} & \textbf{M6.5} & \textbf{M5.5} \\ \hline
+\end{tabular}
+\par\vspace{4pt}\raggedright
+\begin{itemize}[leftmargin=*, itemsep=1pt]
+  \item \textbf{SID:} Current digital logic level on Serial Input Data pin.
+  \item \textbf{I7.5, I6.5, I5.5:} Pending interrupt flags ($1 = \text{interrupt request is pending execution}$).
+  \item \textbf{IE:} Interrupt Enable status flag ($1 = \text{interrupts globally enabled by `EI`}$).
+  \item \textbf{M7.5, M6.5, M5.5:} Current mask status of RST interrupts.
+\end{itemize}
+\end{tcolorbox}
+
+\subsection{8086 Interrupt Vector Table (IVT)}
+The 8086 allocates the lowest $1\,\mathrm{KiB}$ of physical memory (\texttt{00000H}--\texttt{003FFH}) as the \textbf{Interrupt Vector Table (IVT)}. It supports up to 256 interrupts (Types $0$ to $255$):
+\begin{itemize}[leftmargin=*]
+  \item Each vector entry consumes \textbf{4 bytes}: 2 bytes for the Interrupt Service Routine (ISR) Instruction Pointer ($\mathrm{IP}$) and 2 bytes for the Code Segment ($\mathrm{CS}$).
+  \item Physical address of vector type $N$:
+  \[
+  \mathbf{\mathrm{Base\ Address}} = 4 \times N
+  \]
+  \item Dedicated Predefined Interrupts:
+  \begin{itemize}[leftmargin=*]
+    \item \textbf{Type 0:} Divide by Zero error (fault).
+    \item \textbf{Type 1:} Single-Step Trap (enabled when Trap Flag $\mathrm{TF}=1$).
+    \item \textbf{Type 2:} Non-Maskable Interrupt ($\mathrm{NMI}$ pin).
+    \item \textbf{Type 3:} 1-byte Breakpoint instruction (`INT 3`).
+    \item \textbf{Type 4:} Overflow exception (`INTO` instruction when Overflow Flag $\mathrm{OF}=1$).
+  \end{itemize}
+\end{itemize}
+
+\subsection{Direct Memory Access (DMA)}
+\begin{tcolorbox}[defbox, title={Direct Memory Access (DMA) Principle}]
+\textbf{Direct Memory Access (DMA)} is a high-speed data transfer mechanism wherein external high-bandwidth peripherals (hard disks, network controllers) exchange data directly with system RAM without CPU intervention. A dedicated hardware peripheral—the \textbf{DMA Controller (DMAC, e.g., Intel 8257/8237)}—acts as an alternate bus master.
+\end{tcolorbox}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Bus Handshake Sequence:}
+  \begin{enumerate}[leftmargin=*]
+    \item Peripheral asserts DMA Request ($\mathrm{DRQ}$) to DMAC.
+    \item DMAC asserts $\mathrm{HOLD}$ pin to the 8085/8086.
+    \item CPU finishes current bus cycle, floats its address, data, and control lines into high impedance, and asserts Hold Acknowledge ($\mathrm{HLDA}$).
+    \item DMAC asserts DMA Acknowledge ($\mathrm{DACK}$) to the peripheral, drives the memory address bus, and strobes $\overline{\mathrm{IOR}}$ and $\overline{\mathrm{MEMW}}$ (or $\overline{\mathrm{MEMR}}$ and $\overline{\mathrm{IOW}}$) simultaneously to transfer data in a single clock cycle.
+    \item When the block transfer completes, DMAC lowers $\mathrm{HOLD}$, and CPU resumes normal bus control.
+  \end{enumerate}
+  \item \textbf{DMA Transfer Modes:}
+  \begin{itemize}[leftmargin=*]
+    \item \textit{Burst Mode (Block Transfer):} DMAC retains the bus continuously until the entire data buffer is transferred. Fast, but locks out the CPU.
+    \item \textit{Cycle Stealing Mode:} DMAC transfers one byte per request, releasing the bus between bytes so the CPU is not starved.
+  \end{itemize}
+\end{itemize}
+
+\section{Instruction Sets and Addressing Modes}
+
+\subsection{Addressing Modes of 8085 and 8086}
+\par\vspace{6pt}\noindent
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\noindent\begin{tabularx}{\linewidth}{|B{3.2cm}|B{3.4cm}|Y|}
+\hline
+\textbf{Addressing Mode} & \textbf{8085 Example \& Syntax} & \textbf{8086 Example \& Syntax} \\ \hline
+Immediate & `MVI A, 45H` ($A \leftarrow 45_{\mathrm{H}}$) & `MOV AX, 1234H` ($AX \leftarrow 1234_{\mathrm{H}}$) \\ \hline
+Register & `MOV A, B` ($A \leftarrow B$) & `MOV CX, DX` ($CX \leftarrow DX$) \\ \hline
+Direct & `LDA 2050H` ($A \leftarrow [2050_{\mathrm{H}}]$) & `MOV AX, [2050H]` ($AX \leftarrow [DS \times 16 + 2050_{\mathrm{H}}]$) \\ \hline
+Register Indirect & `MOV A, M` ($A \leftarrow [HL]$) & `MOV AX, [BX]` ($AX \leftarrow [DS \times 16 + BX]$) \\ \hline
+Based & \textit{Not available} & `MOV AX, [BX + 04H]` ($AX \leftarrow [DS \times 16 + BX + 4]$) \\ \hline
+Indexed & \textit{Not available} & `MOV AX, [SI + 08H]` ($AX \leftarrow [DS \times 16 + SI + 8]$) \\ \hline
+Based-Indexed & \textit{Not available} & `MOV AX, [BX + DI + 10H]` \\ \hline
+Implied / Implicit & `CMA` (Complement Accumulator) & `STC` (Set Carry Flag) \\ \hline
+\end{tabularx}\par
+\endgroup
+
+\subsection{Key Assembly Programs with Derivations}
+
+\begin{tcolorbox}[examplebox, title={8085 BCD Addition with DAA Instruction}]
+\textbf{Problem:} Add two Packed BCD numbers stored at memory locations \texttt{2050H} ($= 48_{\mathrm{H}}$) and \texttt{2051H} ($= 37_{\mathrm{H}}$), and store the resulting BCD sum ($= 85_{\mathrm{H}}$) at \texttt{2052H}.
+\begin{verbatim}
+        LDA  2050H      ; Load first BCD operand into Accumulator (A = 48H)
+        MOV  B, A       ; Move to register B
+        LDA  2051H      ; Load second BCD operand (A = 37H)
+        ADD  B          ; Binary addition: 48H + 37H = 7FH (AC = 0, CY = 0)
+        DAA             ; Decimal Adjust: lower nibble 0FH > 9, adds 06H:
+                        ; 7FH + 06H = 85H (Auxiliary carry set, CY = 0)
+        STA  2052H      ; Store unpacked BCD result 85H at 2052H
+        HLT             ; Terminate program
+\end{verbatim}
+\textbf{DAA Rule:} If the lower nibble $> 9$ or $AC = 1$, add $06_{\mathrm{H}}$ to Accumulator. If upper nibble $> 9$ or $CY = 1$, add $60_{\mathrm{H}}$ to Accumulator.
+\end{tcolorbox}
+
+\begin{tcolorbox}[examplebox, title={8086 Block Copy Using String Primitives}]
+\textbf{Problem:} Copy a 128-byte block from source address \texttt{DS:0100H} to destination address \texttt{ES:0200H}.
+\begin{verbatim}
+        MOV  AX, 2000H  ; Segment base address
+        MOV  DS, AX     ; Initialize Data Segment
+        MOV  ES, AX     ; Initialize Extra Segment
+        MOV  SI, 0100H  ; SI points to Source Offset
+        MOV  DI, 0200H  ; DI points to Destination Offset
+        MOV  CX, 0080H  ; CX = 128 bytes counter
+        CLD             ; Clear Direction Flag (DF = 0, auto-increment SI and DI)
+        REP  MOVSB      ; Repeat MOVSB while CX != 0:
+                        ; [ES:DI] <- [DS:SI], SI <- SI+1, DI <- DI+1, CX <- CX-1
+        HLT
+\end{verbatim}
+\end{tcolorbox}
+
+\subsection{Subroutine CALL and RET Stack Operations}
+Both 8085 and 8086 use the hardware stack for subroutine execution and interrupt handling:
+\begin{itemize}[leftmargin=*]
+  \item \textbf{8085 CALL / RET:} \texttt{CALL addr} decrements $\mathrm{SP}$ by 2 and pushes the 16-bit return address onto the stack ($[\mathrm{SP}-1] \leftarrow \mathrm{PCH}$, $[\mathrm{SP}-2] \leftarrow \mathrm{PCL}$, $\mathrm{SP} \leftarrow \mathrm{SP}-2$). \texttt{RET} pops the top two stack bytes into $\mathrm{PC}$ ($\mathrm{PCL} \leftarrow [\mathrm{SP}]$, $\mathrm{PCH} \leftarrow [\mathrm{SP}+1]$, $\mathrm{SP} \leftarrow \mathrm{SP}+2$).
+  \item \textbf{8086 Near vs. Far CALL:}
+  \begin{itemize}[leftmargin=*]
+    \item \textit{Near CALL (Intra-Segment):} Target resides within the current Code Segment. Only 16-bit $\mathrm{IP}$ is pushed onto stack ($\mathrm{SP} \leftarrow \mathrm{SP}-2$).
+    \item \textit{Far CALL (Inter-Segment):} Target resides in a different segment. Both $\mathrm{CS}$ and $\mathrm{IP}$ are pushed onto the stack ($4$ bytes total), and new base/offset values are loaded.
+  \end{itemize}
+  \item \textbf{Hardware Multiplication and Division in 8086:}
+  Unlike the 8085, the 8086 provides native integer multiplication (\texttt{MUL}, \texttt{IMUL}) and division (\texttt{DIV}, \texttt{IDIV}). For 8-bit operations: $\mathrm{AX} \leftarrow \mathrm{AL} \times r/m8$; for 16-bit operations: $(\mathrm{DX}:\mathrm{AX}) \leftarrow \mathrm{AX} \times r/m16$.
+\end{itemize}
+
+\begingroup
+\par\smallskip\noindent \textbf{Comprehensive Comparison: Intel 8085 vs. Intel 8086}\par\nobreak
+\par\vspace{5pt}
+\begingroup
+\setlength{\extrarowheight}{2.5pt}
+\begingroup
+\setlength{\LTleft}{0pt}
+\setlength{\LTright}{0pt}
+\begin{longtable}{|B{3.2cm}|>{\small\raggedright\arraybackslash}m{\dimexpr(\linewidth-3.2cm-6\tabcolsep-4\arrayrulewidth)/2\relax}|>{\small\raggedright\arraybackslash}m{\dimexpr(\linewidth-3.2cm-6\tabcolsep-4\arrayrulewidth)/2\relax}|}
+\hline
+\textbf{Architectural Feature} & \textbf{Intel 8085} & \textbf{Intel 8086} \\ \hline
+\endfirsthead
+\hline
+\textbf{Architectural Feature} & \textbf{Intel 8085} & \textbf{Intel 8086} \\ \hline
+\endhead
+Data Bus Width & 8 bits & 16 bits \\ \hline
+Address Bus Width & 16 bits ($64\,\mathrm{KiB}$ address space) & 20 bits ($1\,\mathrm{MiB}$ address space) \\ \hline
+Operating Frequency & $3.072\,\mathrm{MHz}$ (standard) & $5\,\mathrm{MHz}, 8\,\mathrm{MHz}, 10\,\mathrm{MHz}$ \\ \hline
+Internal Architecture & Single functional processing unit & Split into BIU and EU (Pipelined) \\ \hline
+Instruction Queue & None & 6-byte FIFO prefetch queue \\ \hline
+Memory Organization & Single linear $64\,\mathrm{KiB}$ space & Segmented ($4 \times 64\,\mathrm{KiB}$ active banks) \\ \hline
+Memory Banking & None & Two $512\,\mathrm{KiB}$ banks (Even and Odd) \\ \hline
+Operating Modes & Single fixed operating mode & Minimum Mode and Maximum Mode \\ \hline
+Interrupt Vectoring & Vector table shared with RAM & Dedicated $1\,\mathrm{KiB}$ IVT ($256$ vectors) \\ \hline
+Multiply and divide & Not supported in hardware & Hardware `MUL` and `DIV` instructions \\ \hline
+\end{longtable}
+\endgroup\par
+\endgroup
+\endgroup
+
+\newpage
+% ─── Quick Revision Section ────────────────────────────────────────────────────
+\begin{center}
+  {\large\bfseries\color{myred} Quick Revision --- Module 1}\\[3pt]
+  {\small\color{mydark} 8085 and 8086 Microprocessor Systems $|$ EC403}
+\end{center}
+\noindent{\color{myred}\rule{\linewidth}{1.2pt}}\vspace{4pt}
+
+\begin{tcolorbox}[formulabox, title={Key Formulas at a Glance}]
+\renewcommand{\arraystretch}{1.2}
+\noindent\begin{tabularx}{\linewidth}{B{4.5cm}Y}
+Memory Capacity & $\text{Capacity} = 2^n \text{ bytes}$, where $n$ is the number of address bus lines. \\
+T-State Period & $T = 1 / f_{CLK} = 1 / 3.072\,\mathrm{MHz} \approx 325.5\,\mathrm{ns}$ (for 8085). \\
+8086 Physical Address & $\text{Physical Address} = (\text{Segment Register} \times 16_{10}) + \text{Offset Address}$. \\
+8086 IVT Pointer Address & $\text{Vector Pointer Address} = 4 \times N$ (where $N = 0, 1, \dots, 255$ is Interrupt Type). \\
+Bank Selection & Even Bank: $A_0 = 0$; Odd Bank: $\overline{\mathrm{BHE}} = 0$. Word access on even boundary takes 1 cycle. \\
+\end{tabularx}\par
+\end{tcolorbox}
+
+\begin{tcolorbox}[defbox, title={One-Line Definitions}]
+\begin{itemize}[leftmargin=*, itemsep=2pt]
+  \item \textbf{Microprocessor:} Programmable, clock-driven VLSI IC containing CPU registers, ALU, and control unit.
+  \item \textbf{ALE (Address Latch Enable):} Active-high pulse generated during $T_1$ to latch lower multiplexed address bits ($AD_0-AD_7$).
+  \item \textbf{T-State:} One basic subdivision of a machine cycle corresponding to exactly one complete clock period.
+  \item \textbf{Machine Cycle:} Time required by the CPU to execute one discrete bus operation (Fetch, Read, Write).
+  \item \textbf{Pipelining (8086):} Overlapping technique where BIU prefetches instructions into a 6-byte queue while EU executes.
+  \item \textbf{Bus High Enable ($\overline{\mathrm{BHE}}$):} Active-low control signal enabling data transfer over upper data bus lines ($D_8-D_{15}$).
+  \item \textbf{TRAP:} Highest-priority non-maskable, edge-and-level sensitive vectored interrupt of the 8085 ($0024_{\mathrm{H}}$).
+  \item \textbf{DMA (Direct Memory Access):} High-speed hardware data transfer managed directly by a DMAC without CPU intervention.
+\end{itemize}
+\end{tcolorbox}
+
+\begin{tcolorbox}[exambox, title={Frequently Asked / Viva Questions}]
+\begin{enumerate}[leftmargin=*, label=\textbf{Q\arabic*.}, itemsep=3.5pt]
+  \item \Q{Why are AD0--AD7 multiplexed in 8085?}
+  To minimize the physical package pin count to 40 pins while providing separate address and data paths using external transparent latches (74LS373) strobed by ALE.
+  \item \Q{What is the difference between instruction cycle, machine cycle, and T-state?}
+  An Instruction Cycle is the total time to fetch and execute an instruction ($1-5$ Machine Cycles); each Machine Cycle is a discrete bus operation ($3-6$ T-States); a T-state is one clock period.
+  \item \Q{Why does Opcode Fetch require 4 T-states while Memory Read requires only 3?}
+  The extra fourth state ($T_4$) is required for internal decoding and machine encoding of the fetched instruction byte inside the CPU.
+  \item \Q{What are the functions of IO/M, S1, and S0 pins in 8085?}
+  They indicate bus status: $\mathrm{IO}/\overline{\mathrm{M}}$ distinguishes memory ($0$) from I/O ($1$); $S_1, S_0$ identify Fetch ($1,1$), Read ($1,0$), Write ($0,1$), and Halt ($0,0$).
+  \item \Q{Explain the role of the 8086 Bus Interface Unit (BIU) and Execution Unit (EU).}
+  BIU handles bus operations, address computation, and prefetches 6 instruction bytes into a FIFO queue. EU decodes and executes instructions via the 16-bit ALU.
+  \item \Q{Why is memory segmented in 8086 and how is physical address calculated?}
+  Segmentation allows a 16-bit processor to address $1\,\mathrm{MiB}$ with 16-bit registers and provides code relocation. Physical address is calculated as $(\mathrm{Segment\ Base} \times 16_{10}) + \mathrm{Offset}$.
+  \item \Q{What is the penalty of accessing a 16-bit word at an odd address in 8086?}
+  It requires two consecutive bus cycles ($8$ T-states) instead of one ($4$ T-states) because the two bytes reside in different memory banks (Even and Odd banks).
+  \item \Q{What is the purpose of the 8288 Bus Controller in 8086 Maximum Mode?}
+  In maximum mode, the 8086 floats its control pins; the 8288 decodes status outputs $\overline{S}_2\overline{S}_1\overline{S}_0$ to generate system bus strobes ($\overline{\mathrm{MRDC}}, \overline{\mathrm{MWTC}}, \overline{\mathrm{IORC}}, \overline{\mathrm{IOWC}}$).
+  \item \Q{How does the 8085 handle priority among interrupts and what do SIM/RIM do?}
+  Hardware priority is fixed: $\mathrm{TRAP} > \mathrm{RST\,7.5} > \mathrm{RST\,6.5} > \mathrm{RST\,5.5} > \mathrm{INTR}$. `SIM` sets interrupt masks and serial output (SOD); `RIM` reads pending flags and serial input (SID).
+  \item \Q{What happens during HOLD and HLDA signals during DMA?}
+  An external DMAC asserts $\mathrm{HOLD}$; the CPU finishes its current cycle, floats address, data, and control lines into high impedance, and returns $\mathrm{HLDA}$ to grant bus mastership.
+\end{enumerate}
 \end{tcolorbox}
 
 \end{document}
