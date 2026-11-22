@@ -80,6 +80,9 @@ ECE_MAKAUT_Short-Notes/
 │   ├── 05. Numerical Methods/             # BS-M401 — 3 modules (All complete)
 │   │   ├── BS-M401_Module1_Notes.tex through BS-M401_Module3_Notes.tex + PDFs
 │   │   └── BS-M401_Numerical_Methods.pdf (combined output)
+│   ├── 06. Biology for Engineers/        # BS-B401 — 9 modules (All complete)
+│   │   ├── BS-B401_Module1_Notes.tex through BS-B401_Module9_Notes.tex + PDFs
+│   │   └── BS-B401_Biology_for_Engineers.pdf (combined output)
 │   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
 ├── 5th SEM/                        # Planned (each with New Syllabus Subjects/)
 ├── 6th SEM/
@@ -423,6 +426,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | EC403 Microprocessor and Microcontroller | 4 | ✅ All compiled | `EC403_Microprocessor_and_Microcontroller.pdf` | 56 |
 | ES-CS401 Design and Analysis of Algorithms | 5 | ✅ All compiled | `ES-CS401_Design_and_Analysis_of_Algorithms.pdf` | 49 |
 | BS-M401 Numerical Methods | 3 | ✅ All compiled | `BS-M401_Numerical_Methods.pdf` | 25 |
+| BS-B401 Biology for Engineers | 9 | ✅ All compiled | `BS-B401_Biology_for_Engineers.pdf` | 61 |
 
 **6th SEM — complete and compiled:**
 
