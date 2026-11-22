@@ -74,6 +74,9 @@ ECE_MAKAUT_Short-Notes/
 │   │   ├── EC403_Module4_Notes.tex / .pdf
 │   │   ├── EC403_Combined_Notes.tex  (auto-generated — do not hand-edit)
 │   │   └── EC403_Microprocessor_and_Microcontroller.pdf (combined output)
+│   ├── 04. Design and Analysis of Algorithms/ # ES-CS401 — 5 modules (All complete)
+│   │   ├── ES-CS401_Module1_Notes.tex through ES-CS401_Module5_Notes.tex + PDFs
+│   │   └── ES-CS401_Design_and_Analysis_of_Algorithms.pdf (combined output)
 │   └── New Syllabus Subjects/      # Reserved for new curriculum subjects
 ├── 5th SEM/                        # Planned (each with New Syllabus Subjects/)
 ├── 6th SEM/
@@ -415,6 +418,7 @@ Examples: `01. Control System/`, `02. Computer Network/`
 | EC401 Analog Communication | 4 | ✅ All compiled | `EC401_Analog_Communication.pdf` | 46 |
 | EC402 Analog Circuits | 4 | ✅ All compiled | `EC402_Analog_Circuits.pdf` | 45 |
 | EC403 Microprocessor and Microcontroller | 4 | ✅ All compiled | `EC403_Microprocessor_and_Microcontroller.pdf` | 56 |
+| ES-CS401 Design and Analysis of Algorithms | 5 | ✅ All compiled | `ES-CS401_Design_and_Analysis_of_Algorithms.pdf` | 48 |
 
 **6th SEM — complete and compiled:**
 
