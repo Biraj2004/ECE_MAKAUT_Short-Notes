@@ -36,8 +36,8 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 
 | Semester | Status | Subjects | Official Syllabus |
 |---|---|---|---|
-| 1st SEM | ✅ Complete | 2 subjects (12 modules) | [`SEM-1 ECE_MAKAUT_SYLLABUS.pdf`](1st%20SEM/SEM-1%20ECE_MAKAUT_SYLLABUS.pdf) |
-| 2nd SEM | ✅ Complete | 2 subjects (12 modules) | [`SEM-2 ECE_MAKAUT_SYLLABUS.pdf`](2nd%20SEM/SEM-2%20ECE_MAKAUT_SYLLABUS.pdf) |
+| 1st SEM | ✅ Complete | 2 subjects (12 modules) | [`SEM-1 OLD_ECE_MAKAUT_SYLLABUS.pdf`](1st%20SEM/SEM-1%20OLD_ECE_MAKAUT_SYLLABUS.pdf) |
+| 2nd SEM | ✅ Complete | 2 subjects (12 modules) | [`SEM-2 OLD_ECE_MAKAUT_SYLLABUS.pdf`](2nd%20SEM/SEM-2%20OLD_ECE_MAKAUT_SYLLABUS.pdf) |
 | 3rd SEM | 🟡 In Progress | 6 subjects (27 modules) | [`SEM-3 ECE_MAKAUT_SYLLABUS.pdf`](3rd%20SEM/SEM-3%20ECE_MAKAUT_SYLLABUS.pdf) |
 | 4th SEM | 🟡 In Progress | 6 subjects (29 modules) | [`SEM-4 ECE_MAKAUT_SYLLABUS.pdf`](4th%20SEM/SEM-4%20ECE_MAKAUT_SYLLABUS.pdf) |
 | 5th SEM | 🔲 Planned | — | Planned |
@@ -217,7 +217,7 @@ See [`Notes_Build_Guide.md`](Notes_Build_Guide.md) for the full authoring spec.
 
 An interactive web showcase and PDF repository portal is hosted directly in [`docs/`](docs/) (deployable via GitHub Pages). It features:
 - **Instant Background PDF Downloads:** 1-Click downloads open PDFs in a new tab without interrupting or navigating away from the active catalog view.
-- **Standardized Syllabus Archive:** Direct access to official MAKAUT curriculum PDFs (`SEM-* ECE_MAKAUT_SYLLABUS.pdf`) for all completed semesters.
+- **Standardized Syllabus Archive:** Official MAKAUT curriculum PDFs are listed by semester in the status table.
 - **Fast Live Search & Filter:** Instant keyword filtering across all semesters, course codes, subjects, and complete syllabus topic lists in real-time.
 - **Editorial Neo-Brutalism & Pastel UI:** High-contrast aesthetic with zero clutter, zero horizontal overflow across all screen sizes (desktop, tablet, mobile), and safe-area mobile bottom-sheet modals.
 - **PWA & SEO Ready:** Includes `site.webmanifest`, `robots.txt`, `sitemap.xml`, high-res OpenGraph social preview assets (`og-image.png`, `og-thumb.png`), and smooth scroll-to-top interaction.
