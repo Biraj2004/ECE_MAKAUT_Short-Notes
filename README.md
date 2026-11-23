@@ -40,7 +40,7 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 | 2nd SEM | ✅ Complete | 2 subjects (12 modules) | [`SEM-2 OLD_ECE_MAKAUT_SYLLABUS.pdf`](2nd%20SEM/SEM-2%20OLD_ECE_MAKAUT_SYLLABUS.pdf) |
 | 3rd SEM | 🟡 In Progress | 6 subjects (27 modules) | [`SEM-3 ECE_MAKAUT_SYLLABUS.pdf`](3rd%20SEM/SEM-3%20ECE_MAKAUT_SYLLABUS.pdf) |
 | 4th SEM | 🟡 In Progress | 6 subjects (29 modules) | [`SEM-4 ECE_MAKAUT_SYLLABUS.pdf`](4th%20SEM/SEM-4%20ECE_MAKAUT_SYLLABUS.pdf) |
-| 5th SEM | 🟡 In Progress | 1 subject (5 modules) | [`SEM-5 ECE_MAKAUT_SYLLABUS.pdf`](5th%20SEM/SEM-5%20ECE_MAKAUT_SYLLABUS.pdf) |
+| 5th SEM | 🟡 In Progress | 2 subjects (12 modules) | [`SEM-5 ECE_MAKAUT_SYLLABUS.pdf`](5th%20SEM/SEM-5%20ECE_MAKAUT_SYLLABUS.pdf) |
 | 6th SEM | ✅ Complete | 10 subjects (55 modules) | [`SEM-6 ECE_MAKAUT_SYLLABUS.pdf`](6th%20SEM/SEM-6%20ECE_MAKAUT_SYLLABUS.pdf) |
 | 7th SEM | ✅ Complete | 13 subjects (80 modules) | [`SEM-7 ECE_MAKAUT_SYLLABUS.pdf`](7th%20SEM/SEM-7%20ECE_MAKAUT_SYLLABUS.pdf) |
 | 8th SEM | ✅ Complete | 12 subjects (63 modules) | [`SEM-8 ECE_MAKAUT_SYLLABUS.pdf`](8th%20SEM/SEM-8%20ECE_MAKAUT_SYLLABUS.pdf) |
@@ -98,6 +98,7 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 | Code | Subject | Modules |
 |---|---|---|
 | EC501 | [Electromagnetic Waves](5th%20SEM/01.%20Electromagnetic%20Waves/EC501_Electromagnetic_Waves.pdf) | 5 |
+| EC502 | [Computer Architecture](5th%20SEM/02.%20Computer%20Architecture/EC502_Computer_Architecture.pdf) | 7 |
 
 ---
 
