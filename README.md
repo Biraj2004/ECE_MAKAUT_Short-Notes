@@ -22,7 +22,7 @@
 **Curated, structured & compiled in XeLaTeX by [Biraj Sarkar](https://iambiraj.vercel.app)**  
 *Department of Electronics & Communication Engineering, Cooch Behar Government Engineering College (CGEC)*
 
-[🌐 Web Showcase Portal](https://biraj2004.github.io/ECE_MAKAUT_Short-Notes/) • [👨‍💻 Developer Portfolio](https://iambiraj.vercel.app) • [📚 MAKAUT PYQ Papers](https://docs.google.com/document/d/1NLcByiSlAugGMJxNbXkBvEaA9jEwVhUt-21GkwoT_ZE/edit?tab=t.0#heading=h.vpuhncm2s6km) • [📖 Style Guide](Notes_Build_Guide.md)
+[Web Showcase Portal](https://biraj2004.github.io/ECE_MAKAUT_Short-Notes/) • [Developer Portfolio](https://iambiraj.vercel.app) • [MAKAUT PYQ Papers](https://docs.google.com/document/d/1NLcByiSlAugGMJxNbXkBvEaA9jEwVhUt-21GkwoT_ZE/edit?tab=t.0#heading=h.vpuhncm2s6km) • [Style Guide](Notes_Build_Guide.md)
 
 </div>
 
@@ -36,14 +36,14 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 
 | Semester | Status | Subjects | Official Syllabus |
 |---|---|---|---|
-| 1st SEM | Notes available | 3 subjects (18 modules) | [2026–27 curriculum](1st%20SEM/New%20Syllabus%20Subjects/SEM-1%20NEW_ECE_MAKAUT_SYLLABUS_2026-27.pdf) · [Previous curriculum](1st%20SEM/SEM-1%20OLD_ECE_MAKAUT_SYLLABUS.pdf) |
-| 2nd SEM | Previous-curriculum notes available | 2 subjects (12 modules) | [2026–27 curriculum](2nd%20SEM/New%20Syllabus%20Subjects/SEM-2%20NEW_ECE_MAKAUT_SYLLABUS_2026-27.pdf) · [Previous curriculum](2nd%20SEM/SEM-2%20OLD_ECE_MAKAUT_SYLLABUS.pdf) |
-| 3rd SEM | 🟡 In Progress | 6 subjects (27 modules) | [`SEM-3 ECE_MAKAUT_SYLLABUS.pdf`](3rd%20SEM/SEM-3%20ECE_MAKAUT_SYLLABUS.pdf) |
-| 4th SEM | 🟡 In Progress | 6 subjects (29 modules) | [`SEM-4 ECE_MAKAUT_SYLLABUS.pdf`](4th%20SEM/SEM-4%20ECE_MAKAUT_SYLLABUS.pdf) |
-| 5th SEM | 🟡 In Progress | 2 subjects (12 modules) | [`SEM-5 ECE_MAKAUT_SYLLABUS.pdf`](5th%20SEM/SEM-5%20ECE_MAKAUT_SYLLABUS.pdf) |
-| 6th SEM | ✅ Complete | 10 subjects (55 modules) | [`SEM-6 ECE_MAKAUT_SYLLABUS.pdf`](6th%20SEM/SEM-6%20ECE_MAKAUT_SYLLABUS.pdf) |
-| 7th SEM | ✅ Complete | 13 subjects (80 modules) | [`SEM-7 ECE_MAKAUT_SYLLABUS.pdf`](7th%20SEM/SEM-7%20ECE_MAKAUT_SYLLABUS.pdf) |
-| 8th SEM | ✅ Complete | 12 subjects (63 modules) | [`SEM-8 ECE_MAKAUT_SYLLABUS.pdf`](8th%20SEM/SEM-8%20ECE_MAKAUT_SYLLABUS.pdf) |
+| [1st SEM](#1st-semester) | Notes available | 3 subjects (18 modules) | [2026–27 curriculum](1st%20SEM/New%20Syllabus%20Subjects/SEM-1%20NEW_ECE_MAKAUT_SYLLABUS_2026-27.pdf) · [Previous curriculum](1st%20SEM/SEM-1%20OLD_ECE_MAKAUT_SYLLABUS.pdf) |
+| [2nd SEM](#2nd-semester) | Previous-curriculum notes available | 2 subjects (12 modules) | [2026–27 curriculum](2nd%20SEM/New%20Syllabus%20Subjects/SEM-2%20NEW_ECE_MAKAUT_SYLLABUS_2026-27.pdf) · [Previous curriculum](2nd%20SEM/SEM-2%20OLD_ECE_MAKAUT_SYLLABUS.pdf) |
+| [3rd SEM](#3rd-semester) | ✅ Complete | 6 subjects (27 modules) | [`SEM-3 ECE_MAKAUT_SYLLABUS.pdf`](3rd%20SEM/SEM-3%20ECE_MAKAUT_SYLLABUS.pdf) |
+| [4th SEM](#4th-semester) | ✅ Complete | 6 subjects (29 modules) | [`SEM-4 ECE_MAKAUT_SYLLABUS.pdf`](4th%20SEM/SEM-4%20ECE_MAKAUT_SYLLABUS.pdf) |
+| [5th SEM](#5th-semester) | 🟡 In Progress | 2 subjects (12 modules) | [`SEM-5 ECE_MAKAUT_SYLLABUS.pdf`](5th%20SEM/SEM-5%20ECE_MAKAUT_SYLLABUS.pdf) |
+| [6th SEM](#6th-semester) | ✅ Complete | 10 subjects (55 modules) | [`SEM-6 ECE_MAKAUT_SYLLABUS.pdf`](6th%20SEM/SEM-6%20ECE_MAKAUT_SYLLABUS.pdf) |
+| [7th SEM](#7th-semester) | ✅ Complete | 13 subjects (80 modules) | [`SEM-7 ECE_MAKAUT_SYLLABUS.pdf`](7th%20SEM/SEM-7%20ECE_MAKAUT_SYLLABUS.pdf) |
+| [8th SEM](#8th-semester) | ✅ Complete | 12 subjects (63 modules) | [`SEM-8 ECE_MAKAUT_SYLLABUS.pdf`](8th%20SEM/SEM-8%20ECE_MAKAUT_SYLLABUS.pdf) |
 
 > Every semester folder also includes a dedicated `New Syllabus Subjects/` subfolder reserved for new curriculum (NEP 2020) syllabus modules.
 
@@ -54,8 +54,8 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 | Code | Subject | Curriculum | Modules |
 |---|---|---|---|
 | 26-ES-EE101 | [Basic Electrical and Electronics Engineering](1st%20SEM/New%20Syllabus%20Subjects/01.%20Basic%20Electrical%20and%20Electronics%20Engineering/26-ES-EE101_Basic_Electrical_and_Electronics_Engineering.pdf) | 2026–27 | 6 |
-| BS-CH101 | Chemistry-I | Previous | 7 |
-| BS-PH101 | Physics-I | Previous | 5 |
+| BS-CH101 | [Chemistry-I](1st%20SEM/01.%20Chemistry-I/BS-CH101_ChemistryI.pdf) | Previous | 7 |
+| BS-PH101 | [Physics-I](1st%20SEM/02.%20Physics-I/BS-PH101_PhysicsI.pdf) | Previous | 5 |
 
 ---
 
@@ -65,8 +65,8 @@ The table lists previous-curriculum notes. The 2026–27 syllabus is available a
 
 | Code | Subject | Modules |
 |---|---|---|
-| BS-CH101 | Chemistry-I | 7 |
-| BS-PH101 | Physics-I | 5 |
+| BS-CH101 | [Chemistry-I](2nd%20SEM/01.%20Chemistry-I/BS-CH101_ChemistryI.pdf) | 7 |
+| BS-PH101 | [Physics-I](2nd%20SEM/02.%20Physics-I/BS-PH101_PhysicsI.pdf) | 5 |
 
 ---
 
@@ -74,12 +74,12 @@ The table lists previous-curriculum notes. The 2026–27 syllabus is available a
 
 | Code | Subject | Modules |
 |---|---|---|
-| EC301 | Electronic Devices | 4 |
-| EC302 | Digital System Design | 4 |
-| EC303 | Signals and System | 5 |
-| EC304 | Network Theory | 4 |
-| ES-CS301 | Data Structure & Algorithms | 4 |
-| BS-M301 | Probability and Statistics | 6 |
+| EC301 | [Electronic Devices](3rd%20SEM/01.%20Electronic%20Devices/EC301_Electronic_Devices.pdf) | 4 |
+| EC302 | [Digital System Design](3rd%20SEM/02.%20Digital%20System%20Design/EC302_Digital_System_Design.pdf) | 4 |
+| EC303 | [Signals and System](3rd%20SEM/03.%20Signals%20and%20System/EC303_Signals_and_System.pdf) | 5 |
+| EC304 | [Network Theory](3rd%20SEM/04.%20Network%20Theory/EC304_Network_Theory.pdf) | 4 |
+| ES-CS301 | [Data Structure & Algorithms](3rd%20SEM/05.%20Data%20Structure%20and%20Algorithms/ES-CS301_Data_Structure_and_Algorithms.pdf) | 4 |
+| BS-M301 | [Probability and Statistics](3rd%20SEM/06.%20Probability%20and%20Statistics/BS-M301_Probability_and_Statistics.pdf) | 6 |
 
 ---
 
@@ -87,9 +87,9 @@ The table lists previous-curriculum notes. The 2026–27 syllabus is available a
 
 | Code | Subject | Modules |
 |---|---|---|
-| EC401 | Analog Communication | 4 |
-| EC402 | Analog Circuits | 4 |
-| EC403 | Microprocessor and Microcontroller | 4 |
+| EC401 | [Analog Communication](4th%20SEM/01.%20Analog%20Communication/EC401_Analog_Communication.pdf) | 4 |
+| EC402 | [Analog Circuits](4th%20SEM/02.%20Analog%20Circuits/EC402_Analog_Circuits.pdf) | 4 |
+| EC403 | [Microprocessor and Microcontroller](4th%20SEM/03.%20Microprocessor%20and%20Microcontroller/EC403_Microprocessor_and_Microcontroller.pdf) | 4 |
 | ES-CS401 | [Design and Analysis of Algorithms](4th%20SEM/04.%20Design%20and%20Analysis%20of%20Algorithms/ES-CS401_Design_and_Analysis_of_Algorithms.pdf) | 5 |
 | BS-M401 | [Numerical Methods](4th%20SEM/05.%20Numerical%20Methods/BS-M401_Numerical_Methods.pdf) | 3 |
 | BS-B401 | [Biology for Engineers](4th%20SEM/06.%20Biology%20for%20Engineers/BS-B401_Biology_for_Engineers.pdf) | 9 |
@@ -109,16 +109,16 @@ The table lists previous-curriculum notes. The 2026–27 syllabus is available a
 
 | Code | Subject | Modules |
 |---|---|---|
-| EC601 | Control System | 7 |
-| EC602 | Computer Network | 4 |
-| HS-HU601 | Economics for Engineers | 4 |
-| PE-EC603A | Introduction to MEMS | 4 |
-| PE-EC603B | Bio-Medical Electronics | 4 |
-| PE-EC603C | CMOS VLSI Design | 6 |
-| PE-EC603D | Information Theory and Coding | 3 |
-| OE-EC604A | Electronic Measurement and Measuring Instruments | 5 |
-| OE-EC604B | Operating System | 9 |
-| OE-EC604C | Object Oriented Programming | 9 |
+| EC601 | [Control System](6th%20SEM/01.%20Control%20System/EC601_Control_System.pdf) | 7 |
+| EC602 | [Computer Network](6th%20SEM/02.%20Computer%20Network/EC602_Computer_Network.pdf) | 4 |
+| HS-HU601 | [Economics for Engineers](6th%20SEM/03.%20Economics%20For%20Engineers/HS-HU601_Economics_for_Engineers.pdf) | 4 |
+| PE-EC603A | [Introduction to MEMS](6th%20SEM/06.%20Introduction%20to%20MEMS/PE-EC603A_Introduction_to_MEMS.pdf) | 4 |
+| PE-EC603B | [Bio-Medical Electronics](6th%20SEM/07.%20Bio-Medical%20Electronics/PE-EC603B_BioMedical_Electronics.pdf) | 4 |
+| PE-EC603C | [CMOS VLSI Design](6th%20SEM/10.%20CMOS%20VLSI%20Design/PE-EC603C_CMOS_VLSI_Design.pdf) | 6 |
+| PE-EC603D | [Information Theory and Coding](6th%20SEM/04.%20Information%20Theory%20and%20Coding/PE-EC603D_Information_Theory_and_Coding.pdf) | 3 |
+| OE-EC604A | [Electronic Measurement and Measuring Instruments](6th%20SEM/09.%20Electronic%20Measurement%20and%20Measuring%20Instruments/OE-EC604A_Electronic_Measurement_and_Measuring_Instruments.pdf) | 5 |
+| OE-EC604B | [Operating System](6th%20SEM/08.%20Operating%20System/OE-EC604B_Operating_System.pdf) | 9 |
+| OE-EC604C | [Object Oriented Programming](6th%20SEM/05.%20Object%20Oriented%20Programming/OE-EC604C_Object_Oriented_Programming.pdf) | 9 |
 
 ---
 
@@ -126,19 +126,19 @@ The table lists previous-curriculum notes. The 2026–27 syllabus is available a
 
 | Code | Subject | Modules |
 |---|---|---|
-| HS-HU701 | Principles of Management | 4 |
-| PE-EC701A | Microwave Theory and Technique | 9 |
-| PE-EC701B | Satellite Communication | 6 |
-| PE-EC701C | Mobile Communication and Networks | 6 |
-| PE-EC702A | Adaptive Signal Processing | 5 |
-| PE-EC702B | Digital Image and Video Processing | 8 |
-| PE-EC702C | Neural Network and Fuzzy Logic Control | 5 |
-| PE-EC703A | Embedded System | 5 |
-| PE-EC703B | Wireless Sensor Networks | 5 |
-| PE-EC703C | Wavelet Transforms | 7 |
-| OE-EC704A | Web Technology | 10 |
-| OE-EC704B | Optimization Technique | 6 |
-| OE-EC704C | Entrepreneurship | 4 |
+| HS-HU701 | [Principles of Management](7th%20SEM/01.%20Principles%20of%20Management/HS-HU701_Principles_of_Management.pdf) | 4 |
+| PE-EC701A | [Microwave Theory and Technique](7th%20SEM/02.%20Microwave%20Theory%20and%20Technique/PE-EC701A_Microwave_Theory_and_Technique.pdf) | 9 |
+| PE-EC701B | [Satellite Communication](7th%20SEM/03.%20Satellite%20Communication/PE-EC701B_Satellite_Communication.pdf) | 6 |
+| PE-EC701C | [Mobile Communication and Networks](7th%20SEM/04.%20Mobile%20Communication%20and%20Networks/PE-EC701C_Mobile_Communication_and_Networks.pdf) | 6 |
+| PE-EC702A | [Adaptive Signal Processing](7th%20SEM/05.%20Adaptive%20Signal%20Processing/PE-EC702A_Adaptive_Signal_Processing.pdf) | 5 |
+| PE-EC702B | [Digital Image and Video Processing](7th%20SEM/06.%20Digital%20Image%20and%20Video%20Processing/PE-EC702B_Digital_Image_and_Video_Processing.pdf) | 8 |
+| PE-EC702C | [Neural Network and Fuzzy Logic Control](7th%20SEM/07.%20Neural%20Network%20and%20Fuzzy%20Logic%20Control/PE-EC702C_Neural_Network_and_Fuzzy_Logic_Control.pdf) | 5 |
+| PE-EC703A | [Embedded System](7th%20SEM/08.%20Embedded%20System/PE-EC703A_Embedded_System.pdf) | 5 |
+| PE-EC703B | [Wireless Sensor Networks](7th%20SEM/09.%20Wireless%20Sensor%20Networks/PE-EC703B_Wireless_Sensor_Networks.pdf) | 5 |
+| PE-EC703C | [Wavelet Transforms](7th%20SEM/11.%20Wavelet%20Transforms/PE-EC703C_Wavelet_Transforms.pdf) | 7 |
+| OE-EC704A | [Web Technology](7th%20SEM/10.%20Web%20Technology/OE-EC704A_Web_Technology.pdf) | 10 |
+| OE-EC704B | [Optimization Technique](7th%20SEM/13.%20Optimization%20Technique/OE-EC704B_Optimization_Technique.pdf) | 6 |
+| OE-EC704C | [Entrepreneurship](7th%20SEM/12.%20Entrepreneurship/OE-EC704C_Entrepreneurship.pdf) | 4 |
 
 ---
 
@@ -146,18 +146,18 @@ The table lists previous-curriculum notes. The 2026–27 syllabus is available a
 
 | Code | Subject | Modules |
 |---|---|---|
-| PE-EC801A | Antennas and Propagation | 7 |
-| PE-EC801B | Fiber Optic Communication | 5 |
-| PE-EC801C | Error Correcting Codes | 5 |
-| PE-EC802A | Mixed Signal Design | 5 |
-| PE-EC802B | Industrial Automation and Control | 5 |
-| PE-EC802C | VLSI Design Automation | 5 |
-| OE-EC803A | Internet of Things | 6 |
-| OE-EC803B | Big Data Analysis | 6 |
-| OE-EC803C | Cyber Security | 4 |
-| OE-EC804A | Artificial Intelligence | 6 |
-| OE-EC804B | Microwave Integrated Circuits | 5 |
-| OE-EC804C | Organizational Behavior | 4 |
+| PE-EC801A | [Antennas and Propagation](8th%20SEM/01.%20Antennas%20and%20Propagation/PE-EC801A_Antennas_and_Propagation.pdf) | 7 |
+| PE-EC801B | [Fiber Optic Communication](8th%20SEM/02.%20Fiber%20Optic%20Communication/PE-EC801B_Fiber_Optic_Communication.pdf) | 5 |
+| PE-EC801C | [Error Correcting Codes](8th%20SEM/03.%20Error%20Correcting%20Codes/PE-EC801C_Error_Correcting_Codes.pdf) | 5 |
+| PE-EC802A | [Mixed Signal Design](8th%20SEM/04.%20Mixed%20Signal%20Design/PE-EC802A_Mixed_Signal_Design.pdf) | 5 |
+| PE-EC802B | [Industrial Automation and Control](8th%20SEM/05.%20Industrial%20Automation%20and%20Control/PE-EC802B_Industrial_Automation_and_Control.pdf) | 5 |
+| PE-EC802C | [VLSI Design Automation](8th%20SEM/06.%20VLSI%20Design%20Automation/PE-EC802C_VLSI_Design_Automation.pdf) | 5 |
+| OE-EC803A | [Internet of Things](8th%20SEM/07.%20Internet%20of%20Things/OE-EC803A_Internet_of_Things.pdf) | 6 |
+| OE-EC803B | [Big Data Analysis](8th%20SEM/08.%20Big%20Data%20Analysis/OE-EC803B_Big_Data_Analysis.pdf) | 6 |
+| OE-EC803C | [Cyber Security](8th%20SEM/09.%20Cyber%20Security/OE-EC803C_Cyber_Security.pdf) | 4 |
+| OE-EC804A | [Artificial Intelligence](8th%20SEM/10.%20Artificial%20Intelligence/OE-EC804A_Artificial_Intelligence.pdf) | 6 |
+| OE-EC804B | [Microwave Integrated Circuits](8th%20SEM/11.%20Microwave%20Integrated%20Circuits/OE-EC804B_Microwave_Integrated_Circuits.pdf) | 5 |
+| OE-EC804C | [Organizational Behavior](8th%20SEM/12.%20Organizational%20Behavior/OE-EC804C_Organizational_Behavior.pdf) | 4 |
 
 ---
 
