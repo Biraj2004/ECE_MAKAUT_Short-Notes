@@ -19,12 +19,13 @@
     download: `<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>`,
     book: `<svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
     check: `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`,
-    clock: `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
     close: `<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`
   };
 
   // DOM Elements
   const DOM = {
+    siteNav: document.querySelector('.site-nav'),
+    searchBar: document.querySelector('.search-sticky-bar'),
     contentContainer: document.getElementById('mainContentFeed'),
     semesterTabsGrid: document.getElementById('semesterTabsGrid'),
     searchInput: document.getElementById('searchInput'),
@@ -86,19 +87,19 @@
     if (!DOM.semesterTabsGrid) return;
 
     let html = `
-      <button class="tab-btn ${state.activeSemester === 'all' ? 'active' : ''}" data-sem="all">
+      <button class="tab-btn ${state.activeSemester === 'all' ? 'active' : ''}" data-sem="all" aria-pressed="${state.activeSemester === 'all'}">
         <span class="tab-label">All Semesters</span>
       </button>
     `;
 
     AcademicCatalog.SEMESTERS.forEach(sem => {
-      const isWip = sem.status === 'coming-soon';
+      const isWip = sem.status === 'in-progress';
       const isActive = state.activeSemester === sem.id;
 
       html += `
-        <button class="tab-btn ${isActive ? 'active' : ''} ${isWip ? 'wip' : ''}" data-sem="${sem.id}">
+        <button class="tab-btn ${isActive ? 'active' : ''} ${isWip ? 'wip' : ''}" data-sem="${sem.id}" aria-pressed="${isActive}">
           <span class="tab-label">${sem.name}</span>
-          ${isWip ? `<span class="tag-soon">Soon</span>` : ''}
+          ${isWip ? `<span class="tag-progress">In progress</span>` : ''}
         </button>
       `;
     });
@@ -126,19 +127,41 @@
     });
   }
 
+  function positionSearchBar() {
+    if (!DOM.siteNav || !DOM.searchBar || !DOM.contentContainer) return;
+    const { siteNav, searchBar, contentContainer } = DOM;
+    const root = document.documentElement;
+    const mobileLayout = window.matchMedia('(max-width: 768px)');
+    const measureStickyStack = () => {
+      const navHeight = siteNav.getBoundingClientRect().height;
+      const searchHeight = siteNav.contains(searchBar) ? 0 : searchBar.getBoundingClientRect().height;
+      root.style.setProperty('--site-nav-height', `${navHeight}px`);
+      root.style.setProperty('--sticky-stack-height', `${navHeight + searchHeight}px`);
+    };
+    const placeSearch = ({ matches }) => {
+      if (matches) {
+        siteNav.append(searchBar);
+      } else {
+        contentContainer.before(searchBar);
+        if (DOM.mobileMenuOverlay?.classList.contains('is-open')) closeMobileMenu();
+      }
+      measureStickyStack();
+    };
+    placeSearch(mobileLayout);
+    mobileLayout.addEventListener('change', placeSearch);
+
+    const observer = new ResizeObserver(measureStickyStack);
+    observer.observe(siteNav, { box: 'border-box' });
+    observer.observe(searchBar, { box: 'border-box' });
+  }
+
   function scrollToSemester(semId) {
     if (!semId || semId === 'all') return;
     setTimeout(() => {
       const target = document.getElementById(semId);
       if (target) {
-        const nav = document.querySelector('.site-nav');
-        const searchBar = document.querySelector('.search-sticky-bar');
-        const stickyOffset =
-          (nav ? nav.getBoundingClientRect().height : 64) +
-          (searchBar ? searchBar.getBoundingClientRect().height : 50) +
-          12;
-        const targetTop = target.getBoundingClientRect().top + window.scrollY - stickyOffset;
-        window.scrollTo({ top: targetTop, behavior: 'smooth' });
+        const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth';
+        target.scrollIntoView({ block: 'start', behavior });
       }
     }, 80);
   }
@@ -161,19 +184,19 @@
     if (!DOM.mobileMenuTabs) return;
 
     let html = `
-      <button class="tab-btn ${state.activeSemester === 'all' ? 'active' : ''}" data-mob-sem="all">
+      <button class="tab-btn ${state.activeSemester === 'all' ? 'active' : ''}" data-mob-sem="all" aria-pressed="${state.activeSemester === 'all'}">
         <span class="tab-label">All Semesters</span>
       </button>
     `;
 
     AcademicCatalog.SEMESTERS.forEach(sem => {
-      const isWip = sem.status === 'coming-soon';
+      const isWip = sem.status === 'in-progress';
       const isActive = state.activeSemester === sem.id;
 
       html += `
-        <button class="tab-btn ${isActive ? 'active' : ''} ${isWip ? 'wip' : ''}" data-mob-sem="${sem.id}">
+        <button class="tab-btn ${isActive ? 'active' : ''} ${isWip ? 'wip' : ''}" data-mob-sem="${sem.id}" aria-pressed="${isActive}">
           <span class="tab-label">${sem.name}</span>
-          ${isWip ? `<span class="tag-soon">Soon</span>` : ''}
+          ${isWip ? `<span class="tag-progress">In progress</span>` : ''}
         </button>
       `;
     });
@@ -231,7 +254,7 @@
 
   function matchesAnyField(fields, regexTokens) {
     if (!regexTokens || regexTokens.length === 0) return true;
-    const combined = fields.filter(Boolean).join(' ');
+    const combined = fields.filter(Boolean).join(' ').replace(/[\u2013\u2014]/g, '-');
     return regexTokens.every(rx => rx.test(combined));
   }
 
@@ -258,158 +281,158 @@
   /**
    * Render Clean Content Feed (Combined PDFs Only)
    */
+  function escapeHtml(text) {
+    return text.replaceAll('&', '&amp;').replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;').replaceAll('"', '&quot;');
+  }
+
+  function renderSyllabus(syllabus) {
+    return `
+      <div class="syllabus-card-banner">
+        <div class="syllabus-banner-left">
+          <div class="syllabus-icon-box" aria-hidden="true">${ICONS.book}</div>
+          <div class="syllabus-info">
+            <h3>${escapeHtml(syllabus.title)}</h3>
+            <p>${escapeHtml(syllabus.description)}</p>
+          </div>
+        </div>
+        <a href="${GitHubSync.getRawUrl(syllabus.path)}" download target="_blank" rel="noopener noreferrer"
+           aria-label="Download ${escapeHtml(syllabus.title)} PDF" class="btn-syllabus-download">
+          ${ICONS.download} Download Syllabus PDF
+        </a>
+      </div>
+    `;
+  }
+
+  function renderSubject(subject) {
+    const available = Boolean(subject.combinedPdf);
+    const working = subject.status === 'in-progress';
+    const status = working ? 'In progress' : 'Pending';
+    return `
+      <article class="subject-item-card${available ? '' : ' subject-unavailable'}">
+        <div>
+          <div class="card-top-row">
+            <span class="subject-code">${escapeHtml(subject.code)}</span>
+            <span class="subject-category">${escapeHtml(subject.category)}</span>
+          </div>
+          <h3 class="subject-title">${escapeHtml(subject.name)}</h3>
+        </div>
+        <div class="subject-downloads">
+          ${(!available || working) ? `<span class="availability-badge ${working ? 'availability-working' : ''}">${status}</span>` : ''}
+          ${available ? `<a href="${GitHubSync.getRawUrl(`${subject.folder}/${subject.combinedPdf}`)}" download target="_blank" rel="noopener noreferrer"
+             aria-label="Download ${escapeHtml(subject.name)} combined notes PDF" class="btn-download-combined">
+            ${ICONS.download} Download Combined Notes PDF
+          </a>` : ''}
+        </div>
+      </article>
+    `;
+  }
+
+  function renderCatalogGroup(group, semester, regexTokens) {
+    const context = [semester.name, semester.code, group.title, group.searchAliases];
+    const syllabus = group.syllabusPdf;
+    const showSyllabus = syllabus && matchesAnyField(
+      [...context, syllabus.title, syllabus.description, 'syllabus'], regexTokens
+    );
+    const subjects = group.subjects.filter(subject => {
+      const fields = [...context, subject.code, subject.name, subject.category];
+      return matchesAnyField(fields, regexTokens) || subject.modules?.some(module =>
+        matchesAnyField([...fields, module.name], regexTokens)
+      );
+    });
+    const available = subjects.filter(subject => subject.combinedPdf);
+    const upcoming = subjects.filter(subject => !subject.combinedPdf);
+    if (!showSyllabus && !subjects.length) return '';
+
+    return `
+      <div class="catalog-group">
+        ${showSyllabus ? renderSyllabus(syllabus) : group.title ? `<h3 class="curriculum-heading">${escapeHtml(group.title)}</h3>` : ''}
+        ${available.length ? `<div class="subject-grid">${available.map(renderSubject).join('')}</div>` : ''}
+        ${upcoming.length ? `
+          <div class="upcoming-notes">
+            <h3 class="curriculum-heading">Upcoming notes</h3>
+            <div class="subject-grid">${upcoming.map(renderSubject).join('')}</div>
+          </div>
+        ` : ''}
+        ${showSyllabus && group.emptyNote ? `<p class="curriculum-note">${escapeHtml(group.emptyNote)}</p>` : ''}
+      </div>
+    `;
+  }
+
   function renderContentFeed() {
     if (!DOM.contentContainer) return;
 
     const regexTokens = buildSearchRegexTokens(state.searchQuery);
-    const semFilter = state.activeSemester;
+    const semesters = AcademicCatalog.SEMESTERS.filter(semester =>
+      state.activeSemester === 'all' || state.activeSemester === semester.id
+    );
+    const sections = semesters.map(semester => {
+      const groups = AcademicCatalog.getGroups(semester);
+      const catalog = groups.map(group => renderCatalogGroup(group, semester, regexTokens)).join('');
+      if (!catalog) return '';
 
-    let matchedSemesters = AcademicCatalog.SEMESTERS;
-    if (semFilter !== 'all') {
-      matchedSemesters = matchedSemesters.filter(s => s.id === semFilter);
-    }
-
-    let renderedAny = false;
-    let outputHtml = '';
-
-    matchedSemesters.forEach(sem => {
-      // Coming Soon Semesters
-      if (sem.status === 'coming-soon') {
-        const expectedText = sem.expectedSubjects.map(sub => `${sub.code} ${sub.name}`).join(' ');
-        const matchesQuery = matchesAnyField([sem.name, sem.code, sem.description, sem.note, expectedText], regexTokens);
-
-        if (matchesQuery) {
-          renderedAny = true;
-          outputHtml += `
-            <section class="semester-block" id="${sem.id}">
-              <div class="semester-header">
-                <div class="header-left">
-                  <span class="sem-code-badge">${sem.code}</span>
-                  <h2 class="sem-title-text">${sem.name}</h2>
-                </div>
-                <div class="sem-meta-text">Official Combined Exam Notes</div>
-              </div>
-              
-              <div class="roadmap-card">
-                <div class="roadmap-badge">${ICONS.clock} Pipeline Roadmap</div>
-                <h3>${sem.name} Notes In Preparation</h3>
-                <p>${sem.note}</p>
-                <div class="roadmap-tags">
-                  ${sem.expectedSubjects.map(sub => `
-                    <span class="roadmap-tag"><strong>${sub.code}</strong> · ${sub.name}</span>
-                  `).join('')}
-                </div>
-              </div>
-            </section>
-          `;
-        }
-        return;
-      }
-
-      // Ready Semesters
-      let filteredSubjects = sem.subjects;
-      if (regexTokens) {
-        filteredSubjects = sem.subjects.filter(subj => {
-          return matchesAnyField([subj.code, subj.name, subj.category, sem.name, sem.code], regexTokens);
-        });
-      }
-
-      const showSyllabus = sem.syllabusPdf && (
-        !regexTokens || 
-        matchesAnyField([sem.syllabusPdf.title, sem.syllabusPdf.description, 'syllabus', sem.name, sem.code], regexTokens)
-      );
-      const hasSubjects = filteredSubjects.length > 0;
-
-      if (showSyllabus || hasSubjects) {
-        renderedAny = true;
-        outputHtml += `
-          <section class="semester-block" id="${sem.id}">
-            <div class="semester-header">
-              <div class="header-left">
-                <span class="sem-code-badge">${sem.code}</span>
-                <h2 class="sem-title-text">${sem.name}</h2>
-              </div>
-              <div class="sem-meta-text">Official Combined Exam Notes</div>
+      const count = groups.reduce((total, group) => total + group.subjects.filter(subject => subject.combinedPdf).length, 0);
+      return `
+        <section class="semester-block" id="${semester.id}">
+          <div class="semester-header">
+            <div class="header-left">
+              <span class="sem-code-badge">${semester.code}</span>
+              <h2 class="sem-title-text">${semester.name}</h2>
             </div>
-        `;
-
-        // Official Syllabus Card
-        if (showSyllabus) {
-          const sylRaw = GitHubSync.getRawUrl(sem.syllabusPdf.path);
-          outputHtml += `
-            <div class="syllabus-card-banner">
-              <div class="syllabus-banner-left">
-                <div class="syllabus-icon-box">${ICONS.book}</div>
-                <div class="syllabus-info">
-                  <h3>${sem.syllabusPdf.title}</h3>
-                  <p>${sem.syllabusPdf.description}</p>
-                </div>
-              </div>
-              <a href="${sylRaw}" download target="_blank" rel="noopener noreferrer" class="btn-syllabus-download">
-                ${ICONS.download} Download Syllabus PDF
-              </a>
+            <div class="sem-meta-text">
+              <span>${count} subject${count === 1 ? '' : 's'} available</span>
+              ${semester.status === 'in-progress' ? '<span class="availability-badge availability-working">In progress</span>' : ''}
             </div>
-          `;
-        }
-
-        // Subject Grid (Clean & Combined Notes Only)
-        if (hasSubjects) {
-          outputHtml += `<div class="subject-grid">`;
-          filteredSubjects.forEach(subj => {
-            const combinedPath = `${subj.folder}/${subj.combinedPdf}`;
-            const combinedRaw = GitHubSync.getRawUrl(combinedPath);
-
-            outputHtml += `
-              <article class="subject-item-card">
-                <div>
-                  <div class="card-top-row">
-                    <span class="subject-code">${subj.code}</span>
-                    <span class="subject-category">${subj.category}</span>
-                  </div>
-                  <h3 class="subject-title">${subj.name}</h3>
-                  <p class="subject-desc">Comprehensive combined exam notes typeset with XeLaTeX.</p>
-                </div>
-                <a href="${combinedRaw}" download target="_blank" rel="noopener noreferrer" class="btn-download-combined">
-                  ${ICONS.download} Download Combined Notes PDF
-                </a>
-              </article>
-            `;
-          });
-          outputHtml += `</div>`;
-        }
-
-        outputHtml += `</section>`;
-      }
-    });
-
-    if (!renderedAny) {
-      const displayQuery = state.searchQuery.slice(0, 50);
-      outputHtml = `
-        <div style="background-color: var(--bg-surface); border: var(--border-width) dashed var(--border-ink); padding: 3rem 1.5rem; text-align: center; border-radius: var(--border-radius); margin: 2rem 0;">
-          <h3 style="font-size: 1.35rem; margin-bottom: 0.5rem;">No Matching Subjects Found</h3>
-          <p style="color: var(--ink-secondary); margin-bottom: 1.25rem; font-size: 0.88rem;">No subjects match your query "${displayQuery}". Try searching for course codes like "EC601", "BS-PH101", or "Control".</p>
-          <button id="resetSearchBtn" class="btn-download-combined" style="width: auto; padding: 0 1.5rem; margin: 0 auto;">
-            Reset Search
-          </button>
-        </div>
+          </div>
+          ${catalog}
+        </section>
       `;
-    }
+    }).join('');
 
-    DOM.contentContainer.innerHTML = outputHtml;
+    DOM.contentContainer.innerHTML = sections || `
+      <div class="catalog-empty">
+        <h3>No matching resources</h3>
+        <p>No notes or syllabi match &ldquo;${escapeHtml(state.searchQuery)}&rdquo; in the selected semester view.</p>
+        <button id="resetSearchBtn" type="button" class="btn-download-combined">Reset search</button>
+      </div>
+    `;
 
-    const resetBtn = document.getElementById('resetSearchBtn');
-    if (resetBtn) {
-      resetBtn.addEventListener('click', clearSearch);
-    }
+    document.getElementById('resetSearchBtn')?.addEventListener('click', clearSearch);
+  }
+
+  function renderCatalogStats() {
+    const { semestersWithNotes, totalSemesters, totalCombinedPdfs, totalModules } = AcademicCatalog.META.stats;
+    document.getElementById('catalogSemesterCount').textContent = `${semestersWithNotes}/${totalSemesters}`;
+    document.getElementById('catalogCombinedCount').textContent = totalCombinedPdfs;
+    document.getElementById('catalogModuleCount').textContent = totalModules;
   }
 
   /**
    * License Modal Controller
    */
+  let overlayScrollY = 0;
+
+  function syncOverlayScrollLock() {
+    const root = document.documentElement;
+    const hasOpenOverlay = Boolean(DOM.licenseModal?.classList.contains('active') ||
+      DOM.mobileMenuOverlay?.classList.contains('is-open'));
+    if (hasOpenOverlay === root.classList.contains('overlay-scroll-locked')) return;
+
+    if (hasOpenOverlay) {
+      overlayScrollY = window.scrollY;
+      root.style.setProperty('--overlay-scroll-top', `${-overlayScrollY}px`);
+      root.classList.add('overlay-scroll-locked');
+    } else {
+      root.classList.remove('overlay-scroll-locked');
+      root.style.removeProperty('--overlay-scroll-top');
+      window.scrollTo({ top: overlayScrollY, behavior: 'instant' });
+    }
+  }
+
   function openLicenseModal() {
     if (DOM.licenseModal) {
       DOM.licenseModal.classList.add('active');
-      document.body.style.overflow = 'hidden';
+      syncOverlayScrollLock();
       const body = DOM.licenseModal.querySelector('.modal-body');
       if (body) body.scrollTop = 0;
     }
@@ -418,7 +441,7 @@
   function closeLicenseModal() {
     if (DOM.licenseModal) {
       DOM.licenseModal.classList.remove('active');
-      document.body.style.overflow = '';
+      syncOverlayScrollLock();
     }
   }
 
@@ -435,7 +458,7 @@
           rawVal = rawVal.slice(0, 50);
         }
         // Sanitize: allow letters, numbers, spaces, and safe punctuation (- _ . /)
-        const sanitized = rawVal.replace(/[^a-zA-Z0-9\s\-_./]/g, '');
+        const sanitized = rawVal.replace(/[\u2013\u2014]/g, '-').replace(/[^a-zA-Z0-9\s\-_./]/g, '');
         if (rawVal !== sanitized) {
           e.target.value = sanitized;
         }
@@ -500,41 +523,6 @@
     }
 
     // ── Download Buttons (Open in new tab while staying on current tab) ─────
-    if (DOM.contentContainer) {
-      DOM.contentContainer.addEventListener('click', (e) => {
-        const downloadBtn = e.target.closest('a.btn-download-combined, a.btn-syllabus-download');
-        if (!downloadBtn) return;
-
-        const href = downloadBtn.getAttribute('href');
-        if (!href || href === '#' || href.startsWith('javascript:')) return;
-
-        e.preventDefault();
-
-        // Open download link in a new tab without shifting focus away from current tab
-        const newTab = window.open(href, '_blank', 'noopener,noreferrer');
-        if (newTab) {
-          try {
-            newTab.blur();
-          } catch (err) {}
-        }
-        window.focus();
-        setTimeout(() => window.focus(), 50);
-        setTimeout(() => window.focus(), 150);
-
-        if (!newTab) {
-          // Fallback if popup blocker intercepted window.open
-          const tempAnchor = document.createElement('a');
-          tempAnchor.href = href;
-          tempAnchor.target = '_blank';
-          tempAnchor.rel = 'noopener noreferrer';
-          tempAnchor.download = '';
-          document.body.appendChild(tempAnchor);
-          tempAnchor.click();
-          document.body.removeChild(tempAnchor);
-        }
-      });
-    }
-
     // ESC key closes modal and mobile menu
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
@@ -568,8 +556,8 @@
     // Mobile license button
     if (DOM.mobileLicenseBtn) {
       DOM.mobileLicenseBtn.addEventListener('click', () => {
-        closeMobileMenu();
         openLicenseModal();
+        closeMobileMenu();
       });
     }
 
@@ -617,7 +605,7 @@
       DOM.hamburgerBtn.classList.add('is-open');
       DOM.hamburgerBtn.setAttribute('aria-expanded', 'true');
     }
-    document.body.style.overflow = 'hidden';
+    syncOverlayScrollLock();
   }
 
   function closeMobileMenu() {
@@ -628,7 +616,7 @@
       DOM.hamburgerBtn.classList.remove('is-open');
       DOM.hamburgerBtn.setAttribute('aria-expanded', 'false');
     }
-    document.body.style.overflow = '';
+    syncOverlayScrollLock();
   }
 
   function handleUrlHash() {
@@ -644,9 +632,10 @@
    * App Initializer
    */
   function init() {
+    positionSearchBar();
     setupEventListeners();
+    renderCatalogStats();
     handleUrlHash();
-    renderMobileMenuTabs();
   }
 
   if (document.readyState === 'loading') {

@@ -24,6 +24,23 @@ body {
   overflow-x: clip;
 }
 
+html {
+  scrollbar-gutter: stable;
+  --nav-row-min-height: 4rem;
+  scroll-padding-top: calc(var(--sticky-stack-height, var(--nav-row-min-height)) + 1rem);
+}
+
+html.overlay-scroll-locked {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+html.overlay-scroll-locked body {
+  position: fixed;
+  top: var(--overlay-scroll-top);
+  width: 100%;
+}
+
 header,
 nav:not(.site-nav),
 main,
@@ -54,7 +71,7 @@ footer,
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  min-height: var(--nav-row-min-height);
   gap: 1rem;
 }
 
@@ -343,7 +360,7 @@ footer,
    ───────────────────────────────────────────────────────────────────────────── */
 .search-sticky-bar {
   position: sticky;
-  top: 64px;
+  top: var(--site-nav-height, calc(var(--nav-row-min-height) + var(--border-width)));
   z-index: 90;
   background-color: var(--bg-page);
   border-bottom: var(--border-width) solid var(--border-ink);
@@ -399,6 +416,8 @@ footer,
 .tab-btn.wip {
   background-color: var(--bg-surface-alt);
   color: var(--ink-muted);
+  flex-wrap: wrap;
+  row-gap: 0.2rem;
 }
 
 .tab-btn.wip:hover {
@@ -444,7 +463,7 @@ footer,
   font-weight: 700;
 }
 
-.tag-soon {
+.tag-progress {
   font-size: 0.62rem;
   font-weight: 800;
   text-transform: uppercase;
@@ -455,7 +474,7 @@ footer,
   color: var(--ink-muted);
 }
 
-.tab-btn.wip.active .tag-soon {
+.tab-btn.wip.active .tag-progress {
   background-color: var(--pastel-yellow);
   color: var(--ink-primary);
 }
@@ -566,11 +585,13 @@ footer,
    MAIN CONTENT FEED
    ───────────────────────────────────────────────────────────────────────────── */
 .content-feed {
-  padding: 2.5rem 0 4rem;
+  padding-block: 2.5rem 4rem;
 }
 
 .semester-block {
   margin-bottom: 3.5rem;
+  /* Let card hover and shadow effects extend into the feed gutters. */
+  overflow-x: visible;
 }
 
 .semester-header {
@@ -609,6 +630,10 @@ footer,
   font-family: var(--font-mono);
   font-size: 0.78rem;
   color: var(--ink-muted);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem;
 }
 
 /* Syllabus Banner (Pastel Lavender) */
@@ -703,6 +728,68 @@ footer,
 }
 
 /* Subject Grid (Decluttered & Clean) */
+.catalog-group + .catalog-group {
+  margin-top: 1.75rem;
+}
+
+.curriculum-heading,
+.curriculum-note {
+  margin-bottom: 1rem;
+}
+
+.curriculum-heading {
+  font-size: 1.15rem;
+}
+
+.curriculum-note {
+  padding: 0.85rem 1rem;
+  background-color: var(--pastel-peach);
+  color: var(--ink-primary);
+  border: var(--border-width) dashed var(--border-ink);
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.upcoming-notes {
+  margin-top: 1.5rem;
+}
+
+.availability-badge {
+  display: inline-block;
+  width: fit-content;
+  padding: 0.2rem 0.55rem;
+  background-color: var(--pastel-peach);
+  color: var(--ink-primary);
+  border: 1px solid var(--border-ink);
+  border-radius: var(--border-radius);
+  font: 700 0.75rem var(--font-mono);
+}
+
+.availability-working {
+  background-color: var(--pastel-yellow);
+}
+
+.catalog-empty {
+  padding: 2rem 1.25rem;
+  margin-block: 2rem;
+  text-align: center;
+  background-color: var(--bg-surface);
+  border: var(--border-width) dashed var(--border-ink);
+  border-radius: var(--border-radius);
+}
+
+.catalog-empty p {
+  margin: 0.5rem 0 1rem;
+  color: var(--ink-secondary);
+  overflow-wrap: anywhere;
+}
+
+.catalog-empty .btn-download-combined {
+  width: auto;
+  padding-inline: 1rem;
+}
+
 .subject-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr));
@@ -719,12 +806,28 @@ footer,
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-width: 0;
   transition: all 0.15s ease;
 }
 
 .subject-item-card:hover {
   transform: translate(-2px, -2px);
   box-shadow: var(--shadow-tactile-hover);
+}
+
+.subject-unavailable {
+  background-color: var(--bg-surface-alt);
+  border-style: dashed;
+  box-shadow: none;
+}
+
+.subject-unavailable:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.subject-downloads .availability-working + .btn-download-combined {
+  margin-top: 0.65rem;
 }
 
 .card-top-row {
@@ -761,11 +864,8 @@ footer,
   color: var(--ink-primary);
 }
 
-.subject-desc {
-  font-size: 0.85rem;
-  color: var(--ink-secondary);
-  line-height: 1.5;
-  margin-bottom: 1.25rem;
+.subject-downloads {
+  margin-top: 0.85rem;
 }
 
 /* Tactile Pastel Mint Download Button */
@@ -808,63 +908,12 @@ footer,
   fill: none;
 }
 
-/* Coming Soon Card (Pastel Peach) */
-.roadmap-card {
-  background-color: var(--pastel-peach);
-  border: var(--border-width) dashed var(--border-ink);
-  border-radius: var(--border-radius);
-  padding: 1.75rem 1.5rem;
-}
-
-.roadmap-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  background-color: var(--pastel-yellow);
-  border: 1px solid var(--border-ink);
-  padding: 0.2rem 0.55rem;
-  border-radius: 2px;
-  margin-bottom: 0.75rem;
-}
-
-.roadmap-card h3 {
-  font-size: 1.35rem;
-  margin-bottom: 0.4rem;
-}
-
-.roadmap-card p {
-  color: var(--ink-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 1.25rem;
-}
-
-.roadmap-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-}
-
-.roadmap-tag {
-  background-color: var(--bg-surface);
-  border: 1px solid var(--border-ink);
-  border-radius: 2px;
-  padding: 0.3rem 0.6rem;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--ink-primary);
-}
-
 /* ─────────────────────────────────────────────────────────────────────────────
    LICENSE MODAL DIALOG (WITH RED SQUARE CLOSE BUTTON HOVER)
    ───────────────────────────────────────────────────────────────────────────── */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  width: 100%;
   height: 100%;
   height: 100dvh;
   background-color: rgba(18, 20, 24, 0.6);
@@ -889,8 +938,8 @@ footer,
   border-radius: var(--border-radius);
   width: 100%;
   max-width: 640px;
-  max-height: 85vh;
-  max-height: 85dvh;
+  max-height: min(85vh, 100%);
+  max-height: min(85dvh, 100%);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -950,7 +999,9 @@ footer,
 
 .modal-body {
   padding: 1.5rem;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   scrollbar-gutter: stable;
   scrollbar-width: thin;
   scrollbar-color: var(--border-ink) var(--bg-surface-alt);
@@ -1596,6 +1647,8 @@ footer,
   display: none;
   position: fixed;
   inset: 0;
+  height: 100%;
+  height: 100dvh;
   z-index: 200;
   background-color: rgba(22, 24, 31, 0.45);
   backdrop-filter: blur(3px);
@@ -1610,14 +1663,14 @@ footer,
   position: absolute;
   top: 0;
   right: 0;
-  width: min(320px, 88vw);
+  width: min(20rem, 88%);
   height: 100%;
   background-color: var(--bg-page);
   border-left: var(--border-width) solid var(--border-ink);
   box-shadow: -4px 0 0px var(--border-ink);
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
+  overflow: hidden;
   animation: slideInRight 0.22s ease-out;
 }
 
@@ -1682,11 +1735,13 @@ footer,
 
 .mobile-menu-nav {
   flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   padding: 1rem;
   gap: 0.75rem;
   overflow-y: auto;
+  overscroll-behavior-y: contain;
 }
 
 /* Semester Tabs inside mobile menu (vertical list) */
@@ -1814,6 +1869,10 @@ footer,
 
 /* Mobile large: show hamburger, hide desktop nav items */
 @media (max-width: 768px) {
+  html {
+    --nav-row-min-height: 3.5rem;
+  }
+
   /* Show hamburger */
   .btn-hamburger {
     display: flex;
@@ -1826,7 +1885,6 @@ footer,
 
   /* Compact navbar height */
   .nav-inner {
-    height: 56px;
     gap: 0.65rem;
   }
 
@@ -1859,9 +1917,14 @@ footer,
     gap: 0.45rem;
   }
 
-  /* Control section sticky offset must match nav height */
-  .search-sticky-bar {
-    top: 56px;
+  .search-field {
+    font-size: 1rem;
+  }
+
+  .site-nav .search-sticky-bar {
+    position: static;
+    border-top: var(--border-width) solid var(--border-ink);
+    border-bottom: 0;
   }
 
   /* Hero adjustments */
@@ -1959,8 +2022,7 @@ footer,
     width: 100%;
     border-radius: 12px 12px 0 0;
     border-bottom: none;
-    max-height: calc(85vh - 3rem);
-    max-height: calc(100dvh - 3.5rem - env(safe-area-inset-top, 0px));
+    max-height: 100%;
     box-shadow: 0 -4px 0px var(--border-ink);
     margin-top: auto;
   }
@@ -1997,11 +2059,10 @@ footer,
   }
 
   .container {
-    padding: 0 1rem;
+    padding-inline: 1rem;
   }
 
   .nav-inner {
-    height: 56px;
     gap: 0.45rem;
   }
 
@@ -2133,7 +2194,7 @@ footer,
   }
 
   .container {
-    padding: 0 0.75rem;
+    padding-inline: 0.75rem;
   }
 
   .nav-inner {

@@ -36,8 +36,8 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 
 | Semester | Status | Subjects | Official Syllabus |
 |---|---|---|---|
-| 1st SEM | ✅ Complete | 2 subjects (12 modules) | [`SEM-1 OLD_ECE_MAKAUT_SYLLABUS.pdf`](1st%20SEM/SEM-1%20OLD_ECE_MAKAUT_SYLLABUS.pdf) |
-| 2nd SEM | ✅ Complete | 2 subjects (12 modules) | [`SEM-2 OLD_ECE_MAKAUT_SYLLABUS.pdf`](2nd%20SEM/SEM-2%20OLD_ECE_MAKAUT_SYLLABUS.pdf) |
+| 1st SEM | Notes available | 3 subjects (18 modules) | [2026–27 curriculum](1st%20SEM/New%20Syllabus%20Subjects/SEM-1%20NEW_ECE_MAKAUT_SYLLABUS_2026-27.pdf) · [Previous curriculum](1st%20SEM/SEM-1%20OLD_ECE_MAKAUT_SYLLABUS.pdf) |
+| 2nd SEM | Previous-curriculum notes available | 2 subjects (12 modules) | [2026–27 curriculum](2nd%20SEM/New%20Syllabus%20Subjects/SEM-2%20NEW_ECE_MAKAUT_SYLLABUS_2026-27.pdf) · [Previous curriculum](2nd%20SEM/SEM-2%20OLD_ECE_MAKAUT_SYLLABUS.pdf) |
 | 3rd SEM | 🟡 In Progress | 6 subjects (27 modules) | [`SEM-3 ECE_MAKAUT_SYLLABUS.pdf`](3rd%20SEM/SEM-3%20ECE_MAKAUT_SYLLABUS.pdf) |
 | 4th SEM | 🟡 In Progress | 6 subjects (29 modules) | [`SEM-4 ECE_MAKAUT_SYLLABUS.pdf`](4th%20SEM/SEM-4%20ECE_MAKAUT_SYLLABUS.pdf) |
 | 5th SEM | 🟡 In Progress | 2 subjects (12 modules) | [`SEM-5 ECE_MAKAUT_SYLLABUS.pdf`](5th%20SEM/SEM-5%20ECE_MAKAUT_SYLLABUS.pdf) |
@@ -51,14 +51,17 @@ Every topic follows: **Definition → Concept → Working → Formula → Diagra
 
 ## 1st Semester
 
-| Code | Subject | Modules |
-|---|---|---|
-| BS-CH101 | Chemistry-I | 7 |
-| BS-PH101 | Physics-I | 5 |
+| Code | Subject | Curriculum | Modules |
+|---|---|---|---|
+| 26-ES-EE101 | [Basic Electrical and Electronics Engineering](1st%20SEM/New%20Syllabus%20Subjects/01.%20Basic%20Electrical%20and%20Electronics%20Engineering/26-ES-EE101_Basic_Electrical_and_Electronics_Engineering.pdf) | 2026–27 | 6 |
+| BS-CH101 | Chemistry-I | Previous | 7 |
+| BS-PH101 | Physics-I | Previous | 5 |
 
 ---
 
 ## 2nd Semester
+
+The table lists previous-curriculum notes. The 2026–27 syllabus is available above, and notes for it are pending.
 
 | Code | Subject | Modules |
 |---|---|---|
@@ -225,9 +228,9 @@ See [`Notes_Build_Guide.md`](Notes_Build_Guide.md) for the full authoring spec.
 ## Web Portal
 
 An interactive web showcase and PDF repository portal is hosted directly in [`docs/`](docs/) (deployable via GitHub Pages). It features:
-- **Instant Background PDF Downloads:** 1-Click downloads open PDFs in a new tab without interrupting or navigating away from the active catalog view.
-- **Standardized Syllabus Archive:** Official MAKAUT curriculum PDFs are listed by semester in the status table.
-- **Fast Live Search & Filter:** Instant keyword filtering across all semesters, course codes, subjects, and complete syllabus topic lists in real-time.
+- **Combined PDFs:** Each subject card links to its combined notes. PDF links open in a separate tab.
+- **Syllabus Archive:** The portal lists official syllabi by semester and groups Semester 1 and 2 materials by curriculum.
+- **Live Search:** Filter by semester, course code, subject, module title, or syllabus.
 - **Editorial Neo-Brutalism & Pastel UI:** High-contrast aesthetic with zero clutter, zero horizontal overflow across all screen sizes (desktop, tablet, mobile), and safe-area mobile bottom-sheet modals.
 - **PWA & SEO Ready:** Includes `site.webmanifest`, `robots.txt`, `sitemap.xml`, high-res OpenGraph social preview assets (`og-image.png`, `og-thumb.png`), and smooth scroll-to-top interaction.
 
